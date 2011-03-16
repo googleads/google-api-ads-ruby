@@ -1,0 +1,178 @@
+= Google AdWords Client Library
+
+Welcome to the next generation Google-developed Ruby client library for the
+AdWords API!
+
+Please note that this is an early PREVIEW of the client library, under heavy
+development! A lot of things (such as documentation and full unit testing) are
+still missing or being worked on.
+
+It contains full support for v13, v200909, v201003, v201008 and v201101, with
+full stubs, and a simplified programming interface that lets you handle
+everything in native Ruby collections, instead of forcing you to deal with SOAP
+library-generated objects.
+
+
+= Docs for Users
+
+== 1 - Installation:
+
+google-adwords-api is a ruby gem.  See http://docs.rubygems.org/read/book/1
+
+Install it using the gem install command.
+   $ gem install --remote google-adwords-api
+
+The following gem libraries are required:
+- soap4r v1.5.8
+- httpclient v2.1.2 or greater
+- google-ads-common v0.1.x
+
+
+== 2 - Using the client library:
+
+It's pretty easy to use.
+See http://docs.rubygems.org/read/chapter/3#page70 for how to set the rubygem
+environment.
+   $ export RUBYOPT=rubygems
+or
+   $ ruby -rubygems my_program_that_uses_gems
+
+If you are running Ruby 1.8 and do not use the rubygems option, you need to add
+   require 'rubygems'
+at the beginning of your programs.
+
+Then:
+   gem 'google-adwords-api'
+   require 'adwords_api'
+
+   adwords = AdwordsApi::Api.new
+creates an Api object that will grant you access to all the services for all of
+the currently supported vesions of the AdWords API. It uses a config file in
+ENV['HOME']/adwords_api.yml to read all of your configurations.
+There is an example config file in the root adwords_api directory.
+You can also pass API a manually constructed config hash like:
+   adwords = AdwordsApi::Api.new({
+     :authentication => {
+         :method => 'ClientLogin',
+         :developer_token => 'DEVELOPER_TOKEN',
+         :user_agent => 'Ruby Sample',
+         :password => 'PASSWORD',
+         :email => 'user@domain.com'
+         :client_email => 'user2@domain.com'
+     },
+     :service => {
+       :environment => 'Production'
+     }
+   })
+
+Then, just specify which service you're looking to use, and which version:
+   campaign_srv = adwords.service(:CampaignService, :v201101)
+
+and you should now be able to just use the API methods in the object you were
+returned:
+   campaigns = campaign_srv.get({}) # Empty selector to get all
+
+See the code in the examples directory for working examples you can build from.
+
+*Note*: if your setup requires you to send connections through a proxy server,
+please set the appropriate options in the config file or config hash. E.g.:
+   config[:connection] = {
+     :proxy => 'http://user:password@proxy_hostname:8080/path'
+   }
+
+
+=== 2.1 - Ruby names for a Ruby library:
+
+In order to make things more Ruby-like for our Ruby developers, we've renamed
+API objects and methods to more closely match Ruby conventions. This means using
+snake_case for methods and parameters, and UpperCamelCase for class names.
+
+For example, the 'getReportFields' method of the ReportDefinitionService is
+named 'get_report_fields' in the client library. You invoke it by doing:
+   response = report_def_srv.get_report_fields(report_type)
+
+The 'get' method, on the other hand, returns a ReportDefinitionPage object which
+has an 'entries' and a 'total_num_entries' field. So, to access the return
+values, you would do:
+   response = report_def_srv.get(selector)
+   num_entries = response[:rval][:total_num_entries]
+
+Essentially, all you have to do is follow Ruby conventions, and the library will
+do the rest. All of the examples are written following this standard.
+
+If, however, you would prefer to use the names as provided in the AdWords
+documentation, please disable the 'use_ruby_names' option under the 'service'
+category in the config:
+   config[:service][:use_ruby_names] = false
+
+Disabling Ruby names is an experimental feature, and it is not recommended.
+
+
+=== 2.2 - Using the Sandbox:
+
+In order to use the sandbox, make sure that the 'environment' parameter under
+'service' in the configuration is set to Sandbox.
+   config[:service] = {
+     :environment => 'Sandbox'
+   }
+
+
+=== 2.3 - Logging:
+
+It is often useful to see a trace of the raw SOAP XML being sent and received.
+The quickest way of achieving this when debugging your application is by setting
+the ADWORDSAPI_DEBUG environment variable to TRUE; e.g. in the bash shell:
+   $ export ADWORDSAPI_DEBUG=TRUE
+or from your Ruby code:
+   ENV['ADWORDSAPI_DEBUG'] = 'TRUE'
+
+This will output the SOAP XML to stderr, which will usually show up in your
+terminal window.
+
+There's also the option of logging requests and XML to files. In order to enable
+this, you should use the log_to_file method of the loggers inside your
+AdwordsApi::Api object:
+   adwords = AdwordsApi::Api.new
+   adwords.request_logger.log_to_file
+   adwords.xml_logger.log_to_file
+
+The first logs the units spent and the requests made, whereas the second logs
+the full SOAP XML being sent and received over the wire. These will be written
+to the current directory by default, but you can specify another directory as an
+optional parameter to log_to_file:
+   adwords.request_logger.log_to_file('/var/log/my_app/')
+   adwords.xml_logger.log_to_file('/var/log/my_app/')
+
+The files will be named request_info and soap_xml, respectively.
+
+
+= Docs for Developers
+
+ $ rake getwsdl
+to get the wsdl files
+
+ $ rake generate
+to regenerate the bindings if needed
+
+ $ rake package
+to package the gem and create a release
+
+ $ rake test
+to run unit tests on the library
+
+
+= Copyright/License Info
+
+Copyright 2011, Google Inc. All Rights Reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

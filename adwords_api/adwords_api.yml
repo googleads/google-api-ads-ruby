@@ -1,0 +1,21 @@
+---
+# This is an example configuration file for the AdWords API client library.
+# Please fill in the required fields, and copy it over to your home directory.
+:authentication:
+  :method: ClientLogin
+  :developer_token: INSERT_YOUR_DEVELOPER_TOKEN_HERE
+  :user_agent: INSERT_YOUR_USER_AGENT_HERE
+  :password: INSERT_YOUR_PASSWORD_HERE
+  :email: INSERT_YOUR_LOGIN_EMAIL_HERE
+  :client_email: INSERT_YOUR_CLIENT_EMAIL_HERE
+  # If you would like to manage your auth tokens manually, use the 'auth_token'
+  # property.
+  #:auth_token: INSERT_AUTH_TOKEN_HERE
+:service:
+  :environment: Production
+  :use_ruby_names: true
+:connection:
+  :strict_ssl_verification: false
+  # If your proxy connection requires authentication, make sure to include it in
+  # the URL, e.g.: http://user:password@proxy_hostname:8080/path
+  # :proxy: INSERT_PROXY_HERE

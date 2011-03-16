@@ -1,0 +1,9 @@
+0.2.0:
+  - Now using httpi instead of net/http.
+
+0.1.0:
+  - Full soap4r code generation for client libraries.
+  - Experimental savon code generation for client libraries (in development).
+  - Full ClientLogin authentication support.
+  - Minimal documentation generation support.
+  - The very beginnings of a testing framework.
