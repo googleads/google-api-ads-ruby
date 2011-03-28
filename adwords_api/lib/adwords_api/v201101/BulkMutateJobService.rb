@@ -5583,10 +5583,12 @@ class DeprecatedAdType < ::String
   GADGET = DeprecatedAdType.new("GADGET")
   GADGET_TEMPLATE = DeprecatedAdType.new("GADGET_TEMPLATE")
   IN_STREAM_VIDEO = DeprecatedAdType.new("IN_STREAM_VIDEO")
+  LOCAL_BUSINESS_AD = DeprecatedAdType.new("LOCAL_BUSINESS_AD")
   PRINT = DeprecatedAdType.new("PRINT")
   TEXT_LINK = DeprecatedAdType.new("TEXT_LINK")
   TEXT_WIDE = DeprecatedAdType.new("TEXT_WIDE")
   TEXT_WITH_VIDEO = DeprecatedAdType.new("TEXT_WITH_VIDEO")
+  UNKNOWN = DeprecatedAdType.new("UNKNOWN")
   VIDEO = DeprecatedAdType.new("VIDEO")
 end
 

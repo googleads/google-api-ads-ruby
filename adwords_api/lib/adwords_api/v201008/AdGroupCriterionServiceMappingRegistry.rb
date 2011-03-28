@@ -9,6 +9,16 @@ module DefaultMappingRegistry
   NsV201008 = "https://adwords.google.com/api/adwords/cm/v201008"
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion,
+    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterion"),
+    :schema_element => [
+      ["adGroupId", "SOAP::SOAPLong", [0, 1]],
+      ["criterion", "AdwordsApi::V201008::AdGroupCriterionService::Criterion", [0, 1]],
+      ["adGroupCriterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterion.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionError,
     :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionError"),
     :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
@@ -48,6 +58,73 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionOperation,
+    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionOperation"),
+    :schema_basetype => XSD::QName.new(NsV201008, "Operation"),
+    :schema_element => [
+      ["operator", "AdwordsApi::V201008::AdGroupCriterionService::Operator", [0, 1]],
+      ["operation_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Operation.Type")], [0, 1]],
+      ["operand", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion", [0, 1]],
+      ["exemptionRequests", "AdwordsApi::V201008::AdGroupCriterionService::ExemptionRequest[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionPage,
+    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionPage"),
+    :schema_basetype => XSD::QName.new(NsV201008, "Page"),
+    :schema_element => [
+      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]],
+      ["page_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Page.Type")], [0, 1]],
+      ["entries", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionReturnValue,
+    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionReturnValue"),
+    :schema_basetype => XSD::QName.new(NsV201008, "ListReturnValue"),
+    :schema_element => [
+      ["listReturnValue_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ListReturnValue.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion[]", [0, nil]],
+      ["partialFailureErrors", "AdwordsApi::V201008::AdGroupCriterionService::ApiError[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionSelector,
+    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionSelector"),
+    :schema_element => [
+      ["idFilters", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionIdFilter[]", [0, nil]],
+      ["experimentId", "SOAP::SOAPLong", [0, 1]],
+      ["criterionUse", "AdwordsApi::V201008::AdGroupCriterionService::CriterionUse", [0, 1]],
+      ["userStatuses", "AdwordsApi::V201008::AdGroupCriterionService::UserStatus[]", [0, nil]],
+      ["statsSelector", "AdwordsApi::V201008::AdGroupCriterionService::StatsSelector", [0, 1]],
+      ["paging", "AdwordsApi::V201008::AdGroupCriterionService::Paging", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ApiException,
+    :schema_type => XSD::QName.new(NsV201008, "ApiException"),
+    :schema_basetype => XSD::QName.new(NsV201008, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApplicationException.Type")], [0, 1]],
+      ["errors", "AdwordsApi::V201008::AdGroupCriterionService::ApiError[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ApplicationException,
+    :schema_type => XSD::QName.new(NsV201008, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApplicationException.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::AuthenticationError,
     :schema_type => XSD::QName.new(NsV201008, "AuthenticationError"),
     :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
@@ -74,6 +151,54 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::Bid,
+    :schema_type => XSD::QName.new(NsV201008, "Bid"),
+    :schema_element => [
+      ["amount", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::BidMultiplier,
+    :schema_type => XSD::QName.new(NsV201008, "BidMultiplier"),
+    :schema_element => [
+      ["multiplier", "SOAP::SOAPDouble", [0, 1]],
+      ["multipliedBid", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::BiddableAdGroupCriterion,
+    :schema_type => XSD::QName.new(NsV201008, "BiddableAdGroupCriterion"),
+    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterion"),
+    :schema_element => [
+      ["adGroupId", "SOAP::SOAPLong", [0, 1]],
+      ["criterion", "AdwordsApi::V201008::AdGroupCriterionService::Criterion", [0, 1]],
+      ["adGroupCriterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterion.Type")], [0, 1]],
+      ["userStatus", "AdwordsApi::V201008::AdGroupCriterionService::UserStatus", [0, 1]],
+      ["systemServingStatus", "AdwordsApi::V201008::AdGroupCriterionService::SystemServingStatus", [0, 1]],
+      ["approvalStatus", "AdwordsApi::V201008::AdGroupCriterionService::ApprovalStatus", [0, 1]],
+      ["destinationUrl", "SOAP::SOAPString", [0, 1]],
+      ["bids", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionBids", [0, 1]],
+      ["experimentData", "AdwordsApi::V201008::AdGroupCriterionService::BiddableAdGroupCriterionExperimentData", [0, 1]],
+      ["firstPageCpc", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
+      ["qualityInfo", "AdwordsApi::V201008::AdGroupCriterionService::QualityInfo", [0, 1]],
+      ["stats", "AdwordsApi::V201008::AdGroupCriterionService::Stats", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::BiddableAdGroupCriterionExperimentData,
+    :schema_type => XSD::QName.new(NsV201008, "BiddableAdGroupCriterionExperimentData"),
+    :schema_element => [
+      ["experimentId", "SOAP::SOAPLong", [0, 1]],
+      ["experimentDeltaStatus", "AdwordsApi::V201008::AdGroupCriterionService::ExperimentDeltaStatus", [0, 1]],
+      ["experimentDataStatus", "AdwordsApi::V201008::AdGroupCriterionService::ExperimentDataStatus", [0, 1]],
+      ["experimentBidMultiplier", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionExperimentBidMultiplier", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::BiddingError,
     :schema_type => XSD::QName.new(NsV201008, "BiddingError"),
     :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
@@ -83,6 +208,17 @@ module DefaultMappingRegistry
       ["errorString", "SOAP::SOAPString", [0, 1]],
       ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApiError.Type")], [0, 1]],
       ["reason", "AdwordsApi::V201008::AdGroupCriterionService::BiddingErrorReason", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::BudgetOptimizerAdGroupCriterionBids,
+    :schema_type => XSD::QName.new(NsV201008, "BudgetOptimizerAdGroupCriterionBids"),
+    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionBids"),
+    :schema_element => [
+      ["adGroupCriterionBids_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionBids.Type")], [0, 1]],
+      ["proxyBid", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
+      ["enhancedCpcEnabled", "SOAP::SOAPBoolean", [0, 1]]
     ]
   )
 
@@ -109,6 +245,15 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::Criterion,
+    :schema_type => XSD::QName.new(NsV201008, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Criterion.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::CriterionPolicyError,
     :schema_type => XSD::QName.new(NsV201008, "CriterionPolicyError"),
     :schema_basetype => XSD::QName.new(NsV201008, "PolicyViolationError"),
@@ -123,6 +268,19 @@ module DefaultMappingRegistry
       ["externalPolicyDescription", "SOAP::SOAPString", [0, 1]],
       ["isExemptable", "SOAP::SOAPBoolean", [0, 1]],
       ["violatingParts", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationErrorPart[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::DatabaseError,
+    :schema_type => XSD::QName.new(NsV201008, "DatabaseError"),
+    :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["errorString", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApiError.Type")], [0, 1]],
+      ["reason", "AdwordsApi::V201008::AdGroupCriterionService::DatabaseErrorReason", [0, 1]]
     ]
   )
 
@@ -213,6 +371,14 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ExemptionRequest,
+    :schema_type => XSD::QName.new(NsV201008, "ExemptionRequest"),
+    :schema_element => [
+      ["key", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationKey", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::InternalApiError,
     :schema_type => XSD::QName.new(NsV201008, "InternalApiError"),
     :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
@@ -244,6 +410,41 @@ module DefaultMappingRegistry
     :schema_element => [
       ["comparableValue_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ComparableValue.Type")], [0, 1]],
       ["number", "SOAP::SOAPLong", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ManualCPCAdGroupCriterionBids,
+    :schema_type => XSD::QName.new(NsV201008, "ManualCPCAdGroupCriterionBids"),
+    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionBids"),
+    :schema_element => [
+      ["adGroupCriterionBids_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionBids.Type")], [0, 1]],
+      ["maxCpc", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
+      ["bidSource", "AdwordsApi::V201008::AdGroupCriterionService::BidSource", [0, 1]],
+      ["positionPreferenceBids", "AdwordsApi::V201008::AdGroupCriterionService::PositionPreferenceAdGroupCriterionBids", [0, 1]],
+      ["enhancedCpcEnabled", "SOAP::SOAPBoolean", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ManualCPCAdGroupCriterionExperimentBidMultiplier,
+    :schema_type => XSD::QName.new(NsV201008, "ManualCPCAdGroupCriterionExperimentBidMultiplier"),
+    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionExperimentBidMultiplier"),
+    :schema_element => [
+      ["adGroupCriterionExperimentBidMultiplier_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionExperimentBidMultiplier.Type")], [0, 1]],
+      ["maxCpcMultiplier", "AdwordsApi::V201008::AdGroupCriterionService::BidMultiplier", [0, 1]],
+      ["multiplierSource", "AdwordsApi::V201008::AdGroupCriterionService::MultiplierSource", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ManualCPMAdGroupCriterionBids,
+    :schema_type => XSD::QName.new(NsV201008, "ManualCPMAdGroupCriterionBids"),
+    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionBids"),
+    :schema_element => [
+      ["adGroupCriterionBids_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionBids.Type")], [0, 1]],
+      ["maxCpm", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
+      ["bidSource", "AdwordsApi::V201008::AdGroupCriterionService::BidSource", [0, 1]]
     ]
   )
 
@@ -378,6 +579,24 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationError,
+    :schema_type => XSD::QName.new(NsV201008, "PolicyViolationError"),
+    :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["errorString", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApiError.Type")], [0, 1]],
+      ["key", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationKey", [0, 1]],
+      ["externalPolicyName", "SOAP::SOAPString", [0, 1]],
+      ["externalPolicyUrl", "SOAP::SOAPString", [0, 1]],
+      ["externalPolicyDescription", "SOAP::SOAPString", [0, 1]],
+      ["isExemptable", "SOAP::SOAPBoolean", [0, 1]],
+      ["violatingParts", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationErrorPart[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationErrorPart,
     :schema_type => XSD::QName.new(NsV201008, "PolicyViolationError.Part"),
     :schema_element => [
@@ -392,6 +611,37 @@ module DefaultMappingRegistry
     :schema_element => [
       ["policyName", "SOAP::SOAPString", [0, 1]],
       ["violatingText", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::PositionPreferenceAdGroupCriterionBids,
+    :schema_type => XSD::QName.new(NsV201008, "PositionPreferenceAdGroupCriterionBids"),
+    :schema_element => [
+      ["proxyMaxCpc", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
+      ["preferredPosition", "SOAP::SOAPInt", [0, 1]],
+      ["bottomPosition", "SOAP::SOAPInt", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::Product,
+    :schema_type => XSD::QName.new(NsV201008, "Product"),
+    :schema_basetype => XSD::QName.new(NsV201008, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Criterion.Type")], [0, 1]],
+      ["conditions", "AdwordsApi::V201008::AdGroupCriterionService::ProductCondition[]", [0, nil]],
+      ["text", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ProductCondition,
+    :schema_type => XSD::QName.new(NsV201008, "ProductCondition"),
+    :schema_element => [
+      ["argument", "SOAP::SOAPString", [0, 1]],
+      ["operand", "AdwordsApi::V201008::AdGroupCriterionService::ProductConditionOperand", [0, 1]]
     ]
   )
 
@@ -547,6 +797,34 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::Stats,
+    :schema_type => XSD::QName.new(NsV201008, "Stats"),
+    :schema_element => [
+      ["startDate", "SOAP::SOAPString", [0, 1]],
+      ["endDate", "SOAP::SOAPString", [0, 1]],
+      ["network", "AdwordsApi::V201008::AdGroupCriterionService::StatsNetwork", [0, 1]],
+      ["clicks", "SOAP::SOAPLong", [0, 1]],
+      ["impressions", "SOAP::SOAPLong", [0, 1]],
+      ["cost", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
+      ["averagePosition", "SOAP::SOAPDouble", [0, 1]],
+      ["averageCpc", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
+      ["averageCpm", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
+      ["ctr", "SOAP::SOAPDouble", [0, 1]],
+      ["conversions", "SOAP::SOAPLong", [0, 1]],
+      ["conversionRate", "SOAP::SOAPDouble", [0, 1]],
+      ["costPerConversion", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
+      ["conversionsManyPerClick", "SOAP::SOAPLong", [0, 1]],
+      ["conversionRateManyPerClick", "SOAP::SOAPDouble", [0, 1]],
+      ["costPerConversionManyPerClick", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
+      ["viewThroughConversions", "SOAP::SOAPLong", [0, 1]],
+      ["totalConvValue", "SOAP::SOAPLong", [0, 1]],
+      ["valuePerConv", "SOAP::SOAPDouble", [0, 1]],
+      ["valuePerConvManyPerClick", "SOAP::SOAPDouble", [0, 1]],
+      ["stats_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Stats.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::StatsQueryError,
     :schema_type => XSD::QName.new(NsV201008, "StatsQueryError"),
     :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
@@ -602,284 +880,6 @@ module DefaultMappingRegistry
       ["id", "SOAP::SOAPLong", [0, 1]],
       ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Criterion.Type")], [0, 1]],
       ["path", "SOAP::SOAPString[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::DatabaseError,
-    :schema_type => XSD::QName.new(NsV201008, "DatabaseError"),
-    :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
-    :schema_element => [
-      ["fieldPath", "SOAP::SOAPString", [0, 1]],
-      ["trigger", "SOAP::SOAPString", [0, 1]],
-      ["errorString", "SOAP::SOAPString", [0, 1]],
-      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApiError.Type")], [0, 1]],
-      ["reason", "AdwordsApi::V201008::AdGroupCriterionService::DatabaseErrorReason", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ExemptionRequest,
-    :schema_type => XSD::QName.new(NsV201008, "ExemptionRequest"),
-    :schema_element => [
-      ["key", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationKey", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationError,
-    :schema_type => XSD::QName.new(NsV201008, "PolicyViolationError"),
-    :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
-    :schema_element => [
-      ["fieldPath", "SOAP::SOAPString", [0, 1]],
-      ["trigger", "SOAP::SOAPString", [0, 1]],
-      ["errorString", "SOAP::SOAPString", [0, 1]],
-      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApiError.Type")], [0, 1]],
-      ["key", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationKey", [0, 1]],
-      ["externalPolicyName", "SOAP::SOAPString", [0, 1]],
-      ["externalPolicyUrl", "SOAP::SOAPString", [0, 1]],
-      ["externalPolicyDescription", "SOAP::SOAPString", [0, 1]],
-      ["isExemptable", "SOAP::SOAPBoolean", [0, 1]],
-      ["violatingParts", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationErrorPart[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ProductCondition,
-    :schema_type => XSD::QName.new(NsV201008, "ProductCondition"),
-    :schema_element => [
-      ["argument", "SOAP::SOAPString", [0, 1]],
-      ["operand", "AdwordsApi::V201008::AdGroupCriterionService::ProductConditionOperand", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::Stats,
-    :schema_type => XSD::QName.new(NsV201008, "Stats"),
-    :schema_element => [
-      ["startDate", "SOAP::SOAPString", [0, 1]],
-      ["endDate", "SOAP::SOAPString", [0, 1]],
-      ["network", "AdwordsApi::V201008::AdGroupCriterionService::StatsNetwork", [0, 1]],
-      ["clicks", "SOAP::SOAPLong", [0, 1]],
-      ["impressions", "SOAP::SOAPLong", [0, 1]],
-      ["cost", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
-      ["averagePosition", "SOAP::SOAPDouble", [0, 1]],
-      ["averageCpc", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
-      ["averageCpm", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
-      ["ctr", "SOAP::SOAPDouble", [0, 1]],
-      ["conversions", "SOAP::SOAPLong", [0, 1]],
-      ["conversionRate", "SOAP::SOAPDouble", [0, 1]],
-      ["costPerConversion", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
-      ["conversionsManyPerClick", "SOAP::SOAPLong", [0, 1]],
-      ["conversionRateManyPerClick", "SOAP::SOAPDouble", [0, 1]],
-      ["costPerConversionManyPerClick", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
-      ["viewThroughConversions", "SOAP::SOAPLong", [0, 1]],
-      ["totalConvValue", "SOAP::SOAPLong", [0, 1]],
-      ["valuePerConv", "SOAP::SOAPDouble", [0, 1]],
-      ["valuePerConvManyPerClick", "SOAP::SOAPDouble", [0, 1]],
-      ["stats_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Stats.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ApiException,
-    :schema_type => XSD::QName.new(NsV201008, "ApiException"),
-    :schema_basetype => XSD::QName.new(NsV201008, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApplicationException.Type")], [0, 1]],
-      ["errors", "AdwordsApi::V201008::AdGroupCriterionService::ApiError[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ApplicationException,
-    :schema_type => XSD::QName.new(NsV201008, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApplicationException.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::Bid,
-    :schema_type => XSD::QName.new(NsV201008, "Bid"),
-    :schema_element => [
-      ["amount", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::BidMultiplier,
-    :schema_type => XSD::QName.new(NsV201008, "BidMultiplier"),
-    :schema_element => [
-      ["multiplier", "SOAP::SOAPDouble", [0, 1]],
-      ["multipliedBid", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::BudgetOptimizerAdGroupCriterionBids,
-    :schema_type => XSD::QName.new(NsV201008, "BudgetOptimizerAdGroupCriterionBids"),
-    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionBids"),
-    :schema_element => [
-      ["adGroupCriterionBids_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionBids.Type")], [0, 1]],
-      ["proxyBid", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
-      ["enhancedCpcEnabled", "SOAP::SOAPBoolean", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ManualCPCAdGroupCriterionExperimentBidMultiplier,
-    :schema_type => XSD::QName.new(NsV201008, "ManualCPCAdGroupCriterionExperimentBidMultiplier"),
-    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionExperimentBidMultiplier"),
-    :schema_element => [
-      ["adGroupCriterionExperimentBidMultiplier_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionExperimentBidMultiplier.Type")], [0, 1]],
-      ["maxCpcMultiplier", "AdwordsApi::V201008::AdGroupCriterionService::BidMultiplier", [0, 1]],
-      ["multiplierSource", "AdwordsApi::V201008::AdGroupCriterionService::MultiplierSource", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ManualCPMAdGroupCriterionBids,
-    :schema_type => XSD::QName.new(NsV201008, "ManualCPMAdGroupCriterionBids"),
-    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionBids"),
-    :schema_element => [
-      ["adGroupCriterionBids_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionBids.Type")], [0, 1]],
-      ["maxCpm", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
-      ["bidSource", "AdwordsApi::V201008::AdGroupCriterionService::BidSource", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::PositionPreferenceAdGroupCriterionBids,
-    :schema_type => XSD::QName.new(NsV201008, "PositionPreferenceAdGroupCriterionBids"),
-    :schema_element => [
-      ["proxyMaxCpc", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
-      ["preferredPosition", "SOAP::SOAPInt", [0, 1]],
-      ["bottomPosition", "SOAP::SOAPInt", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::Product,
-    :schema_type => XSD::QName.new(NsV201008, "Product"),
-    :schema_basetype => XSD::QName.new(NsV201008, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Criterion.Type")], [0, 1]],
-      ["conditions", "AdwordsApi::V201008::AdGroupCriterionService::ProductCondition[]", [0, nil]],
-      ["text", "SOAP::SOAPString", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::BiddableAdGroupCriterionExperimentData,
-    :schema_type => XSD::QName.new(NsV201008, "BiddableAdGroupCriterionExperimentData"),
-    :schema_element => [
-      ["experimentId", "SOAP::SOAPLong", [0, 1]],
-      ["experimentDeltaStatus", "AdwordsApi::V201008::AdGroupCriterionService::ExperimentDeltaStatus", [0, 1]],
-      ["experimentDataStatus", "AdwordsApi::V201008::AdGroupCriterionService::ExperimentDataStatus", [0, 1]],
-      ["experimentBidMultiplier", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionExperimentBidMultiplier", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::Criterion,
-    :schema_type => XSD::QName.new(NsV201008, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Criterion.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ManualCPCAdGroupCriterionBids,
-    :schema_type => XSD::QName.new(NsV201008, "ManualCPCAdGroupCriterionBids"),
-    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionBids"),
-    :schema_element => [
-      ["adGroupCriterionBids_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionBids.Type")], [0, 1]],
-      ["maxCpc", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
-      ["bidSource", "AdwordsApi::V201008::AdGroupCriterionService::BidSource", [0, 1]],
-      ["positionPreferenceBids", "AdwordsApi::V201008::AdGroupCriterionService::PositionPreferenceAdGroupCriterionBids", [0, 1]],
-      ["enhancedCpcEnabled", "SOAP::SOAPBoolean", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::BiddableAdGroupCriterion,
-    :schema_type => XSD::QName.new(NsV201008, "BiddableAdGroupCriterion"),
-    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterion"),
-    :schema_element => [
-      ["adGroupId", "SOAP::SOAPLong", [0, 1]],
-      ["criterion", "AdwordsApi::V201008::AdGroupCriterionService::Criterion", [0, 1]],
-      ["adGroupCriterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterion.Type")], [0, 1]],
-      ["userStatus", "AdwordsApi::V201008::AdGroupCriterionService::UserStatus", [0, 1]],
-      ["systemServingStatus", "AdwordsApi::V201008::AdGroupCriterionService::SystemServingStatus", [0, 1]],
-      ["approvalStatus", "AdwordsApi::V201008::AdGroupCriterionService::ApprovalStatus", [0, 1]],
-      ["destinationUrl", "SOAP::SOAPString", [0, 1]],
-      ["bids", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionBids", [0, 1]],
-      ["experimentData", "AdwordsApi::V201008::AdGroupCriterionService::BiddableAdGroupCriterionExperimentData", [0, 1]],
-      ["firstPageCpc", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
-      ["qualityInfo", "AdwordsApi::V201008::AdGroupCriterionService::QualityInfo", [0, 1]],
-      ["stats", "AdwordsApi::V201008::AdGroupCriterionService::Stats", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion,
-    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterion"),
-    :schema_element => [
-      ["adGroupId", "SOAP::SOAPLong", [0, 1]],
-      ["criterion", "AdwordsApi::V201008::AdGroupCriterionService::Criterion", [0, 1]],
-      ["adGroupCriterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterion.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionOperation,
-    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionOperation"),
-    :schema_basetype => XSD::QName.new(NsV201008, "Operation"),
-    :schema_element => [
-      ["operator", "AdwordsApi::V201008::AdGroupCriterionService::Operator", [0, 1]],
-      ["operation_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Operation.Type")], [0, 1]],
-      ["operand", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion", [0, 1]],
-      ["exemptionRequests", "AdwordsApi::V201008::AdGroupCriterionService::ExemptionRequest[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionPage,
-    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionPage"),
-    :schema_basetype => XSD::QName.new(NsV201008, "Page"),
-    :schema_element => [
-      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]],
-      ["page_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Page.Type")], [0, 1]],
-      ["entries", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionReturnValue,
-    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionReturnValue"),
-    :schema_basetype => XSD::QName.new(NsV201008, "ListReturnValue"),
-    :schema_element => [
-      ["listReturnValue_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ListReturnValue.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion[]", [0, nil]],
-      ["partialFailureErrors", "AdwordsApi::V201008::AdGroupCriterionService::ApiError[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionSelector,
-    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionSelector"),
-    :schema_element => [
-      ["idFilters", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionIdFilter[]", [0, nil]],
-      ["experimentId", "SOAP::SOAPLong", [0, 1]],
-      ["criterionUse", "AdwordsApi::V201008::AdGroupCriterionService::CriterionUse", [0, 1]],
-      ["userStatuses", "AdwordsApi::V201008::AdGroupCriterionService::UserStatus[]", [0, nil]],
-      ["statsSelector", "AdwordsApi::V201008::AdGroupCriterionService::StatsSelector", [0, 1]],
-      ["paging", "AdwordsApi::V201008::AdGroupCriterionService::Paging", [0, 1]]
     ]
   )
 
@@ -1084,6 +1084,16 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion,
+    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterion"),
+    :schema_element => [
+      ["adGroupId", "SOAP::SOAPLong", [0, 1]],
+      ["criterion", "AdwordsApi::V201008::AdGroupCriterionService::Criterion", [0, 1]],
+      ["adGroupCriterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterion.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionError,
     :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionError"),
     :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
@@ -1123,6 +1133,73 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionOperation,
+    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionOperation"),
+    :schema_basetype => XSD::QName.new(NsV201008, "Operation"),
+    :schema_element => [
+      ["operator", "AdwordsApi::V201008::AdGroupCriterionService::Operator", [0, 1]],
+      ["operation_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Operation.Type")], [0, 1]],
+      ["operand", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion", [0, 1]],
+      ["exemptionRequests", "AdwordsApi::V201008::AdGroupCriterionService::ExemptionRequest[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionPage,
+    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionPage"),
+    :schema_basetype => XSD::QName.new(NsV201008, "Page"),
+    :schema_element => [
+      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]],
+      ["page_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Page.Type")], [0, 1]],
+      ["entries", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionReturnValue,
+    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionReturnValue"),
+    :schema_basetype => XSD::QName.new(NsV201008, "ListReturnValue"),
+    :schema_element => [
+      ["listReturnValue_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ListReturnValue.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion[]", [0, nil]],
+      ["partialFailureErrors", "AdwordsApi::V201008::AdGroupCriterionService::ApiError[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionSelector,
+    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionSelector"),
+    :schema_element => [
+      ["idFilters", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionIdFilter[]", [0, nil]],
+      ["experimentId", "SOAP::SOAPLong", [0, 1]],
+      ["criterionUse", "AdwordsApi::V201008::AdGroupCriterionService::CriterionUse", [0, 1]],
+      ["userStatuses", "AdwordsApi::V201008::AdGroupCriterionService::UserStatus[]", [0, nil]],
+      ["statsSelector", "AdwordsApi::V201008::AdGroupCriterionService::StatsSelector", [0, 1]],
+      ["paging", "AdwordsApi::V201008::AdGroupCriterionService::Paging", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ApiException,
+    :schema_type => XSD::QName.new(NsV201008, "ApiException"),
+    :schema_basetype => XSD::QName.new(NsV201008, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApplicationException.Type")], [0, 1]],
+      ["errors", "AdwordsApi::V201008::AdGroupCriterionService::ApiError[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ApplicationException,
+    :schema_type => XSD::QName.new(NsV201008, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApplicationException.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::AuthenticationError,
     :schema_type => XSD::QName.new(NsV201008, "AuthenticationError"),
     :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
@@ -1149,6 +1226,54 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::Bid,
+    :schema_type => XSD::QName.new(NsV201008, "Bid"),
+    :schema_element => [
+      ["amount", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::BidMultiplier,
+    :schema_type => XSD::QName.new(NsV201008, "BidMultiplier"),
+    :schema_element => [
+      ["multiplier", "SOAP::SOAPDouble", [0, 1]],
+      ["multipliedBid", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::BiddableAdGroupCriterion,
+    :schema_type => XSD::QName.new(NsV201008, "BiddableAdGroupCriterion"),
+    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterion"),
+    :schema_element => [
+      ["adGroupId", "SOAP::SOAPLong", [0, 1]],
+      ["criterion", "AdwordsApi::V201008::AdGroupCriterionService::Criterion", [0, 1]],
+      ["adGroupCriterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterion.Type")], [0, 1]],
+      ["userStatus", "AdwordsApi::V201008::AdGroupCriterionService::UserStatus", [0, 1]],
+      ["systemServingStatus", "AdwordsApi::V201008::AdGroupCriterionService::SystemServingStatus", [0, 1]],
+      ["approvalStatus", "AdwordsApi::V201008::AdGroupCriterionService::ApprovalStatus", [0, 1]],
+      ["destinationUrl", "SOAP::SOAPString", [0, 1]],
+      ["bids", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionBids", [0, 1]],
+      ["experimentData", "AdwordsApi::V201008::AdGroupCriterionService::BiddableAdGroupCriterionExperimentData", [0, 1]],
+      ["firstPageCpc", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
+      ["qualityInfo", "AdwordsApi::V201008::AdGroupCriterionService::QualityInfo", [0, 1]],
+      ["stats", "AdwordsApi::V201008::AdGroupCriterionService::Stats", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::BiddableAdGroupCriterionExperimentData,
+    :schema_type => XSD::QName.new(NsV201008, "BiddableAdGroupCriterionExperimentData"),
+    :schema_element => [
+      ["experimentId", "SOAP::SOAPLong", [0, 1]],
+      ["experimentDeltaStatus", "AdwordsApi::V201008::AdGroupCriterionService::ExperimentDeltaStatus", [0, 1]],
+      ["experimentDataStatus", "AdwordsApi::V201008::AdGroupCriterionService::ExperimentDataStatus", [0, 1]],
+      ["experimentBidMultiplier", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionExperimentBidMultiplier", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::BiddingError,
     :schema_type => XSD::QName.new(NsV201008, "BiddingError"),
     :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
@@ -1158,6 +1283,17 @@ module DefaultMappingRegistry
       ["errorString", "SOAP::SOAPString", [0, 1]],
       ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApiError.Type")], [0, 1]],
       ["reason", "AdwordsApi::V201008::AdGroupCriterionService::BiddingErrorReason", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::BudgetOptimizerAdGroupCriterionBids,
+    :schema_type => XSD::QName.new(NsV201008, "BudgetOptimizerAdGroupCriterionBids"),
+    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionBids"),
+    :schema_element => [
+      ["adGroupCriterionBids_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionBids.Type")], [0, 1]],
+      ["proxyBid", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
+      ["enhancedCpcEnabled", "SOAP::SOAPBoolean", [0, 1]]
     ]
   )
 
@@ -1184,6 +1320,15 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::Criterion,
+    :schema_type => XSD::QName.new(NsV201008, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Criterion.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::CriterionPolicyError,
     :schema_type => XSD::QName.new(NsV201008, "CriterionPolicyError"),
     :schema_basetype => XSD::QName.new(NsV201008, "PolicyViolationError"),
@@ -1198,6 +1343,19 @@ module DefaultMappingRegistry
       ["externalPolicyDescription", "SOAP::SOAPString", [0, 1]],
       ["isExemptable", "SOAP::SOAPBoolean", [0, 1]],
       ["violatingParts", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationErrorPart[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::DatabaseError,
+    :schema_type => XSD::QName.new(NsV201008, "DatabaseError"),
+    :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["errorString", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApiError.Type")], [0, 1]],
+      ["reason", "AdwordsApi::V201008::AdGroupCriterionService::DatabaseErrorReason", [0, 1]]
     ]
   )
 
@@ -1288,6 +1446,14 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ExemptionRequest,
+    :schema_type => XSD::QName.new(NsV201008, "ExemptionRequest"),
+    :schema_element => [
+      ["key", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationKey", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::InternalApiError,
     :schema_type => XSD::QName.new(NsV201008, "InternalApiError"),
     :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
@@ -1319,6 +1485,41 @@ module DefaultMappingRegistry
     :schema_element => [
       ["comparableValue_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ComparableValue.Type")], [0, 1]],
       ["number", "SOAP::SOAPLong", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ManualCPCAdGroupCriterionBids,
+    :schema_type => XSD::QName.new(NsV201008, "ManualCPCAdGroupCriterionBids"),
+    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionBids"),
+    :schema_element => [
+      ["adGroupCriterionBids_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionBids.Type")], [0, 1]],
+      ["maxCpc", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
+      ["bidSource", "AdwordsApi::V201008::AdGroupCriterionService::BidSource", [0, 1]],
+      ["positionPreferenceBids", "AdwordsApi::V201008::AdGroupCriterionService::PositionPreferenceAdGroupCriterionBids", [0, 1]],
+      ["enhancedCpcEnabled", "SOAP::SOAPBoolean", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ManualCPCAdGroupCriterionExperimentBidMultiplier,
+    :schema_type => XSD::QName.new(NsV201008, "ManualCPCAdGroupCriterionExperimentBidMultiplier"),
+    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionExperimentBidMultiplier"),
+    :schema_element => [
+      ["adGroupCriterionExperimentBidMultiplier_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionExperimentBidMultiplier.Type")], [0, 1]],
+      ["maxCpcMultiplier", "AdwordsApi::V201008::AdGroupCriterionService::BidMultiplier", [0, 1]],
+      ["multiplierSource", "AdwordsApi::V201008::AdGroupCriterionService::MultiplierSource", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ManualCPMAdGroupCriterionBids,
+    :schema_type => XSD::QName.new(NsV201008, "ManualCPMAdGroupCriterionBids"),
+    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionBids"),
+    :schema_element => [
+      ["adGroupCriterionBids_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionBids.Type")], [0, 1]],
+      ["maxCpm", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
+      ["bidSource", "AdwordsApi::V201008::AdGroupCriterionService::BidSource", [0, 1]]
     ]
   )
 
@@ -1453,6 +1654,24 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationError,
+    :schema_type => XSD::QName.new(NsV201008, "PolicyViolationError"),
+    :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["errorString", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApiError.Type")], [0, 1]],
+      ["key", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationKey", [0, 1]],
+      ["externalPolicyName", "SOAP::SOAPString", [0, 1]],
+      ["externalPolicyUrl", "SOAP::SOAPString", [0, 1]],
+      ["externalPolicyDescription", "SOAP::SOAPString", [0, 1]],
+      ["isExemptable", "SOAP::SOAPBoolean", [0, 1]],
+      ["violatingParts", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationErrorPart[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationErrorPart,
     :schema_type => XSD::QName.new(NsV201008, "PolicyViolationError.Part"),
     :schema_element => [
@@ -1467,6 +1686,37 @@ module DefaultMappingRegistry
     :schema_element => [
       ["policyName", "SOAP::SOAPString", [0, 1]],
       ["violatingText", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::PositionPreferenceAdGroupCriterionBids,
+    :schema_type => XSD::QName.new(NsV201008, "PositionPreferenceAdGroupCriterionBids"),
+    :schema_element => [
+      ["proxyMaxCpc", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
+      ["preferredPosition", "SOAP::SOAPInt", [0, 1]],
+      ["bottomPosition", "SOAP::SOAPInt", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::Product,
+    :schema_type => XSD::QName.new(NsV201008, "Product"),
+    :schema_basetype => XSD::QName.new(NsV201008, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Criterion.Type")], [0, 1]],
+      ["conditions", "AdwordsApi::V201008::AdGroupCriterionService::ProductCondition[]", [0, nil]],
+      ["text", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::ProductCondition,
+    :schema_type => XSD::QName.new(NsV201008, "ProductCondition"),
+    :schema_element => [
+      ["argument", "SOAP::SOAPString", [0, 1]],
+      ["operand", "AdwordsApi::V201008::AdGroupCriterionService::ProductConditionOperand", [0, 1]]
     ]
   )
 
@@ -1622,6 +1872,34 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201008::AdGroupCriterionService::Stats,
+    :schema_type => XSD::QName.new(NsV201008, "Stats"),
+    :schema_element => [
+      ["startDate", "SOAP::SOAPString", [0, 1]],
+      ["endDate", "SOAP::SOAPString", [0, 1]],
+      ["network", "AdwordsApi::V201008::AdGroupCriterionService::StatsNetwork", [0, 1]],
+      ["clicks", "SOAP::SOAPLong", [0, 1]],
+      ["impressions", "SOAP::SOAPLong", [0, 1]],
+      ["cost", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
+      ["averagePosition", "SOAP::SOAPDouble", [0, 1]],
+      ["averageCpc", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
+      ["averageCpm", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
+      ["ctr", "SOAP::SOAPDouble", [0, 1]],
+      ["conversions", "SOAP::SOAPLong", [0, 1]],
+      ["conversionRate", "SOAP::SOAPDouble", [0, 1]],
+      ["costPerConversion", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
+      ["conversionsManyPerClick", "SOAP::SOAPLong", [0, 1]],
+      ["conversionRateManyPerClick", "SOAP::SOAPDouble", [0, 1]],
+      ["costPerConversionManyPerClick", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
+      ["viewThroughConversions", "SOAP::SOAPLong", [0, 1]],
+      ["totalConvValue", "SOAP::SOAPLong", [0, 1]],
+      ["valuePerConv", "SOAP::SOAPDouble", [0, 1]],
+      ["valuePerConvManyPerClick", "SOAP::SOAPDouble", [0, 1]],
+      ["stats_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Stats.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201008::AdGroupCriterionService::StatsQueryError,
     :schema_type => XSD::QName.new(NsV201008, "StatsQueryError"),
     :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
@@ -1677,284 +1955,6 @@ module DefaultMappingRegistry
       ["id", "SOAP::SOAPLong", [0, 1]],
       ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Criterion.Type")], [0, 1]],
       ["path", "SOAP::SOAPString[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::DatabaseError,
-    :schema_type => XSD::QName.new(NsV201008, "DatabaseError"),
-    :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
-    :schema_element => [
-      ["fieldPath", "SOAP::SOAPString", [0, 1]],
-      ["trigger", "SOAP::SOAPString", [0, 1]],
-      ["errorString", "SOAP::SOAPString", [0, 1]],
-      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApiError.Type")], [0, 1]],
-      ["reason", "AdwordsApi::V201008::AdGroupCriterionService::DatabaseErrorReason", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ExemptionRequest,
-    :schema_type => XSD::QName.new(NsV201008, "ExemptionRequest"),
-    :schema_element => [
-      ["key", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationKey", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationError,
-    :schema_type => XSD::QName.new(NsV201008, "PolicyViolationError"),
-    :schema_basetype => XSD::QName.new(NsV201008, "ApiError"),
-    :schema_element => [
-      ["fieldPath", "SOAP::SOAPString", [0, 1]],
-      ["trigger", "SOAP::SOAPString", [0, 1]],
-      ["errorString", "SOAP::SOAPString", [0, 1]],
-      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApiError.Type")], [0, 1]],
-      ["key", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationKey", [0, 1]],
-      ["externalPolicyName", "SOAP::SOAPString", [0, 1]],
-      ["externalPolicyUrl", "SOAP::SOAPString", [0, 1]],
-      ["externalPolicyDescription", "SOAP::SOAPString", [0, 1]],
-      ["isExemptable", "SOAP::SOAPBoolean", [0, 1]],
-      ["violatingParts", "AdwordsApi::V201008::AdGroupCriterionService::PolicyViolationErrorPart[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ProductCondition,
-    :schema_type => XSD::QName.new(NsV201008, "ProductCondition"),
-    :schema_element => [
-      ["argument", "SOAP::SOAPString", [0, 1]],
-      ["operand", "AdwordsApi::V201008::AdGroupCriterionService::ProductConditionOperand", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::Stats,
-    :schema_type => XSD::QName.new(NsV201008, "Stats"),
-    :schema_element => [
-      ["startDate", "SOAP::SOAPString", [0, 1]],
-      ["endDate", "SOAP::SOAPString", [0, 1]],
-      ["network", "AdwordsApi::V201008::AdGroupCriterionService::StatsNetwork", [0, 1]],
-      ["clicks", "SOAP::SOAPLong", [0, 1]],
-      ["impressions", "SOAP::SOAPLong", [0, 1]],
-      ["cost", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
-      ["averagePosition", "SOAP::SOAPDouble", [0, 1]],
-      ["averageCpc", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
-      ["averageCpm", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
-      ["ctr", "SOAP::SOAPDouble", [0, 1]],
-      ["conversions", "SOAP::SOAPLong", [0, 1]],
-      ["conversionRate", "SOAP::SOAPDouble", [0, 1]],
-      ["costPerConversion", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
-      ["conversionsManyPerClick", "SOAP::SOAPLong", [0, 1]],
-      ["conversionRateManyPerClick", "SOAP::SOAPDouble", [0, 1]],
-      ["costPerConversionManyPerClick", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]],
-      ["viewThroughConversions", "SOAP::SOAPLong", [0, 1]],
-      ["totalConvValue", "SOAP::SOAPLong", [0, 1]],
-      ["valuePerConv", "SOAP::SOAPDouble", [0, 1]],
-      ["valuePerConvManyPerClick", "SOAP::SOAPDouble", [0, 1]],
-      ["stats_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Stats.Type")], [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ApiException,
-    :schema_type => XSD::QName.new(NsV201008, "ApiException"),
-    :schema_basetype => XSD::QName.new(NsV201008, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApplicationException.Type")], [0, 1]],
-      ["errors", "AdwordsApi::V201008::AdGroupCriterionService::ApiError[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ApplicationException,
-    :schema_type => XSD::QName.new(NsV201008, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ApplicationException.Type")], [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::Bid,
-    :schema_type => XSD::QName.new(NsV201008, "Bid"),
-    :schema_element => [
-      ["amount", "AdwordsApi::V201008::AdGroupCriterionService::Money", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::BidMultiplier,
-    :schema_type => XSD::QName.new(NsV201008, "BidMultiplier"),
-    :schema_element => [
-      ["multiplier", "SOAP::SOAPDouble", [0, 1]],
-      ["multipliedBid", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::BudgetOptimizerAdGroupCriterionBids,
-    :schema_type => XSD::QName.new(NsV201008, "BudgetOptimizerAdGroupCriterionBids"),
-    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionBids"),
-    :schema_element => [
-      ["adGroupCriterionBids_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionBids.Type")], [0, 1]],
-      ["proxyBid", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
-      ["enhancedCpcEnabled", "SOAP::SOAPBoolean", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ManualCPCAdGroupCriterionExperimentBidMultiplier,
-    :schema_type => XSD::QName.new(NsV201008, "ManualCPCAdGroupCriterionExperimentBidMultiplier"),
-    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionExperimentBidMultiplier"),
-    :schema_element => [
-      ["adGroupCriterionExperimentBidMultiplier_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionExperimentBidMultiplier.Type")], [0, 1]],
-      ["maxCpcMultiplier", "AdwordsApi::V201008::AdGroupCriterionService::BidMultiplier", [0, 1]],
-      ["multiplierSource", "AdwordsApi::V201008::AdGroupCriterionService::MultiplierSource", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ManualCPMAdGroupCriterionBids,
-    :schema_type => XSD::QName.new(NsV201008, "ManualCPMAdGroupCriterionBids"),
-    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionBids"),
-    :schema_element => [
-      ["adGroupCriterionBids_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionBids.Type")], [0, 1]],
-      ["maxCpm", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
-      ["bidSource", "AdwordsApi::V201008::AdGroupCriterionService::BidSource", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::PositionPreferenceAdGroupCriterionBids,
-    :schema_type => XSD::QName.new(NsV201008, "PositionPreferenceAdGroupCriterionBids"),
-    :schema_element => [
-      ["proxyMaxCpc", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
-      ["preferredPosition", "SOAP::SOAPInt", [0, 1]],
-      ["bottomPosition", "SOAP::SOAPInt", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::Product,
-    :schema_type => XSD::QName.new(NsV201008, "Product"),
-    :schema_basetype => XSD::QName.new(NsV201008, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Criterion.Type")], [0, 1]],
-      ["conditions", "AdwordsApi::V201008::AdGroupCriterionService::ProductCondition[]", [0, nil]],
-      ["text", "SOAP::SOAPString", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::BiddableAdGroupCriterionExperimentData,
-    :schema_type => XSD::QName.new(NsV201008, "BiddableAdGroupCriterionExperimentData"),
-    :schema_element => [
-      ["experimentId", "SOAP::SOAPLong", [0, 1]],
-      ["experimentDeltaStatus", "AdwordsApi::V201008::AdGroupCriterionService::ExperimentDeltaStatus", [0, 1]],
-      ["experimentDataStatus", "AdwordsApi::V201008::AdGroupCriterionService::ExperimentDataStatus", [0, 1]],
-      ["experimentBidMultiplier", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionExperimentBidMultiplier", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::Criterion,
-    :schema_type => XSD::QName.new(NsV201008, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Criterion.Type")], [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::ManualCPCAdGroupCriterionBids,
-    :schema_type => XSD::QName.new(NsV201008, "ManualCPCAdGroupCriterionBids"),
-    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterionBids"),
-    :schema_element => [
-      ["adGroupCriterionBids_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterionBids.Type")], [0, 1]],
-      ["maxCpc", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
-      ["bidSource", "AdwordsApi::V201008::AdGroupCriterionService::BidSource", [0, 1]],
-      ["positionPreferenceBids", "AdwordsApi::V201008::AdGroupCriterionService::PositionPreferenceAdGroupCriterionBids", [0, 1]],
-      ["enhancedCpcEnabled", "SOAP::SOAPBoolean", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::BiddableAdGroupCriterion,
-    :schema_type => XSD::QName.new(NsV201008, "BiddableAdGroupCriterion"),
-    :schema_basetype => XSD::QName.new(NsV201008, "AdGroupCriterion"),
-    :schema_element => [
-      ["adGroupId", "SOAP::SOAPLong", [0, 1]],
-      ["criterion", "AdwordsApi::V201008::AdGroupCriterionService::Criterion", [0, 1]],
-      ["adGroupCriterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterion.Type")], [0, 1]],
-      ["userStatus", "AdwordsApi::V201008::AdGroupCriterionService::UserStatus", [0, 1]],
-      ["systemServingStatus", "AdwordsApi::V201008::AdGroupCriterionService::SystemServingStatus", [0, 1]],
-      ["approvalStatus", "AdwordsApi::V201008::AdGroupCriterionService::ApprovalStatus", [0, 1]],
-      ["destinationUrl", "SOAP::SOAPString", [0, 1]],
-      ["bids", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionBids", [0, 1]],
-      ["experimentData", "AdwordsApi::V201008::AdGroupCriterionService::BiddableAdGroupCriterionExperimentData", [0, 1]],
-      ["firstPageCpc", "AdwordsApi::V201008::AdGroupCriterionService::Bid", [0, 1]],
-      ["qualityInfo", "AdwordsApi::V201008::AdGroupCriterionService::QualityInfo", [0, 1]],
-      ["stats", "AdwordsApi::V201008::AdGroupCriterionService::Stats", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion,
-    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterion"),
-    :schema_element => [
-      ["adGroupId", "SOAP::SOAPLong", [0, 1]],
-      ["criterion", "AdwordsApi::V201008::AdGroupCriterionService::Criterion", [0, 1]],
-      ["adGroupCriterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "AdGroupCriterion.Type")], [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionOperation,
-    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionOperation"),
-    :schema_basetype => XSD::QName.new(NsV201008, "Operation"),
-    :schema_element => [
-      ["operator", "AdwordsApi::V201008::AdGroupCriterionService::Operator", [0, 1]],
-      ["operation_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Operation.Type")], [0, 1]],
-      ["operand", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion", [0, 1]],
-      ["exemptionRequests", "AdwordsApi::V201008::AdGroupCriterionService::ExemptionRequest[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionPage,
-    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionPage"),
-    :schema_basetype => XSD::QName.new(NsV201008, "Page"),
-    :schema_element => [
-      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]],
-      ["page_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "Page.Type")], [0, 1]],
-      ["entries", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionReturnValue,
-    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionReturnValue"),
-    :schema_basetype => XSD::QName.new(NsV201008, "ListReturnValue"),
-    :schema_element => [
-      ["listReturnValue_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201008, "ListReturnValue.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterion[]", [0, nil]],
-      ["partialFailureErrors", "AdwordsApi::V201008::AdGroupCriterionService::ApiError[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionSelector,
-    :schema_type => XSD::QName.new(NsV201008, "AdGroupCriterionSelector"),
-    :schema_element => [
-      ["idFilters", "AdwordsApi::V201008::AdGroupCriterionService::AdGroupCriterionIdFilter[]", [0, nil]],
-      ["experimentId", "SOAP::SOAPLong", [0, 1]],
-      ["criterionUse", "AdwordsApi::V201008::AdGroupCriterionService::CriterionUse", [0, 1]],
-      ["userStatuses", "AdwordsApi::V201008::AdGroupCriterionService::UserStatus[]", [0, nil]],
-      ["statsSelector", "AdwordsApi::V201008::AdGroupCriterionService::StatsSelector", [0, 1]],
-      ["paging", "AdwordsApi::V201008::AdGroupCriterionService::Paging", [0, 1]]
     ]
   )
 

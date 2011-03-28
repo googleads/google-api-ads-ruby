@@ -44,7 +44,7 @@ $GEM_DESCRIPTION = "#{$PROJECT_NAME} provides essential utilities shared by " +
     "all Ads Ruby client libraries."
 $GEM_AUTHORS = ['Sergio Gomes', 'Danial Klimkin']
 $GEM_EMAIL = 'api.sgomes@gmail.com'
-$GEM_HOMEPAGE = 'http://code.google.com/p/google-api-adwords-ruby/'
+$GEM_HOMEPAGE = 'http://code.google.com/p/google-api-ads-ruby/'
 
 # ====================================================================
 # Default task - call package

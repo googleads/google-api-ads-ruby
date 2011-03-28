@@ -9,6 +9,26 @@ module DefaultMappingRegistry
   NsV200909 = "https://adwords.google.com/api/adwords/cm/v200909"
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::ApiException,
+    :schema_type => XSD::QName.new(NsV200909, "ApiException"),
+    :schema_basetype => XSD::QName.new(NsV200909, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApplicationException.Type")], [0, 1]],
+      ["errors", "AdwordsApi::V200909::CampaignCriterionService::ApiError[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::ApplicationException,
+    :schema_type => XSD::QName.new(NsV200909, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApplicationException.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V200909::CampaignCriterionService::AuthenticationError,
     :schema_type => XSD::QName.new(NsV200909, "AuthenticationError"),
     :schema_basetype => XSD::QName.new(NsV200909, "ApiError"),
@@ -29,6 +49,16 @@ module DefaultMappingRegistry
       ["trigger", "SOAP::SOAPString", [0, 1]],
       ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApiError.Type")], [0, 1]],
       ["reason", "AdwordsApi::V200909::CampaignCriterionService::AuthorizationErrorReason", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion,
+    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterion"),
+    :schema_element => [
+      ["campaignId", "SOAP::SOAPLong", [0, 1]],
+      ["criterion", "AdwordsApi::V200909::CampaignCriterionService::Criterion", [0, 1]],
+      ["campaignCriterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "CampaignCriterion.Type")], [0, 1]]
     ]
   )
 
@@ -69,6 +99,47 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionOperation,
+    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionOperation"),
+    :schema_basetype => XSD::QName.new(NsV200909, "Operation"),
+    :schema_element => [
+      ["operator", "AdwordsApi::V200909::CampaignCriterionService::Operator", [0, 1]],
+      ["operation_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Operation.Type")], [0, 1]],
+      ["operand", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionPage,
+    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionPage"),
+    :schema_basetype => XSD::QName.new(NsV200909, "Page"),
+    :schema_element => [
+      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]],
+      ["page_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Page.Type")], [0, 1]],
+      ["entries", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionReturnValue,
+    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionReturnValue"),
+    :schema_basetype => XSD::QName.new(NsV200909, "ListReturnValue"),
+    :schema_element => [
+      ["listReturnValue_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ListReturnValue.Type")], [0, 1]],
+      ["value", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionSelector,
+    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionSelector"),
+    :schema_element => [
+      ["idFilters", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionIdFilter[]", [0, nil]],
+      ["paging", "AdwordsApi::V200909::CampaignCriterionService::Paging", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V200909::CampaignCriterionService::ClientTermsError,
     :schema_type => XSD::QName.new(NsV200909, "ClientTermsError"),
     :schema_basetype => XSD::QName.new(NsV200909, "ApiError"),
@@ -88,6 +159,27 @@ module DefaultMappingRegistry
       ["id", "SOAP::SOAPLong", [0, 1]],
       ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Criterion.Type")], [0, 1]],
       ["contentLabelType", "AdwordsApi::V200909::CampaignCriterionService::ContentLabelType", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::Criterion,
+    :schema_type => XSD::QName.new(NsV200909, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Criterion.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::DatabaseError,
+    :schema_type => XSD::QName.new(NsV200909, "DatabaseError"),
+    :schema_basetype => XSD::QName.new(NsV200909, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApiError.Type")], [0, 1]],
+      ["reason", "AdwordsApi::V200909::CampaignCriterionService::DatabaseErrorReason", [0, 1]]
     ]
   )
 
@@ -362,98 +454,6 @@ module DefaultMappingRegistry
       ["operations", "SOAP::SOAPLong", [0, 1]],
       ["responseTime", "SOAP::SOAPLong", [0, 1]],
       ["units", "SOAP::SOAPLong", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::DatabaseError,
-    :schema_type => XSD::QName.new(NsV200909, "DatabaseError"),
-    :schema_basetype => XSD::QName.new(NsV200909, "ApiError"),
-    :schema_element => [
-      ["fieldPath", "SOAP::SOAPString", [0, 1]],
-      ["trigger", "SOAP::SOAPString", [0, 1]],
-      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApiError.Type")], [0, 1]],
-      ["reason", "AdwordsApi::V200909::CampaignCriterionService::DatabaseErrorReason", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::ApiException,
-    :schema_type => XSD::QName.new(NsV200909, "ApiException"),
-    :schema_basetype => XSD::QName.new(NsV200909, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApplicationException.Type")], [0, 1]],
-      ["errors", "AdwordsApi::V200909::CampaignCriterionService::ApiError[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::ApplicationException,
-    :schema_type => XSD::QName.new(NsV200909, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApplicationException.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::Criterion,
-    :schema_type => XSD::QName.new(NsV200909, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Criterion.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion,
-    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterion"),
-    :schema_element => [
-      ["campaignId", "SOAP::SOAPLong", [0, 1]],
-      ["criterion", "AdwordsApi::V200909::CampaignCriterionService::Criterion", [0, 1]],
-      ["campaignCriterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "CampaignCriterion.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionOperation,
-    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionOperation"),
-    :schema_basetype => XSD::QName.new(NsV200909, "Operation"),
-    :schema_element => [
-      ["operator", "AdwordsApi::V200909::CampaignCriterionService::Operator", [0, 1]],
-      ["operation_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Operation.Type")], [0, 1]],
-      ["operand", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionPage,
-    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionPage"),
-    :schema_basetype => XSD::QName.new(NsV200909, "Page"),
-    :schema_element => [
-      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]],
-      ["page_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Page.Type")], [0, 1]],
-      ["entries", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionReturnValue,
-    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionReturnValue"),
-    :schema_basetype => XSD::QName.new(NsV200909, "ListReturnValue"),
-    :schema_element => [
-      ["listReturnValue_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ListReturnValue.Type")], [0, 1]],
-      ["value", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionSelector,
-    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionSelector"),
-    :schema_element => [
-      ["idFilters", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionIdFilter[]", [0, nil]],
-      ["paging", "AdwordsApi::V200909::CampaignCriterionService::Paging", [0, 1]]
     ]
   )
 
@@ -588,6 +588,26 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::ApiException,
+    :schema_type => XSD::QName.new(NsV200909, "ApiException"),
+    :schema_basetype => XSD::QName.new(NsV200909, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApplicationException.Type")], [0, 1]],
+      ["errors", "AdwordsApi::V200909::CampaignCriterionService::ApiError[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::ApplicationException,
+    :schema_type => XSD::QName.new(NsV200909, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApplicationException.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V200909::CampaignCriterionService::AuthenticationError,
     :schema_type => XSD::QName.new(NsV200909, "AuthenticationError"),
     :schema_basetype => XSD::QName.new(NsV200909, "ApiError"),
@@ -608,6 +628,16 @@ module DefaultMappingRegistry
       ["trigger", "SOAP::SOAPString", [0, 1]],
       ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApiError.Type")], [0, 1]],
       ["reason", "AdwordsApi::V200909::CampaignCriterionService::AuthorizationErrorReason", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion,
+    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterion"),
+    :schema_element => [
+      ["campaignId", "SOAP::SOAPLong", [0, 1]],
+      ["criterion", "AdwordsApi::V200909::CampaignCriterionService::Criterion", [0, 1]],
+      ["campaignCriterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "CampaignCriterion.Type")], [0, 1]]
     ]
   )
 
@@ -648,6 +678,47 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionOperation,
+    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionOperation"),
+    :schema_basetype => XSD::QName.new(NsV200909, "Operation"),
+    :schema_element => [
+      ["operator", "AdwordsApi::V200909::CampaignCriterionService::Operator", [0, 1]],
+      ["operation_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Operation.Type")], [0, 1]],
+      ["operand", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionPage,
+    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionPage"),
+    :schema_basetype => XSD::QName.new(NsV200909, "Page"),
+    :schema_element => [
+      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]],
+      ["page_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Page.Type")], [0, 1]],
+      ["entries", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionReturnValue,
+    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionReturnValue"),
+    :schema_basetype => XSD::QName.new(NsV200909, "ListReturnValue"),
+    :schema_element => [
+      ["listReturnValue_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ListReturnValue.Type")], [0, 1]],
+      ["value", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionSelector,
+    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionSelector"),
+    :schema_element => [
+      ["idFilters", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionIdFilter[]", [0, nil]],
+      ["paging", "AdwordsApi::V200909::CampaignCriterionService::Paging", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V200909::CampaignCriterionService::ClientTermsError,
     :schema_type => XSD::QName.new(NsV200909, "ClientTermsError"),
     :schema_basetype => XSD::QName.new(NsV200909, "ApiError"),
@@ -667,6 +738,27 @@ module DefaultMappingRegistry
       ["id", "SOAP::SOAPLong", [0, 1]],
       ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Criterion.Type")], [0, 1]],
       ["contentLabelType", "AdwordsApi::V200909::CampaignCriterionService::ContentLabelType", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::Criterion,
+    :schema_type => XSD::QName.new(NsV200909, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Criterion.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V200909::CampaignCriterionService::DatabaseError,
+    :schema_type => XSD::QName.new(NsV200909, "DatabaseError"),
+    :schema_basetype => XSD::QName.new(NsV200909, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApiError.Type")], [0, 1]],
+      ["reason", "AdwordsApi::V200909::CampaignCriterionService::DatabaseErrorReason", [0, 1]]
     ]
   )
 
@@ -941,98 +1033,6 @@ module DefaultMappingRegistry
       ["operations", "SOAP::SOAPLong", [0, 1]],
       ["responseTime", "SOAP::SOAPLong", [0, 1]],
       ["units", "SOAP::SOAPLong", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::DatabaseError,
-    :schema_type => XSD::QName.new(NsV200909, "DatabaseError"),
-    :schema_basetype => XSD::QName.new(NsV200909, "ApiError"),
-    :schema_element => [
-      ["fieldPath", "SOAP::SOAPString", [0, 1]],
-      ["trigger", "SOAP::SOAPString", [0, 1]],
-      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApiError.Type")], [0, 1]],
-      ["reason", "AdwordsApi::V200909::CampaignCriterionService::DatabaseErrorReason", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::ApiException,
-    :schema_type => XSD::QName.new(NsV200909, "ApiException"),
-    :schema_basetype => XSD::QName.new(NsV200909, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApplicationException.Type")], [0, 1]],
-      ["errors", "AdwordsApi::V200909::CampaignCriterionService::ApiError[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::ApplicationException,
-    :schema_type => XSD::QName.new(NsV200909, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApplicationException.Type")], [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::Criterion,
-    :schema_type => XSD::QName.new(NsV200909, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Criterion.Type")], [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion,
-    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterion"),
-    :schema_element => [
-      ["campaignId", "SOAP::SOAPLong", [0, 1]],
-      ["criterion", "AdwordsApi::V200909::CampaignCriterionService::Criterion", [0, 1]],
-      ["campaignCriterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "CampaignCriterion.Type")], [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionOperation,
-    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionOperation"),
-    :schema_basetype => XSD::QName.new(NsV200909, "Operation"),
-    :schema_element => [
-      ["operator", "AdwordsApi::V200909::CampaignCriterionService::Operator", [0, 1]],
-      ["operation_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Operation.Type")], [0, 1]],
-      ["operand", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionPage,
-    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionPage"),
-    :schema_basetype => XSD::QName.new(NsV200909, "Page"),
-    :schema_element => [
-      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]],
-      ["page_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Page.Type")], [0, 1]],
-      ["entries", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionReturnValue,
-    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionReturnValue"),
-    :schema_basetype => XSD::QName.new(NsV200909, "ListReturnValue"),
-    :schema_element => [
-      ["listReturnValue_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ListReturnValue.Type")], [0, 1]],
-      ["value", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterion[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionSelector,
-    :schema_type => XSD::QName.new(NsV200909, "CampaignCriterionSelector"),
-    :schema_element => [
-      ["idFilters", "AdwordsApi::V200909::CampaignCriterionService::CampaignCriterionIdFilter[]", [0, nil]],
-      ["paging", "AdwordsApi::V200909::CampaignCriterionService::Paging", [0, 1]]
     ]
   )
 

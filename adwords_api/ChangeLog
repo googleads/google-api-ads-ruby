@@ -1,0 +1,9 @@
+0.1.1:
+  - Added support for BulkOpportunityService and CampaignTargetService.
+  - Added examples for the above services.
+  - Bugfix: pointed gem to the correct Google Code project.
+  - Bugfix: correctly handle some API exceptions.
+  - Bugfix: remove non-existent method in extensions.
+
+0.1.0:
+  - First release.

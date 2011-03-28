@@ -3,6 +3,153 @@ require 'xsd/qname'
 module AdwordsApi; module V201003; module AdGroupCriterionService
 
 
+# AdGroupCriterion
+# - adGroupId - SOAP::SOAPLong
+# - criterion - AdwordsApi::V201003::AdGroupCriterionService::Criterion
+# - adGroupCriterion_Type - SOAP::SOAPString
+class AdGroupCriterion
+  attr_accessor :adGroupId
+  attr_accessor :criterion
+  attr_accessor :adGroupCriterion_Type
+
+  def initialize(adGroupId = nil, criterion = nil, adGroupCriterion_Type = nil)
+    @adGroupId = adGroupId
+    @criterion = criterion
+    @adGroupCriterion_Type = adGroupCriterion_Type
+  end
+end
+
+# BiddableAdGroupCriterion
+# - adGroupId - SOAP::SOAPLong
+# - criterion - AdwordsApi::V201003::AdGroupCriterionService::Criterion
+# - adGroupCriterion_Type - SOAP::SOAPString
+# - userStatus - AdwordsApi::V201003::AdGroupCriterionService::UserStatus
+# - systemServingStatus - AdwordsApi::V201003::AdGroupCriterionService::SystemServingStatus
+# - approvalStatus - AdwordsApi::V201003::AdGroupCriterionService::ApprovalStatus
+# - destinationUrl - SOAP::SOAPString
+# - bids - AdwordsApi::V201003::AdGroupCriterionService::AdGroupCriterionBids
+# - firstPageCpc - AdwordsApi::V201003::AdGroupCriterionService::Bid
+# - qualityInfo - AdwordsApi::V201003::AdGroupCriterionService::QualityInfo
+# - stats - AdwordsApi::V201003::AdGroupCriterionService::Stats
+class BiddableAdGroupCriterion < AdGroupCriterion
+  attr_accessor :adGroupId
+  attr_accessor :criterion
+  attr_accessor :adGroupCriterion_Type
+  attr_accessor :userStatus
+  attr_accessor :systemServingStatus
+  attr_accessor :approvalStatus
+  attr_accessor :destinationUrl
+  attr_accessor :bids
+  attr_accessor :firstPageCpc
+  attr_accessor :qualityInfo
+  attr_accessor :stats
+
+  def initialize(adGroupId = nil, criterion = nil, adGroupCriterion_Type = nil, userStatus = nil, systemServingStatus = nil, approvalStatus = nil, destinationUrl = nil, bids = nil, firstPageCpc = nil, qualityInfo = nil, stats = nil)
+    @adGroupId = adGroupId
+    @criterion = criterion
+    @adGroupCriterion_Type = adGroupCriterion_Type
+    @userStatus = userStatus
+    @systemServingStatus = systemServingStatus
+    @approvalStatus = approvalStatus
+    @destinationUrl = destinationUrl
+    @bids = bids
+    @firstPageCpc = firstPageCpc
+    @qualityInfo = qualityInfo
+    @stats = stats
+  end
+end
+
+# NegativeAdGroupCriterion
+# - adGroupId - SOAP::SOAPLong
+# - criterion - AdwordsApi::V201003::AdGroupCriterionService::Criterion
+# - adGroupCriterion_Type - SOAP::SOAPString
+class NegativeAdGroupCriterion < AdGroupCriterion
+  attr_accessor :adGroupId
+  attr_accessor :criterion
+  attr_accessor :adGroupCriterion_Type
+
+  def initialize(adGroupId = nil, criterion = nil, adGroupCriterion_Type = nil)
+    @adGroupId = adGroupId
+    @criterion = criterion
+    @adGroupCriterion_Type = adGroupCriterion_Type
+  end
+end
+
+# AdGroupCriterionBids
+# abstract
+# - adGroupCriterionBids_Type - SOAP::SOAPString
+class AdGroupCriterionBids
+  attr_accessor :adGroupCriterionBids_Type
+
+  def initialize(adGroupCriterionBids_Type = nil)
+    @adGroupCriterionBids_Type = adGroupCriterionBids_Type
+  end
+end
+
+# BudgetOptimizerAdGroupCriterionBids
+# - adGroupCriterionBids_Type - SOAP::SOAPString
+# - proxyBid - AdwordsApi::V201003::AdGroupCriterionService::Bid
+# - enhancedCpcEnabled - SOAP::SOAPBoolean
+class BudgetOptimizerAdGroupCriterionBids < AdGroupCriterionBids
+  attr_accessor :adGroupCriterionBids_Type
+  attr_accessor :proxyBid
+  attr_accessor :enhancedCpcEnabled
+
+  def initialize(adGroupCriterionBids_Type = nil, proxyBid = nil, enhancedCpcEnabled = nil)
+    @adGroupCriterionBids_Type = adGroupCriterionBids_Type
+    @proxyBid = proxyBid
+    @enhancedCpcEnabled = enhancedCpcEnabled
+  end
+end
+
+# ConversionOptimizerAdGroupCriterionBids
+# - adGroupCriterionBids_Type - SOAP::SOAPString
+class ConversionOptimizerAdGroupCriterionBids < AdGroupCriterionBids
+  attr_accessor :adGroupCriterionBids_Type
+
+  def initialize(adGroupCriterionBids_Type = nil)
+    @adGroupCriterionBids_Type = adGroupCriterionBids_Type
+  end
+end
+
+# ManualCPCAdGroupCriterionBids
+# - adGroupCriterionBids_Type - SOAP::SOAPString
+# - maxCpc - AdwordsApi::V201003::AdGroupCriterionService::Bid
+# - bidSource - AdwordsApi::V201003::AdGroupCriterionService::BidSource
+# - positionPreferenceBids - AdwordsApi::V201003::AdGroupCriterionService::PositionPreferenceAdGroupCriterionBids
+# - enhancedCpcEnabled - SOAP::SOAPBoolean
+class ManualCPCAdGroupCriterionBids < AdGroupCriterionBids
+  attr_accessor :adGroupCriterionBids_Type
+  attr_accessor :maxCpc
+  attr_accessor :bidSource
+  attr_accessor :positionPreferenceBids
+  attr_accessor :enhancedCpcEnabled
+
+  def initialize(adGroupCriterionBids_Type = nil, maxCpc = nil, bidSource = nil, positionPreferenceBids = nil, enhancedCpcEnabled = nil)
+    @adGroupCriterionBids_Type = adGroupCriterionBids_Type
+    @maxCpc = maxCpc
+    @bidSource = bidSource
+    @positionPreferenceBids = positionPreferenceBids
+    @enhancedCpcEnabled = enhancedCpcEnabled
+  end
+end
+
+# ManualCPMAdGroupCriterionBids
+# - adGroupCriterionBids_Type - SOAP::SOAPString
+# - maxCpm - AdwordsApi::V201003::AdGroupCriterionService::Bid
+# - bidSource - AdwordsApi::V201003::AdGroupCriterionService::BidSource
+class ManualCPMAdGroupCriterionBids < AdGroupCriterionBids
+  attr_accessor :adGroupCriterionBids_Type
+  attr_accessor :maxCpm
+  attr_accessor :bidSource
+
+  def initialize(adGroupCriterionBids_Type = nil, maxCpm = nil, bidSource = nil)
+    @adGroupCriterionBids_Type = adGroupCriterionBids_Type
+    @maxCpm = maxCpm
+    @bidSource = bidSource
+  end
+end
+
 # AdGroupCriterionIdFilter
 # - campaignId - SOAP::SOAPLong
 # - adGroupId - SOAP::SOAPLong
@@ -19,260 +166,25 @@ class AdGroupCriterionIdFilter
   end
 end
 
-# DateRange
-# - min - SOAP::SOAPString
-# - max - SOAP::SOAPString
-class DateRange
-  attr_accessor :min
-  attr_accessor :max
+# AdGroupCriterionSelector
+# - idFilters - AdwordsApi::V201003::AdGroupCriterionService::AdGroupCriterionIdFilter
+# - criterionUse - AdwordsApi::V201003::AdGroupCriterionService::CriterionUse
+# - userStatuses - AdwordsApi::V201003::AdGroupCriterionService::UserStatus
+# - statsSelector - AdwordsApi::V201003::AdGroupCriterionService::StatsSelector
+# - paging - AdwordsApi::V201003::AdGroupCriterionService::Paging
+class AdGroupCriterionSelector
+  attr_accessor :idFilters
+  attr_accessor :criterionUse
+  attr_accessor :userStatuses
+  attr_accessor :statsSelector
+  attr_accessor :paging
 
-  def initialize(min = nil, max = nil)
-    @min = min
-    @max = max
-  end
-end
-
-# Paging
-# - startIndex - SOAP::SOAPInt
-# - numberResults - SOAP::SOAPInt
-class Paging
-  attr_accessor :startIndex
-  attr_accessor :numberResults
-
-  def initialize(startIndex = nil, numberResults = nil)
-    @startIndex = startIndex
-    @numberResults = numberResults
-  end
-end
-
-# PolicyViolationError.Part
-# - index - SOAP::SOAPInt
-# - length - SOAP::SOAPInt
-class PolicyViolationErrorPart
-  attr_accessor :index
-  attr_accessor :length
-
-  def initialize(index = nil, length = nil)
-    @index = index
-    @length = length
-  end
-end
-
-# PolicyViolationKey
-# - policyName - SOAP::SOAPString
-# - violatingText - SOAP::SOAPString
-class PolicyViolationKey
-  attr_accessor :policyName
-  attr_accessor :violatingText
-
-  def initialize(policyName = nil, violatingText = nil)
-    @policyName = policyName
-    @violatingText = violatingText
-  end
-end
-
-# QualityInfo
-# - isKeywordAdRelevanceAcceptable - SOAP::SOAPBoolean
-# - isLandingPageQualityAcceptable - SOAP::SOAPBoolean
-# - isLandingPageLatencyAcceptable - SOAP::SOAPBoolean
-# - qualityScore - SOAP::SOAPInt
-class QualityInfo
-  attr_accessor :isKeywordAdRelevanceAcceptable
-  attr_accessor :isLandingPageQualityAcceptable
-  attr_accessor :isLandingPageLatencyAcceptable
-  attr_accessor :qualityScore
-
-  def initialize(isKeywordAdRelevanceAcceptable = nil, isLandingPageQualityAcceptable = nil, isLandingPageLatencyAcceptable = nil, qualityScore = nil)
-    @isKeywordAdRelevanceAcceptable = isKeywordAdRelevanceAcceptable
-    @isLandingPageQualityAcceptable = isLandingPageQualityAcceptable
-    @isLandingPageLatencyAcceptable = isLandingPageLatencyAcceptable
-    @qualityScore = qualityScore
-  end
-end
-
-# SoapHeader
-# - authToken - SOAP::SOAPString
-# - clientCustomerId - SOAP::SOAPString
-# - clientEmail - SOAP::SOAPString
-# - developerToken - SOAP::SOAPString
-# - userAgent - SOAP::SOAPString
-# - validateOnly - SOAP::SOAPBoolean
-class SoapHeader
-  attr_accessor :authToken
-  attr_accessor :clientCustomerId
-  attr_accessor :clientEmail
-  attr_accessor :developerToken
-  attr_accessor :userAgent
-  attr_accessor :validateOnly
-
-  def initialize(authToken = nil, clientCustomerId = nil, clientEmail = nil, developerToken = nil, userAgent = nil, validateOnly = nil)
-    @authToken = authToken
-    @clientCustomerId = clientCustomerId
-    @clientEmail = clientEmail
-    @developerToken = developerToken
-    @userAgent = userAgent
-    @validateOnly = validateOnly
-  end
-end
-
-# SoapResponseHeader
-# - requestId - SOAP::SOAPString
-# - operations - SOAP::SOAPLong
-# - responseTime - SOAP::SOAPLong
-# - units - SOAP::SOAPLong
-class SoapResponseHeader
-  attr_accessor :requestId
-  attr_accessor :operations
-  attr_accessor :responseTime
-  attr_accessor :units
-
-  def initialize(requestId = nil, operations = nil, responseTime = nil, units = nil)
-    @requestId = requestId
-    @operations = operations
-    @responseTime = responseTime
-    @units = units
-  end
-end
-
-# StatsSelector
-# - dateRange - AdwordsApi::V201003::AdGroupCriterionService::DateRange
-# - statsSelector_Type - SOAP::SOAPString
-class StatsSelector
-  attr_accessor :dateRange
-  attr_accessor :statsSelector_Type
-
-  def initialize(dateRange = nil, statsSelector_Type = nil)
-    @dateRange = dateRange
-    @statsSelector_Type = statsSelector_Type
-  end
-end
-
-# ComparableValue
-# abstract
-# - comparableValue_Type - SOAP::SOAPString
-class ComparableValue
-  attr_accessor :comparableValue_Type
-
-  def initialize(comparableValue_Type = nil)
-    @comparableValue_Type = comparableValue_Type
-  end
-end
-
-# Money
-# - comparableValue_Type - SOAP::SOAPString
-# - microAmount - SOAP::SOAPLong
-class Money < ComparableValue
-  attr_accessor :comparableValue_Type
-  attr_accessor :microAmount
-
-  def initialize(comparableValue_Type = nil, microAmount = nil)
-    @comparableValue_Type = comparableValue_Type
-    @microAmount = microAmount
-  end
-end
-
-# NumberValue
-# abstract
-# - comparableValue_Type - SOAP::SOAPString
-class NumberValue < ComparableValue
-  attr_accessor :comparableValue_Type
-
-  def initialize(comparableValue_Type = nil)
-    @comparableValue_Type = comparableValue_Type
-  end
-end
-
-# DoubleValue
-# - comparableValue_Type - SOAP::SOAPString
-# - number - SOAP::SOAPDouble
-class DoubleValue < NumberValue
-  attr_accessor :comparableValue_Type
-  attr_accessor :number
-
-  def initialize(comparableValue_Type = nil, number = nil)
-    @comparableValue_Type = comparableValue_Type
-    @number = number
-  end
-end
-
-# LongValue
-# - comparableValue_Type - SOAP::SOAPString
-# - number - SOAP::SOAPLong
-class LongValue < NumberValue
-  attr_accessor :comparableValue_Type
-  attr_accessor :number
-
-  def initialize(comparableValue_Type = nil, number = nil)
-    @comparableValue_Type = comparableValue_Type
-    @number = number
-  end
-end
-
-# ExemptionRequest
-# - key - AdwordsApi::V201003::AdGroupCriterionService::PolicyViolationKey
-class ExemptionRequest
-  attr_accessor :key
-
-  def initialize(key = nil)
-    @key = key
-  end
-end
-
-# Stats
-# - startDate - SOAP::SOAPString
-# - endDate - SOAP::SOAPString
-# - network - AdwordsApi::V201003::AdGroupCriterionService::StatsNetwork
-# - clicks - SOAP::SOAPLong
-# - impressions - SOAP::SOAPLong
-# - cost - AdwordsApi::V201003::AdGroupCriterionService::Money
-# - averagePosition - SOAP::SOAPDouble
-# - averageCpc - AdwordsApi::V201003::AdGroupCriterionService::Money
-# - averageCpm - AdwordsApi::V201003::AdGroupCriterionService::Money
-# - ctr - SOAP::SOAPDouble
-# - conversions - SOAP::SOAPLong
-# - conversionRate - SOAP::SOAPDouble
-# - costPerConversion - AdwordsApi::V201003::AdGroupCriterionService::Money
-# - conversionsManyPerClick - SOAP::SOAPLong
-# - conversionRateManyPerClick - SOAP::SOAPDouble
-# - costPerConversionManyPerClick - AdwordsApi::V201003::AdGroupCriterionService::Money
-# - stats_Type - SOAP::SOAPString
-class Stats
-  attr_accessor :startDate
-  attr_accessor :endDate
-  attr_accessor :network
-  attr_accessor :clicks
-  attr_accessor :impressions
-  attr_accessor :cost
-  attr_accessor :averagePosition
-  attr_accessor :averageCpc
-  attr_accessor :averageCpm
-  attr_accessor :ctr
-  attr_accessor :conversions
-  attr_accessor :conversionRate
-  attr_accessor :costPerConversion
-  attr_accessor :conversionsManyPerClick
-  attr_accessor :conversionRateManyPerClick
-  attr_accessor :costPerConversionManyPerClick
-  attr_accessor :stats_Type
-
-  def initialize(startDate = nil, endDate = nil, network = nil, clicks = nil, impressions = nil, cost = nil, averagePosition = nil, averageCpc = nil, averageCpm = nil, ctr = nil, conversions = nil, conversionRate = nil, costPerConversion = nil, conversionsManyPerClick = nil, conversionRateManyPerClick = nil, costPerConversionManyPerClick = nil, stats_Type = nil)
-    @startDate = startDate
-    @endDate = endDate
-    @network = network
-    @clicks = clicks
-    @impressions = impressions
-    @cost = cost
-    @averagePosition = averagePosition
-    @averageCpc = averageCpc
-    @averageCpm = averageCpm
-    @ctr = ctr
-    @conversions = conversions
-    @conversionRate = conversionRate
-    @costPerConversion = costPerConversion
-    @conversionsManyPerClick = conversionsManyPerClick
-    @conversionRateManyPerClick = conversionRateManyPerClick
-    @costPerConversionManyPerClick = costPerConversionManyPerClick
-    @stats_Type = stats_Type
+  def initialize(idFilters = [], criterionUse = nil, userStatuses = [], statsSelector = nil, paging = nil)
+    @idFilters = idFilters
+    @criterionUse = criterionUse
+    @userStatuses = userStatuses
+    @statsSelector = statsSelector
+    @paging = paging
   end
 end
 
@@ -391,6 +303,28 @@ end
 # - apiError_Type - SOAP::SOAPString
 # - reason - AdwordsApi::V201003::AdGroupCriterionService::ClientTermsErrorReason
 class ClientTermsError < ApiError
+  attr_accessor :fieldPath
+  attr_accessor :trigger
+  attr_accessor :errorString
+  attr_accessor :apiError_Type
+  attr_accessor :reason
+
+  def initialize(fieldPath = nil, trigger = nil, errorString = nil, apiError_Type = nil, reason = nil)
+    @fieldPath = fieldPath
+    @trigger = trigger
+    @errorString = errorString
+    @apiError_Type = apiError_Type
+    @reason = reason
+  end
+end
+
+# DatabaseError
+# - fieldPath - SOAP::SOAPString
+# - trigger - SOAP::SOAPString
+# - errorString - SOAP::SOAPString
+# - apiError_Type - SOAP::SOAPString
+# - reason - AdwordsApi::V201003::AdGroupCriterionService::DatabaseErrorReason
+class DatabaseError < ApiError
   attr_accessor :fieldPath
   attr_accessor :trigger
   attr_accessor :errorString
@@ -707,6 +641,80 @@ class PagingError < ApiError
   end
 end
 
+# PolicyViolationError
+# - fieldPath - SOAP::SOAPString
+# - trigger - SOAP::SOAPString
+# - errorString - SOAP::SOAPString
+# - apiError_Type - SOAP::SOAPString
+# - key - AdwordsApi::V201003::AdGroupCriterionService::PolicyViolationKey
+# - externalPolicyName - SOAP::SOAPString
+# - externalPolicyUrl - SOAP::SOAPString
+# - externalPolicyDescription - SOAP::SOAPString
+# - isExemptable - SOAP::SOAPBoolean
+# - violatingParts - AdwordsApi::V201003::AdGroupCriterionService::PolicyViolationErrorPart
+class PolicyViolationError < ApiError
+  attr_accessor :fieldPath
+  attr_accessor :trigger
+  attr_accessor :errorString
+  attr_accessor :apiError_Type
+  attr_accessor :key
+  attr_accessor :externalPolicyName
+  attr_accessor :externalPolicyUrl
+  attr_accessor :externalPolicyDescription
+  attr_accessor :isExemptable
+  attr_accessor :violatingParts
+
+  def initialize(fieldPath = nil, trigger = nil, errorString = nil, apiError_Type = nil, key = nil, externalPolicyName = nil, externalPolicyUrl = nil, externalPolicyDescription = nil, isExemptable = nil, violatingParts = [])
+    @fieldPath = fieldPath
+    @trigger = trigger
+    @errorString = errorString
+    @apiError_Type = apiError_Type
+    @key = key
+    @externalPolicyName = externalPolicyName
+    @externalPolicyUrl = externalPolicyUrl
+    @externalPolicyDescription = externalPolicyDescription
+    @isExemptable = isExemptable
+    @violatingParts = violatingParts
+  end
+end
+
+# CriterionPolicyError
+# - fieldPath - SOAP::SOAPString
+# - trigger - SOAP::SOAPString
+# - errorString - SOAP::SOAPString
+# - apiError_Type - SOAP::SOAPString
+# - key - AdwordsApi::V201003::AdGroupCriterionService::PolicyViolationKey
+# - externalPolicyName - SOAP::SOAPString
+# - externalPolicyUrl - SOAP::SOAPString
+# - externalPolicyDescription - SOAP::SOAPString
+# - isExemptable - SOAP::SOAPBoolean
+# - violatingParts - AdwordsApi::V201003::AdGroupCriterionService::PolicyViolationErrorPart
+class CriterionPolicyError < PolicyViolationError
+  attr_accessor :fieldPath
+  attr_accessor :trigger
+  attr_accessor :errorString
+  attr_accessor :apiError_Type
+  attr_accessor :key
+  attr_accessor :externalPolicyName
+  attr_accessor :externalPolicyUrl
+  attr_accessor :externalPolicyDescription
+  attr_accessor :isExemptable
+  attr_accessor :violatingParts
+
+  def initialize(fieldPath = nil, trigger = nil, errorString = nil, apiError_Type = nil, key = nil, externalPolicyName = nil, externalPolicyUrl = nil, externalPolicyDescription = nil, isExemptable = nil, violatingParts = [])
+    @fieldPath = fieldPath
+    @trigger = trigger
+    @errorString = errorString
+    @apiError_Type = apiError_Type
+    @key = key
+    @externalPolicyName = externalPolicyName
+    @externalPolicyUrl = externalPolicyUrl
+    @externalPolicyDescription = externalPolicyDescription
+    @isExemptable = isExemptable
+    @violatingParts = violatingParts
+  end
+end
+
 # QuotaCheckError
 # - fieldPath - SOAP::SOAPString
 # - trigger - SOAP::SOAPString
@@ -914,102 +922,6 @@ class StatsQueryError < ApiError
   end
 end
 
-# DatabaseError
-# - fieldPath - SOAP::SOAPString
-# - trigger - SOAP::SOAPString
-# - errorString - SOAP::SOAPString
-# - apiError_Type - SOAP::SOAPString
-# - reason - AdwordsApi::V201003::AdGroupCriterionService::DatabaseErrorReason
-class DatabaseError < ApiError
-  attr_accessor :fieldPath
-  attr_accessor :trigger
-  attr_accessor :errorString
-  attr_accessor :apiError_Type
-  attr_accessor :reason
-
-  def initialize(fieldPath = nil, trigger = nil, errorString = nil, apiError_Type = nil, reason = nil)
-    @fieldPath = fieldPath
-    @trigger = trigger
-    @errorString = errorString
-    @apiError_Type = apiError_Type
-    @reason = reason
-  end
-end
-
-# PolicyViolationError
-# - fieldPath - SOAP::SOAPString
-# - trigger - SOAP::SOAPString
-# - errorString - SOAP::SOAPString
-# - apiError_Type - SOAP::SOAPString
-# - key - AdwordsApi::V201003::AdGroupCriterionService::PolicyViolationKey
-# - externalPolicyName - SOAP::SOAPString
-# - externalPolicyUrl - SOAP::SOAPString
-# - externalPolicyDescription - SOAP::SOAPString
-# - isExemptable - SOAP::SOAPBoolean
-# - violatingParts - AdwordsApi::V201003::AdGroupCriterionService::PolicyViolationErrorPart
-class PolicyViolationError < ApiError
-  attr_accessor :fieldPath
-  attr_accessor :trigger
-  attr_accessor :errorString
-  attr_accessor :apiError_Type
-  attr_accessor :key
-  attr_accessor :externalPolicyName
-  attr_accessor :externalPolicyUrl
-  attr_accessor :externalPolicyDescription
-  attr_accessor :isExemptable
-  attr_accessor :violatingParts
-
-  def initialize(fieldPath = nil, trigger = nil, errorString = nil, apiError_Type = nil, key = nil, externalPolicyName = nil, externalPolicyUrl = nil, externalPolicyDescription = nil, isExemptable = nil, violatingParts = [])
-    @fieldPath = fieldPath
-    @trigger = trigger
-    @errorString = errorString
-    @apiError_Type = apiError_Type
-    @key = key
-    @externalPolicyName = externalPolicyName
-    @externalPolicyUrl = externalPolicyUrl
-    @externalPolicyDescription = externalPolicyDescription
-    @isExemptable = isExemptable
-    @violatingParts = violatingParts
-  end
-end
-
-# CriterionPolicyError
-# - fieldPath - SOAP::SOAPString
-# - trigger - SOAP::SOAPString
-# - errorString - SOAP::SOAPString
-# - apiError_Type - SOAP::SOAPString
-# - key - AdwordsApi::V201003::AdGroupCriterionService::PolicyViolationKey
-# - externalPolicyName - SOAP::SOAPString
-# - externalPolicyUrl - SOAP::SOAPString
-# - externalPolicyDescription - SOAP::SOAPString
-# - isExemptable - SOAP::SOAPBoolean
-# - violatingParts - AdwordsApi::V201003::AdGroupCriterionService::PolicyViolationErrorPart
-class CriterionPolicyError < PolicyViolationError
-  attr_accessor :fieldPath
-  attr_accessor :trigger
-  attr_accessor :errorString
-  attr_accessor :apiError_Type
-  attr_accessor :key
-  attr_accessor :externalPolicyName
-  attr_accessor :externalPolicyUrl
-  attr_accessor :externalPolicyDescription
-  attr_accessor :isExemptable
-  attr_accessor :violatingParts
-
-  def initialize(fieldPath = nil, trigger = nil, errorString = nil, apiError_Type = nil, key = nil, externalPolicyName = nil, externalPolicyUrl = nil, externalPolicyDescription = nil, isExemptable = nil, violatingParts = [])
-    @fieldPath = fieldPath
-    @trigger = trigger
-    @errorString = errorString
-    @apiError_Type = apiError_Type
-    @key = key
-    @externalPolicyName = externalPolicyName
-    @externalPolicyUrl = externalPolicyUrl
-    @externalPolicyDescription = externalPolicyDescription
-    @isExemptable = isExemptable
-    @violatingParts = violatingParts
-  end
-end
-
 # ApplicationException
 # - message - SOAP::SOAPString
 # - applicationException_Type - SOAP::SOAPString
@@ -1049,19 +961,64 @@ class Bid
   end
 end
 
-# PositionPreferenceAdGroupCriterionBids
-# - proxyMaxCpc - AdwordsApi::V201003::AdGroupCriterionService::Bid
-# - preferredPosition - SOAP::SOAPInt
-# - bottomPosition - SOAP::SOAPInt
-class PositionPreferenceAdGroupCriterionBids
-  attr_accessor :proxyMaxCpc
-  attr_accessor :preferredPosition
-  attr_accessor :bottomPosition
+# ComparableValue
+# abstract
+# - comparableValue_Type - SOAP::SOAPString
+class ComparableValue
+  attr_accessor :comparableValue_Type
 
-  def initialize(proxyMaxCpc = nil, preferredPosition = nil, bottomPosition = nil)
-    @proxyMaxCpc = proxyMaxCpc
-    @preferredPosition = preferredPosition
-    @bottomPosition = bottomPosition
+  def initialize(comparableValue_Type = nil)
+    @comparableValue_Type = comparableValue_Type
+  end
+end
+
+# Money
+# - comparableValue_Type - SOAP::SOAPString
+# - microAmount - SOAP::SOAPLong
+class Money < ComparableValue
+  attr_accessor :comparableValue_Type
+  attr_accessor :microAmount
+
+  def initialize(comparableValue_Type = nil, microAmount = nil)
+    @comparableValue_Type = comparableValue_Type
+    @microAmount = microAmount
+  end
+end
+
+# NumberValue
+# abstract
+# - comparableValue_Type - SOAP::SOAPString
+class NumberValue < ComparableValue
+  attr_accessor :comparableValue_Type
+
+  def initialize(comparableValue_Type = nil)
+    @comparableValue_Type = comparableValue_Type
+  end
+end
+
+# DoubleValue
+# - comparableValue_Type - SOAP::SOAPString
+# - number - SOAP::SOAPDouble
+class DoubleValue < NumberValue
+  attr_accessor :comparableValue_Type
+  attr_accessor :number
+
+  def initialize(comparableValue_Type = nil, number = nil)
+    @comparableValue_Type = comparableValue_Type
+    @number = number
+  end
+end
+
+# LongValue
+# - comparableValue_Type - SOAP::SOAPString
+# - number - SOAP::SOAPLong
+class LongValue < NumberValue
+  attr_accessor :comparableValue_Type
+  attr_accessor :number
+
+  def initialize(comparableValue_Type = nil, number = nil)
+    @comparableValue_Type = comparableValue_Type
+    @number = number
   end
 end
 
@@ -1129,172 +1086,26 @@ class Vertical < Criterion
   end
 end
 
-# AdGroupCriterionBids
-# abstract
-# - adGroupCriterionBids_Type - SOAP::SOAPString
-class AdGroupCriterionBids
-  attr_accessor :adGroupCriterionBids_Type
+# DateRange
+# - min - SOAP::SOAPString
+# - max - SOAP::SOAPString
+class DateRange
+  attr_accessor :min
+  attr_accessor :max
 
-  def initialize(adGroupCriterionBids_Type = nil)
-    @adGroupCriterionBids_Type = adGroupCriterionBids_Type
+  def initialize(min = nil, max = nil)
+    @min = min
+    @max = max
   end
 end
 
-# ConversionOptimizerAdGroupCriterionBids
-# - adGroupCriterionBids_Type - SOAP::SOAPString
-class ConversionOptimizerAdGroupCriterionBids < AdGroupCriterionBids
-  attr_accessor :adGroupCriterionBids_Type
+# ExemptionRequest
+# - key - AdwordsApi::V201003::AdGroupCriterionService::PolicyViolationKey
+class ExemptionRequest
+  attr_accessor :key
 
-  def initialize(adGroupCriterionBids_Type = nil)
-    @adGroupCriterionBids_Type = adGroupCriterionBids_Type
-  end
-end
-
-# BudgetOptimizerAdGroupCriterionBids
-# - adGroupCriterionBids_Type - SOAP::SOAPString
-# - proxyBid - AdwordsApi::V201003::AdGroupCriterionService::Bid
-# - enhancedCpcEnabled - SOAP::SOAPBoolean
-class BudgetOptimizerAdGroupCriterionBids < AdGroupCriterionBids
-  attr_accessor :adGroupCriterionBids_Type
-  attr_accessor :proxyBid
-  attr_accessor :enhancedCpcEnabled
-
-  def initialize(adGroupCriterionBids_Type = nil, proxyBid = nil, enhancedCpcEnabled = nil)
-    @adGroupCriterionBids_Type = adGroupCriterionBids_Type
-    @proxyBid = proxyBid
-    @enhancedCpcEnabled = enhancedCpcEnabled
-  end
-end
-
-# ManualCPMAdGroupCriterionBids
-# - adGroupCriterionBids_Type - SOAP::SOAPString
-# - maxCpm - AdwordsApi::V201003::AdGroupCriterionService::Bid
-# - bidSource - AdwordsApi::V201003::AdGroupCriterionService::BidSource
-class ManualCPMAdGroupCriterionBids < AdGroupCriterionBids
-  attr_accessor :adGroupCriterionBids_Type
-  attr_accessor :maxCpm
-  attr_accessor :bidSource
-
-  def initialize(adGroupCriterionBids_Type = nil, maxCpm = nil, bidSource = nil)
-    @adGroupCriterionBids_Type = adGroupCriterionBids_Type
-    @maxCpm = maxCpm
-    @bidSource = bidSource
-  end
-end
-
-# ManualCPCAdGroupCriterionBids
-# - adGroupCriterionBids_Type - SOAP::SOAPString
-# - maxCpc - AdwordsApi::V201003::AdGroupCriterionService::Bid
-# - bidSource - AdwordsApi::V201003::AdGroupCriterionService::BidSource
-# - positionPreferenceBids - AdwordsApi::V201003::AdGroupCriterionService::PositionPreferenceAdGroupCriterionBids
-# - enhancedCpcEnabled - SOAP::SOAPBoolean
-class ManualCPCAdGroupCriterionBids < AdGroupCriterionBids
-  attr_accessor :adGroupCriterionBids_Type
-  attr_accessor :maxCpc
-  attr_accessor :bidSource
-  attr_accessor :positionPreferenceBids
-  attr_accessor :enhancedCpcEnabled
-
-  def initialize(adGroupCriterionBids_Type = nil, maxCpc = nil, bidSource = nil, positionPreferenceBids = nil, enhancedCpcEnabled = nil)
-    @adGroupCriterionBids_Type = adGroupCriterionBids_Type
-    @maxCpc = maxCpc
-    @bidSource = bidSource
-    @positionPreferenceBids = positionPreferenceBids
-    @enhancedCpcEnabled = enhancedCpcEnabled
-  end
-end
-
-# AdGroupCriterion
-# - adGroupId - SOAP::SOAPLong
-# - criterion - AdwordsApi::V201003::AdGroupCriterionService::Criterion
-# - adGroupCriterion_Type - SOAP::SOAPString
-class AdGroupCriterion
-  attr_accessor :adGroupId
-  attr_accessor :criterion
-  attr_accessor :adGroupCriterion_Type
-
-  def initialize(adGroupId = nil, criterion = nil, adGroupCriterion_Type = nil)
-    @adGroupId = adGroupId
-    @criterion = criterion
-    @adGroupCriterion_Type = adGroupCriterion_Type
-  end
-end
-
-# NegativeAdGroupCriterion
-# - adGroupId - SOAP::SOAPLong
-# - criterion - AdwordsApi::V201003::AdGroupCriterionService::Criterion
-# - adGroupCriterion_Type - SOAP::SOAPString
-class NegativeAdGroupCriterion < AdGroupCriterion
-  attr_accessor :adGroupId
-  attr_accessor :criterion
-  attr_accessor :adGroupCriterion_Type
-
-  def initialize(adGroupId = nil, criterion = nil, adGroupCriterion_Type = nil)
-    @adGroupId = adGroupId
-    @criterion = criterion
-    @adGroupCriterion_Type = adGroupCriterion_Type
-  end
-end
-
-# BiddableAdGroupCriterion
-# - adGroupId - SOAP::SOAPLong
-# - criterion - AdwordsApi::V201003::AdGroupCriterionService::Criterion
-# - adGroupCriterion_Type - SOAP::SOAPString
-# - userStatus - AdwordsApi::V201003::AdGroupCriterionService::UserStatus
-# - systemServingStatus - AdwordsApi::V201003::AdGroupCriterionService::SystemServingStatus
-# - approvalStatus - AdwordsApi::V201003::AdGroupCriterionService::ApprovalStatus
-# - destinationUrl - SOAP::SOAPString
-# - bids - AdwordsApi::V201003::AdGroupCriterionService::AdGroupCriterionBids
-# - firstPageCpc - AdwordsApi::V201003::AdGroupCriterionService::Bid
-# - qualityInfo - AdwordsApi::V201003::AdGroupCriterionService::QualityInfo
-# - stats - AdwordsApi::V201003::AdGroupCriterionService::Stats
-class BiddableAdGroupCriterion < AdGroupCriterion
-  attr_accessor :adGroupId
-  attr_accessor :criterion
-  attr_accessor :adGroupCriterion_Type
-  attr_accessor :userStatus
-  attr_accessor :systemServingStatus
-  attr_accessor :approvalStatus
-  attr_accessor :destinationUrl
-  attr_accessor :bids
-  attr_accessor :firstPageCpc
-  attr_accessor :qualityInfo
-  attr_accessor :stats
-
-  def initialize(adGroupId = nil, criterion = nil, adGroupCriterion_Type = nil, userStatus = nil, systemServingStatus = nil, approvalStatus = nil, destinationUrl = nil, bids = nil, firstPageCpc = nil, qualityInfo = nil, stats = nil)
-    @adGroupId = adGroupId
-    @criterion = criterion
-    @adGroupCriterion_Type = adGroupCriterion_Type
-    @userStatus = userStatus
-    @systemServingStatus = systemServingStatus
-    @approvalStatus = approvalStatus
-    @destinationUrl = destinationUrl
-    @bids = bids
-    @firstPageCpc = firstPageCpc
-    @qualityInfo = qualityInfo
-    @stats = stats
-  end
-end
-
-# AdGroupCriterionSelector
-# - idFilters - AdwordsApi::V201003::AdGroupCriterionService::AdGroupCriterionIdFilter
-# - criterionUse - AdwordsApi::V201003::AdGroupCriterionService::CriterionUse
-# - userStatuses - AdwordsApi::V201003::AdGroupCriterionService::UserStatus
-# - statsSelector - AdwordsApi::V201003::AdGroupCriterionService::StatsSelector
-# - paging - AdwordsApi::V201003::AdGroupCriterionService::Paging
-class AdGroupCriterionSelector
-  attr_accessor :idFilters
-  attr_accessor :criterionUse
-  attr_accessor :userStatuses
-  attr_accessor :statsSelector
-  attr_accessor :paging
-
-  def initialize(idFilters = [], criterionUse = nil, userStatuses = [], statsSelector = nil, paging = nil)
-    @idFilters = idFilters
-    @criterionUse = criterionUse
-    @userStatuses = userStatuses
-    @statsSelector = statsSelector
-    @paging = paging
+  def initialize(key = nil)
+    @key = key
   end
 end
 
@@ -1382,6 +1193,195 @@ class AdGroupCriterionPage < Page
     @totalNumEntries = totalNumEntries
     @page_Type = page_Type
     @entries = entries
+  end
+end
+
+# Paging
+# - startIndex - SOAP::SOAPInt
+# - numberResults - SOAP::SOAPInt
+class Paging
+  attr_accessor :startIndex
+  attr_accessor :numberResults
+
+  def initialize(startIndex = nil, numberResults = nil)
+    @startIndex = startIndex
+    @numberResults = numberResults
+  end
+end
+
+# PolicyViolationError.Part
+# - index - SOAP::SOAPInt
+# - length - SOAP::SOAPInt
+class PolicyViolationErrorPart
+  attr_accessor :index
+  attr_accessor :length
+
+  def initialize(index = nil, length = nil)
+    @index = index
+    @length = length
+  end
+end
+
+# PolicyViolationKey
+# - policyName - SOAP::SOAPString
+# - violatingText - SOAP::SOAPString
+class PolicyViolationKey
+  attr_accessor :policyName
+  attr_accessor :violatingText
+
+  def initialize(policyName = nil, violatingText = nil)
+    @policyName = policyName
+    @violatingText = violatingText
+  end
+end
+
+# PositionPreferenceAdGroupCriterionBids
+# - proxyMaxCpc - AdwordsApi::V201003::AdGroupCriterionService::Bid
+# - preferredPosition - SOAP::SOAPInt
+# - bottomPosition - SOAP::SOAPInt
+class PositionPreferenceAdGroupCriterionBids
+  attr_accessor :proxyMaxCpc
+  attr_accessor :preferredPosition
+  attr_accessor :bottomPosition
+
+  def initialize(proxyMaxCpc = nil, preferredPosition = nil, bottomPosition = nil)
+    @proxyMaxCpc = proxyMaxCpc
+    @preferredPosition = preferredPosition
+    @bottomPosition = bottomPosition
+  end
+end
+
+# QualityInfo
+# - isKeywordAdRelevanceAcceptable - SOAP::SOAPBoolean
+# - isLandingPageQualityAcceptable - SOAP::SOAPBoolean
+# - isLandingPageLatencyAcceptable - SOAP::SOAPBoolean
+# - qualityScore - SOAP::SOAPInt
+class QualityInfo
+  attr_accessor :isKeywordAdRelevanceAcceptable
+  attr_accessor :isLandingPageQualityAcceptable
+  attr_accessor :isLandingPageLatencyAcceptable
+  attr_accessor :qualityScore
+
+  def initialize(isKeywordAdRelevanceAcceptable = nil, isLandingPageQualityAcceptable = nil, isLandingPageLatencyAcceptable = nil, qualityScore = nil)
+    @isKeywordAdRelevanceAcceptable = isKeywordAdRelevanceAcceptable
+    @isLandingPageQualityAcceptable = isLandingPageQualityAcceptable
+    @isLandingPageLatencyAcceptable = isLandingPageLatencyAcceptable
+    @qualityScore = qualityScore
+  end
+end
+
+# SoapHeader
+# - authToken - SOAP::SOAPString
+# - clientCustomerId - SOAP::SOAPString
+# - clientEmail - SOAP::SOAPString
+# - developerToken - SOAP::SOAPString
+# - userAgent - SOAP::SOAPString
+# - validateOnly - SOAP::SOAPBoolean
+class SoapHeader
+  attr_accessor :authToken
+  attr_accessor :clientCustomerId
+  attr_accessor :clientEmail
+  attr_accessor :developerToken
+  attr_accessor :userAgent
+  attr_accessor :validateOnly
+
+  def initialize(authToken = nil, clientCustomerId = nil, clientEmail = nil, developerToken = nil, userAgent = nil, validateOnly = nil)
+    @authToken = authToken
+    @clientCustomerId = clientCustomerId
+    @clientEmail = clientEmail
+    @developerToken = developerToken
+    @userAgent = userAgent
+    @validateOnly = validateOnly
+  end
+end
+
+# SoapResponseHeader
+# - requestId - SOAP::SOAPString
+# - operations - SOAP::SOAPLong
+# - responseTime - SOAP::SOAPLong
+# - units - SOAP::SOAPLong
+class SoapResponseHeader
+  attr_accessor :requestId
+  attr_accessor :operations
+  attr_accessor :responseTime
+  attr_accessor :units
+
+  def initialize(requestId = nil, operations = nil, responseTime = nil, units = nil)
+    @requestId = requestId
+    @operations = operations
+    @responseTime = responseTime
+    @units = units
+  end
+end
+
+# Stats
+# - startDate - SOAP::SOAPString
+# - endDate - SOAP::SOAPString
+# - network - AdwordsApi::V201003::AdGroupCriterionService::StatsNetwork
+# - clicks - SOAP::SOAPLong
+# - impressions - SOAP::SOAPLong
+# - cost - AdwordsApi::V201003::AdGroupCriterionService::Money
+# - averagePosition - SOAP::SOAPDouble
+# - averageCpc - AdwordsApi::V201003::AdGroupCriterionService::Money
+# - averageCpm - AdwordsApi::V201003::AdGroupCriterionService::Money
+# - ctr - SOAP::SOAPDouble
+# - conversions - SOAP::SOAPLong
+# - conversionRate - SOAP::SOAPDouble
+# - costPerConversion - AdwordsApi::V201003::AdGroupCriterionService::Money
+# - conversionsManyPerClick - SOAP::SOAPLong
+# - conversionRateManyPerClick - SOAP::SOAPDouble
+# - costPerConversionManyPerClick - AdwordsApi::V201003::AdGroupCriterionService::Money
+# - stats_Type - SOAP::SOAPString
+class Stats
+  attr_accessor :startDate
+  attr_accessor :endDate
+  attr_accessor :network
+  attr_accessor :clicks
+  attr_accessor :impressions
+  attr_accessor :cost
+  attr_accessor :averagePosition
+  attr_accessor :averageCpc
+  attr_accessor :averageCpm
+  attr_accessor :ctr
+  attr_accessor :conversions
+  attr_accessor :conversionRate
+  attr_accessor :costPerConversion
+  attr_accessor :conversionsManyPerClick
+  attr_accessor :conversionRateManyPerClick
+  attr_accessor :costPerConversionManyPerClick
+  attr_accessor :stats_Type
+
+  def initialize(startDate = nil, endDate = nil, network = nil, clicks = nil, impressions = nil, cost = nil, averagePosition = nil, averageCpc = nil, averageCpm = nil, ctr = nil, conversions = nil, conversionRate = nil, costPerConversion = nil, conversionsManyPerClick = nil, conversionRateManyPerClick = nil, costPerConversionManyPerClick = nil, stats_Type = nil)
+    @startDate = startDate
+    @endDate = endDate
+    @network = network
+    @clicks = clicks
+    @impressions = impressions
+    @cost = cost
+    @averagePosition = averagePosition
+    @averageCpc = averageCpc
+    @averageCpm = averageCpm
+    @ctr = ctr
+    @conversions = conversions
+    @conversionRate = conversionRate
+    @costPerConversion = costPerConversion
+    @conversionsManyPerClick = conversionsManyPerClick
+    @conversionRateManyPerClick = conversionRateManyPerClick
+    @costPerConversionManyPerClick = costPerConversionManyPerClick
+    @stats_Type = stats_Type
+  end
+end
+
+# StatsSelector
+# - dateRange - AdwordsApi::V201003::AdGroupCriterionService::DateRange
+# - statsSelector_Type - SOAP::SOAPString
+class StatsSelector
+  attr_accessor :dateRange
+  attr_accessor :statsSelector_Type
+
+  def initialize(dateRange = nil, statsSelector_Type = nil)
+    @dateRange = dateRange
+    @statsSelector_Type = statsSelector_Type
   end
 end
 

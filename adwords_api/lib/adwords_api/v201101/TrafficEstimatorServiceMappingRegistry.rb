@@ -50,6 +50,26 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TrafficEstimatorService::ApiException,
+    :schema_type => XSD::QName.new(NsV201101, "ApiException"),
+    :schema_basetype => XSD::QName.new(NsV201101, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]],
+      ["errors", "AdwordsApi::V201101::TrafficEstimatorService::ApiError[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TrafficEstimatorService::ApplicationException,
+    :schema_type => XSD::QName.new(NsV201101, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201101::TrafficEstimatorService::AuthenticationError,
     :schema_type => XSD::QName.new(NsV201101, "AuthenticationError"),
     :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
@@ -109,6 +129,28 @@ module DefaultMappingRegistry
       ["target_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Target.Type")], [0, 1]],
       ["excluded", "SOAP::SOAPBoolean", [0, 1]],
       ["countryCode", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TrafficEstimatorService::Criterion,
+    :schema_type => XSD::QName.new(NsV201101, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TrafficEstimatorService::DatabaseError,
+    :schema_type => XSD::QName.new(NsV201101, "DatabaseError"),
+    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["errorString", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
+      ["reason", "AdwordsApi::V201101::TrafficEstimatorService::DatabaseErrorReason", [0, 1]]
     ]
   )
 
@@ -392,6 +434,27 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TrafficEstimatorService::Product,
+    :schema_type => XSD::QName.new(NsV201101, "Product"),
+    :schema_basetype => XSD::QName.new(NsV201101, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]],
+      ["conditions", "AdwordsApi::V201101::TrafficEstimatorService::ProductCondition[]", [0, nil]],
+      ["text", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TrafficEstimatorService::ProductCondition,
+    :schema_type => XSD::QName.new(NsV201101, "ProductCondition"),
+    :schema_element => [
+      ["argument", "SOAP::SOAPString", [0, 1]],
+      ["operand", "AdwordsApi::V201101::TrafficEstimatorService::ProductConditionOperand", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201101::TrafficEstimatorService::ProductConditionOperand,
     :schema_type => XSD::QName.new(NsV201101, "ProductConditionOperand"),
     :schema_element => [
@@ -629,69 +692,6 @@ module DefaultMappingRegistry
       ["id", "SOAP::SOAPLong", [0, 1]],
       ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]],
       ["path", "SOAP::SOAPString[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TrafficEstimatorService::DatabaseError,
-    :schema_type => XSD::QName.new(NsV201101, "DatabaseError"),
-    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
-    :schema_element => [
-      ["fieldPath", "SOAP::SOAPString", [0, 1]],
-      ["trigger", "SOAP::SOAPString", [0, 1]],
-      ["errorString", "SOAP::SOAPString", [0, 1]],
-      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
-      ["reason", "AdwordsApi::V201101::TrafficEstimatorService::DatabaseErrorReason", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TrafficEstimatorService::ProductCondition,
-    :schema_type => XSD::QName.new(NsV201101, "ProductCondition"),
-    :schema_element => [
-      ["argument", "SOAP::SOAPString", [0, 1]],
-      ["operand", "AdwordsApi::V201101::TrafficEstimatorService::ProductConditionOperand", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TrafficEstimatorService::ApiException,
-    :schema_type => XSD::QName.new(NsV201101, "ApiException"),
-    :schema_basetype => XSD::QName.new(NsV201101, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]],
-      ["errors", "AdwordsApi::V201101::TrafficEstimatorService::ApiError[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TrafficEstimatorService::ApplicationException,
-    :schema_type => XSD::QName.new(NsV201101, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TrafficEstimatorService::Product,
-    :schema_type => XSD::QName.new(NsV201101, "Product"),
-    :schema_basetype => XSD::QName.new(NsV201101, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]],
-      ["conditions", "AdwordsApi::V201101::TrafficEstimatorService::ProductCondition[]", [0, nil]],
-      ["text", "SOAP::SOAPString", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TrafficEstimatorService::Criterion,
-    :schema_type => XSD::QName.new(NsV201101, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]]
     ]
   )
 
@@ -1082,6 +1082,26 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TrafficEstimatorService::ApiException,
+    :schema_type => XSD::QName.new(NsV201101, "ApiException"),
+    :schema_basetype => XSD::QName.new(NsV201101, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]],
+      ["errors", "AdwordsApi::V201101::TrafficEstimatorService::ApiError[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TrafficEstimatorService::ApplicationException,
+    :schema_type => XSD::QName.new(NsV201101, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201101::TrafficEstimatorService::AuthenticationError,
     :schema_type => XSD::QName.new(NsV201101, "AuthenticationError"),
     :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
@@ -1141,6 +1161,28 @@ module DefaultMappingRegistry
       ["target_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Target.Type")], [0, 1]],
       ["excluded", "SOAP::SOAPBoolean", [0, 1]],
       ["countryCode", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TrafficEstimatorService::Criterion,
+    :schema_type => XSD::QName.new(NsV201101, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TrafficEstimatorService::DatabaseError,
+    :schema_type => XSD::QName.new(NsV201101, "DatabaseError"),
+    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["errorString", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
+      ["reason", "AdwordsApi::V201101::TrafficEstimatorService::DatabaseErrorReason", [0, 1]]
     ]
   )
 
@@ -1424,6 +1466,27 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TrafficEstimatorService::Product,
+    :schema_type => XSD::QName.new(NsV201101, "Product"),
+    :schema_basetype => XSD::QName.new(NsV201101, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]],
+      ["conditions", "AdwordsApi::V201101::TrafficEstimatorService::ProductCondition[]", [0, nil]],
+      ["text", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TrafficEstimatorService::ProductCondition,
+    :schema_type => XSD::QName.new(NsV201101, "ProductCondition"),
+    :schema_element => [
+      ["argument", "SOAP::SOAPString", [0, 1]],
+      ["operand", "AdwordsApi::V201101::TrafficEstimatorService::ProductConditionOperand", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201101::TrafficEstimatorService::ProductConditionOperand,
     :schema_type => XSD::QName.new(NsV201101, "ProductConditionOperand"),
     :schema_element => [
@@ -1661,69 +1724,6 @@ module DefaultMappingRegistry
       ["id", "SOAP::SOAPLong", [0, 1]],
       ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]],
       ["path", "SOAP::SOAPString[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TrafficEstimatorService::DatabaseError,
-    :schema_type => XSD::QName.new(NsV201101, "DatabaseError"),
-    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
-    :schema_element => [
-      ["fieldPath", "SOAP::SOAPString", [0, 1]],
-      ["trigger", "SOAP::SOAPString", [0, 1]],
-      ["errorString", "SOAP::SOAPString", [0, 1]],
-      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
-      ["reason", "AdwordsApi::V201101::TrafficEstimatorService::DatabaseErrorReason", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TrafficEstimatorService::ProductCondition,
-    :schema_type => XSD::QName.new(NsV201101, "ProductCondition"),
-    :schema_element => [
-      ["argument", "SOAP::SOAPString", [0, 1]],
-      ["operand", "AdwordsApi::V201101::TrafficEstimatorService::ProductConditionOperand", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TrafficEstimatorService::ApiException,
-    :schema_type => XSD::QName.new(NsV201101, "ApiException"),
-    :schema_basetype => XSD::QName.new(NsV201101, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]],
-      ["errors", "AdwordsApi::V201101::TrafficEstimatorService::ApiError[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TrafficEstimatorService::ApplicationException,
-    :schema_type => XSD::QName.new(NsV201101, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TrafficEstimatorService::Product,
-    :schema_type => XSD::QName.new(NsV201101, "Product"),
-    :schema_basetype => XSD::QName.new(NsV201101, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]],
-      ["conditions", "AdwordsApi::V201101::TrafficEstimatorService::ProductCondition[]", [0, nil]],
-      ["text", "SOAP::SOAPString", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TrafficEstimatorService::Criterion,
-    :schema_type => XSD::QName.new(NsV201101, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]]
     ]
   )
 

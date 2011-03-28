@@ -17,9 +17,10 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to create a user list.
+# This example illustrates how to create a user list and show its associated
+# conversion tracker code snippet.
 #
-# Tags: UserListService.mutate
+# Tags: UserListService.mutate, ConversionTrackerService.get
 
 require 'rubygems'
 gem 'google-adwords-api'
@@ -32,6 +33,7 @@ def add_user_list()
   # when called without parameters.
   adwords = AdwordsApi::Api.new
   user_list_srv = adwords.service(:UserListService, API_VERSION)
+  conv_tracker_srv = adwords.service(:ConversionTrackerService, API_VERSION)
 
   # Prepare for adding remarketing user list.
   name = 'Mars cruise customers #%s' % (Time.new.to_f * 1000).to_i
@@ -54,8 +56,32 @@ def add_user_list()
   response = user_list_srv.mutate([operation])
   if response and response[:value]
     user_list = response[:value].first
+
+    # Get conversion snippets.
+    if user_list and user_list[:conversion_types]
+      conversion_ids = user_list[:conversion_types].map {|type| type[:id]}
+      selector = {
+        # We're actually interested in the 'Snippet' field, which is returned
+        # automatically.
+        :fields => ['Id'],
+        :predicates => [
+          {:field => 'Id', :operator => 'IN', :values => conversion_ids}
+        ]
+      }
+      conv_tracker_response = conv_tracker_srv.get(selector)
+      if conv_tracker_response and conv_tracker_response[:entries]
+        conversions = conv_tracker_response[:entries]
+      end
+    end
     puts 'User list with name "%s" and id %d was added.' %
         [user_list[:name], user_list[:id]]
+    # Display user list associated conversion code snippets.
+    if conversions
+      conversions.each do |conversion|
+        puts "Conversion type code snipped associated to the list:\n%s\n" %
+          conversion[:snippet]
+      end
+    end
   else
     puts 'No user lists were added.'
   end

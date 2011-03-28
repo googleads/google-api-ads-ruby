@@ -40,7 +40,7 @@ module AdwordsApi
     # Set other constants
     API_NAME = 'AdwordsApi'
     API_PATH = 'adwords_api'
-    CLIENT_LIB_VERSION = '0.1.0'
+    CLIENT_LIB_VERSION = '0.1.1'
 
     # Configure the services available to each version
     @@service_config = {
@@ -71,8 +71,9 @@ module AdwordsApi
       :v201101 => [:AdExtensionOverrideService, :AdGroupAdService,
                    :AdGroupCriterionService, :AdGroupService, :AdParamService,
                    :AlertService, :BulkMutateJobService,
-                   :CampaignAdExtensionService, :CampaignCriterionService,
-                   :CampaignService, :CampaignTargetService,
+                   :BulkOpportunityService, :CampaignAdExtensionService,
+                   :CampaignCriterionService, :CampaignService,
+                   :CampaignTargetService, :ConversionTrackerService,
                    :CustomerSyncService, :DataService, :ExperimentService,
                    :GeoLocationService, :InfoService, :MediaService,
                    :ReportDefinitionService, :ServicedAccountService,
@@ -167,10 +168,12 @@ module AdwordsApi
       [:v201101, :AdParamService] => 'cm/',
       [:v201101, :AlertService] => 'mcm/',
       [:v201101, :BulkMutateJobService] => 'job/',
+      [:v201101, :BulkOpportunityService] => 'o/',
       [:v201101, :CampaignAdExtensionService] => 'cm/',
       [:v201101, :CampaignCriterionService] => 'cm/',
       [:v201101, :CampaignService] => 'cm/',
       [:v201101, :CampaignTargetService] => 'cm/',
+      [:v201101, :ConversionTrackerService] => 'cm/',
       [:v201101, :CustomerSyncService] => 'ch/',
       [:v201101, :DataService] => 'cm/',
       [:v201101, :ExperimentService] => 'cm/',

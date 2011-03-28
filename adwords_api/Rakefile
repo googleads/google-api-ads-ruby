@@ -56,7 +56,7 @@ end
 $GEM_DESCRIPTION = description
 $GEM_AUTHORS = ['Sergio Gomes']
 $GEM_EMAIL = 'api.sgomes@gmail.com'
-$GEM_HOMEPAGE = 'http://code.google.com/p/google-api-adwords-ruby/'
+$GEM_HOMEPAGE = 'http://code.google.com/p/google-api-ads-ruby/'
 
 
 # Configure code generation for the AdWords API client library.

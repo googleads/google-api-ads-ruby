@@ -16,7 +16,7 @@ class BidLandscapeServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201008", "getBidLandscapeResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201008::BidLandscapeService::ApiException"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/cm/v201008", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201008::BidLandscapeService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/cm/v201008", :name=>"ApiException"}} }
     ]
   ]
 

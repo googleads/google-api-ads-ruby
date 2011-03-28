@@ -38,7 +38,7 @@ module AdwordsApi
       [:v201008, :ReportDefinitionService] => [:download_report,
           :download_report_as_file],
       [:v201101, :ReportDefinitionService] => [:download_report,
-          :download_report_as_file, :download_mcc_report]
+          :download_report_as_file]
     }
 
     # Defines the parameter list for every extension method

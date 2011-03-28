@@ -95,6 +95,26 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::ApiException,
+    :schema_type => XSD::QName.new(NsV201101, "ApiException"),
+    :schema_basetype => XSD::QName.new(NsV201101, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]],
+      ["errors", "AdwordsApi::V201101::TargetingIdeaService::ApiError[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::ApplicationException,
+    :schema_type => XSD::QName.new(NsV201101, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::AuthenticationError,
     :schema_type => XSD::QName.new(NsV201101, "AuthenticationError"),
     :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
@@ -117,6 +137,18 @@ module DefaultMappingRegistry
       ["errorString", "SOAP::SOAPString", [0, 1]],
       ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
       ["reason", "AdwordsApi::V201101::TargetingIdeaService::AuthorizationErrorReason", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::BidLandscapeLandscapePoint,
+    :schema_type => XSD::QName.new(NsV201101, "BidLandscape.LandscapePoint"),
+    :schema_element => [
+      ["bid", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]],
+      ["clicks", "SOAP::SOAPLong", [0, 1]],
+      ["cost", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]],
+      ["marginalCpc", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]],
+      ["impressions", "SOAP::SOAPLong", [0, 1]]
     ]
   )
 
@@ -184,6 +216,15 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::Criterion,
+    :schema_type => XSD::QName.new(NsV201101, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::CriterionBidLandscape,
     :schema_type => XSD::QName.new(NsV201101, "CriterionBidLandscape"),
     :schema_basetype => XSD::QName.new(NsV201101, "BidLandscape"),
@@ -213,6 +254,19 @@ module DefaultMappingRegistry
       ["externalPolicyDescription", "SOAP::SOAPString", [0, 1]],
       ["isExemptable", "SOAP::SOAPBoolean", [0, 1]],
       ["violatingParts", "AdwordsApi::V201101::TargetingIdeaService::PolicyViolationErrorPart[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::DatabaseError,
+    :schema_type => XSD::QName.new(NsV201101, "DatabaseError"),
+    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["errorString", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
+      ["reason", "AdwordsApi::V201101::TargetingIdeaService::DatabaseErrorReason", [0, 1]]
     ]
   )
 
@@ -457,6 +511,24 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::PolicyViolationError,
+    :schema_type => XSD::QName.new(NsV201101, "PolicyViolationError"),
+    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["errorString", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
+      ["key", "AdwordsApi::V201101::TargetingIdeaService::PolicyViolationKey", [0, 1]],
+      ["externalPolicyName", "SOAP::SOAPString", [0, 1]],
+      ["externalPolicyUrl", "SOAP::SOAPString", [0, 1]],
+      ["externalPolicyDescription", "SOAP::SOAPString", [0, 1]],
+      ["isExemptable", "SOAP::SOAPBoolean", [0, 1]],
+      ["violatingParts", "AdwordsApi::V201101::TargetingIdeaService::PolicyViolationErrorPart[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::PolicyViolationErrorPart,
     :schema_type => XSD::QName.new(NsV201101, "PolicyViolationError.Part"),
     :schema_element => [
@@ -482,6 +554,27 @@ module DefaultMappingRegistry
       ["target_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Target.Type")], [0, 1]],
       ["excluded", "SOAP::SOAPBoolean", [0, 1]],
       ["vertices", "AdwordsApi::V201101::TargetingIdeaService::GeoPoint[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::Product,
+    :schema_type => XSD::QName.new(NsV201101, "Product"),
+    :schema_basetype => XSD::QName.new(NsV201101, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]],
+      ["conditions", "AdwordsApi::V201101::TargetingIdeaService::ProductCondition[]", [0, nil]],
+      ["text", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::ProductCondition,
+    :schema_type => XSD::QName.new(NsV201101, "ProductCondition"),
+    :schema_element => [
+      ["argument", "SOAP::SOAPString", [0, 1]],
+      ["operand", "AdwordsApi::V201101::TargetingIdeaService::ProductConditionOperand", [0, 1]]
     ]
   )
 
@@ -727,99 +820,6 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::DatabaseError,
-    :schema_type => XSD::QName.new(NsV201101, "DatabaseError"),
-    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
-    :schema_element => [
-      ["fieldPath", "SOAP::SOAPString", [0, 1]],
-      ["trigger", "SOAP::SOAPString", [0, 1]],
-      ["errorString", "SOAP::SOAPString", [0, 1]],
-      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
-      ["reason", "AdwordsApi::V201101::TargetingIdeaService::DatabaseErrorReason", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::PolicyViolationError,
-    :schema_type => XSD::QName.new(NsV201101, "PolicyViolationError"),
-    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
-    :schema_element => [
-      ["fieldPath", "SOAP::SOAPString", [0, 1]],
-      ["trigger", "SOAP::SOAPString", [0, 1]],
-      ["errorString", "SOAP::SOAPString", [0, 1]],
-      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
-      ["key", "AdwordsApi::V201101::TargetingIdeaService::PolicyViolationKey", [0, 1]],
-      ["externalPolicyName", "SOAP::SOAPString", [0, 1]],
-      ["externalPolicyUrl", "SOAP::SOAPString", [0, 1]],
-      ["externalPolicyDescription", "SOAP::SOAPString", [0, 1]],
-      ["isExemptable", "SOAP::SOAPBoolean", [0, 1]],
-      ["violatingParts", "AdwordsApi::V201101::TargetingIdeaService::PolicyViolationErrorPart[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::ProductCondition,
-    :schema_type => XSD::QName.new(NsV201101, "ProductCondition"),
-    :schema_element => [
-      ["argument", "SOAP::SOAPString", [0, 1]],
-      ["operand", "AdwordsApi::V201101::TargetingIdeaService::ProductConditionOperand", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::ApiException,
-    :schema_type => XSD::QName.new(NsV201101, "ApiException"),
-    :schema_basetype => XSD::QName.new(NsV201101, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]],
-      ["errors", "AdwordsApi::V201101::TargetingIdeaService::ApiError[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::ApplicationException,
-    :schema_type => XSD::QName.new(NsV201101, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::BidLandscapeLandscapePoint,
-    :schema_type => XSD::QName.new(NsV201101, "BidLandscape.LandscapePoint"),
-    :schema_element => [
-      ["bid", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]],
-      ["clicks", "SOAP::SOAPLong", [0, 1]],
-      ["cost", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]],
-      ["marginalCpc", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]],
-      ["impressions", "SOAP::SOAPLong", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::Product,
-    :schema_type => XSD::QName.new(NsV201101, "Product"),
-    :schema_basetype => XSD::QName.new(NsV201101, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]],
-      ["conditions", "AdwordsApi::V201101::TargetingIdeaService::ProductCondition[]", [0, nil]],
-      ["text", "SOAP::SOAPString", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::Criterion,
-    :schema_type => XSD::QName.new(NsV201101, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::AdFormatSpec,
     :schema_type => XSD::QName.new(NsV201101_0, "AdFormatSpec"),
     :schema_element => [
@@ -838,12 +838,42 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::AdShareSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "AdShareSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["operation", "AdwordsApi::V201101::TargetingIdeaService::DoubleComparisonOperation", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::AdTypeSearchParameter,
     :schema_type => XSD::QName.new(NsV201101_0, "AdTypeSearchParameter"),
     :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
     :schema_element => [
       ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
       ["adTypes", "AdwordsApi::V201101::TargetingIdeaService::SiteConstantsAdType[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::AverageTargetedMonthlySearchesSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "AverageTargetedMonthlySearchesSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["operation", "AdwordsApi::V201101::TargetingIdeaService::LongComparisonOperation", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::BidLandscapeAttribute,
+    :schema_type => XSD::QName.new(NsV201101_0, "BidLandscapeAttribute"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
+    :schema_element => [
+      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::BidLandscape", [0, 1]]
     ]
   )
 
@@ -877,6 +907,26 @@ module DefaultMappingRegistry
     :schema_element => [
       ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
       ["levels", "AdwordsApi::V201101::TargetingIdeaService::CompetitionSearchParameterLevel[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::CountryTargetSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "CountryTargetSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["countryTargets", "AdwordsApi::V201101::TargetingIdeaService::CountryTarget[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::CriterionAttribute,
+    :schema_type => XSD::QName.new(NsV201101_0, "CriterionAttribute"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
+    :schema_element => [
+      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::Criterion", [0, 1]]
     ]
   )
 
@@ -919,6 +969,26 @@ module DefaultMappingRegistry
     :schema_element => [
       ["minimum", "SOAP::SOAPDouble", [0, 1]],
       ["maximum", "SOAP::SOAPDouble", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::ExcludedKeywordSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "ExcludedKeywordSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["keywords", "AdwordsApi::V201101::TargetingIdeaService::Keyword[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::GlobalMonthlySearchesSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "GlobalMonthlySearchesSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["operation", "AdwordsApi::V201101::TargetingIdeaService::LongComparisonOperation", [0, 1]]
     ]
   )
 
@@ -997,6 +1067,16 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::KeywordAttribute,
+    :schema_type => XSD::QName.new(NsV201101_0, "KeywordAttribute"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
+    :schema_element => [
+      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::Keyword", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::KeywordCategoryIdSearchParameter,
     :schema_type => XSD::QName.new(NsV201101_0, "KeywordCategoryIdSearchParameter"),
     :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
@@ -1013,6 +1093,16 @@ module DefaultMappingRegistry
     :schema_element => [
       ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
       ["keywordMatchTypes", "AdwordsApi::V201101::TargetingIdeaService::KeywordMatchType[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::LanguageTargetSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "LanguageTargetSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["languageTargets", "AdwordsApi::V201101::TargetingIdeaService::LanguageTarget[]", [0, nil]]
     ]
   )
 
@@ -1036,6 +1126,16 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::LongRangeAttribute,
+    :schema_type => XSD::QName.new(NsV201101_0, "LongRangeAttribute"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
+    :schema_element => [
+      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::C_Range", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::MatchesRegexError,
     :schema_type => XSD::QName.new(NsV201101_0, "MatchesRegexError"),
     :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
@@ -1045,6 +1145,16 @@ module DefaultMappingRegistry
       ["errorString", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "errorString")], [0, 1]],
       ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
       ["reason", "AdwordsApi::V201101::TargetingIdeaService::MatchesRegexErrorReason", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::MoneyAttribute,
+    :schema_type => XSD::QName.new(NsV201101_0, "MoneyAttribute"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
+    :schema_element => [
+      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]]
     ]
   )
 
@@ -1079,6 +1189,16 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::PlacementAttribute,
+    :schema_type => XSD::QName.new(NsV201101_0, "PlacementAttribute"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
+    :schema_element => [
+      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::Placement", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::PlacementTypeAttribute,
     :schema_type => XSD::QName.new(NsV201101_0, "PlacementTypeAttribute"),
     :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
@@ -1095,6 +1215,25 @@ module DefaultMappingRegistry
     :schema_element => [
       ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
       ["placementTypes", "AdwordsApi::V201101::TargetingIdeaService::SiteConstantsPlacementType[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::C_Range,
+    :schema_type => XSD::QName.new(NsV201101_0, "Range"),
+    :schema_element => [
+      ["min", "AdwordsApi::V201101::TargetingIdeaService::ComparableValue", [0, 1]],
+      ["max", "AdwordsApi::V201101::TargetingIdeaService::ComparableValue", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::RelatedToKeywordSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "RelatedToKeywordSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["keywords", "AdwordsApi::V201101::TargetingIdeaService::Keyword[]", [0, nil]]
     ]
   )
 
@@ -1140,6 +1279,14 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdea,
+    :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdea"),
+    :schema_element => [
+      ["data", "AdwordsApi::V201101::TargetingIdeaService::Type_AttributeMapEntry[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdeaError,
     :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdeaError"),
     :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
@@ -1149,6 +1296,38 @@ module DefaultMappingRegistry
       ["errorString", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "errorString")], [0, 1]],
       ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
       ["reason", "AdwordsApi::V201101::TargetingIdeaService::TargetingIdeaErrorReason", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdeaPage,
+    :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdeaPage"),
+    :schema_element => [
+      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]],
+      ["entries", "AdwordsApi::V201101::TargetingIdeaService::TargetingIdea[]", [0, nil]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdeaSelector,
+    :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdeaSelector"),
+    :schema_element => [
+      ["searchParameters", "AdwordsApi::V201101::TargetingIdeaService::SearchParameter[]", [0, nil]],
+      ["ideaType", "AdwordsApi::V201101::TargetingIdeaService::IdeaType", [0, 1]],
+      ["requestType", "AdwordsApi::V201101::TargetingIdeaService::RequestType", [0, 1]],
+      ["requestedAttributeTypes", "AdwordsApi::V201101::TargetingIdeaService::AttributeType[]", [0, nil]],
+      ["paging", "AdwordsApi::V201101::TargetingIdeaService::Paging", [0, 1]],
+      ["localeCode", "SOAP::SOAPString", [0, 1]],
+      ["currencyCode", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::Type_AttributeMapEntry,
+    :schema_type => XSD::QName.new(NsV201101_0, "Type_AttributeMapEntry"),
+    :schema_element => [
+      ["key", "AdwordsApi::V201101::TargetingIdeaService::AttributeType", [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::Attribute", [0, 1]]
     ]
   )
 
@@ -1168,185 +1347,6 @@ module DefaultMappingRegistry
     :schema_element => [
       ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
       ["value", "AdwordsApi::V201101::TargetingIdeaService::WebpageDescriptor", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::AdShareSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "AdShareSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["operation", "AdwordsApi::V201101::TargetingIdeaService::DoubleComparisonOperation", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::AverageTargetedMonthlySearchesSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "AverageTargetedMonthlySearchesSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["operation", "AdwordsApi::V201101::TargetingIdeaService::LongComparisonOperation", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::GlobalMonthlySearchesSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "GlobalMonthlySearchesSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["operation", "AdwordsApi::V201101::TargetingIdeaService::LongComparisonOperation", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::MoneyAttribute,
-    :schema_type => XSD::QName.new(NsV201101_0, "MoneyAttribute"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
-    :schema_element => [
-      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::C_Range,
-    :schema_type => XSD::QName.new(NsV201101_0, "Range"),
-    :schema_element => [
-      ["min", "AdwordsApi::V201101::TargetingIdeaService::ComparableValue", [0, 1]],
-      ["max", "AdwordsApi::V201101::TargetingIdeaService::ComparableValue", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::CountryTargetSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "CountryTargetSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["countryTargets", "AdwordsApi::V201101::TargetingIdeaService::CountryTarget[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::LanguageTargetSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "LanguageTargetSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["languageTargets", "AdwordsApi::V201101::TargetingIdeaService::LanguageTarget[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::LongRangeAttribute,
-    :schema_type => XSD::QName.new(NsV201101_0, "LongRangeAttribute"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
-    :schema_element => [
-      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::C_Range", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::CriterionAttribute,
-    :schema_type => XSD::QName.new(NsV201101_0, "CriterionAttribute"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
-    :schema_element => [
-      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::Criterion", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::ExcludedKeywordSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "ExcludedKeywordSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["keywords", "AdwordsApi::V201101::TargetingIdeaService::Keyword[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::KeywordAttribute,
-    :schema_type => XSD::QName.new(NsV201101_0, "KeywordAttribute"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
-    :schema_element => [
-      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::Keyword", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::PlacementAttribute,
-    :schema_type => XSD::QName.new(NsV201101_0, "PlacementAttribute"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
-    :schema_element => [
-      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::Placement", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::RelatedToKeywordSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "RelatedToKeywordSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["keywords", "AdwordsApi::V201101::TargetingIdeaService::Keyword[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdeaSelector,
-    :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdeaSelector"),
-    :schema_element => [
-      ["searchParameters", "AdwordsApi::V201101::TargetingIdeaService::SearchParameter[]", [0, nil]],
-      ["ideaType", "AdwordsApi::V201101::TargetingIdeaService::IdeaType", [0, 1]],
-      ["requestType", "AdwordsApi::V201101::TargetingIdeaService::RequestType", [0, 1]],
-      ["requestedAttributeTypes", "AdwordsApi::V201101::TargetingIdeaService::AttributeType[]", [0, nil]],
-      ["paging", "AdwordsApi::V201101::TargetingIdeaService::Paging", [0, 1]],
-      ["localeCode", "SOAP::SOAPString", [0, 1]],
-      ["currencyCode", "SOAP::SOAPString", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::BidLandscapeAttribute,
-    :schema_type => XSD::QName.new(NsV201101_0, "BidLandscapeAttribute"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
-    :schema_element => [
-      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::BidLandscape", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::Type_AttributeMapEntry,
-    :schema_type => XSD::QName.new(NsV201101_0, "Type_AttributeMapEntry"),
-    :schema_element => [
-      ["key", "AdwordsApi::V201101::TargetingIdeaService::AttributeType", [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::Attribute", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdea,
-    :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdea"),
-    :schema_element => [
-      ["data", "AdwordsApi::V201101::TargetingIdeaService::Type_AttributeMapEntry[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdeaPage,
-    :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdeaPage"),
-    :schema_element => [
-      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]],
-      ["entries", "AdwordsApi::V201101::TargetingIdeaService::TargetingIdea[]", [0, nil]]
     ]
   )
 
@@ -1686,6 +1686,26 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::ApiException,
+    :schema_type => XSD::QName.new(NsV201101, "ApiException"),
+    :schema_basetype => XSD::QName.new(NsV201101, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]],
+      ["errors", "AdwordsApi::V201101::TargetingIdeaService::ApiError[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::ApplicationException,
+    :schema_type => XSD::QName.new(NsV201101, "ApplicationException"),
+    :schema_element => [
+      ["message", "SOAP::SOAPString", [0, 1]],
+      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::AuthenticationError,
     :schema_type => XSD::QName.new(NsV201101, "AuthenticationError"),
     :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
@@ -1708,6 +1728,18 @@ module DefaultMappingRegistry
       ["errorString", "SOAP::SOAPString", [0, 1]],
       ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
       ["reason", "AdwordsApi::V201101::TargetingIdeaService::AuthorizationErrorReason", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::BidLandscapeLandscapePoint,
+    :schema_type => XSD::QName.new(NsV201101, "BidLandscape.LandscapePoint"),
+    :schema_element => [
+      ["bid", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]],
+      ["clicks", "SOAP::SOAPLong", [0, 1]],
+      ["cost", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]],
+      ["marginalCpc", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]],
+      ["impressions", "SOAP::SOAPLong", [0, 1]]
     ]
   )
 
@@ -1775,6 +1807,15 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::Criterion,
+    :schema_type => XSD::QName.new(NsV201101, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::CriterionBidLandscape,
     :schema_type => XSD::QName.new(NsV201101, "CriterionBidLandscape"),
     :schema_basetype => XSD::QName.new(NsV201101, "BidLandscape"),
@@ -1804,6 +1845,19 @@ module DefaultMappingRegistry
       ["externalPolicyDescription", "SOAP::SOAPString", [0, 1]],
       ["isExemptable", "SOAP::SOAPBoolean", [0, 1]],
       ["violatingParts", "AdwordsApi::V201101::TargetingIdeaService::PolicyViolationErrorPart[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::DatabaseError,
+    :schema_type => XSD::QName.new(NsV201101, "DatabaseError"),
+    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["errorString", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
+      ["reason", "AdwordsApi::V201101::TargetingIdeaService::DatabaseErrorReason", [0, 1]]
     ]
   )
 
@@ -2048,6 +2102,24 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::PolicyViolationError,
+    :schema_type => XSD::QName.new(NsV201101, "PolicyViolationError"),
+    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["errorString", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
+      ["key", "AdwordsApi::V201101::TargetingIdeaService::PolicyViolationKey", [0, 1]],
+      ["externalPolicyName", "SOAP::SOAPString", [0, 1]],
+      ["externalPolicyUrl", "SOAP::SOAPString", [0, 1]],
+      ["externalPolicyDescription", "SOAP::SOAPString", [0, 1]],
+      ["isExemptable", "SOAP::SOAPBoolean", [0, 1]],
+      ["violatingParts", "AdwordsApi::V201101::TargetingIdeaService::PolicyViolationErrorPart[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::PolicyViolationErrorPart,
     :schema_type => XSD::QName.new(NsV201101, "PolicyViolationError.Part"),
     :schema_element => [
@@ -2073,6 +2145,27 @@ module DefaultMappingRegistry
       ["target_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Target.Type")], [0, 1]],
       ["excluded", "SOAP::SOAPBoolean", [0, 1]],
       ["vertices", "AdwordsApi::V201101::TargetingIdeaService::GeoPoint[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::Product,
+    :schema_type => XSD::QName.new(NsV201101, "Product"),
+    :schema_basetype => XSD::QName.new(NsV201101, "Criterion"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]],
+      ["conditions", "AdwordsApi::V201101::TargetingIdeaService::ProductCondition[]", [0, nil]],
+      ["text", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::ProductCondition,
+    :schema_type => XSD::QName.new(NsV201101, "ProductCondition"),
+    :schema_element => [
+      ["argument", "SOAP::SOAPString", [0, 1]],
+      ["operand", "AdwordsApi::V201101::TargetingIdeaService::ProductConditionOperand", [0, 1]]
     ]
   )
 
@@ -2318,99 +2411,6 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::DatabaseError,
-    :schema_type => XSD::QName.new(NsV201101, "DatabaseError"),
-    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
-    :schema_element => [
-      ["fieldPath", "SOAP::SOAPString", [0, 1]],
-      ["trigger", "SOAP::SOAPString", [0, 1]],
-      ["errorString", "SOAP::SOAPString", [0, 1]],
-      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
-      ["reason", "AdwordsApi::V201101::TargetingIdeaService::DatabaseErrorReason", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::PolicyViolationError,
-    :schema_type => XSD::QName.new(NsV201101, "PolicyViolationError"),
-    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
-    :schema_element => [
-      ["fieldPath", "SOAP::SOAPString", [0, 1]],
-      ["trigger", "SOAP::SOAPString", [0, 1]],
-      ["errorString", "SOAP::SOAPString", [0, 1]],
-      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
-      ["key", "AdwordsApi::V201101::TargetingIdeaService::PolicyViolationKey", [0, 1]],
-      ["externalPolicyName", "SOAP::SOAPString", [0, 1]],
-      ["externalPolicyUrl", "SOAP::SOAPString", [0, 1]],
-      ["externalPolicyDescription", "SOAP::SOAPString", [0, 1]],
-      ["isExemptable", "SOAP::SOAPBoolean", [0, 1]],
-      ["violatingParts", "AdwordsApi::V201101::TargetingIdeaService::PolicyViolationErrorPart[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::ProductCondition,
-    :schema_type => XSD::QName.new(NsV201101, "ProductCondition"),
-    :schema_element => [
-      ["argument", "SOAP::SOAPString", [0, 1]],
-      ["operand", "AdwordsApi::V201101::TargetingIdeaService::ProductConditionOperand", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::ApiException,
-    :schema_type => XSD::QName.new(NsV201101, "ApiException"),
-    :schema_basetype => XSD::QName.new(NsV201101, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]],
-      ["errors", "AdwordsApi::V201101::TargetingIdeaService::ApiError[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::ApplicationException,
-    :schema_type => XSD::QName.new(NsV201101, "ApplicationException"),
-    :schema_element => [
-      ["message", "SOAP::SOAPString", [0, 1]],
-      ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApplicationException.Type")], [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::BidLandscapeLandscapePoint,
-    :schema_type => XSD::QName.new(NsV201101, "BidLandscape.LandscapePoint"),
-    :schema_element => [
-      ["bid", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]],
-      ["clicks", "SOAP::SOAPLong", [0, 1]],
-      ["cost", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]],
-      ["marginalCpc", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]],
-      ["impressions", "SOAP::SOAPLong", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::Product,
-    :schema_type => XSD::QName.new(NsV201101, "Product"),
-    :schema_basetype => XSD::QName.new(NsV201101, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]],
-      ["conditions", "AdwordsApi::V201101::TargetingIdeaService::ProductCondition[]", [0, nil]],
-      ["text", "SOAP::SOAPString", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::Criterion,
-    :schema_type => XSD::QName.new(NsV201101, "Criterion"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["criterion_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "Criterion.Type")], [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::AdFormatSpec,
     :schema_type => XSD::QName.new(NsV201101_0, "AdFormatSpec"),
     :schema_element => [
@@ -2429,12 +2429,42 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::AdShareSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "AdShareSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["operation", "AdwordsApi::V201101::TargetingIdeaService::DoubleComparisonOperation", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::AdTypeSearchParameter,
     :schema_type => XSD::QName.new(NsV201101_0, "AdTypeSearchParameter"),
     :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
     :schema_element => [
       ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
       ["adTypes", "AdwordsApi::V201101::TargetingIdeaService::SiteConstantsAdType[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::AverageTargetedMonthlySearchesSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "AverageTargetedMonthlySearchesSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["operation", "AdwordsApi::V201101::TargetingIdeaService::LongComparisonOperation", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::BidLandscapeAttribute,
+    :schema_type => XSD::QName.new(NsV201101_0, "BidLandscapeAttribute"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
+    :schema_element => [
+      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::BidLandscape", [0, 1]]
     ]
   )
 
@@ -2468,6 +2498,26 @@ module DefaultMappingRegistry
     :schema_element => [
       ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
       ["levels", "AdwordsApi::V201101::TargetingIdeaService::CompetitionSearchParameterLevel[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::CountryTargetSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "CountryTargetSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["countryTargets", "AdwordsApi::V201101::TargetingIdeaService::CountryTarget[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::CriterionAttribute,
+    :schema_type => XSD::QName.new(NsV201101_0, "CriterionAttribute"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
+    :schema_element => [
+      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::Criterion", [0, 1]]
     ]
   )
 
@@ -2510,6 +2560,26 @@ module DefaultMappingRegistry
     :schema_element => [
       ["minimum", "SOAP::SOAPDouble", [0, 1]],
       ["maximum", "SOAP::SOAPDouble", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::ExcludedKeywordSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "ExcludedKeywordSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["keywords", "AdwordsApi::V201101::TargetingIdeaService::Keyword[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::GlobalMonthlySearchesSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "GlobalMonthlySearchesSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["operation", "AdwordsApi::V201101::TargetingIdeaService::LongComparisonOperation", [0, 1]]
     ]
   )
 
@@ -2588,6 +2658,16 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::KeywordAttribute,
+    :schema_type => XSD::QName.new(NsV201101_0, "KeywordAttribute"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
+    :schema_element => [
+      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::Keyword", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::KeywordCategoryIdSearchParameter,
     :schema_type => XSD::QName.new(NsV201101_0, "KeywordCategoryIdSearchParameter"),
     :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
@@ -2604,6 +2684,16 @@ module DefaultMappingRegistry
     :schema_element => [
       ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
       ["keywordMatchTypes", "AdwordsApi::V201101::TargetingIdeaService::KeywordMatchType[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::LanguageTargetSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "LanguageTargetSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["languageTargets", "AdwordsApi::V201101::TargetingIdeaService::LanguageTarget[]", [0, nil]]
     ]
   )
 
@@ -2627,6 +2717,16 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::LongRangeAttribute,
+    :schema_type => XSD::QName.new(NsV201101_0, "LongRangeAttribute"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
+    :schema_element => [
+      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::C_Range", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::MatchesRegexError,
     :schema_type => XSD::QName.new(NsV201101_0, "MatchesRegexError"),
     :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
@@ -2636,6 +2736,16 @@ module DefaultMappingRegistry
       ["errorString", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "errorString")], [0, 1]],
       ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
       ["reason", "AdwordsApi::V201101::TargetingIdeaService::MatchesRegexErrorReason", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::MoneyAttribute,
+    :schema_type => XSD::QName.new(NsV201101_0, "MoneyAttribute"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
+    :schema_element => [
+      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]]
     ]
   )
 
@@ -2670,6 +2780,16 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::PlacementAttribute,
+    :schema_type => XSD::QName.new(NsV201101_0, "PlacementAttribute"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
+    :schema_element => [
+      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::Placement", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::PlacementTypeAttribute,
     :schema_type => XSD::QName.new(NsV201101_0, "PlacementTypeAttribute"),
     :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
@@ -2686,6 +2806,25 @@ module DefaultMappingRegistry
     :schema_element => [
       ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
       ["placementTypes", "AdwordsApi::V201101::TargetingIdeaService::SiteConstantsPlacementType[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::C_Range,
+    :schema_type => XSD::QName.new(NsV201101_0, "Range"),
+    :schema_element => [
+      ["min", "AdwordsApi::V201101::TargetingIdeaService::ComparableValue", [0, 1]],
+      ["max", "AdwordsApi::V201101::TargetingIdeaService::ComparableValue", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::RelatedToKeywordSearchParameter,
+    :schema_type => XSD::QName.new(NsV201101_0, "RelatedToKeywordSearchParameter"),
+    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
+    :schema_element => [
+      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
+      ["keywords", "AdwordsApi::V201101::TargetingIdeaService::Keyword[]", [0, nil]]
     ]
   )
 
@@ -2731,6 +2870,14 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdea,
+    :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdea"),
+    :schema_element => [
+      ["data", "AdwordsApi::V201101::TargetingIdeaService::Type_AttributeMapEntry[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdeaError,
     :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdeaError"),
     :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
@@ -2740,6 +2887,38 @@ module DefaultMappingRegistry
       ["errorString", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "errorString")], [0, 1]],
       ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
       ["reason", "AdwordsApi::V201101::TargetingIdeaService::TargetingIdeaErrorReason", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdeaPage,
+    :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdeaPage"),
+    :schema_element => [
+      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]],
+      ["entries", "AdwordsApi::V201101::TargetingIdeaService::TargetingIdea[]", [0, nil]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdeaSelector,
+    :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdeaSelector"),
+    :schema_element => [
+      ["searchParameters", "AdwordsApi::V201101::TargetingIdeaService::SearchParameter[]", [0, nil]],
+      ["ideaType", "AdwordsApi::V201101::TargetingIdeaService::IdeaType", [0, 1]],
+      ["requestType", "AdwordsApi::V201101::TargetingIdeaService::RequestType", [0, 1]],
+      ["requestedAttributeTypes", "AdwordsApi::V201101::TargetingIdeaService::AttributeType[]", [0, nil]],
+      ["paging", "AdwordsApi::V201101::TargetingIdeaService::Paging", [0, 1]],
+      ["localeCode", "SOAP::SOAPString", [0, 1]],
+      ["currencyCode", "SOAP::SOAPString", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::TargetingIdeaService::Type_AttributeMapEntry,
+    :schema_type => XSD::QName.new(NsV201101_0, "Type_AttributeMapEntry"),
+    :schema_element => [
+      ["key", "AdwordsApi::V201101::TargetingIdeaService::AttributeType", [0, 1]],
+      ["value", "AdwordsApi::V201101::TargetingIdeaService::Attribute", [0, 1]]
     ]
   )
 
@@ -2759,185 +2938,6 @@ module DefaultMappingRegistry
     :schema_element => [
       ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
       ["value", "AdwordsApi::V201101::TargetingIdeaService::WebpageDescriptor", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::AdShareSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "AdShareSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["operation", "AdwordsApi::V201101::TargetingIdeaService::DoubleComparisonOperation", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::AverageTargetedMonthlySearchesSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "AverageTargetedMonthlySearchesSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["operation", "AdwordsApi::V201101::TargetingIdeaService::LongComparisonOperation", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::GlobalMonthlySearchesSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "GlobalMonthlySearchesSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["operation", "AdwordsApi::V201101::TargetingIdeaService::LongComparisonOperation", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::MoneyAttribute,
-    :schema_type => XSD::QName.new(NsV201101_0, "MoneyAttribute"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
-    :schema_element => [
-      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::Money", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::C_Range,
-    :schema_type => XSD::QName.new(NsV201101_0, "Range"),
-    :schema_element => [
-      ["min", "AdwordsApi::V201101::TargetingIdeaService::ComparableValue", [0, 1]],
-      ["max", "AdwordsApi::V201101::TargetingIdeaService::ComparableValue", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::CountryTargetSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "CountryTargetSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["countryTargets", "AdwordsApi::V201101::TargetingIdeaService::CountryTarget[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::LanguageTargetSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "LanguageTargetSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["languageTargets", "AdwordsApi::V201101::TargetingIdeaService::LanguageTarget[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::LongRangeAttribute,
-    :schema_type => XSD::QName.new(NsV201101_0, "LongRangeAttribute"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
-    :schema_element => [
-      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::C_Range", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::CriterionAttribute,
-    :schema_type => XSD::QName.new(NsV201101_0, "CriterionAttribute"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
-    :schema_element => [
-      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::Criterion", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::ExcludedKeywordSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "ExcludedKeywordSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["keywords", "AdwordsApi::V201101::TargetingIdeaService::Keyword[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::KeywordAttribute,
-    :schema_type => XSD::QName.new(NsV201101_0, "KeywordAttribute"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
-    :schema_element => [
-      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::Keyword", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::PlacementAttribute,
-    :schema_type => XSD::QName.new(NsV201101_0, "PlacementAttribute"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
-    :schema_element => [
-      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::Placement", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::RelatedToKeywordSearchParameter,
-    :schema_type => XSD::QName.new(NsV201101_0, "RelatedToKeywordSearchParameter"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "SearchParameter"),
-    :schema_element => [
-      ["searchParameter_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "SearchParameter.Type")], [0, 1]],
-      ["keywords", "AdwordsApi::V201101::TargetingIdeaService::Keyword[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdeaSelector,
-    :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdeaSelector"),
-    :schema_element => [
-      ["searchParameters", "AdwordsApi::V201101::TargetingIdeaService::SearchParameter[]", [0, nil]],
-      ["ideaType", "AdwordsApi::V201101::TargetingIdeaService::IdeaType", [0, 1]],
-      ["requestType", "AdwordsApi::V201101::TargetingIdeaService::RequestType", [0, 1]],
-      ["requestedAttributeTypes", "AdwordsApi::V201101::TargetingIdeaService::AttributeType[]", [0, nil]],
-      ["paging", "AdwordsApi::V201101::TargetingIdeaService::Paging", [0, 1]],
-      ["localeCode", "SOAP::SOAPString", [0, 1]],
-      ["currencyCode", "SOAP::SOAPString", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::BidLandscapeAttribute,
-    :schema_type => XSD::QName.new(NsV201101_0, "BidLandscapeAttribute"),
-    :schema_basetype => XSD::QName.new(NsV201101_0, "Attribute"),
-    :schema_element => [
-      ["attribute_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101_0, "Attribute.Type")], [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::BidLandscape", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::Type_AttributeMapEntry,
-    :schema_type => XSD::QName.new(NsV201101_0, "Type_AttributeMapEntry"),
-    :schema_element => [
-      ["key", "AdwordsApi::V201101::TargetingIdeaService::AttributeType", [0, 1]],
-      ["value", "AdwordsApi::V201101::TargetingIdeaService::Attribute", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdea,
-    :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdea"),
-    :schema_element => [
-      ["data", "AdwordsApi::V201101::TargetingIdeaService::Type_AttributeMapEntry[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::TargetingIdeaService::TargetingIdeaPage,
-    :schema_type => XSD::QName.new(NsV201101_0, "TargetingIdeaPage"),
-    :schema_element => [
-      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]],
-      ["entries", "AdwordsApi::V201101::TargetingIdeaService::TargetingIdea[]", [0, nil]]
     ]
   )
 

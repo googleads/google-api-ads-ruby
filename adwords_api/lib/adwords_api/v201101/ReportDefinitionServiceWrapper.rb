@@ -358,6 +358,20 @@
             end
           end
 
+          # <i>Extension method</i> -- Calls the
+          # AdwordsApi::Extensions.download_report method with +self+ as the
+          # first parameter.
+          def download_report(report_definition_id)
+            return AdwordsApi::Extensions.download_report(self, report_definition_id)
+          end
+
+          # <i>Extension method</i> -- Calls the
+          # AdwordsApi::Extensions.download_report_as_file method with +self+ as the
+          # first parameter.
+          def download_report_as_file(report_definition_id, path)
+            return AdwordsApi::Extensions.download_report_as_file(self, report_definition_id, path)
+          end
+
         end
       end
     end

@@ -70,7 +70,10 @@ module AdwordsApi
         # Convert error objects to hashes.
         errors = nil
         if inner_fault.errors
-          errors = inner_fault.errors.map do |error_object|
+          # Fix problem with single errors on mismatched namespaces.
+          error_array = inner_fault.errors.is_a?(Array) ? inner_fault.errors :
+              [inner_fault.errors]
+          errors = error_array.map do |error_object|
             wrapper.convert_from_object(error_object)
           end
         end

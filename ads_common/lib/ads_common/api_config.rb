@@ -256,7 +256,7 @@ module AdsCommon
         path = wsdl_base
         if (!subdir_config().nil?)
           subdir_name = subdir(version, service);
-          path = path + subdir_name if !subdir_name.empty?()
+          path = path + subdir_name if subdir_name and !subdir_name.empty?
         end
         path = path + version.to_s + '/' + service.to_s + '?wsdl'
         res[service.to_s] = path

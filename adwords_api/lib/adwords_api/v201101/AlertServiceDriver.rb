@@ -16,7 +16,7 @@ class AlertServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/mcm/v201101", "getResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::AlertService::ApiException_"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/mcm/v201101", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201101::AlertService::ApiException_"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/mcm/v201101", :name=>"ApiException"}} }
     ]
   ]
 

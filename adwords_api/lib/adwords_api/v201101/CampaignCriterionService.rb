@@ -3,153 +3,6 @@ require 'xsd/qname'
 module AdwordsApi; module V201101; module CampaignCriterionService
 
 
-# DateRange
-# - min - SOAP::SOAPString
-# - max - SOAP::SOAPString
-class DateRange
-  attr_accessor :min
-  attr_accessor :max
-
-  def initialize(min = nil, max = nil)
-    @min = min
-    @max = max
-  end
-end
-
-# OrderBy
-# - field - SOAP::SOAPString
-# - sortOrder - AdwordsApi::V201101::CampaignCriterionService::SortOrder
-class OrderBy
-  attr_accessor :field
-  attr_accessor :sortOrder
-
-  def initialize(field = nil, sortOrder = nil)
-    @field = field
-    @sortOrder = sortOrder
-  end
-end
-
-# Paging
-# - startIndex - SOAP::SOAPInt
-# - numberResults - SOAP::SOAPInt
-class Paging
-  attr_accessor :startIndex
-  attr_accessor :numberResults
-
-  def initialize(startIndex = nil, numberResults = nil)
-    @startIndex = startIndex
-    @numberResults = numberResults
-  end
-end
-
-# Predicate
-# - field - SOAP::SOAPString
-# - operator - AdwordsApi::V201101::CampaignCriterionService::PredicateOperator
-# - values - SOAP::SOAPString
-class Predicate
-  attr_accessor :field
-  attr_accessor :operator
-  attr_accessor :values
-
-  def initialize(field = nil, operator = nil, values = [])
-    @field = field
-    @operator = operator
-    @values = values
-  end
-end
-
-# ProductConditionOperand
-# - operand - SOAP::SOAPString
-class ProductConditionOperand
-  attr_accessor :operand
-
-  def initialize(operand = nil)
-    @operand = operand
-  end
-end
-
-# SoapHeader
-# - authToken - SOAP::SOAPString
-# - clientCustomerId - SOAP::SOAPString
-# - clientEmail - SOAP::SOAPString
-# - developerToken - SOAP::SOAPString
-# - userAgent - SOAP::SOAPString
-# - validateOnly - SOAP::SOAPBoolean
-# - partialFailure - SOAP::SOAPBoolean
-class SoapHeader
-  attr_accessor :authToken
-  attr_accessor :clientCustomerId
-  attr_accessor :clientEmail
-  attr_accessor :developerToken
-  attr_accessor :userAgent
-  attr_accessor :validateOnly
-  attr_accessor :partialFailure
-
-  def initialize(authToken = nil, clientCustomerId = nil, clientEmail = nil, developerToken = nil, userAgent = nil, validateOnly = nil, partialFailure = nil)
-    @authToken = authToken
-    @clientCustomerId = clientCustomerId
-    @clientEmail = clientEmail
-    @developerToken = developerToken
-    @userAgent = userAgent
-    @validateOnly = validateOnly
-    @partialFailure = partialFailure
-  end
-end
-
-# SoapResponseHeader
-# - requestId - SOAP::SOAPString
-# - operations - SOAP::SOAPLong
-# - responseTime - SOAP::SOAPLong
-# - units - SOAP::SOAPLong
-class SoapResponseHeader
-  attr_accessor :requestId
-  attr_accessor :operations
-  attr_accessor :responseTime
-  attr_accessor :units
-
-  def initialize(requestId = nil, operations = nil, responseTime = nil, units = nil)
-    @requestId = requestId
-    @operations = operations
-    @responseTime = responseTime
-    @units = units
-  end
-end
-
-# ProductCondition
-# - argument - SOAP::SOAPString
-# - operand - AdwordsApi::V201101::CampaignCriterionService::ProductConditionOperand
-class ProductCondition
-  attr_accessor :argument
-  attr_accessor :operand
-
-  def initialize(argument = nil, operand = nil)
-    @argument = argument
-    @operand = operand
-  end
-end
-
-# Selector
-# - fields - SOAP::SOAPString
-# - predicates - AdwordsApi::V201101::CampaignCriterionService::Predicate
-# - dateRange - AdwordsApi::V201101::CampaignCriterionService::DateRange
-# - ordering - AdwordsApi::V201101::CampaignCriterionService::OrderBy
-# - paging - AdwordsApi::V201101::CampaignCriterionService::Paging
-class Selector
-  attr_accessor :fields
-  attr_accessor :predicates
-  attr_accessor :dateRange
-  attr_accessor :ordering
-  attr_accessor :paging
-
-  def initialize(fields = [], predicates = [], dateRange = nil, ordering = [], paging = nil)
-    @fields = fields
-    @predicates = predicates
-    @dateRange = dateRange
-    @ordering = ordering
-    @paging = paging
-  end
-end
-
 # ApiError
 # abstract
 # - fieldPath - SOAP::SOAPString
@@ -265,6 +118,28 @@ end
 # - apiError_Type - SOAP::SOAPString
 # - reason - AdwordsApi::V201101::CampaignCriterionService::CriterionErrorReason
 class CriterionError < ApiError
+  attr_accessor :fieldPath
+  attr_accessor :trigger
+  attr_accessor :errorString
+  attr_accessor :apiError_Type
+  attr_accessor :reason
+
+  def initialize(fieldPath = nil, trigger = nil, errorString = nil, apiError_Type = nil, reason = nil)
+    @fieldPath = fieldPath
+    @trigger = trigger
+    @errorString = errorString
+    @apiError_Type = apiError_Type
+    @reason = reason
+  end
+end
+
+# DatabaseError
+# - fieldPath - SOAP::SOAPString
+# - trigger - SOAP::SOAPString
+# - errorString - SOAP::SOAPString
+# - apiError_Type - SOAP::SOAPString
+# - reason - AdwordsApi::V201101::CampaignCriterionService::DatabaseErrorReason
+class DatabaseError < ApiError
   attr_accessor :fieldPath
   attr_accessor :trigger
   attr_accessor :errorString
@@ -744,28 +619,6 @@ class SizeLimitError < ApiError
   end
 end
 
-# DatabaseError
-# - fieldPath - SOAP::SOAPString
-# - trigger - SOAP::SOAPString
-# - errorString - SOAP::SOAPString
-# - apiError_Type - SOAP::SOAPString
-# - reason - AdwordsApi::V201101::CampaignCriterionService::DatabaseErrorReason
-class DatabaseError < ApiError
-  attr_accessor :fieldPath
-  attr_accessor :trigger
-  attr_accessor :errorString
-  attr_accessor :apiError_Type
-  attr_accessor :reason
-
-  def initialize(fieldPath = nil, trigger = nil, errorString = nil, apiError_Type = nil, reason = nil)
-    @fieldPath = fieldPath
-    @trigger = trigger
-    @errorString = errorString
-    @apiError_Type = apiError_Type
-    @reason = reason
-  end
-end
-
 # ApplicationException
 # - message - SOAP::SOAPString
 # - applicationException_Type - SOAP::SOAPString
@@ -792,6 +645,38 @@ class ApiException < ApplicationException
     @message = message
     @applicationException_Type = applicationException_Type
     @errors = errors
+  end
+end
+
+# CampaignCriterion
+# - campaignId - SOAP::SOAPLong
+# - criterion - AdwordsApi::V201101::CampaignCriterionService::Criterion
+# - campaignCriterion_Type - SOAP::SOAPString
+class CampaignCriterion
+  attr_accessor :campaignId
+  attr_accessor :criterion
+  attr_accessor :campaignCriterion_Type
+
+  def initialize(campaignId = nil, criterion = nil, campaignCriterion_Type = nil)
+    @campaignId = campaignId
+    @criterion = criterion
+    @campaignCriterion_Type = campaignCriterion_Type
+  end
+end
+
+# NegativeCampaignCriterion
+# - campaignId - SOAP::SOAPLong
+# - criterion - AdwordsApi::V201101::CampaignCriterionService::Criterion
+# - campaignCriterion_Type - SOAP::SOAPString
+class NegativeCampaignCriterion < CampaignCriterion
+  attr_accessor :campaignId
+  attr_accessor :criterion
+  attr_accessor :campaignCriterion_Type
+
+  def initialize(campaignId = nil, criterion = nil, campaignCriterion_Type = nil)
+    @campaignId = campaignId
+    @criterion = criterion
+    @campaignCriterion_Type = campaignCriterion_Type
   end
 end
 
@@ -859,6 +744,25 @@ class Placement < Criterion
   end
 end
 
+# Product
+# - id - SOAP::SOAPLong
+# - criterion_Type - SOAP::SOAPString
+# - conditions - AdwordsApi::V201101::CampaignCriterionService::ProductCondition
+# - text - SOAP::SOAPString
+class Product < Criterion
+  attr_accessor :id
+  attr_accessor :criterion_Type
+  attr_accessor :conditions
+  attr_accessor :text
+
+  def initialize(id = nil, criterion_Type = nil, conditions = [], text = nil)
+    @id = id
+    @criterion_Type = criterion_Type
+    @conditions = conditions
+    @text = text
+  end
+end
+
 # CriterionUserInterest
 # - id - SOAP::SOAPLong
 # - criterion_Type - SOAP::SOAPString
@@ -916,54 +820,16 @@ class Vertical < Criterion
   end
 end
 
-# Product
-# - id - SOAP::SOAPLong
-# - criterion_Type - SOAP::SOAPString
-# - conditions - AdwordsApi::V201101::CampaignCriterionService::ProductCondition
-# - text - SOAP::SOAPString
-class Product < Criterion
-  attr_accessor :id
-  attr_accessor :criterion_Type
-  attr_accessor :conditions
-  attr_accessor :text
+# DateRange
+# - min - SOAP::SOAPString
+# - max - SOAP::SOAPString
+class DateRange
+  attr_accessor :min
+  attr_accessor :max
 
-  def initialize(id = nil, criterion_Type = nil, conditions = [], text = nil)
-    @id = id
-    @criterion_Type = criterion_Type
-    @conditions = conditions
-    @text = text
-  end
-end
-
-# CampaignCriterion
-# - campaignId - SOAP::SOAPLong
-# - criterion - AdwordsApi::V201101::CampaignCriterionService::Criterion
-# - campaignCriterion_Type - SOAP::SOAPString
-class CampaignCriterion
-  attr_accessor :campaignId
-  attr_accessor :criterion
-  attr_accessor :campaignCriterion_Type
-
-  def initialize(campaignId = nil, criterion = nil, campaignCriterion_Type = nil)
-    @campaignId = campaignId
-    @criterion = criterion
-    @campaignCriterion_Type = campaignCriterion_Type
-  end
-end
-
-# NegativeCampaignCriterion
-# - campaignId - SOAP::SOAPLong
-# - criterion - AdwordsApi::V201101::CampaignCriterionService::Criterion
-# - campaignCriterion_Type - SOAP::SOAPString
-class NegativeCampaignCriterion < CampaignCriterion
-  attr_accessor :campaignId
-  attr_accessor :criterion
-  attr_accessor :campaignCriterion_Type
-
-  def initialize(campaignId = nil, criterion = nil, campaignCriterion_Type = nil)
-    @campaignId = campaignId
-    @criterion = criterion
-    @campaignCriterion_Type = campaignCriterion_Type
+  def initialize(min = nil, max = nil)
+    @min = min
+    @max = max
   end
 end
 
@@ -1021,6 +887,19 @@ class CampaignCriterionOperation < Operation
   end
 end
 
+# OrderBy
+# - field - SOAP::SOAPString
+# - sortOrder - AdwordsApi::V201101::CampaignCriterionService::SortOrder
+class OrderBy
+  attr_accessor :field
+  attr_accessor :sortOrder
+
+  def initialize(field = nil, sortOrder = nil)
+    @field = field
+    @sortOrder = sortOrder
+  end
+end
+
 # Page
 # abstract
 # - totalNumEntries - SOAP::SOAPInt
@@ -1048,6 +927,127 @@ class CampaignCriterionPage < Page
     @totalNumEntries = totalNumEntries
     @page_Type = page_Type
     @entries = entries
+  end
+end
+
+# Paging
+# - startIndex - SOAP::SOAPInt
+# - numberResults - SOAP::SOAPInt
+class Paging
+  attr_accessor :startIndex
+  attr_accessor :numberResults
+
+  def initialize(startIndex = nil, numberResults = nil)
+    @startIndex = startIndex
+    @numberResults = numberResults
+  end
+end
+
+# Predicate
+# - field - SOAP::SOAPString
+# - operator - AdwordsApi::V201101::CampaignCriterionService::PredicateOperator
+# - values - SOAP::SOAPString
+class Predicate
+  attr_accessor :field
+  attr_accessor :operator
+  attr_accessor :values
+
+  def initialize(field = nil, operator = nil, values = [])
+    @field = field
+    @operator = operator
+    @values = values
+  end
+end
+
+# ProductCondition
+# - argument - SOAP::SOAPString
+# - operand - AdwordsApi::V201101::CampaignCriterionService::ProductConditionOperand
+class ProductCondition
+  attr_accessor :argument
+  attr_accessor :operand
+
+  def initialize(argument = nil, operand = nil)
+    @argument = argument
+    @operand = operand
+  end
+end
+
+# ProductConditionOperand
+# - operand - SOAP::SOAPString
+class ProductConditionOperand
+  attr_accessor :operand
+
+  def initialize(operand = nil)
+    @operand = operand
+  end
+end
+
+# Selector
+# - fields - SOAP::SOAPString
+# - predicates - AdwordsApi::V201101::CampaignCriterionService::Predicate
+# - dateRange - AdwordsApi::V201101::CampaignCriterionService::DateRange
+# - ordering - AdwordsApi::V201101::CampaignCriterionService::OrderBy
+# - paging - AdwordsApi::V201101::CampaignCriterionService::Paging
+class Selector
+  attr_accessor :fields
+  attr_accessor :predicates
+  attr_accessor :dateRange
+  attr_accessor :ordering
+  attr_accessor :paging
+
+  def initialize(fields = [], predicates = [], dateRange = nil, ordering = [], paging = nil)
+    @fields = fields
+    @predicates = predicates
+    @dateRange = dateRange
+    @ordering = ordering
+    @paging = paging
+  end
+end
+
+# SoapHeader
+# - authToken - SOAP::SOAPString
+# - clientCustomerId - SOAP::SOAPString
+# - clientEmail - SOAP::SOAPString
+# - developerToken - SOAP::SOAPString
+# - userAgent - SOAP::SOAPString
+# - validateOnly - SOAP::SOAPBoolean
+# - partialFailure - SOAP::SOAPBoolean
+class SoapHeader
+  attr_accessor :authToken
+  attr_accessor :clientCustomerId
+  attr_accessor :clientEmail
+  attr_accessor :developerToken
+  attr_accessor :userAgent
+  attr_accessor :validateOnly
+  attr_accessor :partialFailure
+
+  def initialize(authToken = nil, clientCustomerId = nil, clientEmail = nil, developerToken = nil, userAgent = nil, validateOnly = nil, partialFailure = nil)
+    @authToken = authToken
+    @clientCustomerId = clientCustomerId
+    @clientEmail = clientEmail
+    @developerToken = developerToken
+    @userAgent = userAgent
+    @validateOnly = validateOnly
+    @partialFailure = partialFailure
+  end
+end
+
+# SoapResponseHeader
+# - requestId - SOAP::SOAPString
+# - operations - SOAP::SOAPLong
+# - responseTime - SOAP::SOAPLong
+# - units - SOAP::SOAPLong
+class SoapResponseHeader
+  attr_accessor :requestId
+  attr_accessor :operations
+  attr_accessor :responseTime
+  attr_accessor :units
+
+  def initialize(requestId = nil, operations = nil, responseTime = nil, units = nil)
+    @requestId = requestId
+    @operations = operations
+    @responseTime = responseTime
+    @units = units
   end
 end
 

@@ -16,7 +16,7 @@ class ReportInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/v13", "deleteReportResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :name=>"ApiException"}} }
     ],
     [ "",
       "getAllJobs",
@@ -24,7 +24,7 @@ class ReportInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/v13", "getAllJobsResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :name=>"ApiException"}} }
     ],
     [ "",
       "getGzipReportDownloadUrl",
@@ -32,7 +32,7 @@ class ReportInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/v13", "getGzipReportDownloadUrlResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :name=>"ApiException"}} }
     ],
     [ "",
       "getReportDownloadUrl",
@@ -40,7 +40,7 @@ class ReportInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/v13", "getReportDownloadUrlResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :name=>"ApiException"}} }
     ],
     [ "",
       "getReportJobStatus",
@@ -48,7 +48,7 @@ class ReportInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/v13", "getReportJobStatusResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :name=>"ApiException"}} }
     ],
     [ "",
       "scheduleReportJob",
@@ -56,7 +56,7 @@ class ReportInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/v13", "scheduleReportJobResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :name=>"ApiException"}} }
     ],
     [ "",
       "validateReportJob",
@@ -64,7 +64,7 @@ class ReportInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/v13", "validateReportJobResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V13::ReportService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :name=>"ApiException"}} }
     ]
   ]
 

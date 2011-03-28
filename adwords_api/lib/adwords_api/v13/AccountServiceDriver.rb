@@ -16,7 +16,7 @@ class AccountInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/v13", "getAccountInfoResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V13::AccountService::ApiException"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V13::AccountService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :name=>"ApiException"}} }
     ],
     [ "",
       "getClientAccountInfos",
@@ -24,7 +24,7 @@ class AccountInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/v13", "getClientAccountInfosResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V13::AccountService::ApiException"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V13::AccountService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :name=>"ApiException"}} }
     ],
     [ "",
       "getClientAccounts",
@@ -32,7 +32,7 @@ class AccountInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/v13", "getClientAccountsResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V13::AccountService::ApiException"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V13::AccountService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :name=>"ApiException"}} }
     ],
     [ "",
       "getMccAlerts",
@@ -40,7 +40,7 @@ class AccountInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/v13", "getMccAlertsResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V13::AccountService::ApiException"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V13::AccountService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :name=>"ApiException"}} }
     ],
     [ "",
       "updateAccountInfo",
@@ -48,7 +48,7 @@ class AccountInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/v13", "updateAccountInfoResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V13::AccountService::ApiException"=>{:encodingstyle=>"document", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :use=>"literal", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V13::AccountService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/v13", :name=>"ApiException"}} }
     ]
   ]
 

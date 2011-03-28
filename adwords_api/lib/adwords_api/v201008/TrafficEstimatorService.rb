@@ -31,442 +31,6 @@ class Address
   end
 end
 
-# GeoPoint
-# - latitudeInMicroDegrees - SOAP::SOAPInt
-# - longitudeInMicroDegrees - SOAP::SOAPInt
-class GeoPoint
-  attr_accessor :latitudeInMicroDegrees
-  attr_accessor :longitudeInMicroDegrees
-
-  def initialize(latitudeInMicroDegrees = nil, longitudeInMicroDegrees = nil)
-    @latitudeInMicroDegrees = latitudeInMicroDegrees
-    @longitudeInMicroDegrees = longitudeInMicroDegrees
-  end
-end
-
-# ProductConditionOperand
-# - operand - SOAP::SOAPString
-class ProductConditionOperand
-  attr_accessor :operand
-
-  def initialize(operand = nil)
-    @operand = operand
-  end
-end
-
-# SoapHeader
-# - authToken - SOAP::SOAPString
-# - clientCustomerId - SOAP::SOAPString
-# - clientEmail - SOAP::SOAPString
-# - developerToken - SOAP::SOAPString
-# - userAgent - SOAP::SOAPString
-# - validateOnly - SOAP::SOAPBoolean
-# - partialFailure - SOAP::SOAPBoolean
-class SoapHeader
-  attr_accessor :authToken
-  attr_accessor :clientCustomerId
-  attr_accessor :clientEmail
-  attr_accessor :developerToken
-  attr_accessor :userAgent
-  attr_accessor :validateOnly
-  attr_accessor :partialFailure
-
-  def initialize(authToken = nil, clientCustomerId = nil, clientEmail = nil, developerToken = nil, userAgent = nil, validateOnly = nil, partialFailure = nil)
-    @authToken = authToken
-    @clientCustomerId = clientCustomerId
-    @clientEmail = clientEmail
-    @developerToken = developerToken
-    @userAgent = userAgent
-    @validateOnly = validateOnly
-    @partialFailure = partialFailure
-  end
-end
-
-# SoapResponseHeader
-# - requestId - SOAP::SOAPString
-# - operations - SOAP::SOAPLong
-# - responseTime - SOAP::SOAPLong
-# - units - SOAP::SOAPLong
-class SoapResponseHeader
-  attr_accessor :requestId
-  attr_accessor :operations
-  attr_accessor :responseTime
-  attr_accessor :units
-
-  def initialize(requestId = nil, operations = nil, responseTime = nil, units = nil)
-    @requestId = requestId
-    @operations = operations
-    @responseTime = responseTime
-    @units = units
-  end
-end
-
-# ComparableValue
-# abstract
-# - comparableValue_Type - SOAP::SOAPString
-class ComparableValue
-  attr_accessor :comparableValue_Type
-
-  def initialize(comparableValue_Type = nil)
-    @comparableValue_Type = comparableValue_Type
-  end
-end
-
-# Money
-# - comparableValue_Type - SOAP::SOAPString
-# - microAmount - SOAP::SOAPLong
-class Money < ComparableValue
-  attr_accessor :comparableValue_Type
-  attr_accessor :microAmount
-
-  def initialize(comparableValue_Type = nil, microAmount = nil)
-    @comparableValue_Type = comparableValue_Type
-    @microAmount = microAmount
-  end
-end
-
-# NumberValue
-# abstract
-# - comparableValue_Type - SOAP::SOAPString
-class NumberValue < ComparableValue
-  attr_accessor :comparableValue_Type
-
-  def initialize(comparableValue_Type = nil)
-    @comparableValue_Type = comparableValue_Type
-  end
-end
-
-# DoubleValue
-# - comparableValue_Type - SOAP::SOAPString
-# - number - SOAP::SOAPDouble
-class DoubleValue < NumberValue
-  attr_accessor :comparableValue_Type
-  attr_accessor :number
-
-  def initialize(comparableValue_Type = nil, number = nil)
-    @comparableValue_Type = comparableValue_Type
-    @number = number
-  end
-end
-
-# LongValue
-# - comparableValue_Type - SOAP::SOAPString
-# - number - SOAP::SOAPLong
-class LongValue < NumberValue
-  attr_accessor :comparableValue_Type
-  attr_accessor :number
-
-  def initialize(comparableValue_Type = nil, number = nil)
-    @comparableValue_Type = comparableValue_Type
-    @number = number
-  end
-end
-
-# ProductCondition
-# - argument - SOAP::SOAPString
-# - operand - AdwordsApi::V201008::TrafficEstimatorService::ProductConditionOperand
-class ProductCondition
-  attr_accessor :argument
-  attr_accessor :operand
-
-  def initialize(argument = nil, operand = nil)
-    @argument = argument
-    @operand = operand
-  end
-end
-
-# Target
-# abstract
-# - target_Type - SOAP::SOAPString
-class Target
-  attr_accessor :target_Type
-
-  def initialize(target_Type = nil)
-    @target_Type = target_Type
-  end
-end
-
-# AdScheduleTarget
-# - target_Type - SOAP::SOAPString
-# - dayOfWeek - AdwordsApi::V201008::TrafficEstimatorService::DayOfWeek
-# - startHour - SOAP::SOAPInt
-# - startMinute - AdwordsApi::V201008::TrafficEstimatorService::MinuteOfHour
-# - endHour - SOAP::SOAPInt
-# - endMinute - AdwordsApi::V201008::TrafficEstimatorService::MinuteOfHour
-# - bidMultiplier - SOAP::SOAPDouble
-class AdScheduleTarget < Target
-  attr_accessor :target_Type
-  attr_accessor :dayOfWeek
-  attr_accessor :startHour
-  attr_accessor :startMinute
-  attr_accessor :endHour
-  attr_accessor :endMinute
-  attr_accessor :bidMultiplier
-
-  def initialize(target_Type = nil, dayOfWeek = nil, startHour = nil, startMinute = nil, endHour = nil, endMinute = nil, bidMultiplier = nil)
-    @target_Type = target_Type
-    @dayOfWeek = dayOfWeek
-    @startHour = startHour
-    @startMinute = startMinute
-    @endHour = endHour
-    @endMinute = endMinute
-    @bidMultiplier = bidMultiplier
-  end
-end
-
-# LanguageTarget
-# - target_Type - SOAP::SOAPString
-# - languageCode - SOAP::SOAPString
-class LanguageTarget < Target
-  attr_accessor :target_Type
-  attr_accessor :languageCode
-
-  def initialize(target_Type = nil, languageCode = nil)
-    @target_Type = target_Type
-    @languageCode = languageCode
-  end
-end
-
-# MobileTarget
-# abstract
-# - target_Type - SOAP::SOAPString
-class MobileTarget < Target
-  attr_accessor :target_Type
-
-  def initialize(target_Type = nil)
-    @target_Type = target_Type
-  end
-end
-
-# MobileCarrierTarget
-# - target_Type - SOAP::SOAPString
-# - carrierName - SOAP::SOAPString
-# - countryCode - SOAP::SOAPString
-class MobileCarrierTarget < MobileTarget
-  attr_accessor :target_Type
-  attr_accessor :carrierName
-  attr_accessor :countryCode
-
-  def initialize(target_Type = nil, carrierName = nil, countryCode = nil)
-    @target_Type = target_Type
-    @carrierName = carrierName
-    @countryCode = countryCode
-  end
-end
-
-# MobilePlatformTarget
-# - target_Type - SOAP::SOAPString
-# - platformName - SOAP::SOAPString
-class MobilePlatformTarget < MobileTarget
-  attr_accessor :target_Type
-  attr_accessor :platformName
-
-  def initialize(target_Type = nil, platformName = nil)
-    @target_Type = target_Type
-    @platformName = platformName
-  end
-end
-
-# NetworkTarget
-# - target_Type - SOAP::SOAPString
-# - networkCoverageType - AdwordsApi::V201008::TrafficEstimatorService::NetworkCoverageType
-class NetworkTarget < Target
-  attr_accessor :target_Type
-  attr_accessor :networkCoverageType
-
-  def initialize(target_Type = nil, networkCoverageType = nil)
-    @target_Type = target_Type
-    @networkCoverageType = networkCoverageType
-  end
-end
-
-# PlatformTarget
-# - target_Type - SOAP::SOAPString
-# - platformType - AdwordsApi::V201008::TrafficEstimatorService::PlatformType
-class PlatformTarget < Target
-  attr_accessor :target_Type
-  attr_accessor :platformType
-
-  def initialize(target_Type = nil, platformType = nil)
-    @target_Type = target_Type
-    @platformType = platformType
-  end
-end
-
-# DemographicTarget
-# abstract
-# - target_Type - SOAP::SOAPString
-# - bidModifier - SOAP::SOAPInt
-class DemographicTarget < Target
-  attr_accessor :target_Type
-  attr_accessor :bidModifier
-
-  def initialize(target_Type = nil, bidModifier = nil)
-    @target_Type = target_Type
-    @bidModifier = bidModifier
-  end
-end
-
-# AgeTarget
-# - target_Type - SOAP::SOAPString
-# - bidModifier - SOAP::SOAPInt
-# - age - AdwordsApi::V201008::TrafficEstimatorService::AgeTargetAge
-class AgeTarget < DemographicTarget
-  attr_accessor :target_Type
-  attr_accessor :bidModifier
-  attr_accessor :age
-
-  def initialize(target_Type = nil, bidModifier = nil, age = nil)
-    @target_Type = target_Type
-    @bidModifier = bidModifier
-    @age = age
-  end
-end
-
-# GenderTarget
-# - target_Type - SOAP::SOAPString
-# - bidModifier - SOAP::SOAPInt
-# - gender - AdwordsApi::V201008::TrafficEstimatorService::GenderTargetGender
-class GenderTarget < DemographicTarget
-  attr_accessor :target_Type
-  attr_accessor :bidModifier
-  attr_accessor :gender
-
-  def initialize(target_Type = nil, bidModifier = nil, gender = nil)
-    @target_Type = target_Type
-    @bidModifier = bidModifier
-    @gender = gender
-  end
-end
-
-# GeoTarget
-# abstract
-# - target_Type - SOAP::SOAPString
-# - excluded - SOAP::SOAPBoolean
-class GeoTarget < Target
-  attr_accessor :target_Type
-  attr_accessor :excluded
-
-  def initialize(target_Type = nil, excluded = nil)
-    @target_Type = target_Type
-    @excluded = excluded
-  end
-end
-
-# CityTarget
-# - target_Type - SOAP::SOAPString
-# - excluded - SOAP::SOAPBoolean
-# - cityName - SOAP::SOAPString
-# - provinceCode - SOAP::SOAPString
-# - countryCode - SOAP::SOAPString
-class CityTarget < GeoTarget
-  attr_accessor :target_Type
-  attr_accessor :excluded
-  attr_accessor :cityName
-  attr_accessor :provinceCode
-  attr_accessor :countryCode
-
-  def initialize(target_Type = nil, excluded = nil, cityName = nil, provinceCode = nil, countryCode = nil)
-    @target_Type = target_Type
-    @excluded = excluded
-    @cityName = cityName
-    @provinceCode = provinceCode
-    @countryCode = countryCode
-  end
-end
-
-# CountryTarget
-# - target_Type - SOAP::SOAPString
-# - excluded - SOAP::SOAPBoolean
-# - countryCode - SOAP::SOAPString
-class CountryTarget < GeoTarget
-  attr_accessor :target_Type
-  attr_accessor :excluded
-  attr_accessor :countryCode
-
-  def initialize(target_Type = nil, excluded = nil, countryCode = nil)
-    @target_Type = target_Type
-    @excluded = excluded
-    @countryCode = countryCode
-  end
-end
-
-# MetroTarget
-# - target_Type - SOAP::SOAPString
-# - excluded - SOAP::SOAPBoolean
-# - metroCode - SOAP::SOAPString
-class MetroTarget < GeoTarget
-  attr_accessor :target_Type
-  attr_accessor :excluded
-  attr_accessor :metroCode
-
-  def initialize(target_Type = nil, excluded = nil, metroCode = nil)
-    @target_Type = target_Type
-    @excluded = excluded
-    @metroCode = metroCode
-  end
-end
-
-# PolygonTarget
-# - target_Type - SOAP::SOAPString
-# - excluded - SOAP::SOAPBoolean
-# - vertices - AdwordsApi::V201008::TrafficEstimatorService::GeoPoint
-class PolygonTarget < GeoTarget
-  attr_accessor :target_Type
-  attr_accessor :excluded
-  attr_accessor :vertices
-
-  def initialize(target_Type = nil, excluded = nil, vertices = [])
-    @target_Type = target_Type
-    @excluded = excluded
-    @vertices = vertices
-  end
-end
-
-# ProvinceTarget
-# - target_Type - SOAP::SOAPString
-# - excluded - SOAP::SOAPBoolean
-# - provinceCode - SOAP::SOAPString
-class ProvinceTarget < GeoTarget
-  attr_accessor :target_Type
-  attr_accessor :excluded
-  attr_accessor :provinceCode
-
-  def initialize(target_Type = nil, excluded = nil, provinceCode = nil)
-    @target_Type = target_Type
-    @excluded = excluded
-    @provinceCode = provinceCode
-  end
-end
-
-# ProximityTarget
-# - target_Type - SOAP::SOAPString
-# - excluded - SOAP::SOAPBoolean
-# - geoPoint - AdwordsApi::V201008::TrafficEstimatorService::GeoPoint
-# - radiusDistanceUnits - AdwordsApi::V201008::TrafficEstimatorService::ProximityTargetDistanceUnits
-# - radiusInUnits - SOAP::SOAPDouble
-# - address - AdwordsApi::V201008::TrafficEstimatorService::Address
-# - allowServiceOfAddress - SOAP::SOAPBoolean
-class ProximityTarget < GeoTarget
-  attr_accessor :target_Type
-  attr_accessor :excluded
-  attr_accessor :geoPoint
-  attr_accessor :radiusDistanceUnits
-  attr_accessor :radiusInUnits
-  attr_accessor :address
-  attr_accessor :allowServiceOfAddress
-
-  def initialize(target_Type = nil, excluded = nil, geoPoint = nil, radiusDistanceUnits = nil, radiusInUnits = nil, address = nil, allowServiceOfAddress = nil)
-    @target_Type = target_Type
-    @excluded = excluded
-    @geoPoint = geoPoint
-    @radiusDistanceUnits = radiusDistanceUnits
-    @radiusInUnits = radiusInUnits
-    @address = address
-    @allowServiceOfAddress = allowServiceOfAddress
-  end
-end
-
 # ApiError
 # abstract
 # - fieldPath - SOAP::SOAPString
@@ -538,6 +102,28 @@ end
 # - apiError_Type - SOAP::SOAPString
 # - reason - AdwordsApi::V201008::TrafficEstimatorService::ClientTermsErrorReason
 class ClientTermsError < ApiError
+  attr_accessor :fieldPath
+  attr_accessor :trigger
+  attr_accessor :errorString
+  attr_accessor :apiError_Type
+  attr_accessor :reason
+
+  def initialize(fieldPath = nil, trigger = nil, errorString = nil, apiError_Type = nil, reason = nil)
+    @fieldPath = fieldPath
+    @trigger = trigger
+    @errorString = errorString
+    @apiError_Type = apiError_Type
+    @reason = reason
+  end
+end
+
+# DatabaseError
+# - fieldPath - SOAP::SOAPString
+# - trigger - SOAP::SOAPString
+# - errorString - SOAP::SOAPString
+# - apiError_Type - SOAP::SOAPString
+# - reason - AdwordsApi::V201008::TrafficEstimatorService::DatabaseErrorReason
+class DatabaseError < ApiError
   attr_accessor :fieldPath
   attr_accessor :trigger
   attr_accessor :errorString
@@ -1046,28 +632,6 @@ class TargetError < ApiError
   end
 end
 
-# DatabaseError
-# - fieldPath - SOAP::SOAPString
-# - trigger - SOAP::SOAPString
-# - errorString - SOAP::SOAPString
-# - apiError_Type - SOAP::SOAPString
-# - reason - AdwordsApi::V201008::TrafficEstimatorService::DatabaseErrorReason
-class DatabaseError < ApiError
-  attr_accessor :fieldPath
-  attr_accessor :trigger
-  attr_accessor :errorString
-  attr_accessor :apiError_Type
-  attr_accessor :reason
-
-  def initialize(fieldPath = nil, trigger = nil, errorString = nil, apiError_Type = nil, reason = nil)
-    @fieldPath = fieldPath
-    @trigger = trigger
-    @errorString = errorString
-    @apiError_Type = apiError_Type
-    @reason = reason
-  end
-end
-
 # CollectionSizeError
 # - fieldPath - SOAP::SOAPString
 # - trigger - SOAP::SOAPString
@@ -1163,6 +727,67 @@ class ApiException < ApplicationException
   end
 end
 
+# ComparableValue
+# abstract
+# - comparableValue_Type - SOAP::SOAPString
+class ComparableValue
+  attr_accessor :comparableValue_Type
+
+  def initialize(comparableValue_Type = nil)
+    @comparableValue_Type = comparableValue_Type
+  end
+end
+
+# Money
+# - comparableValue_Type - SOAP::SOAPString
+# - microAmount - SOAP::SOAPLong
+class Money < ComparableValue
+  attr_accessor :comparableValue_Type
+  attr_accessor :microAmount
+
+  def initialize(comparableValue_Type = nil, microAmount = nil)
+    @comparableValue_Type = comparableValue_Type
+    @microAmount = microAmount
+  end
+end
+
+# NumberValue
+# abstract
+# - comparableValue_Type - SOAP::SOAPString
+class NumberValue < ComparableValue
+  attr_accessor :comparableValue_Type
+
+  def initialize(comparableValue_Type = nil)
+    @comparableValue_Type = comparableValue_Type
+  end
+end
+
+# DoubleValue
+# - comparableValue_Type - SOAP::SOAPString
+# - number - SOAP::SOAPDouble
+class DoubleValue < NumberValue
+  attr_accessor :comparableValue_Type
+  attr_accessor :number
+
+  def initialize(comparableValue_Type = nil, number = nil)
+    @comparableValue_Type = comparableValue_Type
+    @number = number
+  end
+end
+
+# LongValue
+# - comparableValue_Type - SOAP::SOAPString
+# - number - SOAP::SOAPLong
+class LongValue < NumberValue
+  attr_accessor :comparableValue_Type
+  attr_accessor :number
+
+  def initialize(comparableValue_Type = nil, number = nil)
+    @comparableValue_Type = comparableValue_Type
+    @number = number
+  end
+end
+
 # Criterion
 # - id - SOAP::SOAPLong
 # - criterion_Type - SOAP::SOAPString
@@ -1208,6 +833,25 @@ class Placement < Criterion
     @id = id
     @criterion_Type = criterion_Type
     @url = url
+  end
+end
+
+# Product
+# - id - SOAP::SOAPLong
+# - criterion_Type - SOAP::SOAPString
+# - conditions - AdwordsApi::V201008::TrafficEstimatorService::ProductCondition
+# - text - SOAP::SOAPString
+class Product < Criterion
+  attr_accessor :id
+  attr_accessor :criterion_Type
+  attr_accessor :conditions
+  attr_accessor :text
+
+  def initialize(id = nil, criterion_Type = nil, conditions = [], text = nil)
+    @id = id
+    @criterion_Type = criterion_Type
+    @conditions = conditions
+    @text = text
   end
 end
 
@@ -1271,22 +915,378 @@ class Vertical < Criterion
   end
 end
 
-# Product
-# - id - SOAP::SOAPLong
-# - criterion_Type - SOAP::SOAPString
-# - conditions - AdwordsApi::V201008::TrafficEstimatorService::ProductCondition
-# - text - SOAP::SOAPString
-class Product < Criterion
-  attr_accessor :id
-  attr_accessor :criterion_Type
-  attr_accessor :conditions
-  attr_accessor :text
+# GeoPoint
+# - latitudeInMicroDegrees - SOAP::SOAPInt
+# - longitudeInMicroDegrees - SOAP::SOAPInt
+class GeoPoint
+  attr_accessor :latitudeInMicroDegrees
+  attr_accessor :longitudeInMicroDegrees
 
-  def initialize(id = nil, criterion_Type = nil, conditions = [], text = nil)
-    @id = id
-    @criterion_Type = criterion_Type
-    @conditions = conditions
-    @text = text
+  def initialize(latitudeInMicroDegrees = nil, longitudeInMicroDegrees = nil)
+    @latitudeInMicroDegrees = latitudeInMicroDegrees
+    @longitudeInMicroDegrees = longitudeInMicroDegrees
+  end
+end
+
+# ProductCondition
+# - argument - SOAP::SOAPString
+# - operand - AdwordsApi::V201008::TrafficEstimatorService::ProductConditionOperand
+class ProductCondition
+  attr_accessor :argument
+  attr_accessor :operand
+
+  def initialize(argument = nil, operand = nil)
+    @argument = argument
+    @operand = operand
+  end
+end
+
+# ProductConditionOperand
+# - operand - SOAP::SOAPString
+class ProductConditionOperand
+  attr_accessor :operand
+
+  def initialize(operand = nil)
+    @operand = operand
+  end
+end
+
+# SoapHeader
+# - authToken - SOAP::SOAPString
+# - clientCustomerId - SOAP::SOAPString
+# - clientEmail - SOAP::SOAPString
+# - developerToken - SOAP::SOAPString
+# - userAgent - SOAP::SOAPString
+# - validateOnly - SOAP::SOAPBoolean
+# - partialFailure - SOAP::SOAPBoolean
+class SoapHeader
+  attr_accessor :authToken
+  attr_accessor :clientCustomerId
+  attr_accessor :clientEmail
+  attr_accessor :developerToken
+  attr_accessor :userAgent
+  attr_accessor :validateOnly
+  attr_accessor :partialFailure
+
+  def initialize(authToken = nil, clientCustomerId = nil, clientEmail = nil, developerToken = nil, userAgent = nil, validateOnly = nil, partialFailure = nil)
+    @authToken = authToken
+    @clientCustomerId = clientCustomerId
+    @clientEmail = clientEmail
+    @developerToken = developerToken
+    @userAgent = userAgent
+    @validateOnly = validateOnly
+    @partialFailure = partialFailure
+  end
+end
+
+# SoapResponseHeader
+# - requestId - SOAP::SOAPString
+# - operations - SOAP::SOAPLong
+# - responseTime - SOAP::SOAPLong
+# - units - SOAP::SOAPLong
+class SoapResponseHeader
+  attr_accessor :requestId
+  attr_accessor :operations
+  attr_accessor :responseTime
+  attr_accessor :units
+
+  def initialize(requestId = nil, operations = nil, responseTime = nil, units = nil)
+    @requestId = requestId
+    @operations = operations
+    @responseTime = responseTime
+    @units = units
+  end
+end
+
+# Target
+# abstract
+# - target_Type - SOAP::SOAPString
+class Target
+  attr_accessor :target_Type
+
+  def initialize(target_Type = nil)
+    @target_Type = target_Type
+  end
+end
+
+# AdScheduleTarget
+# - target_Type - SOAP::SOAPString
+# - dayOfWeek - AdwordsApi::V201008::TrafficEstimatorService::DayOfWeek
+# - startHour - SOAP::SOAPInt
+# - startMinute - AdwordsApi::V201008::TrafficEstimatorService::MinuteOfHour
+# - endHour - SOAP::SOAPInt
+# - endMinute - AdwordsApi::V201008::TrafficEstimatorService::MinuteOfHour
+# - bidMultiplier - SOAP::SOAPDouble
+class AdScheduleTarget < Target
+  attr_accessor :target_Type
+  attr_accessor :dayOfWeek
+  attr_accessor :startHour
+  attr_accessor :startMinute
+  attr_accessor :endHour
+  attr_accessor :endMinute
+  attr_accessor :bidMultiplier
+
+  def initialize(target_Type = nil, dayOfWeek = nil, startHour = nil, startMinute = nil, endHour = nil, endMinute = nil, bidMultiplier = nil)
+    @target_Type = target_Type
+    @dayOfWeek = dayOfWeek
+    @startHour = startHour
+    @startMinute = startMinute
+    @endHour = endHour
+    @endMinute = endMinute
+    @bidMultiplier = bidMultiplier
+  end
+end
+
+# DemographicTarget
+# abstract
+# - target_Type - SOAP::SOAPString
+# - bidModifier - SOAP::SOAPInt
+class DemographicTarget < Target
+  attr_accessor :target_Type
+  attr_accessor :bidModifier
+
+  def initialize(target_Type = nil, bidModifier = nil)
+    @target_Type = target_Type
+    @bidModifier = bidModifier
+  end
+end
+
+# AgeTarget
+# - target_Type - SOAP::SOAPString
+# - bidModifier - SOAP::SOAPInt
+# - age - AdwordsApi::V201008::TrafficEstimatorService::AgeTargetAge
+class AgeTarget < DemographicTarget
+  attr_accessor :target_Type
+  attr_accessor :bidModifier
+  attr_accessor :age
+
+  def initialize(target_Type = nil, bidModifier = nil, age = nil)
+    @target_Type = target_Type
+    @bidModifier = bidModifier
+    @age = age
+  end
+end
+
+# GenderTarget
+# - target_Type - SOAP::SOAPString
+# - bidModifier - SOAP::SOAPInt
+# - gender - AdwordsApi::V201008::TrafficEstimatorService::GenderTargetGender
+class GenderTarget < DemographicTarget
+  attr_accessor :target_Type
+  attr_accessor :bidModifier
+  attr_accessor :gender
+
+  def initialize(target_Type = nil, bidModifier = nil, gender = nil)
+    @target_Type = target_Type
+    @bidModifier = bidModifier
+    @gender = gender
+  end
+end
+
+# GeoTarget
+# abstract
+# - target_Type - SOAP::SOAPString
+# - excluded - SOAP::SOAPBoolean
+class GeoTarget < Target
+  attr_accessor :target_Type
+  attr_accessor :excluded
+
+  def initialize(target_Type = nil, excluded = nil)
+    @target_Type = target_Type
+    @excluded = excluded
+  end
+end
+
+# CityTarget
+# - target_Type - SOAP::SOAPString
+# - excluded - SOAP::SOAPBoolean
+# - cityName - SOAP::SOAPString
+# - provinceCode - SOAP::SOAPString
+# - countryCode - SOAP::SOAPString
+class CityTarget < GeoTarget
+  attr_accessor :target_Type
+  attr_accessor :excluded
+  attr_accessor :cityName
+  attr_accessor :provinceCode
+  attr_accessor :countryCode
+
+  def initialize(target_Type = nil, excluded = nil, cityName = nil, provinceCode = nil, countryCode = nil)
+    @target_Type = target_Type
+    @excluded = excluded
+    @cityName = cityName
+    @provinceCode = provinceCode
+    @countryCode = countryCode
+  end
+end
+
+# CountryTarget
+# - target_Type - SOAP::SOAPString
+# - excluded - SOAP::SOAPBoolean
+# - countryCode - SOAP::SOAPString
+class CountryTarget < GeoTarget
+  attr_accessor :target_Type
+  attr_accessor :excluded
+  attr_accessor :countryCode
+
+  def initialize(target_Type = nil, excluded = nil, countryCode = nil)
+    @target_Type = target_Type
+    @excluded = excluded
+    @countryCode = countryCode
+  end
+end
+
+# MetroTarget
+# - target_Type - SOAP::SOAPString
+# - excluded - SOAP::SOAPBoolean
+# - metroCode - SOAP::SOAPString
+class MetroTarget < GeoTarget
+  attr_accessor :target_Type
+  attr_accessor :excluded
+  attr_accessor :metroCode
+
+  def initialize(target_Type = nil, excluded = nil, metroCode = nil)
+    @target_Type = target_Type
+    @excluded = excluded
+    @metroCode = metroCode
+  end
+end
+
+# PolygonTarget
+# - target_Type - SOAP::SOAPString
+# - excluded - SOAP::SOAPBoolean
+# - vertices - AdwordsApi::V201008::TrafficEstimatorService::GeoPoint
+class PolygonTarget < GeoTarget
+  attr_accessor :target_Type
+  attr_accessor :excluded
+  attr_accessor :vertices
+
+  def initialize(target_Type = nil, excluded = nil, vertices = [])
+    @target_Type = target_Type
+    @excluded = excluded
+    @vertices = vertices
+  end
+end
+
+# ProvinceTarget
+# - target_Type - SOAP::SOAPString
+# - excluded - SOAP::SOAPBoolean
+# - provinceCode - SOAP::SOAPString
+class ProvinceTarget < GeoTarget
+  attr_accessor :target_Type
+  attr_accessor :excluded
+  attr_accessor :provinceCode
+
+  def initialize(target_Type = nil, excluded = nil, provinceCode = nil)
+    @target_Type = target_Type
+    @excluded = excluded
+    @provinceCode = provinceCode
+  end
+end
+
+# ProximityTarget
+# - target_Type - SOAP::SOAPString
+# - excluded - SOAP::SOAPBoolean
+# - geoPoint - AdwordsApi::V201008::TrafficEstimatorService::GeoPoint
+# - radiusDistanceUnits - AdwordsApi::V201008::TrafficEstimatorService::ProximityTargetDistanceUnits
+# - radiusInUnits - SOAP::SOAPDouble
+# - address - AdwordsApi::V201008::TrafficEstimatorService::Address
+# - allowServiceOfAddress - SOAP::SOAPBoolean
+class ProximityTarget < GeoTarget
+  attr_accessor :target_Type
+  attr_accessor :excluded
+  attr_accessor :geoPoint
+  attr_accessor :radiusDistanceUnits
+  attr_accessor :radiusInUnits
+  attr_accessor :address
+  attr_accessor :allowServiceOfAddress
+
+  def initialize(target_Type = nil, excluded = nil, geoPoint = nil, radiusDistanceUnits = nil, radiusInUnits = nil, address = nil, allowServiceOfAddress = nil)
+    @target_Type = target_Type
+    @excluded = excluded
+    @geoPoint = geoPoint
+    @radiusDistanceUnits = radiusDistanceUnits
+    @radiusInUnits = radiusInUnits
+    @address = address
+    @allowServiceOfAddress = allowServiceOfAddress
+  end
+end
+
+# LanguageTarget
+# - target_Type - SOAP::SOAPString
+# - languageCode - SOAP::SOAPString
+class LanguageTarget < Target
+  attr_accessor :target_Type
+  attr_accessor :languageCode
+
+  def initialize(target_Type = nil, languageCode = nil)
+    @target_Type = target_Type
+    @languageCode = languageCode
+  end
+end
+
+# MobileTarget
+# abstract
+# - target_Type - SOAP::SOAPString
+class MobileTarget < Target
+  attr_accessor :target_Type
+
+  def initialize(target_Type = nil)
+    @target_Type = target_Type
+  end
+end
+
+# MobileCarrierTarget
+# - target_Type - SOAP::SOAPString
+# - carrierName - SOAP::SOAPString
+# - countryCode - SOAP::SOAPString
+class MobileCarrierTarget < MobileTarget
+  attr_accessor :target_Type
+  attr_accessor :carrierName
+  attr_accessor :countryCode
+
+  def initialize(target_Type = nil, carrierName = nil, countryCode = nil)
+    @target_Type = target_Type
+    @carrierName = carrierName
+    @countryCode = countryCode
+  end
+end
+
+# MobilePlatformTarget
+# - target_Type - SOAP::SOAPString
+# - platformName - SOAP::SOAPString
+class MobilePlatformTarget < MobileTarget
+  attr_accessor :target_Type
+  attr_accessor :platformName
+
+  def initialize(target_Type = nil, platformName = nil)
+    @target_Type = target_Type
+    @platformName = platformName
+  end
+end
+
+# NetworkTarget
+# - target_Type - SOAP::SOAPString
+# - networkCoverageType - AdwordsApi::V201008::TrafficEstimatorService::NetworkCoverageType
+class NetworkTarget < Target
+  attr_accessor :target_Type
+  attr_accessor :networkCoverageType
+
+  def initialize(target_Type = nil, networkCoverageType = nil)
+    @target_Type = target_Type
+    @networkCoverageType = networkCoverageType
+  end
+end
+
+# PlatformTarget
+# - target_Type - SOAP::SOAPString
+# - platformType - AdwordsApi::V201008::TrafficEstimatorService::PlatformType
+class PlatformTarget < Target
+  attr_accessor :target_Type
+  attr_accessor :platformType
+
+  def initialize(target_Type = nil, platformType = nil)
+    @target_Type = target_Type
+    @platformType = platformType
   end
 end
 
