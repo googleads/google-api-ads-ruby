@@ -95,7 +95,7 @@ The 'get' method, on the other hand, returns a ReportDefinitionPage object which
 has an 'entries' and a 'total_num_entries' field. So, to access the return
 values, you would do:
    response = report_def_srv.get(selector)
-   num_entries = response[:rval][:total_num_entries]
+   num_entries = response[:total_num_entries]
 
 Essentially, all you have to do is follow Ruby conventions, and the library will
 do the rest. All of the examples are written following this standard.
