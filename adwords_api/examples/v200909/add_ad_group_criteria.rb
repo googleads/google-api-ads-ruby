@@ -69,7 +69,7 @@ def add_ad_group_criteria()
 
   # Add criteria.
   response = ad_group_criterion_srv.mutate([kwd_operation, plc_operation])
-  if response and and response[:value]
+  if response and response[:value]
     ad_group_criteria = response[:value]
     puts "Added #{ad_group_criteria.length} criteria to ad group " +
         "#{ad_group_id}."

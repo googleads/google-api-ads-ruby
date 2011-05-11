@@ -20,6 +20,9 @@
 # This example adds a cross client (MCC) report. To get ad groups, run
 # get_all_ad_groups.rb. To get report fields, run get_report_fields.rb.
 #
+# Please note: This feature is still under development and may change before it
+# is released.
+#
 # Tags: ReportDefinitionService.mutate
 
 require 'rubygems'
@@ -34,12 +37,6 @@ def add_mcc_report_definition()
   adwords = AdwordsApi::Api.new
   report_def_srv = adwords.service(:ReportDefinitionService, API_VERSION)
 
-  # List of client logins to get report for ['abc@example.com', ...].
-  client_logins = []
-
-  # Prepare per-client selector.
-  client_selectors = client_logins.collect { |login| {:login => login} }
-
   # Prepare for adding report definition.
   operation = {
     :operator => 'ADD',
@@ -53,8 +50,7 @@ def add_mcc_report_definition()
       },
       :date_range_type => 'LAST_MONTH',
       :download_format => 'XML',
-      :cross_client => true,
-      :client_selectors => client_selectors
+      :cross_client => true
     }
   }
 

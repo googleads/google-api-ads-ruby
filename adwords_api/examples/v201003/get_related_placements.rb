@@ -56,24 +56,21 @@ def get_related_placements()
     }
   }
 
-  # Perform request.
   results = []
   index = 0
-  while true
-    page = targeting_idea_srv.get(selector)
-    if page and and page[:entries]
-      results += page[:entries]
-    end
-    break if page[:total_num_entries] <= index
-    index += results_per_page
+  begin
     selector[:paging][:start_index] = index
-  end
+    # Perform request.
+    page = targeting_idea_srv.get(selector)
+    results += page[:entries] if page and page[:entries]
+    index += results_per_page
+  end while index < page[:total_num_entries]
 
   # Display results.
   results.each do |result|
     data = AdwordsApi::Utils.map(result[:data])
     placement = data['PLACEMENT'][:value]
-    puts " Related content keywords found at URL \"%s\"" % placement[:url]
+    puts "Related content keywords found at URL \"%s\"" % placement[:url]
   end
   puts "Total urls found with content keywords related to keywords at " +
       " \"#{url}\": #{results.length}."

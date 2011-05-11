@@ -17,8 +17,8 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets and downloads a report from a report definition using MCC
-# (cross-client) feature. To create a report definition, run
+# This example gets and saves a report from a report definition using MCC
+# (cross-client) feature to a given path. To create a report definition, run
 # add_mcc_report_definition.rb.
 #
 # Please note: This feature is still under development and may change before it
@@ -35,21 +35,22 @@ API_VERSION = :v201101
 MAX_RETRIES = 10
 RETRY_INTERVAL = 30
 
-def download_mcc_report()
+def download_mcc_report_as_file()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
   report_def_srv = adwords.service(:ReportDefinitionService, API_VERSION)
 
   report_definition_id = 'INSERT_REPORT_ID_HERE'.to_i
+  file_name = 'INSERT_OUTPUT_FILE_NAME_HERE'
 
   # Poll for the report.
-  report_data = poll_for_report(report_def_srv, report_definition_id)
+  report_data = poll_for_report(report_def_srv, report_definition_id, file_name)
 
   # Check the response code.
   case report_data[:code]
     when 301
-      puts "Acquired report data of size: %d" % report_data[:report_data].size
+      puts "Saved report into a file: %s" % file_name
     when 500
       puts "Received a failure: %s" % report_data[:body]['failureReason']
       if report_data[:body]['failures']
@@ -62,15 +63,15 @@ def download_mcc_report()
   end
 end
 
-def poll_for_report(report_def_srv, report_definition_id)
+def poll_for_report(report_def_srv, report_definition_id, file_name)
   # Initially run with query_token = 'new'.
   query_token = 'new'
 
   MAX_RETRIES.times do |retry_count|
-    # Acquire report or report status with "download_mcc_report" extension
-    # method.
-    report_data = report_def_srv.download_mcc_report(report_definition_id,
-        query_token)
+    # Acquire report or report status with "download_mcc_report_as_file"
+    # extension method.
+    report_data = report_def_srv.download_mcc_report_as_file(
+        report_definition_id, query_token, file_name)
     if report_data[:body]
       # Save query id for following queries.
       query_token = report_data[:body]['queryToken']
@@ -89,7 +90,7 @@ end
 
 if __FILE__ == $0
   begin
-    download_mcc_report()
+    download_mcc_report_as_file()
 
   # Connection error. Likely transitory.
   rescue Errno::ECONNRESET, SOAP::HTTPStreamError, SocketError => e
