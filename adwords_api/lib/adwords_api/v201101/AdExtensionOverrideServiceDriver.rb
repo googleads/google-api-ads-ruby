@@ -16,7 +16,7 @@ class AdExtensionOverrideServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201101", "getResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::AdExtensionOverrideService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v201101", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
+        :faults => {"AdwordsApi::V201101::AdExtensionOverrideService::ApiException"=>{:ns=>"https://adwords.google.com/api/adwords/cm/v201101", :encodingstyle=>"document", :use=>"literal", :name=>"ApiException", :namespace=>nil}} }
     ],
     [ "",
       "mutate",
@@ -24,7 +24,7 @@ class AdExtensionOverrideServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201101", "mutateResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::AdExtensionOverrideService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v201101", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
+        :faults => {"AdwordsApi::V201101::AdExtensionOverrideService::ApiException"=>{:ns=>"https://adwords.google.com/api/adwords/cm/v201101", :encodingstyle=>"document", :use=>"literal", :name=>"ApiException", :namespace=>nil}} }
     ]
   ]
 

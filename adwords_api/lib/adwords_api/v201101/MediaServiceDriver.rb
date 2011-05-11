@@ -16,7 +16,7 @@ class MediaServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201101", "getResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::MediaService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v201101", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
+        :faults => {"AdwordsApi::V201101::MediaService::ApiException"=>{:ns=>"https://adwords.google.com/api/adwords/cm/v201101", :encodingstyle=>"document", :use=>"literal", :name=>"ApiException", :namespace=>nil}} }
     ],
     [ "",
       "upload",
@@ -24,7 +24,7 @@ class MediaServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201101", "uploadResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::MediaService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v201101", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
+        :faults => {"AdwordsApi::V201101::MediaService::ApiException"=>{:ns=>"https://adwords.google.com/api/adwords/cm/v201101", :encodingstyle=>"document", :use=>"literal", :name=>"ApiException", :namespace=>nil}} }
     ]
   ]
 
