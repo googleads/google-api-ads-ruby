@@ -1,3 +1,6 @@
+0.1.2:
+  - Support for cross-client MCC reports.
+
 0.1.1:
   - Added support for BulkOpportunityService and CampaignTargetService.
   - Added examples for the above services.

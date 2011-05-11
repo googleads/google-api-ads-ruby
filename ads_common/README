@@ -19,6 +19,7 @@ Install it using the gem install command.
 The following gem libraries are required:
  - soap4r v1.5.8 (only for soap4r-based libraries);
  - savon v0.8.5 or greater (only for savon-enabled libraries);
+ - httpi v0.7.9 or greater;
  - httpclient v2.1.2 or greater.
 
 = Docs for Developers
@@ -47,7 +48,7 @@ to run unit tests on the library
 
 = Copyright/License Info
 
-Copyright 2010, Google Inc. All Rights Reserved.
+Copyright 2011, Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -66,3 +67,4 @@ limitations under the License.
 
 Sérgio Gomes (api.sgomes@gmail.com)
 Danial Klimkin (api.dklimkin@gmail.com)
+
