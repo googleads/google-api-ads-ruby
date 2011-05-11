@@ -40,7 +40,7 @@ module AdwordsApi
     # Set other constants
     API_NAME = 'AdwordsApi'
     API_PATH = 'adwords_api'
-    CLIENT_LIB_VERSION = '0.1.1'
+    CLIENT_LIB_VERSION = '0.1.2'
 
     # Configure the services available to each version
     @@service_config = {

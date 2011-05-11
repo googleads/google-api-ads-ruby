@@ -23,7 +23,6 @@
 require 'rexml/document'
 require 'csv'
 require 'ads_common/http'
-require 'json'
 
 module AdwordsApi
 
@@ -38,15 +37,19 @@ module AdwordsApi
       [:v201008, :ReportDefinitionService] => [:download_report,
           :download_report_as_file],
       [:v201101, :ReportDefinitionService] => [:download_report,
-          :download_report_as_file]
+          :download_report_as_file, :download_mcc_report,
+          :download_mcc_report_as_file]
     }
 
-    # Defines the parameter list for every extension method
+    # Defines the parameter list for every extension method.
     @@methods = {
       :download_xml_report     => [:job_id],
       :download_csv_report     => [:job_id],
       :download_report         => [:report_definition_id],
-      :download_report_as_file => [:report_definition_id, :path]
+      :download_report_as_file => [:report_definition_id, :path],
+      :download_mcc_report     => [:report_definition_id, :query_token],
+      :download_mcc_report_as_file =>
+          [:report_definition_id, :query_token, :path]
     }
 
     # Return list of all extension methods, indexed by version and service.
@@ -116,7 +119,7 @@ module AdwordsApi
       else
         # Reports that pass validation will normally not fail, but if there is
         # an error in the report generation service it can sometimes happen.
-        raise AdwordsApi::Error::Error, 'Report generation failed.'
+        raise AdwordsApi::Errors::ApiException, 'Report generation failed.'
       end
     end
 
@@ -168,7 +171,7 @@ module AdwordsApi
         return csv
       rescue REXML::ParseException => e
         # Error parsing XML
-        raise AdwordsApi::Error::Error,
+        raise AdwordsApi::Errors::ApiException,
             "Error parsing report XML: %s\nSource: %s" % [e, e.backtrace.first]
       end
     end
@@ -188,12 +191,7 @@ module AdwordsApi
     #
     def self.download_report_as_file(wrapper, report_definition_id, path)
       report_data = download_report(wrapper, report_definition_id)
-
-      # Write to file (if provided)
-      if path
-        open(path, 'w') { |file| file.puts(report_data) }
-      end
-
+      save_to_file(report_data, path)
       return nil
     end
 
@@ -210,21 +208,103 @@ module AdwordsApi
     # The data for the report (as a string)
     #
     def self.download_report(wrapper, report_definition_id)
-      report_response = get_report_response(wrapper, "?__rd=%s" %
-          report_definition_id)
+      url = get_report_url(wrapper, "?__rd=%s" % report_definition_id)
+      report_response = get_report_response(wrapper, url)
       return report_response.body
+    end
+
+    # <i>Extension method</i> -- Download and return a MCC report.
+    #
+    # *Warning*: this method is blocking for the calling thread.
+    #
+    # Args:
+    # - wrapper: the service wrapper object for any API methods that need to be
+    #   called
+    # - report_definition_id: the id for the report definition
+    # - query_token: id from previous calls to the method
+    #
+    # Returns:
+    # A hash with HTTP code and report service response
+    #
+    def self.download_mcc_report(wrapper, report_definition_id, query_token)
+      do_download_mcc_report(wrapper, report_definition_id, query_token, nil)
+    end
+
+    # <i>Extension method</i> -- Download and save a MCC report to file.
+    #
+    # *Warning*: this method is blocking for the calling thread.
+    #
+    # Args:
+    # - wrapper: the service wrapper object for any API methods that need to be
+    #   called
+    # - report_definition_id: the id for the report definition
+    # - query_token: id from previous calls to the method
+    # - path: filename to save downloaded report to
+    #
+    # Returns:
+    # A hash with HTTP code and report service response
+    #
+    def self.download_mcc_report_as_file(wrapper, report_definition_id,
+        query_token, path)
+      do_download_mcc_report(wrapper, report_definition_id, query_token, path)
     end
 
     private
 
-    # Gets a report response for a given parameters.
-    def self.get_report_response(wrapper, parameters)
-      # Get download URL.
-      url = AdwordsApi::ApiConfig.report_download_url(
-          wrapper.api.config.read('service.environment'),
-          wrapper.version)
+    # Polls the service once and downloads report into a file or to a hash.
+    def self.do_download_mcc_report(wrapper, report_definition_id, query_token,
+        path = nil)
+      query_token = 'new' if query_token.nil? or query_token.empty?
+      url = get_report_url(wrapper,
+          "?__rd=%s&qt=%s" % [report_definition_id, query_token])
+      report_response = get_report_response(wrapper, url)
+      check_old_error(report_response.body)
+      mcc_response = report_response_to_hash(report_response)
+      result = case report_response.code
+        when 200, 500
+          mcc_response
+        when 301
+          return_or_save_mcc_report_data(wrapper, mcc_response, path)
+        else
+          raise AdwordsApi::Errors::ApiException,
+              "Unknown HTTP error code %d message: %s" %
+              [report_response.code, report_response.body]
+      end
+      return result
+    end
 
-      # Set HTTP headers.
+    # Downloads a report body into a hash or a file.
+    def self.return_or_save_mcc_report_data(wrapper, mcc_response, path = nil)
+      report_data = get_report_response(wrapper, mcc_response[:location]).body
+      if path.nil?
+        mcc_response[:report_data] = report_data
+      else
+        save_to_file(report_data, path)
+      end
+      return mcc_response
+    end
+
+    # Saves raw data to a file.
+    def self.save_to_file(data, path)
+      open(path, 'w') { |file| file.puts(data) } if path
+    end
+
+    # Generates default report URL with given parameters.
+    def self.get_report_url(wrapper, parameters)
+      return AdwordsApi::ApiConfig.report_download_url(
+          wrapper.api.config.read('service.environment'),
+          wrapper.version) + parameters
+    end
+
+    # Gets a report response for a given parameters.
+    def self.get_report_response(wrapper, url)
+      headers = get_report_request_headers(wrapper)
+      report_response = AdsCommon::Http.get_response(url, wrapper.api.config,
+          headers)
+      return report_response
+    end
+
+    def self.get_report_request_headers(wrapper)
       headers = {}
       credentials = wrapper.api.credential_handler.credentials
       auth_handler = wrapper.api.client_login_handler
@@ -234,12 +314,63 @@ module AdwordsApi
         headers['clientEmail'] = credentials[:clientEmail]
       elsif credentials[:clientCustomerId]
         headers['clientCustomerId'] = credentials[:clientCustomerId]
+      elsif credentials[:email]
+        headers['clientEmail'] = credentials[:email]
       end
+      return headers
+    end
 
-      # Download report data.
-      report_response = AdsCommon::Http.get_response(url + parameters,
-          wrapper.api.config, headers)
-      return report_response
+    # Converts report response data into a convenient hash.
+    def self.report_response_to_hash(response)
+      result = {}
+      result[:code] = response.code
+      xml = REXML::Document.new(response.body)
+      result[:body] = xml_to_hash(xml.root) if xml and xml.root
+      if !response.headers.nil? and !response.headers['Location'].nil?
+        result[:location] = response.headers['Location']
+      end
+      # Special case for accounts list in failures.
+      if result[:body] and result[:body][:failures]
+        result[:body][:failures][:account] =
+            arrayize(result[:body][:failures][:account])
+      end
+      return result
+    end
+
+    # Converts xml into a convenient hash.
+    def self.xml_to_hash(xml)
+      result = {}
+      xml.elements.each do |item|
+        value = case item.has_elements?
+          when true: xml_to_hash(item)
+          else item.get_text()
+        end
+        if result[item.name].nil?
+          result[item.name] = value
+        else
+          result[item.name] = arrayize(result[item.name])
+          result[item.name] << value
+        end
+      end
+      return result
+    end
+
+    # Makes sure object is an array.
+    def self.arrayize(object)
+      return Array.new if object.nil?
+      return object.is_a?(Array) ? object : [object]
+    end
+
+    # Checks for old-style pre-MCC reporting error.
+    def self.check_old_error(response_text)
+      error_message_regex = '^!!!(-?\d+)\|\|\|(-?\d+)\|\|\|(.*)\?\?\?'
+      matches = response_text.match(error_message_regex)
+      if matches
+        message = (matches[3].nil?) ? response_text : matches[3]
+        raise AdwordsApi::Errors::ApiException,
+            "Report download error occured: %s" % message
+      end
+      return nil
     end
   end
 end
