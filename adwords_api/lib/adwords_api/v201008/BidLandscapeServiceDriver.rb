@@ -7,7 +7,7 @@ module V201008
 module BidLandscapeService
 
 class BidLandscapeServiceInterface < ::SOAP::RPC::Driver
-  DefaultEndpointUrl = "https://adwords.google.com:443/api/adwords/cm/v201008/BidLandscapeService"
+  DefaultEndpointUrl = "https://adwords.google.com/api/adwords/cm/v201008/BidLandscapeService"
 
   Methods = [
     [ "",
@@ -16,7 +16,7 @@ class BidLandscapeServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201008", "getBidLandscapeResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201008::BidLandscapeService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/cm/v201008", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201008::BidLandscapeService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v201008", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ]
   ]
 

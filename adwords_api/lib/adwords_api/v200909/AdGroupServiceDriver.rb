@@ -7,7 +7,7 @@ module V200909
 module AdGroupService
 
 class AdGroupServiceInterface < ::SOAP::RPC::Driver
-  DefaultEndpointUrl = "https://adwords.google.com:443/api/adwords/cm/v200909/AdGroupService"
+  DefaultEndpointUrl = "https://adwords.google.com/api/adwords/cm/v200909/AdGroupService"
 
   Methods = [
     [ "",
@@ -16,7 +16,7 @@ class AdGroupServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v200909", "getResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V200909::AdGroupService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/cm/v200909", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V200909::AdGroupService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v200909", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ],
     [ "",
       "mutate",
@@ -24,7 +24,7 @@ class AdGroupServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v200909", "mutateResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V200909::AdGroupService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/cm/v200909", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V200909::AdGroupService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v200909", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ]
   ]
 

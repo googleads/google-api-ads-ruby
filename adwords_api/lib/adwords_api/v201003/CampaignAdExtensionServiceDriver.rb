@@ -7,7 +7,7 @@ module V201003
 module CampaignAdExtensionService
 
 class CampaignAdExtensionServiceInterface < ::SOAP::RPC::Driver
-  DefaultEndpointUrl = "https://adwords.google.com:443/api/adwords/cm/v201003/CampaignAdExtensionService"
+  DefaultEndpointUrl = "https://adwords.google.com/api/adwords/cm/v201003/CampaignAdExtensionService"
 
   Methods = [
     [ "",
@@ -16,7 +16,7 @@ class CampaignAdExtensionServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201003", "getResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201003::CampaignAdExtensionService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/cm/v201003", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201003::CampaignAdExtensionService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v201003", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ],
     [ "",
       "mutate",
@@ -24,7 +24,7 @@ class CampaignAdExtensionServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201003", "mutateResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201003::CampaignAdExtensionService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/cm/v201003", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201003::CampaignAdExtensionService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v201003", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ]
   ]
 

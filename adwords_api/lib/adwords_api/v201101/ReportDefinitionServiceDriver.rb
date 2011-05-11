@@ -7,7 +7,7 @@ module V201101
 module ReportDefinitionService
 
 class ReportDefinitionServiceInterface < ::SOAP::RPC::Driver
-  DefaultEndpointUrl = "https://adwords.google.com:443/api/adwords/cm/v201101/ReportDefinitionService"
+  DefaultEndpointUrl = "https://adwords.google.com/api/adwords/cm/v201101/ReportDefinitionService"
 
   Methods = [
     [ "",
@@ -16,7 +16,7 @@ class ReportDefinitionServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201101", "getResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::ReportDefinitionService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/cm/v201101", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201101::ReportDefinitionService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v201101", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ],
     [ "",
       "getReportFields",
@@ -24,7 +24,7 @@ class ReportDefinitionServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201101", "getReportFieldsResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::ReportDefinitionService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/cm/v201101", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201101::ReportDefinitionService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v201101", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ],
     [ "",
       "mutate",
@@ -32,7 +32,7 @@ class ReportDefinitionServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201101", "mutateResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::ReportDefinitionService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/cm/v201101", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201101::ReportDefinitionService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v201101", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ]
   ]
 

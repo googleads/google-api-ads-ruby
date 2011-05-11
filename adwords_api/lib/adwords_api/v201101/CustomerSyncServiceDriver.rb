@@ -7,7 +7,7 @@ module V201101
 module CustomerSyncService
 
 class CustomerSyncServiceInterface < ::SOAP::RPC::Driver
-  DefaultEndpointUrl = "https://adwords.google.com:443/api/adwords/ch/v201101/CustomerSyncService"
+  DefaultEndpointUrl = "https://adwords.google.com/api/adwords/ch/v201101/CustomerSyncService"
 
   Methods = [
     [ "",
@@ -16,7 +16,7 @@ class CustomerSyncServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/ch/v201101", "getResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::CustomerSyncService::ApiException_"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/ch/v201101", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201101::CustomerSyncService::ApiException_"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/ch/v201101", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ]
   ]
 

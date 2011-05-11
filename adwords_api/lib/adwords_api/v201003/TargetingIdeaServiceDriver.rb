@@ -7,7 +7,7 @@ module V201003
 module TargetingIdeaService
 
 class TargetingIdeaServiceInterface < ::SOAP::RPC::Driver
-  DefaultEndpointUrl = "https://adwords.google.com:443/api/adwords/o/v201003/TargetingIdeaService"
+  DefaultEndpointUrl = "https://adwords.google.com/api/adwords/o/v201003/TargetingIdeaService"
 
   Methods = [
     [ "",
@@ -16,7 +16,7 @@ class TargetingIdeaServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/o/v201003", "getResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201003::TargetingIdeaService::ApiException_"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/o/v201003", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201003::TargetingIdeaService::ApiException_"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/o/v201003", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ],
     [ "",
       "getBulkKeywordIdeas",
@@ -24,7 +24,7 @@ class TargetingIdeaServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/o/v201003", "getBulkKeywordIdeasResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201003::TargetingIdeaService::ApiException_"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/o/v201003", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201003::TargetingIdeaService::ApiException_"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/o/v201003", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ]
   ]
 

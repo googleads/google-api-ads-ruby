@@ -7,7 +7,7 @@ module V201008
 module ServicedAccountService
 
 class ServicedAccountServiceInterface < ::SOAP::RPC::Driver
-  DefaultEndpointUrl = "https://adwords.google.com:443/api/adwords/mcm/v201008/ServicedAccountService"
+  DefaultEndpointUrl = "https://adwords.google.com/api/adwords/mcm/v201008/ServicedAccountService"
 
   Methods = [
     [ "",
@@ -16,7 +16,7 @@ class ServicedAccountServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/mcm/v201008", "getResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201008::ServicedAccountService::ApiException_"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/mcm/v201008", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201008::ServicedAccountService::ApiException_"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/mcm/v201008", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ]
   ]
 

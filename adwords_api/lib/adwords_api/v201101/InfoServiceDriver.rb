@@ -7,7 +7,7 @@ module V201101
 module InfoService
 
 class InfoServiceInterface < ::SOAP::RPC::Driver
-  DefaultEndpointUrl = "https://adwords.google.com:443/api/adwords/info/v201101/InfoService"
+  DefaultEndpointUrl = "https://adwords.google.com/api/adwords/info/v201101/InfoService"
 
   Methods = [
     [ "",
@@ -16,7 +16,7 @@ class InfoServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/info/v201101", "getResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::InfoService::ApiException_"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/info/v201101", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201101::InfoService::ApiException_"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/info/v201101", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ]
   ]
 

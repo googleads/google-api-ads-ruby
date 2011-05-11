@@ -7,7 +7,7 @@ module V201003
 module BulkMutateJobService
 
 class BulkMutateJobServiceInterface < ::SOAP::RPC::Driver
-  DefaultEndpointUrl = "https://adwords.google.com:443/api/adwords/job/v201003/BulkMutateJobService"
+  DefaultEndpointUrl = "https://adwords.google.com/api/adwords/job/v201003/BulkMutateJobService"
 
   Methods = [
     [ "",
@@ -16,7 +16,7 @@ class BulkMutateJobServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201003", "getResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201003::BulkMutateJobService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/cm/v201003", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201003::BulkMutateJobService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v201003", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ],
     [ "",
       "mutate",
@@ -24,7 +24,7 @@ class BulkMutateJobServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201003", "mutateResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201003::BulkMutateJobService::ApiException"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/cm/v201003", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201003::BulkMutateJobService::ApiException"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/cm/v201003", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ]
   ]
 

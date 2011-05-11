@@ -7,7 +7,7 @@ module V201101
 module TrafficEstimatorService
 
 class TrafficEstimatorServiceInterface < ::SOAP::RPC::Driver
-  DefaultEndpointUrl = "https://adwords.google.com:443/api/adwords/o/v201101/TrafficEstimatorService"
+  DefaultEndpointUrl = "https://adwords.google.com/api/adwords/o/v201101/TrafficEstimatorService"
 
   Methods = [
     [ "",
@@ -16,7 +16,7 @@ class TrafficEstimatorServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/o/v201101", "getResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::TrafficEstimatorService::ApiException_"=>{:encodingstyle=>"document", :use=>"literal", :namespace=>nil, :ns=>"https://adwords.google.com/api/adwords/o/v201101", :name=>"ApiException"}} }
+        :faults => {"AdwordsApi::V201101::TrafficEstimatorService::ApiException_"=>{:encodingstyle=>"document", :ns=>"https://adwords.google.com/api/adwords/o/v201101", :name=>"ApiException", :use=>"literal", :namespace=>nil}} }
     ]
   ]
 
