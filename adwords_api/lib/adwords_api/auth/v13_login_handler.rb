@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Authors:: api.sgomes@gmail.com (Sérgio Gomes)
+# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
@@ -24,12 +24,9 @@ require 'ads_common/auth/base_handler'
 module AdwordsApi
   module Auth
     class V13LoginHandler < AdsCommon::Auth::BaseHandler
-
-      # Ensure that clientEmail and clientCustomerId are always present
       def header_list(credentials)
-        creds = credentials.keys.dup
-        creds << :clientEmail unless creds.include? :clientEmail
-        creds << :clientCustomerId unless creds.include? :clientCustomerId
+        # Ensure that clientEmail and clientCustomerId are always present.
+        return credentials.keys.dup() | [:clientEmail, :clientCustomerId]
       end
     end
   end
