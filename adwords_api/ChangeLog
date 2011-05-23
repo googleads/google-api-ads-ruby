@@ -1,5 +1,6 @@
 0.1.2:
   - Support for cross-client MCC reports.
+  - Documented library use for DoubleClick Ad Exchange Buyer API.
 
 0.1.1:
   - Added support for BulkOpportunityService and CampaignTargetService.

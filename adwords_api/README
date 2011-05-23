@@ -1,11 +1,10 @@
-= Google AdWords Client Library
+= Google AdWords and DoubleClick Ad Exchange Buyer Client Library
 
 Welcome to the next generation Google-developed Ruby client library for the
-AdWords API!
+AdWords and DoubleClick Ad Exchange Buyer API!
 
-Please note that this is an early PREVIEW of the client library, under heavy
-development! A lot of things (such as documentation and full unit testing) are
-still missing or being worked on.
+Please note that this is an early PREVIEW of the client library, still under
+development.
 
 It contains full support for v13, v200909, v201003, v201008 and v201101, with
 full stubs, and a simplified programming interface that lets you handle
@@ -17,10 +16,16 @@ library-generated objects.
 
 == 1 - Installation:
 
-google-adwords-api is a ruby gem.  See http://docs.rubygems.org/read/book/1
+google-adwords-api and google-adx-api are ruby gems.
+  See http://docs.rubygems.org/read/book/1
 
-Install it using the gem install command.
+Install them using the gem install command:
    $ gem install --remote google-adwords-api
+   $ gem install --remote google-adx-api
+
+Please note the google-adx-api gem contains only DoubleClick Ad Exchange Buyer
+client library examples. You need AdWords library in order to use it which is
+installed automatically as a dependency.
 
 The following gem libraries are required:
 - soap4r v1.5.8
@@ -47,9 +52,10 @@ Then:
 
    adwords = AdwordsApi::Api.new
 creates an Api object that will grant you access to all the services for all of
-the currently supported vesions of the AdWords API. It uses a config file in
+the currently supported vesions of the APIs. It uses a config file in:
 ENV['HOME']/adwords_api.yml to read all of your configurations.
-There is an example config file in the root adwords_api directory.
+There is an example configuration file shipped with these libraries.
+
 You can also pass API a manually constructed config hash like:
    adwords = AdwordsApi::Api.new({
      :authentication => {
@@ -70,7 +76,7 @@ Then, just specify which service you're looking to use, and which version:
 
 and you should now be able to just use the API methods in the object you were
 returned:
-   campaigns = campaign_srv.get({}) # Empty selector to get all
+   campaigns = campaign_srv.get({})    # Empty selector to get all
 
 See the code in the examples directory for working examples you can build from.
 
@@ -122,9 +128,9 @@ In order to use the sandbox, make sure that the 'environment' parameter under
 It is often useful to see a trace of the raw SOAP XML being sent and received.
 The quickest way of achieving this when debugging your application is by setting
 the ADWORDSAPI_DEBUG environment variable to TRUE; e.g. in the bash shell:
-   $ export ADWORDSAPI_DEBUG=TRUE
+   $ export ADWORDSAPI_DEBUG=true
 or from your Ruby code:
-   ENV['ADWORDSAPI_DEBUG'] = 'TRUE'
+   ENV['ADWORDSAPI_DEBUG'] = 'true'
 
 This will output the SOAP XML to stderr, which will usually show up in your
 terminal window.
@@ -148,6 +154,8 @@ The files will be named request_info and soap_xml, respectively.
 
 = Docs for Developers
 
+== Rake targets
+
  $ rake getwsdl
 to get the wsdl files
 
@@ -161,7 +169,20 @@ to package the gem and create a release
 to run unit tests on the library
 
 
+== Where do I submit bug reports and feature requests?
+
+Bug reports and feature requests can be posted on the library page:
+
+  http://code.google.com/p/google-api-ads-ruby/issues
+
+Questions can be asked on forum
+
+  http://groups.google.com/group/adwords-api
+
+
 = Copyright/License Info
+
+== Licence
 
 Copyright 2011, Google Inc. All Rights Reserved.
 
@@ -176,3 +197,12 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+== Authors
+
+Authors:
+    api.sgomes (Sérgio Gomes)
+    api.dklimkin@gmail.com (Danial Klimkin)
+
+Maintainer:
+    api.dklimkin@gmail.com (Danial Klimkin)
