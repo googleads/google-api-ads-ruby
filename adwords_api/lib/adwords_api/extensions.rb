@@ -87,7 +87,7 @@ module AdwordsApi
       status_field = nil
       download_field = nil
 
-      if wrapper.api.config.read('service.use_ruby_names')
+      if wrapper.api.config.read('service.use_ruby_names', true)
         status_field = :get_report_job_status_return
         download_field = :get_report_download_url_return
       else

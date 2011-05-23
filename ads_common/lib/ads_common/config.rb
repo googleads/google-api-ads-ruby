@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Authors:: api.sgomes@gmail.com (Sérgio Gomes)
+# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
 #
@@ -29,26 +29,21 @@ module AdsCommon
     # Initialized the Config object with either the contents of a provided file
     # or a provided hash.
     def initialize(param = nil)
-      @config = {}
-      if param and param.is_a? String
-        load(param)
-      elsif param and param.is_a? Hash
-        set_all(param)
+      @config = Hash.new
+      case param
+        when String: load(param)
+        when Hash: set_all(param)
       end
     end
 
     # Reads a property or category from the loaded configuration.
     # They can be indexed using a dot-based notation (e.g. "category.property"
     # to access "property" under "category").
-    def read(property_path = nil)
-      current_level = @config
-      if property_path
-        property_path.split('.').each do |item|
-          return nil if !current_level or !(current_level.is_a?(Hash))
-          current_level = current_level[item.to_sym]
-        end
-      end
-      return current_level
+    #
+    # Returns the specified default if no value found.
+    def read(property_path, default_value = nil)
+      result = find_value(@config, property_path)
+      return (result.nil?) ? default_value : result
     end
 
     # Writes a new value to a property or category in memory (creating it if
@@ -56,18 +51,13 @@ module AdsCommon
     # They can be indexed using a dot-based notation (e.g. "category.property"
     # to access "property" under "category").
     def set(property_path, value)
-      @config = {} if !@config
-      current_level = @config
       if property_path
-        segments = property_path.split('.')
-        segments[0,-2].each do |item|
-          return nil if !current_level or !(current_level.is_a?(Hash))
-          current_level = current_level[item.to_sym]
+        last_node = @config
+        last_name = property_path.split('.').inject(nil) do |last_name, section|
+          last_node = last_node[last_name.to_sym] ||= {} unless last_name.nil?
+          section
         end
-        if current_level and current_level.is_a?(Hash)
-          current_level[segments.last] = value
-          return value
-        end
+        last_node[last_name.to_sym] = value
       end
       return nil
     end
@@ -77,46 +67,41 @@ module AdsCommon
       @config = process_hash_keys(properties)
     end
 
+    private
+
     # Auxiliary method to recurse through a hash and convert all the keys to
     # symbols.
     def process_hash_keys(hash)
-      new_hash = {}
-      hash.each do |key, value|
-        if value.is_a? Hash
-          new_hash[key.to_sym] = process_hash_keys(value)
-        else
-          new_hash[key.to_sym] = value
-        end
+      return hash.inject({}) do |result, pair|
+        key, value = pair
+        result[key.to_sym] = value.is_a?(Hash) ?
+            process_hash_keys(value) : value
+        result
       end
-      return new_hash
     end
 
-    # Reads a configuration file and returns a Ruby structure with the complete
-    # set of keys and values.
-    #
+    # Finds a value for string of format 'level1.level2.name' in a given hash.
+    def find_value(data, path)
+      return (path.nil? or data.nil?) ? nil :
+          path.split('.').inject(data) do |node, section|
+            break if node.nil?
+            key = section.to_sym
+            (node.is_a?(Hash) and node.include?(key)) ? node[key] : nil
+          end
+    end
+
+    # Reads a configuration file into instance variable as a Ruby structure with
+    # the complete set of keys and values.
     #
     # Args:
     # - filename: config file to be read (*String*)
     #
-    # Returns:
-    # - Ruby objects for the stored YAML
-    #
     # Raises:
-    # - <b>Errno::EACCES</b> if the file does not exist.
+    # - <b>Errno::ENOENT</b> if the file does not exist.
     #
     def load(filename)
-      unless File.exist?(filename)
-        raise(Errno::EACCES, "File #{filename} does not exist")
-      end
-      file = nil
-      begin
-        file = File.open(filename)
-        @config = YAML::load(file)
-      ensure
-        file.close if file
-      end
-      return @config
+      @config = YAML::load_file(filename)
+      return nil
     end
   end
-
 end

@@ -268,7 +268,7 @@ module AdsCommon
               object.each do |entry, value|
                 entry = entry.to_s
                 unless entry == 'xsi_type'
-                  if @api.config.read('service.use_ruby_names')
+                  if @api.config.read('service.use_ruby_names', true)
                     entry = camel_case(entry)
                   end
                   if value.is_a? Hash
@@ -319,7 +319,7 @@ module AdsCommon
                   if object.respond_to? property and !property.include?('_Type')
                     value = object.send(property)
                     property_name = nil
-                    if @api.config.read('service.use_ruby_names')
+                    if @api.config.read('service.use_ruby_names', true)
                       property_name = underscore(property).to_sym
                     else
                       property_name = property.to_sym

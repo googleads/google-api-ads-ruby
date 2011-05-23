@@ -22,7 +22,7 @@
 
 require 'rubygems'
 gem 'soap4r', '=1.5.8'
-gem 'google-ads-common', '~>0.2.0'
+gem 'google-ads-common', '~>0.2.1'
 require 'thread'
 require 'uri'
 require 'ads_common/logger'
@@ -261,13 +261,9 @@ module AdwordsApi
     #   configuration rather than use the default
     #
     def load_config(provided_config = nil)
-      @config = AdsCommon::Config.new
-      if !provided_config
-        filename = File.join(ENV['HOME'], 'adwords_api.yml')
-        @config.load(filename)
-      else
-        @config.set_all(provided_config)
-      end
+      @config = (provided_config.nil?) ?
+          AdsCommon::Config.new(File.join(ENV['HOME'], 'adwords_api.yml')) :
+          AdsCommon::Config.new(provided_config)
     end
   end
 end

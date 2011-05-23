@@ -13,7 +13,6 @@
   #:auth_token: INSERT_AUTH_TOKEN_HERE
 :service:
   :environment: Production
-  :use_ruby_names: true
 :connection:
   :strict_ssl_verification: false
   # If your proxy connection requires authentication, make sure to include it in

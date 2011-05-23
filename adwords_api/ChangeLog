@@ -1,6 +1,7 @@
 0.1.2:
   - Support for cross-client MCC reports.
   - Documented library use for DoubleClick Ad Exchange Buyer API.
+  - Require google-ads-common 0.2.1 or later from now on.
 
 0.1.1:
   - Added support for BulkOpportunityService and CampaignTargetService.
