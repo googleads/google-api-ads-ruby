@@ -80,11 +80,9 @@ end
 # Create a task that will package the Rake software into distributable
 # gem files.
 PKG_FILES = FileList[
-  '*.*',
   'Rakefile',
   "#{$LIBDIR}/**/*.rb",
-  "#{$DOCDIR}/**/*.*",
-  "#{$TESTDIR}/**/*.*"
+  "#{$DOCDIR}/**/*.*"
 ]
 
 PKG_FILES.exclude(/\._/)
@@ -110,7 +108,7 @@ else
 
     # RDoc information
     s.has_rdoc = true
-    s.extra_rdoc_files = ['README']
+    s.extra_rdoc_files = ['README', 'ChangeLog', 'COPYING']
     s.rdoc_options << '--main' << 'README'
 
     # Metadata
