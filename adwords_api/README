@@ -16,16 +16,16 @@ library-generated objects.
 
 == 1 - Installation:
 
-google-adwords-api and google-adx-api are ruby gems.
+google-adwords-api and google-adx-buyer-api are ruby gems.
   See http://docs.rubygems.org/read/book/1
 
 Install them using the gem install command:
    $ gem install --remote google-adwords-api
-   $ gem install --remote google-adx-api
+   $ gem install --remote google-adx-buyer-api
 
-Please note the google-adx-api gem contains only DoubleClick Ad Exchange Buyer
-client library examples. You need AdWords library in order to use it which is
-installed automatically as a dependency.
+Please note the google-adx-buyer-api gem contains only DoubleClick Ad Exchange
+Buyer client library examples. You need the AdWords library in order to use it
+which is installed automatically as a dependency.
 
 The following gem libraries are required:
 - soap4r v1.5.8
