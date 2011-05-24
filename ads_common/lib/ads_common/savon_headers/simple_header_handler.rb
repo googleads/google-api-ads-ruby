@@ -45,7 +45,8 @@ module AdsCommon
       end
 
       # Enriches soap object with API-specific headers like namespaces, login
-      # credentials etc.
+      # credentials etc. Sets the default namespace for the body to the one
+      # specified in initializer.
       #
       # Args:
       #  - soap: a Savon soap object to fill fields in.
@@ -57,9 +58,8 @@ module AdsCommon
         soap.header[prepend_namespace(@element_name)] =
             generate_request_header()
         soap.namespace = @namespace
-        if (!args.nil?)
-          soap.body = prepare_args(args)
-        end
+        soap.body = args if args
+        soap.input[1] = {:xmlns => @namespace}
       end
 
       private
@@ -82,66 +82,15 @@ module AdsCommon
         return request_header
       end
 
-      # Modifies request parameters to include namespace reference. For Hash
-      # and Array data types dives deeper into structure.
+      # Adds namespace to the given string.
       #
       # Args:
-      #  - args: subtree of request parameters.
-      #
-      # Returns:
-      #  - subtree with modified parameters including namespaces.
-      def prepare_args(args)
-        res = case args
-            when Hash
-              prepare_hash_args(args)
-            when Array
-              prepare_array_args(args)
-            else
-              args
-            end
-        return res
-      end
-
-      # Crawls hash for all the request parameters and adds namespace
-      # reference for the keys.
-      #
-      # Args:
-      #  - args: Hash element of subtree of request parameters.
-      #
-      # Returns:
-      #  - Modified Hash with all keys updated and all values crawled.
-      def prepare_hash_args(args)
-        res = {}
-        args.each do |key, value|
-          res[prepend_namespace(key)] = prepare_args(value)
-        end
-        return res
-      end
-
-      # Crawls array and process each of its elements to include namespace.
-      #
-      # Args:
-      #  - args: Array element of subtree of request parameters.
-      #
-      # Returns:
-      #  - Modified Array with every element crawled.
-      def prepare_array_args(args)
-        res = []
-        args.each do |item|
-          res << prepare_args(item)
-        end
-        return res
-      end
-
-      # Adds namespace to the request parameter name.
-      #
-      # Args:
-      #  - str: String to prepend with a namespace
+      #  - str: String to prepend with a namespace.
       #
       # Returns:
       #  - String with a namespace.
       def prepend_namespace(str)
-        return "%s:%s" % [DEFAULT_NAMESPACE, str.to_s]
+        return "%s:%s" % [DEFAULT_NAMESPACE, str]
       end
     end
   end

@@ -104,8 +104,9 @@ else
     s.files = PKG_FILES.to_a
     s.require_path = $LIBDIR
     s.add_dependency('soap4r', '= 1.5.8')
-    s.add_dependency('httpclient', '>= 2.1.5.2')
-    s.add_dependency('httpi', '~>0.7.9')
+    s.add_dependency('savon', '~> 0.9.1')
+    s.add_dependency('httpclient', '>= 2.1.6')
+    s.add_dependency('httpi', '~> 0.9.2')
 
     # RDoc information
     s.has_rdoc = true
@@ -118,8 +119,9 @@ else
     s.homepage = $GEM_HOMEPAGE
     s.rubyforge_project = $GEM_NAME
     s.requirements << 'soap4r v1.5.8'
-    s.requirements << 'httpclient v2.1.5.2 or greater'
-    s.requirements << 'httpi v0.7.9 or greater'
+    s.requirements << 'savon v0.9.1 or greater'
+    s.requirements << 'httpclient v2.1.6 or greater'
+    s.requirements << 'httpi v0.9.2 or greater'
   end
 
   Rake::GemPackageTask.new(spec) do |t|

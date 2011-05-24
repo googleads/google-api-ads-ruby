@@ -44,26 +44,37 @@ module AdsCommon
 
       # Generate code for given Savon client.
       def do_process_wsdl(wsdl)
+        @soap_exceptions = []
+        @soap_types = []
+        @soap_methods = []
+
         doc = REXML::Document.new(wsdl.to_xml)
-        @raw_types = []
-        @soap_exceptions = extract_exceptions(doc)
+        process_types(doc)
+        process_methods(doc)
         sort_exceptions()
-        @soap_methods = extract_methods(doc)
-        @soap_types = extract_types(doc)
       end
 
-      # Extracts exceptions list with basic properties from ComplexTypes list.
-      def extract_exceptions(doc)
-        exceptions = []
-        ctypes = get_complex_types(doc)
-        raw_exceptions = exceptions_from_ctypes(ctypes)
-        raw_exceptions.each do |raw_exception|
-          exceptions << {:name => raw_exception.attributes['name'],
-              :doc => get_element_doc(raw_exception),
-              :base => get_element_base(raw_exception),
-              :fields => get_element_fields(raw_exception)}
+      # Extracts different types from XML.
+      def process_types(doc)
+        get_complex_types(doc).each do |ctype|
+          ctype_name = get_element_name(ctype)
+          if ctype_name.match('.+Exception$')
+            @soap_exceptions << extract_exception(ctype)
+          elsif ctype_name.match('.+Error$')
+            # We don't use it at the moment.
+            # TODO: log we ignore it at proper log level.
+          else
+            @soap_types << extract_type(ctype)
+          end
         end
-        return exceptions
+      end
+
+      # Extracts SOAP actions as methods.
+      def process_methods(doc)
+        iface = REXML::XPath.first(doc, 'descendant::wsdl:portType')
+        REXML::XPath.each(iface, 'descendant::wsdl:operation') do |operation|
+          @soap_methods << extract_method(operation, doc)
+        end
       end
 
       # Extracts ComplexTypes from XML into an array.
@@ -75,72 +86,73 @@ module AdsCommon
         return complex_types
       end
 
-      # Helper function to find Exceptions (by name) from all types.
-      def exceptions_from_ctypes(ctypes)
-        exceptions = []
-        ctypes.each do |ctype|
-          if ctype.attributes['name'].match('.+Exception$')
-            exceptions << ctype
-          end
-        end
-        return exceptions
+      # Extracts exception parameters from ComplexTypes element.
+      def extract_exception(exception_element)
+        return {:name => get_element_name(exception_element),
+                :doc => get_element_doc(exception_element),
+                :base => get_element_base(exception_element),
+                :fields => get_element_fields(exception_element)}
       end
 
-      # Extracts methods and parameters from XML.
-      def extract_methods(doc)
-        methods = []
-        iface = REXML::XPath.first(doc, 'descendant::wsdl:portType')
-        REXML::XPath.each(iface, 'descendant::wsdl:operation') do |operation|
-          methods << {:name => operation.attributes['name'].to_s.snakecase,
-              :input => extract_input_parameters(operation, doc),
-              :output => extract_output_parameters(operation, doc)}
-          # This could be used to include documentation from wsdl.
-          #    :doc => get_element_doc(operation, 'wsdl')}
+      # Extracts method parameters from ComplexTypes element.
+      def extract_method(method_element, doc)
+        return {:name => get_element_name(method_element).snakecase,
+                :input => extract_input_parameters(method_element, doc),
+                :output => extract_output_parameters(method_element, doc)}
+            #  This could be used to include documentation from wsdl.
+            #    :doc => get_element_doc(operation, 'wsdl')}
+      end
+
+      # Extracts definition of all types. If a non standard undefined type is
+      # found it process it recursively.
+      def extract_type(type_element)
+        type = {:name => get_element_name(type_element), :fields => []}
+        if attribute_to_boolean(type_element.attribute('abstract'))
+          type[:abstract] = true
         end
-        return methods
+        base_type = get_element_base(type_element)
+        type[:base] = base_type if base_type
+        REXML::XPath.each(type_element,
+            'sequence | complexContent/extension/sequence') do |seq_node|
+          type[:fields] += get_element_fields(seq_node)
+        end
+        return type
       end
 
       # Extracts input parameters of given method as an array.
       def extract_input_parameters(op_node, doc)
-        result = []
-        op_name = op_node.attributes['name'].to_s
-        doc.each_element_with_attribute('name', op_name, 0,
-            '//schema/element') do |method_node|
-          seq_node = REXML::XPath.first(method_node, 'complexType/sequence')
-          result = get_element_fields(seq_node)
-          process_method_field_types(result)
-        end
-        return result
+        op_name = get_element_name(op_node)
+        return find_sequence_fields(op_name, doc)
       end
 
       # Extracts output parameter name and fields.
       def extract_output_parameters(op_node, doc)
         output_element = REXML::XPath.first(op_node, 'descendant::wsdl:output')
-        output_name = (output_element.nil?) ? nil :
-            output_element.attribute('name').to_s
-        output_fields = []
-        doc.each_element_with_attribute('name', output_name, 0,
-            '//schema/element') do |response_node|
-          seq_node = REXML::XPath.first(response_node, 'complexType/sequence')
-          output_fields = get_element_fields(seq_node)
-          process_method_field_types(output_fields)
+        output_name = get_element_name(output_element)
+        output_fields = find_sequence_fields(output_name, doc)
+        return {:name => output_name.snakecase, :fields => output_fields}
+      end
+
+      # Finds sequence fields for the element of given name.
+      def find_sequence_fields(name, doc)
+        result = []
+        doc.each_element_with_attribute('name', name, 0,
+            '//schema/element') do |element_node|
+          REXML::XPath.each(element_node, 'complexType/sequence') do |seq_node|
+            result += get_element_fields(seq_node)
+          end
         end
-        result = {:name => output_name.snakecase, :fields => output_fields}
         return result
       end
 
-      # Checks all fields are of standard type or included in raw_types.
-      def process_method_field_types(fields)
-        fields.each do |field|
-          field_type = field[:type]
-          next if STANDARD_TYPES.include?(field_type)
-          @raw_types << field_type unless @raw_types.include?(field_type)
-        end
+      # Gets element name defined as its attribute.
+      def get_element_name(element)
+        return element.attribute('name').to_s
       end
 
       # Gets element base defined as an attribute in sibling.
-      def get_element_base(root)
-        base_element = REXML::XPath.first(root, 'complexContent/extension')
+      def get_element_base(element)
+        base_element = REXML::XPath.first(element, 'complexContent/extension')
         base = (base_element.nil?) ? nil :
             base_element.attribute('base').to_s.gsub(/^.+:/, '')
         return base
@@ -157,51 +169,25 @@ module AdsCommon
       end
 
       # Gets subfields defined as elements under given root.
-      def get_element_fields(root)
+      def get_element_fields(element)
         fields = []
-        REXML::XPath.each(root, 'descendant::element') do |element|
-          fields << {:name => element.attribute('name').to_s.snakecase,
-              :type => element.attribute('type').to_s.gsub(/^.+:/, ''),
-              :min_occurs => attribute_to_int(element.attribute('minOccurs')),
-              :max_occurs => attribute_to_int(element.attribute('maxOccurs'))}
+        REXML::XPath.each(element, 'descendant::element') do |item|
+          fields << {:name => get_element_name(item).snakecase.to_sym,
+              :type => item.attribute('type').to_s.gsub(/^.+:/, ''),
+              :min_occurs => attribute_to_int(item.attribute('minOccurs')),
+              :max_occurs => attribute_to_int(item.attribute('maxOccurs'))}
         end
         return fields
-      end
-
-      # Extracts definition of all types. If a non standard undefined type is
-      # found it process it recursively.
-      # Special case for extensions - types with a base class.
-      def extract_types(doc)
-        types = []
-        @raw_types.each do |raw_type|
-          doc.each_element_with_attribute('name', raw_type, 0,
-              '//schema/complexType') do |type_node|
-            type = {:name => raw_type, :fields => []}
-            ext_node = REXML::XPath.first(type_node, 'complexContent/extension')
-            if ext_node
-              base_type = ext_node.attribute('base').to_s.gsub(/^.+:/, '')
-              type[:base] = base_type
-              @raw_types << base_type unless @raw_types.include?(base_type)
-              seq_node = REXML::XPath.first(ext_node, 'sequence')
-              fields = get_element_fields(seq_node)
-              process_method_field_types(fields)
-              type[:fields] += fields
-            end
-            seq_node = REXML::XPath.first(type_node, 'sequence')
-            if seq_node
-              fields = get_element_fields(seq_node)
-              process_method_field_types(fields)
-              type[:fields] += fields
-            end
-            types << type
-          end
-        end
-        return types
       end
 
       # Simple converter for int values.
       def attribute_to_int(attribute)
         return attribute.value.eql?('unbounded') ? nil : attribute.value.to_i
+      end
+
+      # Simple converter for boolean values.
+      def attribute_to_boolean(attribute)
+        return (attribute.nil?) ? nil : attribute.value.eql?('true')
       end
 
       # Reorders exceptions so that base ones always come before derived.

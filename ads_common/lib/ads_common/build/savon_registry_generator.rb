@@ -34,8 +34,6 @@ module AdsCommon
       #
       # <%= @generator_stamp %>
 
-      require 'savon'
-
       <%= @modules_open_string %>
 
         class <%= @service_name %>Registry
@@ -73,7 +71,7 @@ module AdsCommon
           end
           <% end %>
         end
-      <% end %>
+        <% end %>
       <%= @modules_close_string %>
 
       }.gsub(/^      /, '')

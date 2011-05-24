@@ -41,7 +41,7 @@ module AdsCommon
 
       def generate_code()
         code = ERB.new(get_code_template(), 0, '%<>')
-        code.result(binding)
+        return remove_lines_with_blanks_only(code.result(binding))
       end
 
       def get_code_template()
@@ -53,6 +53,10 @@ module AdsCommon
         @modules_open_string = 'module ' + @module_name.gsub(/::/, '; module ')
         @modules_close_string = 'end; ' * modules_count
         @modules_close_string += 'end'
+      end
+
+      def remove_lines_with_blanks_only(text)
+        return text.gsub(/\n\ +$/, '')
       end
     end
   end
