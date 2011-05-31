@@ -32,6 +32,11 @@ def check_campaigns()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # adwords.logger = Logger.new('adwords_xml.log')
+
   campaign_srv = adwords.service(:CampaignService, API_VERSION)
 
   # Enable 'validate only'
@@ -98,11 +103,6 @@ def check_campaigns()
 end
 
 if __FILE__ == $0
-  # To enable logging of SOAP requests, set the ADWORDSAPI_DEBUG environment
-  # variable to 'true'. This can be done either from your operating system
-  # environment or via code, as done below.
-  ENV['ADWORDSAPI_DEBUG'] = 'false'
-
   begin
     check_campaigns()
 

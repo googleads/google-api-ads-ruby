@@ -32,6 +32,11 @@ def get_related_placements()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # adwords.logger = Logger.new('adwords_xml.log')
+
   targeting_idea_srv = adwords.service(:TargetingIdeaService, API_VERSION)
 
   results_per_page = 10
@@ -80,11 +85,6 @@ def get_related_placements()
 end
 
 if __FILE__ == $0
-  # To enable logging of SOAP requests, set the ADWORDSAPI_DEBUG environment
-  # variable to 'true'. This can be done either from your operating system
-  # environment or via code, as done below.
-  ENV['ADWORDSAPI_DEBUG'] = 'false'
-
   begin
     get_related_placements()
 

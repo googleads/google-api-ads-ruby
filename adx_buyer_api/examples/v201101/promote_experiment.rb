@@ -33,6 +33,11 @@ def promote_experiment()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # adwords.logger = Logger.new('adwords_xml.log')
+
   experiment_srv = adwords.service(:ExperimentService, API_VERSION)
 
   experiment_id = 'INSERT_EXPERIMENT_ID_HERE'.to_i
@@ -54,11 +59,6 @@ def promote_experiment()
 end
 
 if __FILE__ == $0
-  # To enable logging of SOAP requests, set the ADWORDSAPI_DEBUG environment
-  # variable to 'true'. This can be done either from your operating system
-  # environment or via code, as done below.
-  ENV['ADWORDSAPI_DEBUG'] = 'false'
-
   begin
     promote_experiment()
 

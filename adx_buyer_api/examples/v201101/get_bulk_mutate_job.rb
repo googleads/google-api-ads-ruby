@@ -32,6 +32,11 @@ def get_all_bulk_mutate_jobs()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # adwords.logger = Logger.new('adwords_xml.log')
+
   bulk_mutate_job_srv = adwords.service(:BulkMutateJobService, API_VERSION)
 
   # Replace with valid values of your account.
@@ -72,11 +77,6 @@ def get_all_bulk_mutate_jobs()
 end
 
 if __FILE__ == $0
-  # To enable logging of SOAP requests, set the ADWORDSAPI_DEBUG environment
-  # variable to 'true'. This can be done either from your operating system
-  # environment or via code, as done below.
-  ENV['ADWORDSAPI_DEBUG'] = 'false'
-
   begin
     get_all_bulk_mutate_jobs()
 

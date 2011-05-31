@@ -30,7 +30,7 @@ which is installed automatically as a dependency.
 The following gem libraries are required:
 - soap4r v1.5.8
 - httpclient v2.1.2 or greater
-- google-ads-common v0.2.1 or later.
+- google-ads-common v0.3.0 or later.
 
 
 == 2 - Using the client library:
@@ -127,29 +127,26 @@ In order to use the sandbox, make sure that the 'environment' parameter under
 
 It is often useful to see a trace of the raw SOAP XML being sent and received.
 The quickest way of achieving this when debugging your application is by setting
-the ADWORDSAPI_DEBUG environment variable to TRUE; e.g. in the bash shell:
-   $ export ADWORDSAPI_DEBUG=true
-or from your Ruby code:
-   ENV['ADWORDSAPI_DEBUG'] = 'true'
+the library.log_level configuration variable to 'DEBUG':
+   config[:library] = {
+     :log_level => 'DEBUG'
+   }
+or via configuration file (see example).
 
 This will output the SOAP XML to stderr, which will usually show up in your
 terminal window.
 
-There's also the option of logging requests and XML to files. In order to enable
-this, you should use the log_to_file method of the loggers inside your
-AdwordsApi::Api object:
+There's also an option of logging requests and XML to a file. In order to enable
+this, you should create a standard Logger object and pass it to the library:
+   require 'logger'
+   logger = Logger.new('path/to/log_filename')
+   logger.level = Logger::DEBUG
    adwords = AdwordsApi::Api.new
-   adwords.request_logger.log_to_file
-   adwords.xml_logger.log_to_file
+   adwords.logger = logger
 
-The first logs the units spent and the requests made, whereas the second logs
-the full SOAP XML being sent and received over the wire. These will be written
-to the current directory by default, but you can specify another directory as an
-optional parameter to log_to_file:
-   adwords.request_logger.log_to_file('/var/log/my_app/')
-   adwords.xml_logger.log_to_file('/var/log/my_app/')
-
-The files will be named request_info and soap_xml, respectively.
+Request details and units spend are logged at the INFO log level, while raw HTTP
+headers and XML dumps are logged at the DEBUG log level. For more details on
+using Logger refer to the Ruby Logger documentation.
 
 
 = Docs for Developers
