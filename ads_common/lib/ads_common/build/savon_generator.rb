@@ -45,11 +45,19 @@ module AdsCommon
         @wsdl_url = wsdl_url
         @code_path = code_path
         @service_name = service_name
+        @logger = Logger.new(STDOUT)
+        @logger.level = Logger::INFO
         @generator_args = {
             :service_name => service_name,
             :module_name  => module_name,
-            :require_path => @code_path.sub(/^lib\//, '')
+            :require_path => @code_path.sub(/^lib\//, ''),
+            :logger => @logger
         }
+        Savon.configure do |config|
+          config.logger = @logger
+          config.log_level = :debug
+        end
+        HTTPI.logger = @logger
       end
 
       #
@@ -68,7 +76,6 @@ module AdsCommon
         rescue AdsCommon::Errors::Error => e
           error_msg = "An unrecoverable error occured during code generation"
           error_msg += " for service [%s]: %s" % [@wsdl_url, e]
-          # TODO log properly
           raise AdsCommon::Errors::BuildError, error_msg
         end
       end
@@ -121,7 +128,7 @@ module AdsCommon
       # Creates a new file on specified path, overwriting existing one if it
       # exists
       def create_new_file(file_name)
-        puts "Creating %s..." % [file_name]
+        @logger.info("Creating %s..." % [file_name])
         make_dir_for_path(file_name)
         new_file = File.new(file_name, File::WRONLY|File::TRUNC|File::CREAT)
       end

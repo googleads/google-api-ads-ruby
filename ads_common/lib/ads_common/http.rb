@@ -61,14 +61,15 @@ module AdsCommon
     # Defaulting to stricter :peer validation.
     def self.prepare_request(config, url, headers = nil, data = nil)
       request = HTTPI::Request.new(url)
-      proxy = config ? config.read('connection.proxy') : nil
+      proxy = config.read('connection.proxy', nil)
       request.proxy = proxy if proxy
       strict_ssl = config.nil? or
           !(config.read('connection.strict_ssl_verification') == 'false')
       request.auth.ssl.verify_mode = strict_ssl ? :peer : :none
       request.headers = headers if headers
       request.body = data if data
-      HTTPI.log = false # TODO remove after logger CL.
+      logger = config.read('library.logger')
+      HTTPI.logger = logger if logger
       return request
     end
   end

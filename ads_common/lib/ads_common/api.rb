@@ -19,28 +19,18 @@
 #
 # Generic Api class, to be inherited from and extended by specific APIs.
 
+require 'logger'
+
 require 'ads_common/errors'
 require 'ads_common/auth/base_handler'
 require 'ads_common/auth/client_login_handler'
 require 'ads_common/soap4r_headers/nested_header_handler'
 require 'ads_common/soap4r_headers/single_header_handler'
 require 'ads_common/soap4r_response_handler'
+require 'ads_common/soap4r_logger'
 
 module AdsCommon
   class Api
-
-    # Auxiliary method to create a new Soap4rResponseHandler
-    # Should be redefined in inheriting classes, if planning to do specific
-    # logging.
-    def create_handler
-      AdsCommon::Soap4rResponseHandler.new(self)
-    end
-
-    # Logger object used for logging request info
-    attr_reader :request_logger
-
-    # Logger object used for logging SOAP XML
-    attr_reader :xml_logger
 
     # Methods that return the service configuration and the client library
     # configuration. They need to be redefined in subclasses.
@@ -51,6 +41,23 @@ module AdsCommon
 
     # The configuration for this Api object
     attr_reader :config
+
+    # The logger for this Api object.
+    attr_reader :logger
+
+    # Constructor for Api.
+    def initialize(provided_config = nil)
+      load_config(provided_config)
+      provided_logger = @config.read('library.logger')
+      self.logger = (provided_logger.nil?) ?
+          create_default_logger() : provided_logger
+    end
+
+    # Sets the logger to use.
+    def logger=(logger)
+      @logger = logger
+      @config.set('library.logger', @logger)
+    end
 
     # Obtain an API service, given a version and its name.
     #
@@ -124,7 +131,7 @@ module AdsCommon
     end
 
     # Handle loading of a single service.
-    # Creates the driver, sets up handlers and loggers, declares the appropriate
+    # Creates the driver, sets up handlers and logger, declares the appropriate
     # wrapper class and creates an instance of it.
     #
     # Args:
@@ -168,7 +175,7 @@ module AdsCommon
       # Add response handler to this driver for API unit usage processing.
       driver.callbackhandler = create_callback_handler
       # Plug the wiredump to our XML logger
-      driver.wiredump_dev = xml_logger
+      driver.wiredump_dev = AdsCommon::Soap4rLogger.new(@logger, Logger::DEBUG)
       driver.options['protocol.http.ssl_config.verify_mode'] = nil
       proxy = config.read('connection.proxy')
       if proxy
@@ -178,6 +185,42 @@ module AdsCommon
       @drivers[[version, service]] = driver
       @wrappers[[version, service]] = wrapper
       return driver, wrapper
+    end
+
+    # Auxiliary method to create a default Logger.
+    def create_default_logger()
+      logger = Logger.new(STDOUT)
+      logger.level = get_log_level_for_string(
+          @config.read('library.log_level', Logger::INFO))
+      return logger
+    end
+
+    # Helper method to load the default configuration file or a given config.
+    def load_config(provided_config = nil)
+      @config = (provided_config.nil?) ?
+          AdsCommon::Config.new(
+              File.join(ENV['HOME'], default_config_filename)) :
+          AdsCommon::Config.new(provided_config)
+    end
+
+    # Gets the default config filename.
+    def default_config_filename()
+      return api_config.default_config_filename
+    end
+
+    # Converts log level string (from config) to Logger value.
+    def get_log_level_for_string(log_level)
+      result = log_level
+      if log_level.is_a?(String)
+        result = case log_level.upcase
+          when 'FATAL': Logger::FATAL
+          when 'ERROR': Logger:ERROR
+          when 'WARN': Logger::WARN
+          when 'INFO': Logger::INFO
+          when 'DEBUG': Logger::DEBUG
+        end
+      end
+      return result
     end
   end
 end

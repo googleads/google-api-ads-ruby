@@ -2,7 +2,7 @@
 #
 # Authors:: api.sgomes@gmail.com (Sérgio Gomes)
 #
-# Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -50,19 +50,10 @@ module AdsCommon
     #
     def on_callback(method_name, endpoint, envelope, params, fault = false,
         fault_msg = nil)
-
-      host = URI.parse(endpoint).host
-
-      data = "host=#{host} method=#{method_name} "
-      data += "isFault=#{(!!fault).to_s} "
-
-      if fault_msg
-        data += "faultMessage=\"#{fault_msg}\""
-      else
-        data += "faultMessage=none"
-      end
-
-      @parent.request_logger << data
+      fault_text = fault_msg ? fault_msg.to_s : 'none'
+      data = "host=%s method=%s isFault=%s faultMessage=\"%s\"" %
+          [URI.parse(endpoint).host, method_name, fault.to_s, fault_text]
+      @parent.logger.info(data)
     end
 
     # Parses the value contained in a SOAP response header.

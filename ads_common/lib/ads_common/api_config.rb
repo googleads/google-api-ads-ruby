@@ -26,7 +26,7 @@ module AdsCommon
   # Contains helper methods for loading and managing the available services.
   # This module is meant to be imported into API-specific modules.
   module ApiConfig
-    ADS_COMMON_VERSION = '0.2.1'
+    ADS_COMMON_VERSION = '0.3.0'
 
     # Get the available API versions.
     #
@@ -109,6 +109,11 @@ module AdsCommon
     #
     def default_environment
       nil
+    end
+
+    # Get the default filename for the config file.
+    def default_config_filename
+      raise NotImplementedError, 'default_config_filename not overriden.'
     end
 
     # Get the endpoint for a service on a given environment and API version.

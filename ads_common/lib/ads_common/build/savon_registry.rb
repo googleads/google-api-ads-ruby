@@ -62,7 +62,6 @@ module AdsCommon
             @soap_exceptions << extract_exception(ctype)
           elsif ctype_name.match('.+Error$')
             # We don't use it at the moment.
-            # TODO: log we ignore it at proper log level.
           else
             @soap_types << extract_type(ctype)
           end

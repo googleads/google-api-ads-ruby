@@ -47,7 +47,8 @@ $PKG_VERSION = ENV['REL'] ? ENV['REL'] : $CURRENT_VERSION
 
 SRC_RB = FileList["#{$LIBDIR}/**/*.rb"]
 
-logger = Logger.new(STDERR)
+logger = Logger.new(STDOUT)
+logger.level = Logger::INFO
 
 CLEAN.include($WSDLDIR)
 CLEAN.include($DOCDIR)
@@ -69,9 +70,11 @@ task :getwsdl do
   $API_CONFIG.versions.each do |version|
     urls = $API_CONFIG.get_wsdls(version)
     mkdir_p File.join($WSDLDIR, version.to_s)
+    config = Generator.config
+    config.set('library.logger', logger)
     urls.each do |service, url|
-      puts "getting #{url}"
-      save(AdsCommon::Http.get(url, Generator.config),
+      logger.info("Getting #{url}...")
+      save(AdsCommon::Http.get(url, config),
            get_wsdl_file_name(version.to_s, service.to_s))
     end
   end
@@ -146,7 +149,8 @@ task :soap4r_generate do
       File.open(wrapper_file, 'w') do |file|
         file.write(Generator.generate_wrapper_class(version, service))
       end
-      puts "Generated #{version} #{service_name} wrapper: #{wrapper_file}"
+      logger.info("Generated #{version} #{service_name} " +
+          "wrapper: #{wrapper_file}")
     end
   end
 end
@@ -297,7 +301,7 @@ PKG_FILES = FileList[
 PKG_FILES.exclude(/\._/)
 
 if ! defined?(Gem)
-  puts "Package Target requires RubyGems"
+  logger.fatal('Package Target requires RubyGems')
 else
   spec = Gem::Specification.new do |s|
 

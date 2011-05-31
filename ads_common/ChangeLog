@@ -1,3 +1,6 @@
+0.3.0:
+  - New single-Logger logging system.
+
 0.2.1:
   - Support for Savon 0.9.1 and later which is now a dependency.
   - Upgraded to httpi/0.9.2, httpclient/2.1.6.

@@ -24,7 +24,7 @@ require 'savon'
 
 module AdsCommon
   class SavonService
-    attr_accessor :headerhandler, :wiredump_dev, :options
+    attr_accessor :headerhandler
 
     # Creates a new service.
     def initialize(endpoint, namespace)
@@ -32,8 +32,6 @@ module AdsCommon
         raise NoMethodError, "Tried to instantiate an abstract class"
       end
       @headerhandler = []
-      @wiredump_dev = nil
-      @options = {}
       @client = Savon::Client.new do |wsdl|
         wsdl.namespace = namespace
         wsdl.endpoint = endpoint
@@ -66,7 +64,7 @@ module AdsCommon
     # - add parameter names;
     # - resolve xsi:type where required;
     # - convert some native types to xml.
-    def validate_args(action_name, *args)
+    def validate_args(action_name, args)
       validated_args = Hash.new
       in_params = get_service_registry.get_method_signature(action_name)[:input]
       in_params.each_with_index do |in_param, index|
