@@ -320,7 +320,7 @@ else
 
     # RDoc information
     s.has_rdoc = true
-    s.extra_rdoc_files = ['README']
+    s.extra_rdoc_files = ['README', 'COPYING', 'ChangeLog']
     s.rdoc_options << '--main' << 'README'
 
     # Metadata

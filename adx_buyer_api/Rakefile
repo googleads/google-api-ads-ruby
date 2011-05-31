@@ -23,7 +23,7 @@
 require 'rubygems'
 require 'rake/gempackagetask'
 
-files = FileList["{examples}/**/*"].to_a
+files = FileList["{examples}/**/*", "Rakefile"].to_a
 docs = ['README', 'COPYING', 'ChangeLog']
 
 spec = Gem::Specification.new do |s|
