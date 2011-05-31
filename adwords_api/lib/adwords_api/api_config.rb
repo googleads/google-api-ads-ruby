@@ -40,7 +40,8 @@ module AdwordsApi
     # Set other constants
     API_NAME = 'AdwordsApi'
     API_PATH = 'adwords_api'
-    CLIENT_LIB_VERSION = '0.1.2'
+    CLIENT_LIB_VERSION = '0.2.0'
+    DEFAULT_CONFIG_FILENAME = 'adwords_api.yml'
 
     # Configure the services available to each version
     @@service_config = {
@@ -230,6 +231,10 @@ module AdwordsApi
 
     def self.auth_server_config
       @@auth_server_config
+    end
+
+    def self.default_config_filename
+      DEFAULT_CONFIG_FILENAME
     end
 
     # Returns the full interface class name for a given service. Overriding this

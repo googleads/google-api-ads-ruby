@@ -115,7 +115,7 @@ module AdwordsApi
         data += "faultMessage=none"
       end
 
-      @parent.request_logger << data
+      @parent.logger.info(data)
     end
   end
 end

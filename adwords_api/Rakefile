@@ -36,7 +36,7 @@ $GEM_NAME = 'google-adwords-api'
 $API_NAME = 'AdWords API'
 $CURRENT_VERSION = AdwordsApi::ApiConfig::CLIENT_LIB_VERSION
 $PRODDIR = 'adwords_api'
-$ADS_COMMON_VERSION = '~> 0.2.1'
+$ADS_COMMON_VERSION = '~> 0.3.0'
 
 # Configure module / namespace
 $MODULE = AdwordsApi

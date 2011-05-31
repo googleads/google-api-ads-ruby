@@ -22,10 +22,9 @@
 
 require 'rubygems'
 gem 'soap4r', '=1.5.8'
-gem 'google-ads-common', '~>0.2.1'
+gem 'google-ads-common', '~>0.3.0'
 require 'thread'
 require 'uri'
-require 'ads_common/logger'
 require 'ads_common/soap4r_patches'
 require 'ads_common/api'
 require 'ads_common/config'
@@ -106,7 +105,7 @@ module AdwordsApi
 
     # Constructor for Api.
     def initialize(provided_config = nil)
-      load_config(provided_config)
+      super(provided_config)
       @credential_handler = AdwordsApi::CredentialHandler.new(@config)
       environment = config.read('service.environment').upcase.to_sym
       if !api_config.environments.include? environment
@@ -117,10 +116,6 @@ module AdwordsApi
       @wrappers = Hash.new
       @total_units = 0
       @last_units = 0
-      log_to_console = !ENV['ADWORDSAPI_DEBUG'].nil? &&
-          ENV['ADWORDSAPI_DEBUG'].upcase == 'TRUE'
-      @xml_logger = AdsCommon::Logger.new('soap_xml', log_to_console)
-      @request_logger = AdsCommon::Logger.new('request_info')
       @mutex = Mutex.new
     end
 
@@ -252,18 +247,6 @@ module AdwordsApi
         end
         return @client_login_handler
       end
-    end
-
-    # Helper method to load the default configuration file or a given config.
-    #
-    # Args:
-    # - provided_config: a configuration hash, if you wish to use a specific
-    #   configuration rather than use the default
-    #
-    def load_config(provided_config = nil)
-      @config = (provided_config.nil?) ?
-          AdsCommon::Config.new(File.join(ENV['HOME'], 'adwords_api.yml')) :
-          AdsCommon::Config.new(provided_config)
     end
   end
 end

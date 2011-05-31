@@ -1,3 +1,7 @@
+0.2.0:
+  - Require google-ads-common 0.3.0 or later from now on;
+  - Consolidated log output to single Logger, see README.
+
 0.1.2:
   - Support for cross-client MCC reports.
   - Documented library use for DoubleClick Ad Exchange Buyer API.
