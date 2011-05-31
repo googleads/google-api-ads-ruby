@@ -190,7 +190,7 @@ if __FILE__ == $0
   # To enable logging of SOAP requests, set the ADWORDSAPI_DEBUG environment
   # variable to 'true'. This can be done either from your operating system
   # environment or via code, as done below.
-  ENV['ADWORDSAPI_DEBUG'] = 'true'
+  ENV['ADWORDSAPI_DEBUG'] = 'false'
 
   begin
     perform_bulk_mutate_job()
