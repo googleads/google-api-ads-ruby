@@ -95,11 +95,17 @@ module AdsCommon
 
       # Extracts method parameters from ComplexTypes element.
       def extract_method(method_element, doc)
-        return {:name => get_element_name(method_element).snakecase,
-                :input => extract_input_parameters(method_element, doc),
-                :output => extract_output_parameters(method_element, doc)}
-            #  This could be used to include documentation from wsdl.
-            #    :doc => get_element_doc(operation, 'wsdl')}
+        name = get_element_name(method_element)
+        method = {
+            :name => name.snakecase,
+            :input => extract_input_parameters(method_element, doc),
+            :output => extract_output_parameters(method_element, doc)
+            # This could be used to include documentation from wsdl.
+            #:doc => get_element_doc(operation, 'wsdl')
+        }
+        original_name = (name.snakecase.lower_camelcase == name)? nil : name
+        method[:original_name] = original_name unless original_name.nil?
+        return method
       end
 
       # Extracts definition of all types. If a non standard undefined type is

@@ -1,4 +1,5 @@
 0.3.0:
+  - Support for method names with CAPSed words (Savon),
   - New single-Logger logging system.
 
 0.2.1:

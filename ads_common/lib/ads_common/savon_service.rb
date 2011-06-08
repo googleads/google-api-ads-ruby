@@ -53,11 +53,20 @@ module AdsCommon
     # Executes SOAP action specified as a string with given arguments.
     def execute_action(action_name, args)
       args = validate_args(action_name, args)
-      response = @client.request(action_name.to_sym) do |soap|
-        set_headers(soap, args)
-      end
+      response = execute_soap_request(action_name.to_sym, args)
       handle_errors(response)
       return extract_result(response, action_name)
+    end
+
+    # Executes the SOAP request with original SOAP name.
+    def execute_soap_request(action, args)
+      original_action_name =
+          get_service_registry.get_method_signature(action)[:original_name]
+      original_action_name = action if original_action_name.nil?
+      response = @client.request(original_action_name) do |soap|
+        set_headers(soap, args)
+      end
+      return response
     end
 
     # Validates input parameters to:
