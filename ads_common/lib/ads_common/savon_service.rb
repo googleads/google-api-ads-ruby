@@ -223,12 +223,14 @@ module AdsCommon
     # Converts XML input string into a native format.
     def normalize_type(data, field)
       type_name = field[:type]
-      result = case type_name
-        when 'long', 'int': Integer(data)
-        when 'double': Float(data)
-        when 'boolean': data.kind_of?(String) ? data.casecmp('true') == 0 : data
-        else data
-      end
+      result = (data.nil?) ? data :
+          case type_name
+            when 'long', 'int': Integer(data)
+            when 'double': Float(data)
+            when 'boolean': data.kind_of?(String) ?
+                data.casecmp('true') == 0 : data
+            else data
+          end
       # If field signature allows an array, forcing array structure even for one
       # item.
       if !field[:min_occurs].nil? and
