@@ -1,0 +1,10 @@
+0.2.0:
+  - Require google-ads-common 0.3.0 or later from now on;
+  - Support for Savon backend 0.9.1.
+
+0.1.1:
+  - Exception generation and error handling.
+  - DFP API v201101 support.
+
+0.1.0:
+  - Initial version with minimal functionality.

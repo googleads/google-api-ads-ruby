@@ -1,0 +1,15 @@
+---
+# This is an example configuration file for the Ruby DFP API client library.
+# Please fill in the required fields, and copy it over to your home directory.
+:authentication:
+  :method: ClientLogin
+  :application_name: dfp_ruby_examples
+  :password: INSERT_PASSWORD_HERE
+  :email: INSERT_EMAIL_HERE
+  :network_code: INSERT_NETWORK_CODE_HERE
+:service:
+  :environment: SANDBOX
+:connection:
+  #:proxy: http://proxy.example.com:3128
+:library:
+  :log_level: INFO
