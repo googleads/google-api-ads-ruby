@@ -40,7 +40,8 @@ def upload_image()
   media_srv = adwords.service(:MediaService, API_VERSION)
 
   # Create image.
-  image_url = 'https://sandbox.google.com/sandboximages/image.jpg'
+  image_url =
+      'http://www.google.com/intl/en/adwords/select/images/samples/inline.jpg'
   # This utility method retrieves the contents of a URL using all of the config
   # options provided to the Api object.
   image_data = AdsCommon::Http.get(image_url, adwords.config)
