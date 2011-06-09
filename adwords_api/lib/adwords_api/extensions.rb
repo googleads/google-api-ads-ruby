@@ -341,10 +341,7 @@ module AdwordsApi
     def self.xml_to_hash(xml)
       result = {}
       xml.elements.each do |item|
-        value = case item.has_elements?
-          when true: xml_to_hash(item)
-          else item.get_text()
-        end
+        value = (item.has_elements?) ? xml_to_hash(item) : item.get_text()
         if result[item.name].nil?
           result[item.name] = value
         else

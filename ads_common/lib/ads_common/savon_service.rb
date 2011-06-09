@@ -89,9 +89,9 @@ module AdsCommon
     # Also handles some types that need special conversions.
     def validate_arg(arg, parent = nil, key = nil)
       result = case arg
-        when Hash: validate_hash_arg(arg, parent, key)
-        when Array: arg.map {|item| validate_arg(item, parent, key)}
-        when Time: time_to_xml_hash(arg)
+        when Hash then validate_hash_arg(arg, parent, key)
+        when Array then arg.map {|item| validate_arg(item, parent, key)}
+        when Time then time_to_xml_hash(arg)
         else arg
       end
       return result
@@ -225,9 +225,9 @@ module AdsCommon
       type_name = field[:type]
       result = (data.nil?) ? data :
           case type_name
-            when 'long', 'int': Integer(data)
-            when 'double': Float(data)
-            when 'boolean': data.kind_of?(String) ?
+            when 'long', 'int' then Integer(data)
+            when 'double' then Float(data)
+            when 'boolean' then data.kind_of?(String) ?
                 data.casecmp('true') == 0 : data
             else data
           end

@@ -31,8 +31,8 @@ module AdsCommon
     def initialize(param = nil)
       @config = Hash.new
       case param
-        when String: load(param)
-        when Hash: set_all(param)
+        when String then load(param)
+        when Hash then set_all(param)
       end
     end
 

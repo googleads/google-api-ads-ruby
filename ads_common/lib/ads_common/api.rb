@@ -213,11 +213,11 @@ module AdsCommon
       result = log_level
       if log_level.is_a?(String)
         result = case log_level.upcase
-          when 'FATAL': Logger::FATAL
-          when 'ERROR': Logger:ERROR
-          when 'WARN': Logger::WARN
-          when 'INFO': Logger::INFO
-          when 'DEBUG': Logger::DEBUG
+          when 'FATAL' then Logger::FATAL
+          when 'ERROR' then Logger:ERROR
+          when 'WARN' then Logger::WARN
+          when 'INFO' then Logger::INFO
+          when 'DEBUG' then Logger::DEBUG
         end
       end
       return result
