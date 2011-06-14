@@ -20,11 +20,12 @@
 # Contains the main classes for the client library. Takes care of all
 # dependencies.
 
-gem 'google-ads-common', '~>0.3.0'
+gem 'google-ads-common', '~>0.3.1'
 require 'logger'
 require 'ads_common/api'
 require 'ads_common/config'
 require 'ads_common/auth/client_login_handler'
+require 'ads_common/savon_headers/client_login_header_handler'
 require 'ads_common/savon_headers/simple_header_handler'
 require 'dfp_api/errors'
 require 'dfp_api/api_config'
@@ -91,8 +92,16 @@ module DfpApi
     # Retrieve DFP HeaderHandlers per credential.
     def soap_header_handlers(auth_handler, header_list, version)
       ns = HEADER_NAMESPACE_PREAMBLE + version.to_s
-      return [AdsCommon::SavonHeaders::SimpleHeaderHandler.new(
-          @credential_handler, auth_handler, REQUEST_HEADER, ns, version)]
+      handler = case version
+          when :v201101 then AdsCommon::SavonHeaders::SimpleHeaderHandler
+          when :v201103 then AdsCommon::SavonHeaders::ClientLoginHeaderHandler
+          when :v201104 then AdsCommon::SavonHeaders::ClientLoginHeaderHandler
+          else
+            raise AdsCommon::Errors::Error,
+                "Unknown or unspecified version: \"%s\"" % version.to_s
+      end
+      return [handler.new(@credential_handler, auth_handler, REQUEST_HEADER,
+          ns, version)]
     end
 
     # Handle loading of a single service.
