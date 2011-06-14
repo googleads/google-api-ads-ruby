@@ -17,19 +17,18 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# DFP API Rakefile
-#
+# DFP API Rakefile.
 
 require 'rubygems'
 require 'rake/gempackagetask'
 require 'rake/testtask'
 require 'lib/dfp_api/api_config'
 
-# Google common ads library used for wrapper code generation
+# Google common ads library used for wrapper code generation.
 gem 'google-ads-common'
 require 'ads_common/build/savon_generator'
 
-files = FileList["{lib,examples}/**/*"].to_a
+files = FileList["{lib,examples}/**/*", "Rakefile"].to_a
 tests = FileList["{test}/**/Test*.rb"].to_a
 docs = ['README', 'COPYING', 'ChangeLog']
 
@@ -47,7 +46,7 @@ spec = Gem::Specification.new do |s|
   s.test_files = tests
   s.has_rdoc = true
   s.extra_rdoc_files = docs
-  s.add_dependency('google-ads-common', '~> 0.3.0')
+  s.add_dependency('google-ads-common', '~> 0.3.1')
   s.add_dependency('savon', '~> 0.9.1')
 end
 
@@ -80,5 +79,4 @@ task :generate do
       generator.process_wsdl()
     end
   end
-  spec.files = FileList["{lib,examples}/**/*"].to_a
 end
