@@ -58,7 +58,7 @@ or if you downloaded the gem package manually, use:
 == Using the library
 
 In order to use the library you need to include its modules:
-  require 'google-dfp-api'
+  require 'dfp_api'
 
 Depending on your configuration you might also need to explicitely require
 the rubygems library first:
@@ -78,7 +78,7 @@ constructor:
          :password => 'PASSWORD'
      },
      :service => {
-       :environment => 'Sandbox'
+       :environment => 'SANDBOX'
      }
    })
 
