@@ -78,7 +78,7 @@ module AdsCommon
       in_params = get_service_registry.get_method_signature(action_name)[:input]
       in_params.each_with_index do |in_param, index|
         key = in_param[:name]
-        value = args[index]
+        value = deep_copy(args[index])
         validated_args[key] = (value.nil?) ? nil :
             validate_arg(value, validated_args, key)
       end
@@ -270,6 +270,11 @@ module AdsCommon
         result += implode_parent(parent_type) if parent_type[:base]
       end
       return result
+    end
+
+    # Returns copy of object and its sub-objects ("deep" copy).
+    def deep_copy(data)
+      return Marshal.load(Marshal.dump(data))
     end
   end
 end
