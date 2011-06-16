@@ -223,14 +223,12 @@ module AdsCommon
     # Converts XML input string into a native format.
     def normalize_type(data, field)
       type_name = field[:type]
-      result = (data.nil?) ? data :
-          case type_name
-            when 'long', 'int' then Integer(data)
-            when 'double' then Float(data)
-            when 'boolean' then data.kind_of?(String) ?
-                data.casecmp('true') == 0 : data
-            else data
-          end
+      result = case data
+        when Array
+          data.map {|item| normalize_item(type_name, item)}
+        else
+          normalize_item(type_name, data)
+      end
       # If field signature allows an array, forcing array structure even for one
       # item.
       if !field[:min_occurs].nil? and
@@ -238,6 +236,18 @@ module AdsCommon
         result = arrayize(result)
       end
       return result
+    end
+
+    # Converts one leaf item to a built-in type.
+    def normalize_item(type_name, item)
+      return (item.nil?) ? item :
+          case type_name
+            when 'long', 'int' then Integer(item)
+            when 'double' then Float(item)
+            when 'boolean' then item.kind_of?(String) ?
+                item.casecmp('true') == 0 : item
+            else item
+          end
     end
 
     # Finds a field in a list by its name.
