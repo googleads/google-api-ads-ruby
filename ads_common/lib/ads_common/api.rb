@@ -2,7 +2,7 @@
 #
 # Authors:: api.sgomes@gmail.com (Sérgio Gomes)
 #
-# Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -214,7 +214,7 @@ module AdsCommon
       if log_level.is_a?(String)
         result = case log_level.upcase
           when 'FATAL' then Logger::FATAL
-          when 'ERROR' then Logger:ERROR
+          when 'ERROR' then Logger::ERROR
           when 'WARN' then Logger::WARN
           when 'INFO' then Logger::INFO
           when 'DEBUG' then Logger::DEBUG
