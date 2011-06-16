@@ -286,7 +286,7 @@ module AdwordsApi
 
     # Saves raw data to a file.
     def self.save_to_file(data, path)
-      open(path, 'w') { |file| file.puts(data) } if path
+      open(path, 'wb') { |file| file.puts(data) } if path
     end
 
     # Generates default report URL with given parameters.
