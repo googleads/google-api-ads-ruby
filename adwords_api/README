@@ -30,7 +30,7 @@ which is installed automatically as a dependency.
 The following gem libraries are required:
 - soap4r v1.5.8
 - httpclient v2.1.2 or greater
-- google-ads-common v0.3.0 or later.
+- google-ads-common v0.4.0 or later.
 
 
 == 2 - Using the client library:
@@ -63,11 +63,11 @@ You can also pass API a manually constructed config hash like:
          :developer_token => 'DEVELOPER_TOKEN',
          :user_agent => 'Ruby Sample',
          :password => 'PASSWORD',
-         :email => 'user@domain.com'
+         :email => 'user@domain.com',
          :client_email => 'user2@domain.com'
      },
      :service => {
-       :environment => 'Production'
+       :environment => 'PRODUCTION'
      }
    })
 
@@ -119,7 +119,7 @@ Disabling Ruby names is an experimental feature, and it is not recommended.
 In order to use the sandbox, make sure that the 'environment' parameter under
 'service' in the configuration is set to Sandbox.
    config[:service] = {
-     :environment => 'Sandbox'
+     :environment => 'SANDBOX'
    }
 
 

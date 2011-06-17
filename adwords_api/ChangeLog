@@ -1,6 +1,6 @@
 0.2.0:
   - Better support for UTF reports in download extensions.
-  - Require google-ads-common 0.3.0 or later from now on.
+  - Require google-ads-common 0.4.0 or later from now on.
   - Consolidated log output to single Logger, see README.
 
 0.1.2:

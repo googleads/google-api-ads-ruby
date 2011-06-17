@@ -1,7 +1,8 @@
 0.2.1:
+  - Ruby1.9 compatible.
   - Fixed issue #16 (deep arrays nesting).
   - Support for v201103 and v201104.
-  - Require google-ads-common 0.3.1 or later from now on.
+  - Require google-ads-common 0.4.0 or later from now on.
 
 0.2.0:
   - Require google-ads-common 0.3.0 or later from now on.

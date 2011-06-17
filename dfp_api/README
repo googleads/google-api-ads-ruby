@@ -168,7 +168,7 @@ is planned for next releases.
 External dependencies should be pulled automatically on gem install. Here is the
 list though:
 
-  - Google Ads Common library (google-ads-common-0.3.1);
+  - Google Ads Common library (google-ads-common-0.4.0);
   - Savon 'the heavy metal Ruby SOAP client' (savon-0.9.1 or later).
 
 

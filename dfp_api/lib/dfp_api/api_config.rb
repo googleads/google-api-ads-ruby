@@ -82,6 +82,13 @@ module DfpApi
       :SANDBOX => 'https://www.google.com'
     }
 
+    @@headers_config = {
+      :REQUEST_HEADER => 'RequestHeader',
+      :HEADER_NAMESPACE_PREAMBLE =>
+          'https://www.google.com/apis/ads/publisher/',
+      :LOGIN_SERVICE_NAME => 'gam'
+    }
+
     public
 
     def self.do_require(version, service)
@@ -135,6 +142,10 @@ module DfpApi
 
     def self.default_config_filename
       DEFAULT_CONFIG_FILENAME
+    end
+
+    def self.headers_config
+      @@headers_config
     end
   end
 end

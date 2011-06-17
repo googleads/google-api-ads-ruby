@@ -2,7 +2,7 @@
 #
 # Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 # Contains the main classes for the client library. Takes care of all
 # dependencies.
 
-gem 'google-ads-common', '~>0.3.1'
+gem 'google-ads-common', '~>0.4.0'
 require 'logger'
 require 'ads_common/api'
 require 'ads_common/config'
@@ -40,30 +40,10 @@ module DfpApi
   # Holds all the services, as well as login credentials.
   #
   class Api < AdsCommon::Api
-    # TODO move to service.rb
-    HEADER_NAMESPACE_PREAMBLE = 'https://www.google.com/apis/ads/publisher/'
-    REQUEST_HEADER = 'RequestHeader'
-    LOGIN_SERVICE_NAME = 'gam'
-
-    public
-
-    # Getter for the API service configurations
-    def api_config
-      DfpApi::ApiConfig
-    end
-
-    # Constructor for Api
+    # Constructor for API.
     def initialize(provided_config = nil)
       super(provided_config)
       @credential_handler = DfpApi::CredentialHandler.new(@config)
-      env_string = config.read('service.environment')
-      if env_string.nil? or
-          !api_config.environments.include?(env_string.upcase.to_sym)
-        raise AdsCommon::Errors::Error,
-            "Unknown or unspecified environment: \"%s\"" % env_string
-      end
-      @drivers = Hash.new
-      @wrappers = Hash.new
     end
 
     # Sets the logger to use.
@@ -75,23 +55,28 @@ module DfpApi
       end
     end
 
+    # Getter for the API service configurations.
+    def api_config
+      DfpApi::ApiConfig
+    end
+
     private
 
     # Creates an appropriate authentication handler for each service (reuses the
     # ClientLogin one to avoid generating multiple tokens unnecessarily).
-    def create_auth_handler(version, environment)
+    def create_auth_handler(environment, version)
       if @client_login_handler.nil?
         auth_server = api_config.auth_server(environment)
         @client_login_handler =
             AdsCommon::Auth::ClientLoginHandler.new(config, auth_server,
-                LOGIN_SERVICE_NAME)
+                api_config.headers_config[:LOGIN_SERVICE_NAME])
       end
       return @client_login_handler
     end
 
     # Retrieve DFP HeaderHandlers per credential.
     def soap_header_handlers(auth_handler, header_list, version)
-      ns = HEADER_NAMESPACE_PREAMBLE + version.to_s
+      ns = api_config.headers_config[:HEADER_NAMESPACE_PREAMBLE] + version.to_s
       handler = case version
           when :v201101 then AdsCommon::SavonHeaders::SimpleHeaderHandler
           when :v201103 then AdsCommon::SavonHeaders::ClientLoginHeaderHandler
@@ -100,45 +85,38 @@ module DfpApi
             raise AdsCommon::Errors::Error,
                 "Unknown or unspecified version: \"%s\"" % version.to_s
       end
-      return [handler.new(@credential_handler, auth_handler, REQUEST_HEADER,
-          ns, version)]
+      return [handler.new(@credential_handler, auth_handler,
+          api_config.headers_config[:REQUEST_HEADER], ns, version)]
     end
 
-    # Handle loading of a single service.
-    # Creates the driver, sets up handlers, declares the appropriate wrapper
-    # class and creates an instance of it.
+    # Handle loading of a single service wrapper. Needs to be implemented on
+    # specific API level.
     #
     # Args:
-    # - version: intended API version. Must be an integer.
-    # - service: name for the intended service
+    # - version: intended API version. Must be a symbol.
+    # - service: name for the intended service. Must be a symbol.
     #
     # Returns:
-    # - the driver for the service
-    # - the simplified wrapper generated for the driver
+    # - a wrapper generated for the service.
     #
-    def prepare_driver(version, service)
-      version = version.to_sym
-      service = service.to_sym
+    def prepare_wrapper(version, service)
       environment = config.read('service.environment')
       api_config.do_require(version, service)
       endpoint = api_config.endpoint(environment, version, service)
       interface_class_name = api_config.interface_name(version, service)
       endpoint_url = endpoint.nil? ? nil : endpoint.to_s + service.to_s
-      driver = class_for_path(interface_class_name).new(endpoint_url)
+      wrapper = class_for_path(interface_class_name).new(endpoint_url)
 
-      auth_handler = create_auth_handler(version, environment)
+      auth_handler = create_auth_handler(environment, version)
       header_list =
           auth_handler.header_list(@credential_handler.credentials(version))
 
       soap_handlers = soap_header_handlers(auth_handler, header_list, version)
-
       soap_handlers.each do |handler|
-        driver.headerhandler << handler
+        wrapper.headerhandler << handler
       end
 
-      @drivers[[version, service]] = driver
-      @wrappers[[version, service]] = driver
-      return driver, driver
+      return wrapper
     end
 
     # Converts complete class path into class object.

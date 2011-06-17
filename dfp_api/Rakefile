@@ -20,17 +20,17 @@
 # DFP API Rakefile.
 
 require 'rubygems'
-require 'rake/gempackagetask'
+require 'rubygems/package_task'
 require 'rake/testtask'
-require 'lib/dfp_api/api_config'
+require './lib/dfp_api/api_config'
 
 # Google common ads library used for wrapper code generation.
 gem 'google-ads-common'
 require 'ads_common/build/savon_generator'
 
-files = FileList["{lib,examples}/**/*", "Rakefile"].to_a
-tests = FileList["{test}/**/Test*.rb"].to_a
-docs = ['README', 'COPYING', 'ChangeLog']
+files = FileList['{lib,examples}/**/*', 'Rakefile'].to_a
+tests = FileList['test/**/test*.rb']
+docs = ['README', 'COPYING', 'ChangeLog', 'dfp_api.yml']
 
 spec = Gem::Specification.new do |s|
   s.name = 'google-dfp-api'
@@ -46,16 +46,16 @@ spec = Gem::Specification.new do |s|
   s.test_files = tests
   s.has_rdoc = true
   s.extra_rdoc_files = docs
-  s.add_dependency('google-ads-common', '~> 0.3.1')
+  s.add_dependency('google-ads-common', '~> 0.4.0')
   s.add_dependency('savon', '~> 0.9.1')
 end
 
-Rake::GemPackageTask.new(spec) do |pkg|
+Gem::PackageTask.new(spec) do |pkg|
   pkg.need_tar = true
 end
 
 Rake::TestTask.new do |t|
-  t.test_files = FileList["test/**/test*.rb"]
+  t.test_files = tests
 end
 
 desc 'Default target - build'
@@ -69,7 +69,7 @@ task :generate do
   versions = api_config.versions()
   versions.each do |version|
     code_path = "lib/%s/%s" % [api_config.api_path, version]
-    wsdls = DfpApi::ApiConfig.get_wsdls( version )
+    wsdls = DfpApi::ApiConfig.get_wsdls(version)
     wsdls.each do |service_name, wsdl_url|
       logger.info("Processing %s at [%s]..." % [service_name, wsdl_url])
       module_name = "%s::%s::%s" % [api_config.api_name, version.to_s.upcase,

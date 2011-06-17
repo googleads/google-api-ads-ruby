@@ -26,7 +26,7 @@ module AdsCommon
   # Contains helper methods for loading and managing the available services.
   # This module is meant to be imported into API-specific modules.
   module ApiConfig
-    ADS_COMMON_VERSION = '0.3.1'
+    ADS_COMMON_VERSION = '0.4.0'
 
     # Get the available API versions.
     #
@@ -53,10 +53,8 @@ module AdsCommon
     # given version
     #
     def environment_has_version(environment, version)
-      environment = environment.upcase.to_sym
-      version = version.to_sym
-      !environment_config[environment].nil? and
-          !environment_config[environment][version].nil?
+      return environment_config.include?(environment) &&
+          environment_config[environment].include?(version)
     end
 
     # Does the given version exist and contain the given service?
@@ -66,10 +64,8 @@ module AdsCommon
     # given service
     #
     def version_has_service(version, service)
-      version = version.to_sym
-      service = service.to_sym
-      (!service_config[version].nil? and
-          service_config[version].include?(service))
+      return service_config.include?(version) &&
+          service_config[version].include?(service)
     end
 
     # Get the default API version.
@@ -127,9 +123,6 @@ module AdsCommon
     # The endpoint URL (as a string)
     #
     def endpoint(environment, version, service)
-      environment = environment.upcase.to_sym
-      version = version.to_sym
-      service = service.to_sym
       base = get_wsdl_base(environment, version)
       if !subdir_config().nil?
         base = base.to_s + subdir_config()[[version, service]].to_s
@@ -148,8 +141,6 @@ module AdsCommon
     #
     def subdir(version, service)
       return nil if subdir_config().nil?
-      version = version.to_sym
-      service = service.to_sym
       subdir_config()[[version, service]]
     end
 
@@ -163,30 +154,11 @@ module AdsCommon
     # The full URL for the auth server.
     #
     def auth_server(environment)
-      auth_server_url = ENV['ADSAPI_AUTH_URL']
-      if auth_server_url.nil?
-        environment = environment.upcase.to_sym
-        auth_server_url = auth_server_config[environment]
-      end
-      if auth_server_url.nil?
-        # If we don't have an entry for this environment, we just return the
-        # default server (the same one being used for the default environment)
-        auth_server_url = auth_server_config[default_environment()]
-      end
+      auth_server_url =
+          ENV['ADSAPI_AUTH_URL'] ||
+          auth_server_config[environment] ||
+          auth_server_config[default_environment()]
       return auth_server_url
-    end
-
-    # Add a new environment to the list.
-    #
-    # Args:
-    # - name: the name for the new environment
-    # - endpoint_hash: a hash of base endpoint URLs, indexed by version number,
-    #   e.g.:
-    #    { :v13 => 'URL_FOR_v13', :v200906 => 'URL_FOR_v200906' }
-    #
-    def add_environment(name, endpoint_hash)
-      name = name.upcase.to_sym
-      environment_config[name] = endpoint_hash
     end
 
     # Perform the loading of the necessary source files for a version
@@ -195,7 +167,6 @@ module AdsCommon
     # - version: the API version (as an integer)
     #
     def do_require(version, service)
-      version = version.to_sym
       eval("require '#{api_path}/#{version}/#{service}Wrapper.rb'")
     end
 
@@ -209,8 +180,6 @@ module AdsCommon
     # The full module name for the given service (as a string)
     #
     def module_name(version, service)
-      version = version.to_sym
-      service = service.to_sym
       return "#{api_name}::#{version.to_s.upcase}::#{service}"
     end
 
@@ -224,8 +193,6 @@ module AdsCommon
     # The full interface class name for the given service (as a string)
     #
     def interface_name(version, service)
-      version = version.to_sym
-      service = service.to_sym
       return module_name(version, service) + "::#{service}Interface"
     end
 
@@ -239,8 +206,6 @@ module AdsCommon
     # The full wrapper class name for the given service (as a string)
     #
     def wrapper_name(version, service)
-      version = version.to_sym
-      service = service.to_sym
       return module_name(version, service) + "::#{service}Wrapper"
     end
 
@@ -279,10 +244,8 @@ module AdsCommon
     # Returns:
     #   String containing base URL.
     def get_wsdl_base(environment, version)
-      wsdl_base = ENV['ADSAPI_BASE_URL']
-      if wsdl_base.nil?
-        wsdl_base = environment_config[environment][version]
-      end
+      wsdl_base = ENV['ADSAPI_BASE_URL'] ||
+          wsdl_base = environment_config[environment][version]
       return wsdl_base
     end
   end

@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Authors:: api.sgomes@gmail.com (Sérgio Gomes)
+# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
@@ -20,109 +20,56 @@
 # Rakefile for the ads_common package.
 
 require 'rubygems'
-gem 'rake'
-require 'rake/gempackagetask'
-require 'rake/rdoctask'
-require 'rake/clean'
+require 'rubygems/package_task'
 require 'rake/testtask'
-require 'lib/ads_common/api_config'
+require 'rdoc/task'
+require './lib/ads_common/api_config'
 
-$WSDLDIR = 'wsdl'
-$LIBDIR = 'lib'
-$DOCDIR = 'doc'
-$TESTDIR = 'test'
+GEM_NAME = 'google-ads-common'
 
-$PROJECT_NAME = 'ads_common'
-$GEM_NAME = 'google-ads-common'
+files = FileList['lib/**/*', 'Rakefile'].to_a
+tests = FileList['test/**/test_*.rb']
+docs = ['README', 'COPYING', 'ChangeLog', 'test/test_config.yml']
 
-$CURRENT_VERSION = AdsCommon::ApiConfig::ADS_COMMON_VERSION
-$PKG_VERSION = ENV['REL'] ? ENV['REL'] : $CURRENT_VERSION
+spec = Gem::Specification.new do |s|
+  s.platform = Gem::Platform::RUBY
+  s.name = GEM_NAME
+  s.version = AdsCommon::ApiConfig::ADS_COMMON_VERSION
+  s.summary = 'Common code for Google Ads APIs.'
+  s.description = ("%s provides essential utilities shared by all Ads Ruby " +
+      "client libraries.") % GEM_NAME
+  s.authors = ['Sergio Gomes', 'Danial Klimkin']
+  s.email = 'api.dklimkin@gmail.com'
+  s.homepage = 'http://code.google.com/p/google-api-ads-ruby/'
+  s.require_path = 'lib'
+  s.files = files
+  s.test_files = tests
+  s.has_rdoc = true
+  s.extra_rdoc_files = docs
+  s.add_dependency('savon', '~> 0.9.1')
+  s.add_dependency('soap4r', '= 1.5.8')
+  s.add_dependency('httpclient', '>= 2.1.6')
+  s.add_dependency('httpi', '~> 0.9.2')
+end
 
-# Configure gem details
-$GEM_SUMMARY = "Common code for Google Ads APIs."
-$GEM_DESCRIPTION = "#{$PROJECT_NAME} provides essential utilities shared by " +
-    "all Ads Ruby client libraries."
-$GEM_AUTHORS = ['Sergio Gomes', 'Danial Klimkin']
-$GEM_EMAIL = 'api.sgomes@gmail.com'
-$GEM_HOMEPAGE = 'http://code.google.com/p/google-api-ads-ruby/'
-
-# ====================================================================
-# Default task - call package
+desc 'Default target - build'
 task :default => [:package]
 
-# ====================================================================
+# Create a task that will package the Common library into a gem file.
+Gem::PackageTask.new(spec) do |pkg|
+  pkg.need_tar = true
+end
+
 # Create a task to build the RDOC documentation tree.
-Rake::RDocTask.new("rdoc") do |rdoc|
-  # Try to use SDoc to generate the docs
-  begin
-    require 'sdoc'
-    rdoc.options << '--fmt' << 'shtml'
-    rdoc.template = 'direct'
-  rescue LoadError
-    # Do nothing, give up on SDoc and continue with whatever is the default.
-  end
-  rdoc.rdoc_dir = $DOCDIR
-  rdoc.title = "#{$PROJECT_NAME} -- Common code for Google Ads APIs"
+RDoc::Task.new do |rdoc|
+  rdoc.rdoc_dir = 'doc'
+  rdoc.title = "%s -- Common code for Google Ads APIs" % GEM_NAME
   rdoc.main = 'README'
-  rdoc.rdoc_files.include('README', 'COPYING', 'ChangeLog')
-  rdoc.rdoc_files.include("#{$LIBDIR}/**/*.rb")
+  rdoc.rdoc_files.include(docs)
+  rdoc.rdoc_files.include(files)
 end
 
-# ====================================================================
 # Create a task to perform the unit testing.
-Rake::TestTask.new("test") do |test|
-  test.libs << $TESTDIR
-  test.pattern = "#{$TESTDIR}/**/test_*.rb"
-  test.verbose = true
-end
-
-# ====================================================================
-# Create a task that will package the Rake software into distributable
-# gem files.
-PKG_FILES = FileList[
-  'Rakefile',
-  "#{$LIBDIR}/**/*.rb",
-  "#{$DOCDIR}/**/*.*"
-]
-
-PKG_FILES.exclude(/\._/)
-
-if ! defined?(Gem)
-  puts "Package Target requires RubyGems"
-else
-  spec = Gem::Specification.new do |s|
-
-    # Basic information
-    s.name = $GEM_NAME
-    s.version = $PKG_VERSION
-    s.summary = $GEM_SUMMARY
-    s.description = $GEM_DESCRIPTION
-
-    # Files and dependencies
-    s.files = PKG_FILES.to_a
-    s.require_path = $LIBDIR
-    s.add_dependency('soap4r', '= 1.5.8')
-    s.add_dependency('savon', '~> 0.9.1')
-    s.add_dependency('httpclient', '>= 2.1.6')
-    s.add_dependency('httpi', '~> 0.9.2')
-
-    # RDoc information
-    s.has_rdoc = true
-    s.extra_rdoc_files = ['README', 'ChangeLog', 'COPYING']
-    s.rdoc_options << '--main' << 'README'
-
-    # Metadata
-    s.authors = $GEM_AUTHORS
-    s.email = $GEM_EMAIL
-    s.homepage = $GEM_HOMEPAGE
-    s.rubyforge_project = $GEM_NAME
-    s.requirements << 'soap4r v1.5.8'
-    s.requirements << 'savon v0.9.1 or greater'
-    s.requirements << 'httpclient v2.1.6 or greater'
-    s.requirements << 'httpi v0.9.2 or greater'
-  end
-
-  Rake::GemPackageTask.new(spec) do |t|
-    t.need_tar = true
-  end
+Rake::TestTask.new do |t|
+  t.test_files = tests
 end

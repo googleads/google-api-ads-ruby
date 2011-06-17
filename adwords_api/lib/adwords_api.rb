@@ -22,13 +22,16 @@
 
 require 'rubygems'
 gem 'soap4r', '=1.5.8'
-gem 'google-ads-common', '~>0.3.0'
+gem 'google-ads-common', '~>0.4.0'
 require 'thread'
 require 'uri'
 require 'ads_common/soap4r_patches'
 require 'ads_common/api'
 require 'ads_common/config'
 require 'ads_common/auth/client_login_handler'
+require 'ads_common/soap4r_headers/nested_header_handler'
+require 'ads_common/soap4r_headers/single_header_handler'
+require 'ads_common/soap4r_logger'
 require 'adwords_api/auth/v13_login_handler'
 require 'adwords_api/errors'
 require 'adwords_api/api_config'
@@ -45,11 +48,6 @@ module AdwordsApi
   # Holds all the services, as well as login credentials.
   #
   class Api < AdsCommon::Api
-
-    REQUEST_HEADER = 'RequestHeader'
-    HEADER_NAMESPACE_PREAMBLE = 'https://adwords.google.com/api/adwords/cm/'
-    LOGIN_SERVICE_NAME = 'adwords'
-
     # Mutex object for controlling concurrent access to API object data
     attr_reader :mutex
     # Number of units spent on the last operation via this API object
@@ -95,11 +93,13 @@ module AdwordsApi
         end
         return header_handlers
       else
-        ns = HEADER_NAMESPACE_PREAMBLE + version.to_s
+        ns =
+            api_config.headers_config[:HEADER_NAMESPACE_PREAMBLE] + version.to_s
         top_ns = wrapper.namespace
         return [AdsCommon::Soap4rHeaders::NestedHeaderHandler.new(
-            @credential_handler, auth_handler, REQUEST_HEADER, top_ns, ns,
-            version)]
+            @credential_handler, auth_handler,
+            api_config.headers_config[:REQUEST_HEADER],
+            top_ns, ns, version)]
       end
     end
 
@@ -107,13 +107,7 @@ module AdwordsApi
     def initialize(provided_config = nil)
       super(provided_config)
       @credential_handler = AdwordsApi::CredentialHandler.new(@config)
-      environment = config.read('service.environment').upcase.to_sym
-      if !api_config.environments.include? environment
-        raise AdsCommon::Errors::Error,
-            "Unknown environment #{environment}"
-      end
       @drivers = Hash.new
-      @wrappers = Hash.new
       @total_units = 0
       @last_units = 0
       @mutex = Mutex.new
@@ -235,7 +229,7 @@ module AdwordsApi
     # Returns:
     # - auth handler
     #
-    def create_auth_handler(version, environment)
+    def create_auth_handler(environment, version)
       if version == :v13
         return AdwordsApi::Auth::V13LoginHandler.new
       else
@@ -243,10 +237,62 @@ module AdwordsApi
           auth_server = api_config.auth_server(environment)
           @client_login_handler =
               AdsCommon::Auth::ClientLoginHandler.new(config, auth_server,
-                  LOGIN_SERVICE_NAME)
+                  api_config.headers_config[:LOGIN_SERVICE_NAME])
         end
         return @client_login_handler
       end
+    end
+
+    # Handle loading of a single service.
+    # Creates the driver, sets up handlers and logger, declares the appropriate
+    # wrapper class and creates an instance of it.
+    #
+    # Args:
+    # - version: intended API version. Must be a symbol.
+    # - service: name for the intended service
+    #
+    # Returns:
+    # - the simplified wrapper generated for the driver
+    #
+    def prepare_wrapper(version, service)
+      environment = config.read('service.environment')
+      api_config.do_require(version, service)
+      endpoint = api_config.endpoint(environment, version, service)
+      # Set endpoint if not using the default.
+      if endpoint.nil? then
+        driver = eval("#{api_config.interface_name(version, service)}.new")
+      else
+        endpoint_url = endpoint.to_s + service.to_s
+        driver = eval("#{api_config.interface_name(version, service)}.new" +
+                      "(\"#{endpoint_url}\")")
+      end
+
+      # Create an instance of the wrapper class for this service.
+      wrapper_class = api_config.wrapper_name(version, service)
+      wrapper = eval("#{wrapper_class}.new(driver, self)")
+
+      auth_handler = create_auth_handler(environment, version)
+      header_list =
+          auth_handler.header_list(@credential_handler.credentials(version))
+
+      soap_handlers = soap_header_handlers(auth_handler, header_list, version,
+          wrapper)
+
+      soap_handlers.each do |handler|
+        driver.headerhandler << handler
+      end
+
+      # Add response handler to this driver for API unit usage processing.
+      driver.callbackhandler = create_callback_handler
+      # Plug the wiredump to our XML logger.
+      driver.wiredump_dev = AdsCommon::Soap4rLogger.new(@logger, Logger::DEBUG)
+      driver.options['protocol.http.ssl_config.verify_mode'] = nil
+      proxy = config.read('connection.proxy')
+      driver.options['protocol.http.proxy'] = proxy if proxy
+
+      @drivers[version] ||= {}
+      @drivers[version][service] = driver
+      return wrapper
     end
   end
 end

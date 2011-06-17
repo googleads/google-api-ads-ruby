@@ -194,6 +194,13 @@ module AdwordsApi
       :SANDBOX => 'https://www.google.com'
     }
 
+    @@headers_config = {
+      :REQUEST_HEADER => 'RequestHeader',
+      :HEADER_NAMESPACE_PREAMBLE =>
+          'https://adwords.google.com/api/adwords/cm/',
+      :LOGIN_SERVICE_NAME => 'adwords'
+    }
+
     public
 
     # Getters for constants and module variables.
@@ -237,6 +244,10 @@ module AdwordsApi
       DEFAULT_CONFIG_FILENAME
     end
 
+    def self.headers_config
+      @@headers_config
+    end
+
     # Returns the full interface class name for a given service. Overriding this
     # method from ads_common to fix odd behaviour with v13 class names.
     #
@@ -266,7 +277,7 @@ module AdwordsApi
     #
     def self.report_download_url(environment, version)
       version = version.to_sym
-      base = get_wsdl_base(environment.to_sym, version)
+      base = get_wsdl_base(environment.upcase.to_sym, version)
       if base
         path = service_config[version].include?(:ReportDefinitionService) ?
             'reportdownload' : nil
