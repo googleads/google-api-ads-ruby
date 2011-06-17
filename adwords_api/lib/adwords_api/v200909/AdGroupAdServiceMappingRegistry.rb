@@ -861,43 +861,6 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
-    :class => AdwordsApi::V200909::AdGroupAdService::Media,
-    :schema_type => XSD::QName.new(NsV200909, "Media"),
-    :schema_element => [
-      ["mediaId", "SOAP::SOAPLong", [0, 1]],
-      ["mediaTypeDb", "AdwordsApi::V200909::AdGroupAdService::MediaMediaType", [0, 1]],
-      ["referenceId", "SOAP::SOAPLong", [0, 1]],
-      ["dimensions", "AdwordsApi::V200909::AdGroupAdService::Media_Size_DimensionsMapEntry[]", [0, nil]],
-      ["urls", "AdwordsApi::V200909::AdGroupAdService::Media_Size_StringMapEntry[]", [0, nil]],
-      ["mimeType", "AdwordsApi::V200909::AdGroupAdService::MediaMimeType", [0, 1]],
-      ["sourceUrl", "SOAP::SOAPString", [0, 1]],
-      ["mediaSubType", "AdwordsApi::V200909::AdGroupAdService::MediaMediaSubType", [0, 1]],
-      ["name", "SOAP::SOAPString", [0, 1]],
-      ["fileSize", "SOAP::SOAPLong", [0, 1]],
-      ["extendedCapabilities", "AdwordsApi::V200909::AdGroupAdService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry[]", [0, nil]],
-      ["creationTime", "SOAP::SOAPString", [0, 1]],
-      ["media_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Media.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V200909::AdGroupAdService::MobileImageAd,
-    :schema_type => XSD::QName.new(NsV200909, "MobileImageAd"),
-    :schema_basetype => XSD::QName.new(NsV200909, "Ad"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["url", "SOAP::SOAPString", [0, 1]],
-      ["displayUrl", "SOAP::SOAPString", [0, 1]],
-      ["approvalStatus", "AdwordsApi::V200909::AdGroupAdService::AdApprovalStatus", [0, 1]],
-      ["disapprovalReasons", "SOAP::SOAPString[]", [0, nil]],
-      ["ad_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Ad.Type")], [0, 1]],
-      ["markupLanguages", "AdwordsApi::V200909::AdGroupAdService::MarkupLanguageType[]", [0, nil]],
-      ["mobileCarriers", "SOAP::SOAPString[]", [0, nil]],
-      ["image", "AdwordsApi::V200909::AdGroupAdService::Image", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
     :class => AdwordsApi::V200909::AdGroupAdService::PolicyViolationError,
     :schema_type => XSD::QName.new(NsV200909, "PolicyViolationError"),
     :schema_basetype => XSD::QName.new(NsV200909, "ApiError"),
@@ -939,17 +902,6 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
-    :class => AdwordsApi::V200909::AdGroupAdService::TemplateElementField,
-    :schema_type => XSD::QName.new(NsV200909, "TemplateElementField"),
-    :schema_element => [
-      ["name", "SOAP::SOAPString", [0, 1]],
-      ["type", "AdwordsApi::V200909::AdGroupAdService::TemplateElementFieldType", [0, 1]],
-      ["fieldText", "SOAP::SOAPString", [0, 1]],
-      ["fieldMedia", "AdwordsApi::V200909::AdGroupAdService::Media", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
     :class => AdwordsApi::V200909::AdGroupAdService::ApiException,
     :schema_type => XSD::QName.new(NsV200909, "ApiException"),
     :schema_basetype => XSD::QName.new(NsV200909, "ApplicationException"),
@@ -966,6 +918,66 @@ module DefaultMappingRegistry
     :schema_element => [
       ["message", "SOAP::SOAPString", [0, 1]],
       ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApplicationException.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V200909::AdGroupAdService::Media,
+    :schema_type => XSD::QName.new(NsV200909, "Media"),
+    :schema_element => [
+      ["mediaId", "SOAP::SOAPLong", [0, 1]],
+      ["mediaTypeDb", "AdwordsApi::V200909::AdGroupAdService::MediaMediaType", [0, 1]],
+      ["referenceId", "SOAP::SOAPLong", [0, 1]],
+      ["dimensions", "AdwordsApi::V200909::AdGroupAdService::Media_Size_DimensionsMapEntry[]", [0, nil]],
+      ["urls", "AdwordsApi::V200909::AdGroupAdService::Media_Size_StringMapEntry[]", [0, nil]],
+      ["mimeType", "AdwordsApi::V200909::AdGroupAdService::MediaMimeType", [0, 1]],
+      ["sourceUrl", "SOAP::SOAPString", [0, 1]],
+      ["mediaSubType", "AdwordsApi::V200909::AdGroupAdService::MediaMediaSubType", [0, 1]],
+      ["name", "SOAP::SOAPString", [0, 1]],
+      ["fileSize", "SOAP::SOAPLong", [0, 1]],
+      ["extendedCapabilities", "AdwordsApi::V200909::AdGroupAdService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry[]", [0, nil]],
+      ["creationTime", "SOAP::SOAPString", [0, 1]],
+      ["media_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Media.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V200909::AdGroupAdService::MobileImageAd,
+    :schema_type => XSD::QName.new(NsV200909, "MobileImageAd"),
+    :schema_basetype => XSD::QName.new(NsV200909, "Ad"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["url", "SOAP::SOAPString", [0, 1]],
+      ["displayUrl", "SOAP::SOAPString", [0, 1]],
+      ["approvalStatus", "AdwordsApi::V200909::AdGroupAdService::AdApprovalStatus", [0, 1]],
+      ["disapprovalReasons", "SOAP::SOAPString[]", [0, nil]],
+      ["ad_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Ad.Type")], [0, 1]],
+      ["markupLanguages", "AdwordsApi::V200909::AdGroupAdService::MarkupLanguageType[]", [0, nil]],
+      ["mobileCarriers", "SOAP::SOAPString[]", [0, nil]],
+      ["image", "AdwordsApi::V200909::AdGroupAdService::Image", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V200909::AdGroupAdService::TemplateElementField,
+    :schema_type => XSD::QName.new(NsV200909, "TemplateElementField"),
+    :schema_element => [
+      ["name", "SOAP::SOAPString", [0, 1]],
+      ["type", "AdwordsApi::V200909::AdGroupAdService::TemplateElementFieldType", [0, 1]],
+      ["fieldText", "SOAP::SOAPString", [0, 1]],
+      ["fieldMedia", "AdwordsApi::V200909::AdGroupAdService::Media", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V200909::AdGroupAdService::AdGroupAdSelector,
+    :schema_type => XSD::QName.new(NsV200909, "AdGroupAdSelector"),
+    :schema_element => [
+      ["campaignIds", "SOAP::SOAPLong[]", [0, nil]],
+      ["adGroupIds", "SOAP::SOAPLong[]", [0, nil]],
+      ["adIds", "SOAP::SOAPLong[]", [0, nil]],
+      ["statsSelector", "AdwordsApi::V200909::AdGroupAdService::AdStatsSelector", [0, 1]],
+      ["paging", "AdwordsApi::V200909::AdGroupAdService::Paging", [0, 1]]
     ]
   )
 
@@ -1019,18 +1031,6 @@ module DefaultMappingRegistry
     :schema_element => [
       ["uniqueName", "SOAP::SOAPString", [0, 1]],
       ["fields", "AdwordsApi::V200909::AdGroupAdService::TemplateElementField[]", [0, nil]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V200909::AdGroupAdService::AdGroupAdSelector,
-    :schema_type => XSD::QName.new(NsV200909, "AdGroupAdSelector"),
-    :schema_element => [
-      ["campaignIds", "SOAP::SOAPLong[]", [0, nil]],
-      ["adGroupIds", "SOAP::SOAPLong[]", [0, nil]],
-      ["adIds", "SOAP::SOAPLong[]", [0, nil]],
-      ["statsSelector", "AdwordsApi::V200909::AdGroupAdService::AdStatsSelector", [0, 1]],
-      ["paging", "AdwordsApi::V200909::AdGroupAdService::Paging", [0, 1]]
     ]
   )
 
@@ -2199,43 +2199,6 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
-    :class => AdwordsApi::V200909::AdGroupAdService::Media,
-    :schema_type => XSD::QName.new(NsV200909, "Media"),
-    :schema_element => [
-      ["mediaId", "SOAP::SOAPLong", [0, 1]],
-      ["mediaTypeDb", "AdwordsApi::V200909::AdGroupAdService::MediaMediaType", [0, 1]],
-      ["referenceId", "SOAP::SOAPLong", [0, 1]],
-      ["dimensions", "AdwordsApi::V200909::AdGroupAdService::Media_Size_DimensionsMapEntry[]", [0, nil]],
-      ["urls", "AdwordsApi::V200909::AdGroupAdService::Media_Size_StringMapEntry[]", [0, nil]],
-      ["mimeType", "AdwordsApi::V200909::AdGroupAdService::MediaMimeType", [0, 1]],
-      ["sourceUrl", "SOAP::SOAPString", [0, 1]],
-      ["mediaSubType", "AdwordsApi::V200909::AdGroupAdService::MediaMediaSubType", [0, 1]],
-      ["name", "SOAP::SOAPString", [0, 1]],
-      ["fileSize", "SOAP::SOAPLong", [0, 1]],
-      ["extendedCapabilities", "AdwordsApi::V200909::AdGroupAdService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry[]", [0, nil]],
-      ["creationTime", "SOAP::SOAPString", [0, 1]],
-      ["media_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Media.Type")], [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V200909::AdGroupAdService::MobileImageAd,
-    :schema_type => XSD::QName.new(NsV200909, "MobileImageAd"),
-    :schema_basetype => XSD::QName.new(NsV200909, "Ad"),
-    :schema_element => [
-      ["id", "SOAP::SOAPLong", [0, 1]],
-      ["url", "SOAP::SOAPString", [0, 1]],
-      ["displayUrl", "SOAP::SOAPString", [0, 1]],
-      ["approvalStatus", "AdwordsApi::V200909::AdGroupAdService::AdApprovalStatus", [0, 1]],
-      ["disapprovalReasons", "SOAP::SOAPString[]", [0, nil]],
-      ["ad_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Ad.Type")], [0, 1]],
-      ["markupLanguages", "AdwordsApi::V200909::AdGroupAdService::MarkupLanguageType[]", [0, nil]],
-      ["mobileCarriers", "SOAP::SOAPString[]", [0, nil]],
-      ["image", "AdwordsApi::V200909::AdGroupAdService::Image", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
     :class => AdwordsApi::V200909::AdGroupAdService::PolicyViolationError,
     :schema_type => XSD::QName.new(NsV200909, "PolicyViolationError"),
     :schema_basetype => XSD::QName.new(NsV200909, "ApiError"),
@@ -2277,17 +2240,6 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
-    :class => AdwordsApi::V200909::AdGroupAdService::TemplateElementField,
-    :schema_type => XSD::QName.new(NsV200909, "TemplateElementField"),
-    :schema_element => [
-      ["name", "SOAP::SOAPString", [0, 1]],
-      ["type", "AdwordsApi::V200909::AdGroupAdService::TemplateElementFieldType", [0, 1]],
-      ["fieldText", "SOAP::SOAPString", [0, 1]],
-      ["fieldMedia", "AdwordsApi::V200909::AdGroupAdService::Media", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
     :class => AdwordsApi::V200909::AdGroupAdService::ApiException,
     :schema_type => XSD::QName.new(NsV200909, "ApiException"),
     :schema_basetype => XSD::QName.new(NsV200909, "ApplicationException"),
@@ -2304,6 +2256,66 @@ module DefaultMappingRegistry
     :schema_element => [
       ["message", "SOAP::SOAPString", [0, 1]],
       ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "ApplicationException.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V200909::AdGroupAdService::Media,
+    :schema_type => XSD::QName.new(NsV200909, "Media"),
+    :schema_element => [
+      ["mediaId", "SOAP::SOAPLong", [0, 1]],
+      ["mediaTypeDb", "AdwordsApi::V200909::AdGroupAdService::MediaMediaType", [0, 1]],
+      ["referenceId", "SOAP::SOAPLong", [0, 1]],
+      ["dimensions", "AdwordsApi::V200909::AdGroupAdService::Media_Size_DimensionsMapEntry[]", [0, nil]],
+      ["urls", "AdwordsApi::V200909::AdGroupAdService::Media_Size_StringMapEntry[]", [0, nil]],
+      ["mimeType", "AdwordsApi::V200909::AdGroupAdService::MediaMimeType", [0, 1]],
+      ["sourceUrl", "SOAP::SOAPString", [0, 1]],
+      ["mediaSubType", "AdwordsApi::V200909::AdGroupAdService::MediaMediaSubType", [0, 1]],
+      ["name", "SOAP::SOAPString", [0, 1]],
+      ["fileSize", "SOAP::SOAPLong", [0, 1]],
+      ["extendedCapabilities", "AdwordsApi::V200909::AdGroupAdService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry[]", [0, nil]],
+      ["creationTime", "SOAP::SOAPString", [0, 1]],
+      ["media_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Media.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V200909::AdGroupAdService::MobileImageAd,
+    :schema_type => XSD::QName.new(NsV200909, "MobileImageAd"),
+    :schema_basetype => XSD::QName.new(NsV200909, "Ad"),
+    :schema_element => [
+      ["id", "SOAP::SOAPLong", [0, 1]],
+      ["url", "SOAP::SOAPString", [0, 1]],
+      ["displayUrl", "SOAP::SOAPString", [0, 1]],
+      ["approvalStatus", "AdwordsApi::V200909::AdGroupAdService::AdApprovalStatus", [0, 1]],
+      ["disapprovalReasons", "SOAP::SOAPString[]", [0, nil]],
+      ["ad_Type", ["SOAP::SOAPString", XSD::QName.new(NsV200909, "Ad.Type")], [0, 1]],
+      ["markupLanguages", "AdwordsApi::V200909::AdGroupAdService::MarkupLanguageType[]", [0, nil]],
+      ["mobileCarriers", "SOAP::SOAPString[]", [0, nil]],
+      ["image", "AdwordsApi::V200909::AdGroupAdService::Image", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V200909::AdGroupAdService::TemplateElementField,
+    :schema_type => XSD::QName.new(NsV200909, "TemplateElementField"),
+    :schema_element => [
+      ["name", "SOAP::SOAPString", [0, 1]],
+      ["type", "AdwordsApi::V200909::AdGroupAdService::TemplateElementFieldType", [0, 1]],
+      ["fieldText", "SOAP::SOAPString", [0, 1]],
+      ["fieldMedia", "AdwordsApi::V200909::AdGroupAdService::Media", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V200909::AdGroupAdService::AdGroupAdSelector,
+    :schema_type => XSD::QName.new(NsV200909, "AdGroupAdSelector"),
+    :schema_element => [
+      ["campaignIds", "SOAP::SOAPLong[]", [0, nil]],
+      ["adGroupIds", "SOAP::SOAPLong[]", [0, nil]],
+      ["adIds", "SOAP::SOAPLong[]", [0, nil]],
+      ["statsSelector", "AdwordsApi::V200909::AdGroupAdService::AdStatsSelector", [0, 1]],
+      ["paging", "AdwordsApi::V200909::AdGroupAdService::Paging", [0, 1]]
     ]
   )
 
@@ -2357,18 +2369,6 @@ module DefaultMappingRegistry
     :schema_element => [
       ["uniqueName", "SOAP::SOAPString", [0, 1]],
       ["fields", "AdwordsApi::V200909::AdGroupAdService::TemplateElementField[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V200909::AdGroupAdService::AdGroupAdSelector,
-    :schema_type => XSD::QName.new(NsV200909, "AdGroupAdSelector"),
-    :schema_element => [
-      ["campaignIds", "SOAP::SOAPLong[]", [0, nil]],
-      ["adGroupIds", "SOAP::SOAPLong[]", [0, nil]],
-      ["adIds", "SOAP::SOAPLong[]", [0, nil]],
-      ["statsSelector", "AdwordsApi::V200909::AdGroupAdService::AdStatsSelector", [0, 1]],
-      ["paging", "AdwordsApi::V200909::AdGroupAdService::Paging", [0, 1]]
     ]
   )
 

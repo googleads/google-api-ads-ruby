@@ -575,6 +575,28 @@ class NotWhitelistedError < ApiError
   end
 end
 
+# OperatorError
+# - fieldPath - SOAP::SOAPString
+# - trigger - SOAP::SOAPString
+# - errorString - SOAP::SOAPString
+# - apiError_Type - SOAP::SOAPString
+# - reason - AdwordsApi::V201101::ConversionTrackerService::OperatorErrorReason
+class OperatorError < ApiError
+  attr_accessor :fieldPath
+  attr_accessor :trigger
+  attr_accessor :errorString
+  attr_accessor :apiError_Type
+  attr_accessor :reason
+
+  def initialize(fieldPath = nil, trigger = nil, errorString = nil, apiError_Type = nil, reason = nil)
+    @fieldPath = fieldPath
+    @trigger = trigger
+    @errorString = errorString
+    @apiError_Type = apiError_Type
+    @reason = reason
+  end
+end
+
 # QuotaCheckError
 # - fieldPath - SOAP::SOAPString
 # - trigger - SOAP::SOAPString
@@ -984,6 +1006,11 @@ class Operator < ::String
   ADD = Operator.new("ADD")
   REMOVE = Operator.new("REMOVE")
   SET = Operator.new("SET")
+end
+
+# OperatorError.Reason
+class OperatorErrorReason < ::String
+  OPERATOR_NOT_SUPPORTED = OperatorErrorReason.new("OPERATOR_NOT_SUPPORTED")
 end
 
 # Predicate.Operator

@@ -190,6 +190,19 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
+    :class => AdwordsApi::V201101::ConversionTrackerService::OperatorError,
+    :schema_type => XSD::QName.new(NsV201101, "OperatorError"),
+    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["errorString", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
+      ["reason", "AdwordsApi::V201101::ConversionTrackerService::OperatorErrorReason", [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
     :class => AdwordsApi::V201101::ConversionTrackerService::OrderBy,
     :schema_type => XSD::QName.new(NsV201101, "OrderBy"),
     :schema_element => [
@@ -502,6 +515,11 @@ module DefaultMappingRegistry
   EncodedRegistry.register(
     :class => AdwordsApi::V201101::ConversionTrackerService::Operator,
     :schema_type => XSD::QName.new(NsV201101, "Operator")
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201101::ConversionTrackerService::OperatorErrorReason,
+    :schema_type => XSD::QName.new(NsV201101, "OperatorError.Reason")
   )
 
   EncodedRegistry.register(
@@ -731,6 +749,19 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
+    :class => AdwordsApi::V201101::ConversionTrackerService::OperatorError,
+    :schema_type => XSD::QName.new(NsV201101, "OperatorError"),
+    :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
+    :schema_element => [
+      ["fieldPath", "SOAP::SOAPString", [0, 1]],
+      ["trigger", "SOAP::SOAPString", [0, 1]],
+      ["errorString", "SOAP::SOAPString", [0, 1]],
+      ["apiError_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "ApiError.Type")], [0, 1]],
+      ["reason", "AdwordsApi::V201101::ConversionTrackerService::OperatorErrorReason", [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
     :class => AdwordsApi::V201101::ConversionTrackerService::OrderBy,
     :schema_type => XSD::QName.new(NsV201101, "OrderBy"),
     :schema_element => [
@@ -1043,6 +1074,11 @@ module DefaultMappingRegistry
   LiteralRegistry.register(
     :class => AdwordsApi::V201101::ConversionTrackerService::Operator,
     :schema_type => XSD::QName.new(NsV201101, "Operator")
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201101::ConversionTrackerService::OperatorErrorReason,
+    :schema_type => XSD::QName.new(NsV201101, "OperatorError.Reason")
   )
 
   LiteralRegistry.register(

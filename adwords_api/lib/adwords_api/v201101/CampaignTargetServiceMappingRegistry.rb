@@ -619,16 +619,6 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
-    :class => AdwordsApi::V201101::CampaignTargetService::NetworkTargetList,
-    :schema_type => XSD::QName.new(NsV201101, "NetworkTargetList"),
-    :schema_basetype => XSD::QName.new(NsV201101, "TargetList"),
-    :schema_element => [
-      ["campaignId", "SOAP::SOAPLong", [0, 1]],
-      ["targetList_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "TargetList.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
     :class => AdwordsApi::V201101::CampaignTargetService::PlatformTargetList,
     :schema_type => XSD::QName.new(NsV201101, "PlatformTargetList"),
     :schema_basetype => XSD::QName.new(NsV201101, "TargetList"),
@@ -1438,16 +1428,6 @@ module DefaultMappingRegistry
       ["campaignId", "SOAP::SOAPLong", [0, 1]],
       ["targetList_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "TargetList.Type")], [0, 1]],
       ["targets", "AdwordsApi::V201101::CampaignTargetService::MobileTarget[]", [0, nil]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::CampaignTargetService::NetworkTargetList,
-    :schema_type => XSD::QName.new(NsV201101, "NetworkTargetList"),
-    :schema_basetype => XSD::QName.new(NsV201101, "TargetList"),
-    :schema_element => [
-      ["campaignId", "SOAP::SOAPLong", [0, 1]],
-      ["targetList_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "TargetList.Type")], [0, 1]]
     ]
   )
 

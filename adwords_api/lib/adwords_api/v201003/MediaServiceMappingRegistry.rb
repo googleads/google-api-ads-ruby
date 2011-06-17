@@ -417,35 +417,6 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
-    :class => AdwordsApi::V201003::MediaService::Media,
-    :schema_type => XSD::QName.new(NsV201003, "Media"),
-    :schema_element => [
-      ["mediaId", "SOAP::SOAPLong", [0, 1]],
-      ["mediaTypeDb", "AdwordsApi::V201003::MediaService::MediaMediaType", [0, 1]],
-      ["referenceId", "SOAP::SOAPLong", [0, 1]],
-      ["dimensions", "AdwordsApi::V201003::MediaService::Media_Size_DimensionsMapEntry[]", [0, nil]],
-      ["urls", "AdwordsApi::V201003::MediaService::Media_Size_StringMapEntry[]", [0, nil]],
-      ["mimeType", "AdwordsApi::V201003::MediaService::MediaMimeType", [0, 1]],
-      ["sourceUrl", "SOAP::SOAPString", [0, 1]],
-      ["mediaSubType", "AdwordsApi::V201003::MediaService::MediaMediaSubType", [0, 1]],
-      ["name", "SOAP::SOAPString", [0, 1]],
-      ["fileSize", "SOAP::SOAPLong", [0, 1]],
-      ["extendedCapabilities", "AdwordsApi::V201003::MediaService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry[]", [0, nil]],
-      ["creationTime", "SOAP::SOAPString", [0, 1]],
-      ["media_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201003, "Media.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
-    :class => AdwordsApi::V201003::MediaService::MediaPage,
-    :schema_type => XSD::QName.new(NsV201003, "MediaPage"),
-    :schema_element => [
-      ["media", "AdwordsApi::V201003::MediaService::Media[]", [0, nil]],
-      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
     :class => AdwordsApi::V201003::MediaService::MediaSelector,
     :schema_type => XSD::QName.new(NsV201003, "MediaSelector"),
     :schema_element => [
@@ -476,6 +447,35 @@ module DefaultMappingRegistry
     :schema_element => [
       ["message", "SOAP::SOAPString", [0, 1]],
       ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201003, "ApplicationException.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201003::MediaService::Media,
+    :schema_type => XSD::QName.new(NsV201003, "Media"),
+    :schema_element => [
+      ["mediaId", "SOAP::SOAPLong", [0, 1]],
+      ["mediaTypeDb", "AdwordsApi::V201003::MediaService::MediaMediaType", [0, 1]],
+      ["referenceId", "SOAP::SOAPLong", [0, 1]],
+      ["dimensions", "AdwordsApi::V201003::MediaService::Media_Size_DimensionsMapEntry[]", [0, nil]],
+      ["urls", "AdwordsApi::V201003::MediaService::Media_Size_StringMapEntry[]", [0, nil]],
+      ["mimeType", "AdwordsApi::V201003::MediaService::MediaMimeType", [0, 1]],
+      ["sourceUrl", "SOAP::SOAPString", [0, 1]],
+      ["mediaSubType", "AdwordsApi::V201003::MediaService::MediaMediaSubType", [0, 1]],
+      ["name", "SOAP::SOAPString", [0, 1]],
+      ["fileSize", "SOAP::SOAPLong", [0, 1]],
+      ["extendedCapabilities", "AdwordsApi::V201003::MediaService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry[]", [0, nil]],
+      ["creationTime", "SOAP::SOAPString", [0, 1]],
+      ["media_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201003, "Media.Type")], [0, 1]]
+    ]
+  )
+
+  EncodedRegistry.register(
+    :class => AdwordsApi::V201003::MediaService::MediaPage,
+    :schema_type => XSD::QName.new(NsV201003, "MediaPage"),
+    :schema_element => [
+      ["media", "AdwordsApi::V201003::MediaService::Media[]", [0, nil]],
+      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]]
     ]
   )
 
@@ -1023,35 +1023,6 @@ module DefaultMappingRegistry
   )
 
   LiteralRegistry.register(
-    :class => AdwordsApi::V201003::MediaService::Media,
-    :schema_type => XSD::QName.new(NsV201003, "Media"),
-    :schema_element => [
-      ["mediaId", "SOAP::SOAPLong", [0, 1]],
-      ["mediaTypeDb", "AdwordsApi::V201003::MediaService::MediaMediaType", [0, 1]],
-      ["referenceId", "SOAP::SOAPLong", [0, 1]],
-      ["dimensions", "AdwordsApi::V201003::MediaService::Media_Size_DimensionsMapEntry[]", [0, nil]],
-      ["urls", "AdwordsApi::V201003::MediaService::Media_Size_StringMapEntry[]", [0, nil]],
-      ["mimeType", "AdwordsApi::V201003::MediaService::MediaMimeType", [0, 1]],
-      ["sourceUrl", "SOAP::SOAPString", [0, 1]],
-      ["mediaSubType", "AdwordsApi::V201003::MediaService::MediaMediaSubType", [0, 1]],
-      ["name", "SOAP::SOAPString", [0, 1]],
-      ["fileSize", "SOAP::SOAPLong", [0, 1]],
-      ["extendedCapabilities", "AdwordsApi::V201003::MediaService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry[]", [0, nil]],
-      ["creationTime", "SOAP::SOAPString", [0, 1]],
-      ["media_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201003, "Media.Type")], [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201003::MediaService::MediaPage,
-    :schema_type => XSD::QName.new(NsV201003, "MediaPage"),
-    :schema_element => [
-      ["media", "AdwordsApi::V201003::MediaService::Media[]", [0, nil]],
-      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
     :class => AdwordsApi::V201003::MediaService::MediaSelector,
     :schema_type => XSD::QName.new(NsV201003, "MediaSelector"),
     :schema_element => [
@@ -1082,6 +1053,35 @@ module DefaultMappingRegistry
     :schema_element => [
       ["message", "SOAP::SOAPString", [0, 1]],
       ["applicationException_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201003, "ApplicationException.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201003::MediaService::Media,
+    :schema_type => XSD::QName.new(NsV201003, "Media"),
+    :schema_element => [
+      ["mediaId", "SOAP::SOAPLong", [0, 1]],
+      ["mediaTypeDb", "AdwordsApi::V201003::MediaService::MediaMediaType", [0, 1]],
+      ["referenceId", "SOAP::SOAPLong", [0, 1]],
+      ["dimensions", "AdwordsApi::V201003::MediaService::Media_Size_DimensionsMapEntry[]", [0, nil]],
+      ["urls", "AdwordsApi::V201003::MediaService::Media_Size_StringMapEntry[]", [0, nil]],
+      ["mimeType", "AdwordsApi::V201003::MediaService::MediaMimeType", [0, 1]],
+      ["sourceUrl", "SOAP::SOAPString", [0, 1]],
+      ["mediaSubType", "AdwordsApi::V201003::MediaService::MediaMediaSubType", [0, 1]],
+      ["name", "SOAP::SOAPString", [0, 1]],
+      ["fileSize", "SOAP::SOAPLong", [0, 1]],
+      ["extendedCapabilities", "AdwordsApi::V201003::MediaService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry[]", [0, nil]],
+      ["creationTime", "SOAP::SOAPString", [0, 1]],
+      ["media_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201003, "Media.Type")], [0, 1]]
+    ]
+  )
+
+  LiteralRegistry.register(
+    :class => AdwordsApi::V201003::MediaService::MediaPage,
+    :schema_type => XSD::QName.new(NsV201003, "MediaPage"),
+    :schema_element => [
+      ["media", "AdwordsApi::V201003::MediaService::Media[]", [0, nil]],
+      ["totalNumEntries", "SOAP::SOAPInt", [0, 1]]
     ]
   )
 

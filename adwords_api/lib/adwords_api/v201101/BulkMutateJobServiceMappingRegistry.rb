@@ -1837,16 +1837,6 @@ module DefaultMappingRegistry
   )
 
   EncodedRegistry.register(
-    :class => AdwordsApi::V201101::BulkMutateJobService::NetworkTargetList,
-    :schema_type => XSD::QName.new(NsV201101, "NetworkTargetList"),
-    :schema_basetype => XSD::QName.new(NsV201101, "TargetList"),
-    :schema_element => [
-      ["campaignId", "SOAP::SOAPLong", [0, 1]],
-      ["targetList_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "TargetList.Type")], [0, 1]]
-    ]
-  )
-
-  EncodedRegistry.register(
     :class => AdwordsApi::V201101::BulkMutateJobService::NewEntityCreationError,
     :schema_type => XSD::QName.new(NsV201101, "NewEntityCreationError"),
     :schema_basetype => XSD::QName.new(NsV201101, "ApiError"),
@@ -5010,16 +5000,6 @@ module DefaultMappingRegistry
       ["targetContentNetwork", "SOAP::SOAPBoolean", [0, 1]],
       ["targetContentContextual", "SOAP::SOAPBoolean", [0, 1]],
       ["targetPartnerSearchNetwork", "SOAP::SOAPBoolean", [0, 1]]
-    ]
-  )
-
-  LiteralRegistry.register(
-    :class => AdwordsApi::V201101::BulkMutateJobService::NetworkTargetList,
-    :schema_type => XSD::QName.new(NsV201101, "NetworkTargetList"),
-    :schema_basetype => XSD::QName.new(NsV201101, "TargetList"),
-    :schema_element => [
-      ["campaignId", "SOAP::SOAPLong", [0, 1]],
-      ["targetList_Type", ["SOAP::SOAPString", XSD::QName.new(NsV201101, "TargetList.Type")], [0, 1]]
     ]
   )
 

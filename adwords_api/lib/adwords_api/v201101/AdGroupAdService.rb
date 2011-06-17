@@ -283,196 +283,6 @@ class ExemptionRequest
   end
 end
 
-# Media
-# - mediaId - SOAP::SOAPLong
-# - type - AdwordsApi::V201101::AdGroupAdService::MediaMediaType
-# - referenceId - SOAP::SOAPLong
-# - dimensions - AdwordsApi::V201101::AdGroupAdService::Media_Size_DimensionsMapEntry
-# - urls - AdwordsApi::V201101::AdGroupAdService::Media_Size_StringMapEntry
-# - mimeType - AdwordsApi::V201101::AdGroupAdService::MediaMimeType
-# - sourceUrl - SOAP::SOAPString
-# - name - SOAP::SOAPString
-# - fileSize - SOAP::SOAPLong
-# - creationTime - SOAP::SOAPString
-# - media_Type - SOAP::SOAPString
-class Media
-  attr_accessor :mediaId
-  attr_accessor :type
-  attr_accessor :referenceId
-  attr_accessor :dimensions
-  attr_accessor :urls
-  attr_accessor :mimeType
-  attr_accessor :sourceUrl
-  attr_accessor :name
-  attr_accessor :fileSize
-  attr_accessor :creationTime
-  attr_accessor :media_Type
-
-  def initialize(mediaId = nil, type = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, name = nil, fileSize = nil, creationTime = nil, media_Type = nil)
-    @mediaId = mediaId
-    @type = type
-    @referenceId = referenceId
-    @dimensions = dimensions
-    @urls = urls
-    @mimeType = mimeType
-    @sourceUrl = sourceUrl
-    @name = name
-    @fileSize = fileSize
-    @creationTime = creationTime
-    @media_Type = media_Type
-  end
-end
-
-# Audio
-# - mediaId - SOAP::SOAPLong
-# - type - AdwordsApi::V201101::AdGroupAdService::MediaMediaType
-# - referenceId - SOAP::SOAPLong
-# - dimensions - AdwordsApi::V201101::AdGroupAdService::Media_Size_DimensionsMapEntry
-# - urls - AdwordsApi::V201101::AdGroupAdService::Media_Size_StringMapEntry
-# - mimeType - AdwordsApi::V201101::AdGroupAdService::MediaMimeType
-# - sourceUrl - SOAP::SOAPString
-# - name - SOAP::SOAPString
-# - fileSize - SOAP::SOAPLong
-# - creationTime - SOAP::SOAPString
-# - media_Type - SOAP::SOAPString
-# - durationMillis - SOAP::SOAPLong
-# - streamingUrl - SOAP::SOAPString
-# - readyToPlayOnTheWeb - SOAP::SOAPBoolean
-class Audio < Media
-  attr_accessor :mediaId
-  attr_accessor :type
-  attr_accessor :referenceId
-  attr_accessor :dimensions
-  attr_accessor :urls
-  attr_accessor :mimeType
-  attr_accessor :sourceUrl
-  attr_accessor :name
-  attr_accessor :fileSize
-  attr_accessor :creationTime
-  attr_accessor :media_Type
-  attr_accessor :durationMillis
-  attr_accessor :streamingUrl
-  attr_accessor :readyToPlayOnTheWeb
-
-  def initialize(mediaId = nil, type = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, name = nil, fileSize = nil, creationTime = nil, media_Type = nil, durationMillis = nil, streamingUrl = nil, readyToPlayOnTheWeb = nil)
-    @mediaId = mediaId
-    @type = type
-    @referenceId = referenceId
-    @dimensions = dimensions
-    @urls = urls
-    @mimeType = mimeType
-    @sourceUrl = sourceUrl
-    @name = name
-    @fileSize = fileSize
-    @creationTime = creationTime
-    @media_Type = media_Type
-    @durationMillis = durationMillis
-    @streamingUrl = streamingUrl
-    @readyToPlayOnTheWeb = readyToPlayOnTheWeb
-  end
-end
-
-# Image
-# - mediaId - SOAP::SOAPLong
-# - type - AdwordsApi::V201101::AdGroupAdService::MediaMediaType
-# - referenceId - SOAP::SOAPLong
-# - dimensions - AdwordsApi::V201101::AdGroupAdService::Media_Size_DimensionsMapEntry
-# - urls - AdwordsApi::V201101::AdGroupAdService::Media_Size_StringMapEntry
-# - mimeType - AdwordsApi::V201101::AdGroupAdService::MediaMimeType
-# - sourceUrl - SOAP::SOAPString
-# - name - SOAP::SOAPString
-# - fileSize - SOAP::SOAPLong
-# - creationTime - SOAP::SOAPString
-# - media_Type - SOAP::SOAPString
-# - data - SOAP::SOAPBase64
-class Image < Media
-  attr_accessor :mediaId
-  attr_accessor :type
-  attr_accessor :referenceId
-  attr_accessor :dimensions
-  attr_accessor :urls
-  attr_accessor :mimeType
-  attr_accessor :sourceUrl
-  attr_accessor :name
-  attr_accessor :fileSize
-  attr_accessor :creationTime
-  attr_accessor :media_Type
-  attr_accessor :data
-
-  def initialize(mediaId = nil, type = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, name = nil, fileSize = nil, creationTime = nil, media_Type = nil, data = nil)
-    @mediaId = mediaId
-    @type = type
-    @referenceId = referenceId
-    @dimensions = dimensions
-    @urls = urls
-    @mimeType = mimeType
-    @sourceUrl = sourceUrl
-    @name = name
-    @fileSize = fileSize
-    @creationTime = creationTime
-    @media_Type = media_Type
-    @data = data
-  end
-end
-
-# Video
-# - mediaId - SOAP::SOAPLong
-# - type - AdwordsApi::V201101::AdGroupAdService::MediaMediaType
-# - referenceId - SOAP::SOAPLong
-# - dimensions - AdwordsApi::V201101::AdGroupAdService::Media_Size_DimensionsMapEntry
-# - urls - AdwordsApi::V201101::AdGroupAdService::Media_Size_StringMapEntry
-# - mimeType - AdwordsApi::V201101::AdGroupAdService::MediaMimeType
-# - sourceUrl - SOAP::SOAPString
-# - name - SOAP::SOAPString
-# - fileSize - SOAP::SOAPLong
-# - creationTime - SOAP::SOAPString
-# - media_Type - SOAP::SOAPString
-# - durationMillis - SOAP::SOAPLong
-# - streamingUrl - SOAP::SOAPString
-# - readyToPlayOnTheWeb - SOAP::SOAPBoolean
-# - industryStandardCommercialIdentifier - SOAP::SOAPString
-# - advertisingId - SOAP::SOAPString
-# - youTubeVideoIdString - SOAP::SOAPString
-class Video < Media
-  attr_accessor :mediaId
-  attr_accessor :type
-  attr_accessor :referenceId
-  attr_accessor :dimensions
-  attr_accessor :urls
-  attr_accessor :mimeType
-  attr_accessor :sourceUrl
-  attr_accessor :name
-  attr_accessor :fileSize
-  attr_accessor :creationTime
-  attr_accessor :media_Type
-  attr_accessor :durationMillis
-  attr_accessor :streamingUrl
-  attr_accessor :readyToPlayOnTheWeb
-  attr_accessor :industryStandardCommercialIdentifier
-  attr_accessor :advertisingId
-  attr_accessor :youTubeVideoIdString
-
-  def initialize(mediaId = nil, type = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, name = nil, fileSize = nil, creationTime = nil, media_Type = nil, durationMillis = nil, streamingUrl = nil, readyToPlayOnTheWeb = nil, industryStandardCommercialIdentifier = nil, advertisingId = nil, youTubeVideoIdString = nil)
-    @mediaId = mediaId
-    @type = type
-    @referenceId = referenceId
-    @dimensions = dimensions
-    @urls = urls
-    @mimeType = mimeType
-    @sourceUrl = sourceUrl
-    @name = name
-    @fileSize = fileSize
-    @creationTime = creationTime
-    @media_Type = media_Type
-    @durationMillis = durationMillis
-    @streamingUrl = streamingUrl
-    @readyToPlayOnTheWeb = readyToPlayOnTheWeb
-    @industryStandardCommercialIdentifier = industryStandardCommercialIdentifier
-    @advertisingId = advertisingId
-    @youTubeVideoIdString = youTubeVideoIdString
-  end
-end
-
 # Selector
 # - fields - SOAP::SOAPString
 # - predicates - AdwordsApi::V201101::AdGroupAdService::Predicate
@@ -723,25 +533,6 @@ class AdStats < Stats
     @invalidClickRate = invalidClickRate
     @stats_Type = stats_Type
     @percentServed = percentServed
-  end
-end
-
-# TemplateElementField
-# - name - SOAP::SOAPString
-# - type - AdwordsApi::V201101::AdGroupAdService::TemplateElementFieldType
-# - fieldText - SOAP::SOAPString
-# - fieldMedia - AdwordsApi::V201101::AdGroupAdService::Media
-class TemplateElementField
-  attr_accessor :name
-  attr_accessor :type
-  attr_accessor :fieldText
-  attr_accessor :fieldMedia
-
-  def initialize(name = nil, type = nil, fieldText = nil, fieldMedia = nil)
-    @name = name
-    @type = type
-    @fieldText = fieldText
-    @fieldMedia = fieldMedia
   end
 end
 
@@ -1512,6 +1303,215 @@ class ApiException < ApplicationException
   end
 end
 
+# Media
+# - mediaId - SOAP::SOAPLong
+# - type - AdwordsApi::V201101::AdGroupAdService::MediaMediaType
+# - referenceId - SOAP::SOAPLong
+# - dimensions - AdwordsApi::V201101::AdGroupAdService::Media_Size_DimensionsMapEntry
+# - urls - AdwordsApi::V201101::AdGroupAdService::Media_Size_StringMapEntry
+# - mimeType - AdwordsApi::V201101::AdGroupAdService::MediaMimeType
+# - sourceUrl - SOAP::SOAPString
+# - name - SOAP::SOAPString
+# - fileSize - SOAP::SOAPLong
+# - creationTime - SOAP::SOAPString
+# - media_Type - SOAP::SOAPString
+class Media
+  attr_accessor :mediaId
+  attr_accessor :type
+  attr_accessor :referenceId
+  attr_accessor :dimensions
+  attr_accessor :urls
+  attr_accessor :mimeType
+  attr_accessor :sourceUrl
+  attr_accessor :name
+  attr_accessor :fileSize
+  attr_accessor :creationTime
+  attr_accessor :media_Type
+
+  def initialize(mediaId = nil, type = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, name = nil, fileSize = nil, creationTime = nil, media_Type = nil)
+    @mediaId = mediaId
+    @type = type
+    @referenceId = referenceId
+    @dimensions = dimensions
+    @urls = urls
+    @mimeType = mimeType
+    @sourceUrl = sourceUrl
+    @name = name
+    @fileSize = fileSize
+    @creationTime = creationTime
+    @media_Type = media_Type
+  end
+end
+
+# Audio
+# - mediaId - SOAP::SOAPLong
+# - type - AdwordsApi::V201101::AdGroupAdService::MediaMediaType
+# - referenceId - SOAP::SOAPLong
+# - dimensions - AdwordsApi::V201101::AdGroupAdService::Media_Size_DimensionsMapEntry
+# - urls - AdwordsApi::V201101::AdGroupAdService::Media_Size_StringMapEntry
+# - mimeType - AdwordsApi::V201101::AdGroupAdService::MediaMimeType
+# - sourceUrl - SOAP::SOAPString
+# - name - SOAP::SOAPString
+# - fileSize - SOAP::SOAPLong
+# - creationTime - SOAP::SOAPString
+# - media_Type - SOAP::SOAPString
+# - durationMillis - SOAP::SOAPLong
+# - streamingUrl - SOAP::SOAPString
+# - readyToPlayOnTheWeb - SOAP::SOAPBoolean
+class Audio < Media
+  attr_accessor :mediaId
+  attr_accessor :type
+  attr_accessor :referenceId
+  attr_accessor :dimensions
+  attr_accessor :urls
+  attr_accessor :mimeType
+  attr_accessor :sourceUrl
+  attr_accessor :name
+  attr_accessor :fileSize
+  attr_accessor :creationTime
+  attr_accessor :media_Type
+  attr_accessor :durationMillis
+  attr_accessor :streamingUrl
+  attr_accessor :readyToPlayOnTheWeb
+
+  def initialize(mediaId = nil, type = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, name = nil, fileSize = nil, creationTime = nil, media_Type = nil, durationMillis = nil, streamingUrl = nil, readyToPlayOnTheWeb = nil)
+    @mediaId = mediaId
+    @type = type
+    @referenceId = referenceId
+    @dimensions = dimensions
+    @urls = urls
+    @mimeType = mimeType
+    @sourceUrl = sourceUrl
+    @name = name
+    @fileSize = fileSize
+    @creationTime = creationTime
+    @media_Type = media_Type
+    @durationMillis = durationMillis
+    @streamingUrl = streamingUrl
+    @readyToPlayOnTheWeb = readyToPlayOnTheWeb
+  end
+end
+
+# Image
+# - mediaId - SOAP::SOAPLong
+# - type - AdwordsApi::V201101::AdGroupAdService::MediaMediaType
+# - referenceId - SOAP::SOAPLong
+# - dimensions - AdwordsApi::V201101::AdGroupAdService::Media_Size_DimensionsMapEntry
+# - urls - AdwordsApi::V201101::AdGroupAdService::Media_Size_StringMapEntry
+# - mimeType - AdwordsApi::V201101::AdGroupAdService::MediaMimeType
+# - sourceUrl - SOAP::SOAPString
+# - name - SOAP::SOAPString
+# - fileSize - SOAP::SOAPLong
+# - creationTime - SOAP::SOAPString
+# - media_Type - SOAP::SOAPString
+# - data - SOAP::SOAPBase64
+class Image < Media
+  attr_accessor :mediaId
+  attr_accessor :type
+  attr_accessor :referenceId
+  attr_accessor :dimensions
+  attr_accessor :urls
+  attr_accessor :mimeType
+  attr_accessor :sourceUrl
+  attr_accessor :name
+  attr_accessor :fileSize
+  attr_accessor :creationTime
+  attr_accessor :media_Type
+  attr_accessor :data
+
+  def initialize(mediaId = nil, type = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, name = nil, fileSize = nil, creationTime = nil, media_Type = nil, data = nil)
+    @mediaId = mediaId
+    @type = type
+    @referenceId = referenceId
+    @dimensions = dimensions
+    @urls = urls
+    @mimeType = mimeType
+    @sourceUrl = sourceUrl
+    @name = name
+    @fileSize = fileSize
+    @creationTime = creationTime
+    @media_Type = media_Type
+    @data = data
+  end
+end
+
+# Video
+# - mediaId - SOAP::SOAPLong
+# - type - AdwordsApi::V201101::AdGroupAdService::MediaMediaType
+# - referenceId - SOAP::SOAPLong
+# - dimensions - AdwordsApi::V201101::AdGroupAdService::Media_Size_DimensionsMapEntry
+# - urls - AdwordsApi::V201101::AdGroupAdService::Media_Size_StringMapEntry
+# - mimeType - AdwordsApi::V201101::AdGroupAdService::MediaMimeType
+# - sourceUrl - SOAP::SOAPString
+# - name - SOAP::SOAPString
+# - fileSize - SOAP::SOAPLong
+# - creationTime - SOAP::SOAPString
+# - media_Type - SOAP::SOAPString
+# - durationMillis - SOAP::SOAPLong
+# - streamingUrl - SOAP::SOAPString
+# - readyToPlayOnTheWeb - SOAP::SOAPBoolean
+# - industryStandardCommercialIdentifier - SOAP::SOAPString
+# - advertisingId - SOAP::SOAPString
+# - youTubeVideoIdString - SOAP::SOAPString
+class Video < Media
+  attr_accessor :mediaId
+  attr_accessor :type
+  attr_accessor :referenceId
+  attr_accessor :dimensions
+  attr_accessor :urls
+  attr_accessor :mimeType
+  attr_accessor :sourceUrl
+  attr_accessor :name
+  attr_accessor :fileSize
+  attr_accessor :creationTime
+  attr_accessor :media_Type
+  attr_accessor :durationMillis
+  attr_accessor :streamingUrl
+  attr_accessor :readyToPlayOnTheWeb
+  attr_accessor :industryStandardCommercialIdentifier
+  attr_accessor :advertisingId
+  attr_accessor :youTubeVideoIdString
+
+  def initialize(mediaId = nil, type = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, name = nil, fileSize = nil, creationTime = nil, media_Type = nil, durationMillis = nil, streamingUrl = nil, readyToPlayOnTheWeb = nil, industryStandardCommercialIdentifier = nil, advertisingId = nil, youTubeVideoIdString = nil)
+    @mediaId = mediaId
+    @type = type
+    @referenceId = referenceId
+    @dimensions = dimensions
+    @urls = urls
+    @mimeType = mimeType
+    @sourceUrl = sourceUrl
+    @name = name
+    @fileSize = fileSize
+    @creationTime = creationTime
+    @media_Type = media_Type
+    @durationMillis = durationMillis
+    @streamingUrl = streamingUrl
+    @readyToPlayOnTheWeb = readyToPlayOnTheWeb
+    @industryStandardCommercialIdentifier = industryStandardCommercialIdentifier
+    @advertisingId = advertisingId
+    @youTubeVideoIdString = youTubeVideoIdString
+  end
+end
+
+# TemplateElementField
+# - name - SOAP::SOAPString
+# - type - AdwordsApi::V201101::AdGroupAdService::TemplateElementFieldType
+# - fieldText - SOAP::SOAPString
+# - fieldMedia - AdwordsApi::V201101::AdGroupAdService::Media
+class TemplateElementField
+  attr_accessor :name
+  attr_accessor :type
+  attr_accessor :fieldText
+  attr_accessor :fieldMedia
+
+  def initialize(name = nil, type = nil, fieldText = nil, fieldMedia = nil)
+    @name = name
+    @type = type
+    @fieldText = fieldText
+    @fieldMedia = fieldMedia
+  end
+end
+
 # TemplateElement
 # - uniqueName - SOAP::SOAPString
 # - fields - AdwordsApi::V201101::AdGroupAdService::TemplateElementField
@@ -1704,43 +1704,6 @@ class TextAd < Ad
   end
 end
 
-# MobileImageAd
-# - id - SOAP::SOAPLong
-# - url - SOAP::SOAPString
-# - displayUrl - SOAP::SOAPString
-# - approvalStatus - AdwordsApi::V201101::AdGroupAdService::AdApprovalStatus
-# - disapprovalReasons - SOAP::SOAPString
-# - trademarkDisapproved - SOAP::SOAPBoolean
-# - ad_Type - SOAP::SOAPString
-# - markupLanguages - AdwordsApi::V201101::AdGroupAdService::MarkupLanguageType
-# - mobileCarriers - SOAP::SOAPString
-# - image - AdwordsApi::V201101::AdGroupAdService::Image
-class MobileImageAd < Ad
-  attr_accessor :id
-  attr_accessor :url
-  attr_accessor :displayUrl
-  attr_accessor :approvalStatus
-  attr_accessor :disapprovalReasons
-  attr_accessor :trademarkDisapproved
-  attr_accessor :ad_Type
-  attr_accessor :markupLanguages
-  attr_accessor :mobileCarriers
-  attr_accessor :image
-
-  def initialize(id = nil, url = nil, displayUrl = nil, approvalStatus = nil, disapprovalReasons = [], trademarkDisapproved = nil, ad_Type = nil, markupLanguages = [], mobileCarriers = [], image = nil)
-    @id = id
-    @url = url
-    @displayUrl = displayUrl
-    @approvalStatus = approvalStatus
-    @disapprovalReasons = disapprovalReasons
-    @trademarkDisapproved = trademarkDisapproved
-    @ad_Type = ad_Type
-    @markupLanguages = markupLanguages
-    @mobileCarriers = mobileCarriers
-    @image = image
-  end
-end
-
 # RichMediaAd
 # abstract
 # - id - SOAP::SOAPLong
@@ -1837,6 +1800,43 @@ class ThirdPartyRedirectAd < RichMediaAd
     @isUserInterestTargeted = isUserInterestTargeted
     @isTagged = isTagged
     @videoTypes = videoTypes
+  end
+end
+
+# MobileImageAd
+# - id - SOAP::SOAPLong
+# - url - SOAP::SOAPString
+# - displayUrl - SOAP::SOAPString
+# - approvalStatus - AdwordsApi::V201101::AdGroupAdService::AdApprovalStatus
+# - disapprovalReasons - SOAP::SOAPString
+# - trademarkDisapproved - SOAP::SOAPBoolean
+# - ad_Type - SOAP::SOAPString
+# - markupLanguages - AdwordsApi::V201101::AdGroupAdService::MarkupLanguageType
+# - mobileCarriers - SOAP::SOAPString
+# - image - AdwordsApi::V201101::AdGroupAdService::Image
+class MobileImageAd < Ad
+  attr_accessor :id
+  attr_accessor :url
+  attr_accessor :displayUrl
+  attr_accessor :approvalStatus
+  attr_accessor :disapprovalReasons
+  attr_accessor :trademarkDisapproved
+  attr_accessor :ad_Type
+  attr_accessor :markupLanguages
+  attr_accessor :mobileCarriers
+  attr_accessor :image
+
+  def initialize(id = nil, url = nil, displayUrl = nil, approvalStatus = nil, disapprovalReasons = [], trademarkDisapproved = nil, ad_Type = nil, markupLanguages = [], mobileCarriers = [], image = nil)
+    @id = id
+    @url = url
+    @displayUrl = displayUrl
+    @approvalStatus = approvalStatus
+    @disapprovalReasons = disapprovalReasons
+    @trademarkDisapproved = trademarkDisapproved
+    @ad_Type = ad_Type
+    @markupLanguages = markupLanguages
+    @mobileCarriers = mobileCarriers
+    @image = image
   end
 end
 

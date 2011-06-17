@@ -16,7 +16,7 @@ class ReportDefinitionServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201101", "getResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::ReportDefinitionService::ApiException"=>{:ns=>"https://adwords.google.com/api/adwords/cm/v201101", :encodingstyle=>"document", :use=>"literal", :name=>"ApiException", :namespace=>nil}} }
+        :faults => {"AdwordsApi::V201101::ReportDefinitionService::ApiException"=>{:use=>"literal", :namespace=>nil, :name=>"ApiException", :ns=>"https://adwords.google.com/api/adwords/cm/v201101", :encodingstyle=>"document"}} }
     ],
     [ "",
       "getReportFields",
@@ -24,7 +24,7 @@ class ReportDefinitionServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201101", "getReportFieldsResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::ReportDefinitionService::ApiException"=>{:ns=>"https://adwords.google.com/api/adwords/cm/v201101", :encodingstyle=>"document", :use=>"literal", :name=>"ApiException", :namespace=>nil}} }
+        :faults => {"AdwordsApi::V201101::ReportDefinitionService::ApiException"=>{:use=>"literal", :namespace=>nil, :name=>"ApiException", :ns=>"https://adwords.google.com/api/adwords/cm/v201101", :encodingstyle=>"document"}} }
     ],
     [ "",
       "mutate",
@@ -32,7 +32,7 @@ class ReportDefinitionServiceInterface < ::SOAP::RPC::Driver
         ["out", "parameters", ["::SOAP::SOAPElement", "https://adwords.google.com/api/adwords/cm/v201101", "mutateResponse"]] ],
       { :request_style =>  :document, :request_use =>  :literal,
         :response_style => :document, :response_use => :literal,
-        :faults => {"AdwordsApi::V201101::ReportDefinitionService::ApiException"=>{:ns=>"https://adwords.google.com/api/adwords/cm/v201101", :encodingstyle=>"document", :use=>"literal", :name=>"ApiException", :namespace=>nil}} }
+        :faults => {"AdwordsApi::V201101::ReportDefinitionService::ApiException"=>{:use=>"literal", :namespace=>nil, :name=>"ApiException", :ns=>"https://adwords.google.com/api/adwords/cm/v201101", :encodingstyle=>"document"}} }
     ]
   ]
 

@@ -99,230 +99,6 @@ class SoapResponseHeader
   end
 end
 
-# Media
-# - mediaId - SOAP::SOAPLong
-# - mediaTypeDb - AdwordsApi::V201003::MediaService::MediaMediaType
-# - referenceId - SOAP::SOAPLong
-# - dimensions - AdwordsApi::V201003::MediaService::Media_Size_DimensionsMapEntry
-# - urls - AdwordsApi::V201003::MediaService::Media_Size_StringMapEntry
-# - mimeType - AdwordsApi::V201003::MediaService::MediaMimeType
-# - sourceUrl - SOAP::SOAPString
-# - mediaSubType - AdwordsApi::V201003::MediaService::MediaMediaSubType
-# - name - SOAP::SOAPString
-# - fileSize - SOAP::SOAPLong
-# - extendedCapabilities - AdwordsApi::V201003::MediaService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry
-# - creationTime - SOAP::SOAPString
-# - media_Type - SOAP::SOAPString
-class Media
-  attr_accessor :mediaId
-  attr_accessor :mediaTypeDb
-  attr_accessor :referenceId
-  attr_accessor :dimensions
-  attr_accessor :urls
-  attr_accessor :mimeType
-  attr_accessor :sourceUrl
-  attr_accessor :mediaSubType
-  attr_accessor :name
-  attr_accessor :fileSize
-  attr_accessor :extendedCapabilities
-  attr_accessor :creationTime
-  attr_accessor :media_Type
-
-  def initialize(mediaId = nil, mediaTypeDb = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, mediaSubType = nil, name = nil, fileSize = nil, extendedCapabilities = [], creationTime = nil, media_Type = nil)
-    @mediaId = mediaId
-    @mediaTypeDb = mediaTypeDb
-    @referenceId = referenceId
-    @dimensions = dimensions
-    @urls = urls
-    @mimeType = mimeType
-    @sourceUrl = sourceUrl
-    @mediaSubType = mediaSubType
-    @name = name
-    @fileSize = fileSize
-    @extendedCapabilities = extendedCapabilities
-    @creationTime = creationTime
-    @media_Type = media_Type
-  end
-end
-
-# Audio
-# - mediaId - SOAP::SOAPLong
-# - mediaTypeDb - AdwordsApi::V201003::MediaService::MediaMediaType
-# - referenceId - SOAP::SOAPLong
-# - dimensions - AdwordsApi::V201003::MediaService::Media_Size_DimensionsMapEntry
-# - urls - AdwordsApi::V201003::MediaService::Media_Size_StringMapEntry
-# - mimeType - AdwordsApi::V201003::MediaService::MediaMimeType
-# - sourceUrl - SOAP::SOAPString
-# - mediaSubType - AdwordsApi::V201003::MediaService::MediaMediaSubType
-# - name - SOAP::SOAPString
-# - fileSize - SOAP::SOAPLong
-# - extendedCapabilities - AdwordsApi::V201003::MediaService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry
-# - creationTime - SOAP::SOAPString
-# - media_Type - SOAP::SOAPString
-# - durationMillis - SOAP::SOAPLong
-# - streamingUrl - SOAP::SOAPString
-# - readyToPlayOnTheWeb - SOAP::SOAPBoolean
-class Audio < Media
-  attr_accessor :mediaId
-  attr_accessor :mediaTypeDb
-  attr_accessor :referenceId
-  attr_accessor :dimensions
-  attr_accessor :urls
-  attr_accessor :mimeType
-  attr_accessor :sourceUrl
-  attr_accessor :mediaSubType
-  attr_accessor :name
-  attr_accessor :fileSize
-  attr_accessor :extendedCapabilities
-  attr_accessor :creationTime
-  attr_accessor :media_Type
-  attr_accessor :durationMillis
-  attr_accessor :streamingUrl
-  attr_accessor :readyToPlayOnTheWeb
-
-  def initialize(mediaId = nil, mediaTypeDb = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, mediaSubType = nil, name = nil, fileSize = nil, extendedCapabilities = [], creationTime = nil, media_Type = nil, durationMillis = nil, streamingUrl = nil, readyToPlayOnTheWeb = nil)
-    @mediaId = mediaId
-    @mediaTypeDb = mediaTypeDb
-    @referenceId = referenceId
-    @dimensions = dimensions
-    @urls = urls
-    @mimeType = mimeType
-    @sourceUrl = sourceUrl
-    @mediaSubType = mediaSubType
-    @name = name
-    @fileSize = fileSize
-    @extendedCapabilities = extendedCapabilities
-    @creationTime = creationTime
-    @media_Type = media_Type
-    @durationMillis = durationMillis
-    @streamingUrl = streamingUrl
-    @readyToPlayOnTheWeb = readyToPlayOnTheWeb
-  end
-end
-
-# Image
-# - mediaId - SOAP::SOAPLong
-# - mediaTypeDb - AdwordsApi::V201003::MediaService::MediaMediaType
-# - referenceId - SOAP::SOAPLong
-# - dimensions - AdwordsApi::V201003::MediaService::Media_Size_DimensionsMapEntry
-# - urls - AdwordsApi::V201003::MediaService::Media_Size_StringMapEntry
-# - mimeType - AdwordsApi::V201003::MediaService::MediaMimeType
-# - sourceUrl - SOAP::SOAPString
-# - mediaSubType - AdwordsApi::V201003::MediaService::MediaMediaSubType
-# - name - SOAP::SOAPString
-# - fileSize - SOAP::SOAPLong
-# - extendedCapabilities - AdwordsApi::V201003::MediaService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry
-# - creationTime - SOAP::SOAPString
-# - media_Type - SOAP::SOAPString
-# - data - SOAP::SOAPBase64
-class Image < Media
-  attr_accessor :mediaId
-  attr_accessor :mediaTypeDb
-  attr_accessor :referenceId
-  attr_accessor :dimensions
-  attr_accessor :urls
-  attr_accessor :mimeType
-  attr_accessor :sourceUrl
-  attr_accessor :mediaSubType
-  attr_accessor :name
-  attr_accessor :fileSize
-  attr_accessor :extendedCapabilities
-  attr_accessor :creationTime
-  attr_accessor :media_Type
-  attr_accessor :data
-
-  def initialize(mediaId = nil, mediaTypeDb = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, mediaSubType = nil, name = nil, fileSize = nil, extendedCapabilities = [], creationTime = nil, media_Type = nil, data = nil)
-    @mediaId = mediaId
-    @mediaTypeDb = mediaTypeDb
-    @referenceId = referenceId
-    @dimensions = dimensions
-    @urls = urls
-    @mimeType = mimeType
-    @sourceUrl = sourceUrl
-    @mediaSubType = mediaSubType
-    @name = name
-    @fileSize = fileSize
-    @extendedCapabilities = extendedCapabilities
-    @creationTime = creationTime
-    @media_Type = media_Type
-    @data = data
-  end
-end
-
-# Video
-# - mediaId - SOAP::SOAPLong
-# - mediaTypeDb - AdwordsApi::V201003::MediaService::MediaMediaType
-# - referenceId - SOAP::SOAPLong
-# - dimensions - AdwordsApi::V201003::MediaService::Media_Size_DimensionsMapEntry
-# - urls - AdwordsApi::V201003::MediaService::Media_Size_StringMapEntry
-# - mimeType - AdwordsApi::V201003::MediaService::MediaMimeType
-# - sourceUrl - SOAP::SOAPString
-# - mediaSubType - AdwordsApi::V201003::MediaService::MediaMediaSubType
-# - name - SOAP::SOAPString
-# - fileSize - SOAP::SOAPLong
-# - extendedCapabilities - AdwordsApi::V201003::MediaService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry
-# - creationTime - SOAP::SOAPString
-# - media_Type - SOAP::SOAPString
-# - durationMillis - SOAP::SOAPLong
-# - streamingUrl - SOAP::SOAPString
-# - readyToPlayOnTheWeb - SOAP::SOAPBoolean
-# - industryStandardCommercialIdentifier - SOAP::SOAPString
-# - advertisingId - SOAP::SOAPString
-class Video < Media
-  attr_accessor :mediaId
-  attr_accessor :mediaTypeDb
-  attr_accessor :referenceId
-  attr_accessor :dimensions
-  attr_accessor :urls
-  attr_accessor :mimeType
-  attr_accessor :sourceUrl
-  attr_accessor :mediaSubType
-  attr_accessor :name
-  attr_accessor :fileSize
-  attr_accessor :extendedCapabilities
-  attr_accessor :creationTime
-  attr_accessor :media_Type
-  attr_accessor :durationMillis
-  attr_accessor :streamingUrl
-  attr_accessor :readyToPlayOnTheWeb
-  attr_accessor :industryStandardCommercialIdentifier
-  attr_accessor :advertisingId
-
-  def initialize(mediaId = nil, mediaTypeDb = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, mediaSubType = nil, name = nil, fileSize = nil, extendedCapabilities = [], creationTime = nil, media_Type = nil, durationMillis = nil, streamingUrl = nil, readyToPlayOnTheWeb = nil, industryStandardCommercialIdentifier = nil, advertisingId = nil)
-    @mediaId = mediaId
-    @mediaTypeDb = mediaTypeDb
-    @referenceId = referenceId
-    @dimensions = dimensions
-    @urls = urls
-    @mimeType = mimeType
-    @sourceUrl = sourceUrl
-    @mediaSubType = mediaSubType
-    @name = name
-    @fileSize = fileSize
-    @extendedCapabilities = extendedCapabilities
-    @creationTime = creationTime
-    @media_Type = media_Type
-    @durationMillis = durationMillis
-    @streamingUrl = streamingUrl
-    @readyToPlayOnTheWeb = readyToPlayOnTheWeb
-    @industryStandardCommercialIdentifier = industryStandardCommercialIdentifier
-    @advertisingId = advertisingId
-  end
-end
-
-# MediaPage
-# - media - AdwordsApi::V201003::MediaService::Media
-# - totalNumEntries - SOAP::SOAPInt
-class MediaPage
-  attr_accessor :media
-  attr_accessor :totalNumEntries
-
-  def initialize(media = [], totalNumEntries = nil)
-    @media = media
-    @totalNumEntries = totalNumEntries
-  end
-end
-
 # MediaSelector
 # - mediaType - AdwordsApi::V201003::MediaService::MediaMediaType
 # - mediaSubType - AdwordsApi::V201003::MediaService::MediaMediaSubType
@@ -868,6 +644,230 @@ class ApiException < ApplicationException
     @message = message
     @applicationException_Type = applicationException_Type
     @errors = errors
+  end
+end
+
+# Media
+# - mediaId - SOAP::SOAPLong
+# - mediaTypeDb - AdwordsApi::V201003::MediaService::MediaMediaType
+# - referenceId - SOAP::SOAPLong
+# - dimensions - AdwordsApi::V201003::MediaService::Media_Size_DimensionsMapEntry
+# - urls - AdwordsApi::V201003::MediaService::Media_Size_StringMapEntry
+# - mimeType - AdwordsApi::V201003::MediaService::MediaMimeType
+# - sourceUrl - SOAP::SOAPString
+# - mediaSubType - AdwordsApi::V201003::MediaService::MediaMediaSubType
+# - name - SOAP::SOAPString
+# - fileSize - SOAP::SOAPLong
+# - extendedCapabilities - AdwordsApi::V201003::MediaService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry
+# - creationTime - SOAP::SOAPString
+# - media_Type - SOAP::SOAPString
+class Media
+  attr_accessor :mediaId
+  attr_accessor :mediaTypeDb
+  attr_accessor :referenceId
+  attr_accessor :dimensions
+  attr_accessor :urls
+  attr_accessor :mimeType
+  attr_accessor :sourceUrl
+  attr_accessor :mediaSubType
+  attr_accessor :name
+  attr_accessor :fileSize
+  attr_accessor :extendedCapabilities
+  attr_accessor :creationTime
+  attr_accessor :media_Type
+
+  def initialize(mediaId = nil, mediaTypeDb = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, mediaSubType = nil, name = nil, fileSize = nil, extendedCapabilities = [], creationTime = nil, media_Type = nil)
+    @mediaId = mediaId
+    @mediaTypeDb = mediaTypeDb
+    @referenceId = referenceId
+    @dimensions = dimensions
+    @urls = urls
+    @mimeType = mimeType
+    @sourceUrl = sourceUrl
+    @mediaSubType = mediaSubType
+    @name = name
+    @fileSize = fileSize
+    @extendedCapabilities = extendedCapabilities
+    @creationTime = creationTime
+    @media_Type = media_Type
+  end
+end
+
+# Audio
+# - mediaId - SOAP::SOAPLong
+# - mediaTypeDb - AdwordsApi::V201003::MediaService::MediaMediaType
+# - referenceId - SOAP::SOAPLong
+# - dimensions - AdwordsApi::V201003::MediaService::Media_Size_DimensionsMapEntry
+# - urls - AdwordsApi::V201003::MediaService::Media_Size_StringMapEntry
+# - mimeType - AdwordsApi::V201003::MediaService::MediaMimeType
+# - sourceUrl - SOAP::SOAPString
+# - mediaSubType - AdwordsApi::V201003::MediaService::MediaMediaSubType
+# - name - SOAP::SOAPString
+# - fileSize - SOAP::SOAPLong
+# - extendedCapabilities - AdwordsApi::V201003::MediaService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry
+# - creationTime - SOAP::SOAPString
+# - media_Type - SOAP::SOAPString
+# - durationMillis - SOAP::SOAPLong
+# - streamingUrl - SOAP::SOAPString
+# - readyToPlayOnTheWeb - SOAP::SOAPBoolean
+class Audio < Media
+  attr_accessor :mediaId
+  attr_accessor :mediaTypeDb
+  attr_accessor :referenceId
+  attr_accessor :dimensions
+  attr_accessor :urls
+  attr_accessor :mimeType
+  attr_accessor :sourceUrl
+  attr_accessor :mediaSubType
+  attr_accessor :name
+  attr_accessor :fileSize
+  attr_accessor :extendedCapabilities
+  attr_accessor :creationTime
+  attr_accessor :media_Type
+  attr_accessor :durationMillis
+  attr_accessor :streamingUrl
+  attr_accessor :readyToPlayOnTheWeb
+
+  def initialize(mediaId = nil, mediaTypeDb = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, mediaSubType = nil, name = nil, fileSize = nil, extendedCapabilities = [], creationTime = nil, media_Type = nil, durationMillis = nil, streamingUrl = nil, readyToPlayOnTheWeb = nil)
+    @mediaId = mediaId
+    @mediaTypeDb = mediaTypeDb
+    @referenceId = referenceId
+    @dimensions = dimensions
+    @urls = urls
+    @mimeType = mimeType
+    @sourceUrl = sourceUrl
+    @mediaSubType = mediaSubType
+    @name = name
+    @fileSize = fileSize
+    @extendedCapabilities = extendedCapabilities
+    @creationTime = creationTime
+    @media_Type = media_Type
+    @durationMillis = durationMillis
+    @streamingUrl = streamingUrl
+    @readyToPlayOnTheWeb = readyToPlayOnTheWeb
+  end
+end
+
+# Image
+# - mediaId - SOAP::SOAPLong
+# - mediaTypeDb - AdwordsApi::V201003::MediaService::MediaMediaType
+# - referenceId - SOAP::SOAPLong
+# - dimensions - AdwordsApi::V201003::MediaService::Media_Size_DimensionsMapEntry
+# - urls - AdwordsApi::V201003::MediaService::Media_Size_StringMapEntry
+# - mimeType - AdwordsApi::V201003::MediaService::MediaMimeType
+# - sourceUrl - SOAP::SOAPString
+# - mediaSubType - AdwordsApi::V201003::MediaService::MediaMediaSubType
+# - name - SOAP::SOAPString
+# - fileSize - SOAP::SOAPLong
+# - extendedCapabilities - AdwordsApi::V201003::MediaService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry
+# - creationTime - SOAP::SOAPString
+# - media_Type - SOAP::SOAPString
+# - data - SOAP::SOAPBase64
+class Image < Media
+  attr_accessor :mediaId
+  attr_accessor :mediaTypeDb
+  attr_accessor :referenceId
+  attr_accessor :dimensions
+  attr_accessor :urls
+  attr_accessor :mimeType
+  attr_accessor :sourceUrl
+  attr_accessor :mediaSubType
+  attr_accessor :name
+  attr_accessor :fileSize
+  attr_accessor :extendedCapabilities
+  attr_accessor :creationTime
+  attr_accessor :media_Type
+  attr_accessor :data
+
+  def initialize(mediaId = nil, mediaTypeDb = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, mediaSubType = nil, name = nil, fileSize = nil, extendedCapabilities = [], creationTime = nil, media_Type = nil, data = nil)
+    @mediaId = mediaId
+    @mediaTypeDb = mediaTypeDb
+    @referenceId = referenceId
+    @dimensions = dimensions
+    @urls = urls
+    @mimeType = mimeType
+    @sourceUrl = sourceUrl
+    @mediaSubType = mediaSubType
+    @name = name
+    @fileSize = fileSize
+    @extendedCapabilities = extendedCapabilities
+    @creationTime = creationTime
+    @media_Type = media_Type
+    @data = data
+  end
+end
+
+# Video
+# - mediaId - SOAP::SOAPLong
+# - mediaTypeDb - AdwordsApi::V201003::MediaService::MediaMediaType
+# - referenceId - SOAP::SOAPLong
+# - dimensions - AdwordsApi::V201003::MediaService::Media_Size_DimensionsMapEntry
+# - urls - AdwordsApi::V201003::MediaService::Media_Size_StringMapEntry
+# - mimeType - AdwordsApi::V201003::MediaService::MediaMimeType
+# - sourceUrl - SOAP::SOAPString
+# - mediaSubType - AdwordsApi::V201003::MediaService::MediaMediaSubType
+# - name - SOAP::SOAPString
+# - fileSize - SOAP::SOAPLong
+# - extendedCapabilities - AdwordsApi::V201003::MediaService::Media_MediaExtendedCapabilityType_Media_MediaExtendedCapabilityStateMapEntry
+# - creationTime - SOAP::SOAPString
+# - media_Type - SOAP::SOAPString
+# - durationMillis - SOAP::SOAPLong
+# - streamingUrl - SOAP::SOAPString
+# - readyToPlayOnTheWeb - SOAP::SOAPBoolean
+# - industryStandardCommercialIdentifier - SOAP::SOAPString
+# - advertisingId - SOAP::SOAPString
+class Video < Media
+  attr_accessor :mediaId
+  attr_accessor :mediaTypeDb
+  attr_accessor :referenceId
+  attr_accessor :dimensions
+  attr_accessor :urls
+  attr_accessor :mimeType
+  attr_accessor :sourceUrl
+  attr_accessor :mediaSubType
+  attr_accessor :name
+  attr_accessor :fileSize
+  attr_accessor :extendedCapabilities
+  attr_accessor :creationTime
+  attr_accessor :media_Type
+  attr_accessor :durationMillis
+  attr_accessor :streamingUrl
+  attr_accessor :readyToPlayOnTheWeb
+  attr_accessor :industryStandardCommercialIdentifier
+  attr_accessor :advertisingId
+
+  def initialize(mediaId = nil, mediaTypeDb = nil, referenceId = nil, dimensions = [], urls = [], mimeType = nil, sourceUrl = nil, mediaSubType = nil, name = nil, fileSize = nil, extendedCapabilities = [], creationTime = nil, media_Type = nil, durationMillis = nil, streamingUrl = nil, readyToPlayOnTheWeb = nil, industryStandardCommercialIdentifier = nil, advertisingId = nil)
+    @mediaId = mediaId
+    @mediaTypeDb = mediaTypeDb
+    @referenceId = referenceId
+    @dimensions = dimensions
+    @urls = urls
+    @mimeType = mimeType
+    @sourceUrl = sourceUrl
+    @mediaSubType = mediaSubType
+    @name = name
+    @fileSize = fileSize
+    @extendedCapabilities = extendedCapabilities
+    @creationTime = creationTime
+    @media_Type = media_Type
+    @durationMillis = durationMillis
+    @streamingUrl = streamingUrl
+    @readyToPlayOnTheWeb = readyToPlayOnTheWeb
+    @industryStandardCommercialIdentifier = industryStandardCommercialIdentifier
+    @advertisingId = advertisingId
+  end
+end
+
+# MediaPage
+# - media - AdwordsApi::V201003::MediaService::Media
+# - totalNumEntries - SOAP::SOAPInt
+class MediaPage
+  attr_accessor :media
+  attr_accessor :totalNumEntries
+
+  def initialize(media = [], totalNumEntries = nil)
+    @media = media
+    @totalNumEntries = totalNumEntries
   end
 end
 

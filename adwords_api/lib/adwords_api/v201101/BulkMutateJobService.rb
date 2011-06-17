@@ -4865,19 +4865,6 @@ class MobileTargetList < TargetList
   end
 end
 
-# NetworkTargetList
-# - campaignId - SOAP::SOAPLong
-# - targetList_Type - SOAP::SOAPString
-class NetworkTargetList < TargetList
-  attr_accessor :campaignId
-  attr_accessor :targetList_Type
-
-  def initialize(campaignId = nil, targetList_Type = nil)
-    @campaignId = campaignId
-    @targetList_Type = targetList_Type
-  end
-end
-
 # PlatformTargetList
 # - campaignId - SOAP::SOAPLong
 # - targetList_Type - SOAP::SOAPString
