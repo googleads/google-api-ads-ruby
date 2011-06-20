@@ -29,7 +29,8 @@ GEM_NAME = 'google-ads-common'
 
 files = FileList['lib/**/*', 'Rakefile'].to_a
 tests = FileList['test/**/test_*.rb']
-docs = ['README', 'COPYING', 'ChangeLog', 'test/test_config.yml']
+docs = ['README', 'COPYING', 'ChangeLog']
+extra_files = ['test/test_config.yml']
 
 spec = Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
@@ -58,6 +59,7 @@ task :default => [:package]
 # Create a task that will package the Common library into a gem file.
 Gem::PackageTask.new(spec) do |pkg|
   pkg.need_tar = true
+  pkg.package_files.include(extra_files)
 end
 
 # Create a task to build the RDOC documentation tree.

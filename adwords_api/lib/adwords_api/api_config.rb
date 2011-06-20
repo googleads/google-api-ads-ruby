@@ -259,8 +259,6 @@ module AdwordsApi
     # The full interface class name for the given service (as a string)
     #
     def self.interface_name(version, service)
-      version = version.to_sym
-      service = service.to_sym
       service_str = service.to_s
       service_str = service_str.sub(/Service$/, '') if version == :v13
       return module_name(version, service) + "::#{service_str}Interface"
@@ -276,8 +274,7 @@ module AdwordsApi
     # The endpoint URL (as a string)
     #
     def self.report_download_url(environment, version)
-      version = version.to_sym
-      base = get_wsdl_base(environment.upcase.to_sym, version)
+      base = get_wsdl_base(environment, version)
       if base
         path = service_config[version].include?(:ReportDefinitionService) ?
             'reportdownload' : nil

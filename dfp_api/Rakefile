@@ -30,7 +30,8 @@ require 'ads_common/build/savon_generator'
 
 files = FileList['{lib,examples}/**/*', 'Rakefile'].to_a
 tests = FileList['test/**/test*.rb']
-docs = ['README', 'COPYING', 'ChangeLog', 'dfp_api.yml']
+docs = ['README', 'COPYING', 'ChangeLog']
+extra_files = ['dfp_api.yml', 'test/dfp_api/test_config.yml']
 
 spec = Gem::Specification.new do |s|
   s.name = 'google-dfp-api'
@@ -50,8 +51,9 @@ spec = Gem::Specification.new do |s|
   s.add_dependency('savon', '~> 0.9.1')
 end
 
-Gem::PackageTask.new(spec) do |pkg|
+package_task = Gem::PackageTask.new(spec) do |pkg|
   pkg.need_tar = true
+  pkg.package_files.include(extra_files)
 end
 
 Rake::TestTask.new do |t|
@@ -78,5 +80,6 @@ task :generate do
                       service_name, module_name)
       generator.process_wsdl()
     end
+    package_task.package_files.include(FileList[code_path + '/*'].to_a)
   end
 end

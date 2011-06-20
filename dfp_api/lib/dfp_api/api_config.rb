@@ -98,8 +98,6 @@ module DfpApi
     end
 
     def self.interface_name(version, service)
-      version = version.to_sym
-      service = service.to_sym
       return module_name(version, service) + "::" + service.to_s
     end
 
