@@ -1,0 +1,11 @@
+---
+# This is a test configuration file for Ads Common library.
+:authentication:
+  :method: ClientLogin
+  :application_name: ruby_test_suit
+  :password: mySecretPassword
+  :email: root@example.com
+  :network_code: 1234567
+:service:
+  :environment: sandbox
+  :use_ruby_names: false
