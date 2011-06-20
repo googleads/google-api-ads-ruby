@@ -30,7 +30,7 @@ which is installed automatically as a dependency.
 The following gem libraries are required:
 - soap4r v1.5.8
 - httpclient v2.1.2 or greater
-- google-ads-common v0.3.0 or later.
+- google-ads-common v0.4.0 or later.
 
 
 == 2 - Using the client library:

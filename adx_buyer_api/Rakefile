@@ -17,7 +17,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# DoubleClick Ad Exchange Buyer API Rakefile
+# DoubleClick Ad Exchange Buyer API Rakefile.
 #
 
 require 'rubygems'
