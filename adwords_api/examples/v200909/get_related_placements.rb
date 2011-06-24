@@ -27,6 +27,7 @@ gem 'google-adwords-api'
 require 'adwords_api'
 
 API_VERSION = :v200909
+PAGE_SIZE = 100
 
 def get_related_placements()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
@@ -39,8 +40,7 @@ def get_related_placements()
 
   targeting_idea_srv = adwords.service(:TargetingIdeaService, API_VERSION)
 
-  results_per_page = 10
-  url = 'mars.google.com'
+  url = 'INSERT_PLACEMENT_URL_HERE'
 
   # Construct selector.
   selector = {
@@ -57,31 +57,32 @@ def get_related_placements()
     }],
     :paging => {
       :start_index => 0,
-      :number_results => results_per_page
+      :number_results => PAGE_SIZE
     }
   }
 
-  # Perform request.
+  # Define initial values.
+  offset = 0
   results = []
-  index = 0
-  while true
+
+  begin
+    # Perform request.
     page = targeting_idea_srv.get(selector)
-    if page and page[:entries]
-      results += page[:entries]
-    end
-    break if page[:total_num_entries] <= index
-    index += results_per_page
-    selector[:paging][:start_index] = index
-  end
+    results += page[:entries] if page and page[:entries]
+
+    # Prepare next page request.
+    offset += PAGE_SIZE
+    selector[:paging][:start_index] = offset
+  end while offset < page[:total_num_entries]
 
   # Display results.
   results.each do |result|
     data = AdwordsApi::Utils.map(result[:data])
     placement = data['PLACEMENT'][:value]
-    puts " Related content keywords found at URL \"%s\"" % placement[:url]
+    puts "Related content keywords found at URL [%s]" % placement[:url]
   end
-  puts "Total urls found with content keywords related to keywords at " +
-      " \"#{url}\": #{results.length}."
+  puts "Total URLs found with keywords related to keywords at [%s]: %d." %
+      [url, results.length]
 end
 
 if __FILE__ == $0

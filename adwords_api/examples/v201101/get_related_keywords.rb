@@ -26,6 +26,7 @@ gem 'google-adwords-api'
 require 'adwords_api'
 
 API_VERSION = :v201101
+PAGE_SIZE = 100
 
 def get_related_keywords()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
@@ -38,8 +39,7 @@ def get_related_keywords()
 
   targeting_idea_srv = adwords.service(:TargetingIdeaService, API_VERSION)
 
-  results_per_page = 10
-  keyword_text = 'space cruise'
+  keyword_text = 'INSERT_KEYWORD_TEXT_HERE'
 
   # Construct selector object.
   selector = {
@@ -58,28 +58,29 @@ def get_related_keywords()
     }],
     :paging => {
       :start_index => 0,
-      :number_results => results_per_page
+      :number_results => PAGE_SIZE
     }
   }
 
-  # Perform request.
+  # Define initial values.
+  offset = 0
   results = []
-  index = 0
-  while true
+
+  begin
+    # Perform request.
     page = targeting_idea_srv.get(selector)
-    if page and page[:entries]
-      results += page[:entries]
-    end
-    break if page[:total_num_entries] <= index
-    index += results_per_page
-    selector[:paging][:start_index] = index
-  end
+    results += page[:entries] if page and page[:entries]
+
+    # Prepare next page request.
+    offset += PAGE_SIZE
+    selector[:paging][:start_index] = offset
+  end while offset < page[:total_num_entries]
 
   # Display results.
   results.each do |result|
     data = AdwordsApi::Utils.map(result[:data])
     keyword = data['CRITERION'][:value]
-    puts " Found keyword with text \"%s\" and match type \"%s\"" %
+    puts "Found keyword with text \"%s\" and match type \"%s\"" %
         [keyword[:text], keyword[:match_type]]
   end
   puts "Total keywords related to \"%s\": %d." % [keyword_text, results.length]
