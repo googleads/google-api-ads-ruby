@@ -1,3 +1,5 @@
+0.2.2:
+
 0.2.1:
   - Ruby1.9 compatible.
   - Fixed issue #16 (deep arrays nesting).
