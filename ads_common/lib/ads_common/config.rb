@@ -29,7 +29,7 @@ module AdsCommon
     # Initialized the Config object with either the contents of a provided file
     # or a provided hash.
     def initialize(param = nil)
-      @config = Hash.new
+      @config = {}
       case param
         when String then load(param)
         when Hash then set_all(param)

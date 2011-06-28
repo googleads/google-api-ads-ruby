@@ -46,21 +46,21 @@ def create_placements()
   skyscraper_ad_unit_placement = {
       :name => "Skyscraper AdUnit Placement #%d" % (Time.new.to_f * 1000),
       :description => 'Contains ad units for creatives of size 120x600',
-      :targeted_ad_unit_ids => Array.new
+      :targeted_ad_unit_ids => []
   }
 
   # Create local placement object to store medium square ad units.
   medium_square_ad_unit_placement = {
       :name => "Medium Square AdUnit Placement #%d" % (Time.new.to_f * 1000),
       :description => 'Contains ad units for creatives of size 300x250',
-      :targeted_ad_unit_ids => Array.new
+      :targeted_ad_unit_ids => []
   }
 
   # Create local placement object to store banner ad units.
   banner_ad_unit_placement = {
       :name => "Banner AdUnit Placement #%d" % (Time.new.to_f * 1000),
       :description => 'Contains ad units for creatives of size 468x60',
-      :targeted_ad_unit_ids => Array.new
+      :targeted_ad_unit_ids => []
   }
 
   # Get the first 500 ad units.

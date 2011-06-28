@@ -58,8 +58,8 @@ def deactivate_licas()
 
   # Define initial values.
   offset = 0
-  page = Hash.new
-  creative_ids = Array.new
+  page = {}
+  creative_ids = []
 
   begin
     # Create a statement to get one page with current offset.

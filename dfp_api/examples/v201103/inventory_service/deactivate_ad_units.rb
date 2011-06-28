@@ -51,8 +51,8 @@ def deactivate_ad_units()
 
   # Define initial values.
   offset = 0
-  page = Hash.new
-  ad_unit_ids = Array.new
+  page = {}
+  ad_unit_ids = []
 
   begin
     # Create a statement to get one page with current offset.

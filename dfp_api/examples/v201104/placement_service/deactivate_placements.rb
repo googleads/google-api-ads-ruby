@@ -51,8 +51,8 @@ def deactivate_placements()
 
   # Define initial values.
   offset = 0
-  page = Hash.new
-  placement_ids = Array.new
+  page = {}
+  placement_ids = []
 
   begin
     # Modify the statement to get one page with current offset.

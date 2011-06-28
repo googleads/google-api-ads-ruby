@@ -42,7 +42,7 @@ def get_all_custom_targeting_keys_and_values()
 
   # Define initial values.
   offset = 0
-  page = Hash.new
+  page = {}
 
   begin
     # Create a statement to get one page with current offset.
@@ -82,7 +82,7 @@ end
 def print_all_values_for_key(custom_targeting_service, custom_targeting_key)
   # Define initial values.
   offset = 0
-  page = Hash.new
+  page = {}
 
   # Create a statement to get values for given key.
   statement_text = "WHERE customTargetingKeyId = :key_id LIMIT %d" % PAGE_SIZE

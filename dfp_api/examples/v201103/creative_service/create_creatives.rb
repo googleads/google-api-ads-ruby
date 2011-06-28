@@ -53,7 +53,7 @@ def create_creatives()
   image_data_base64 = Base64.encode64(image_data)
 
   # Create an array to store local creative objects.
-  creatives = Array.new
+  creatives = []
   ITEM_COUNT.times do |index|
     creatives << {
         :xsi_type => 'ImageCreative',

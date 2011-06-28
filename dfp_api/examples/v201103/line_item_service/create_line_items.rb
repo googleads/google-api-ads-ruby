@@ -53,7 +53,7 @@ def create_line_items()
   inventory_targeting = {:targeted_placement_ids => targeted_placement_ids}
 
   # Create geographical targeting.
-  geo_targeting = Hash.new
+  geo_targeting = {}
   # Include the US and Quebec, Canada.
   geo_targeting[:targeted_locations] = [
       {:xsi_type => 'CountryLocation', :country_code => 'US'},
@@ -96,7 +96,7 @@ def create_line_items()
   }
 
   # Create an array to store local line item objects.
-  line_items = Array.new
+  line_items = []
   ITEM_COUNT.times do |index|
     line_item = {:name => "Line item #%d" % index,
                  :order_id => order_id,

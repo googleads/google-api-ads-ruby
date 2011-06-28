@@ -49,7 +49,7 @@ def create_orders()
   trafficker_id = 'INSERT_TRAFFICKER_ID_HERE'.to_i
 
   # Create an array to store local order objects.
-  orders = Array.new
+  orders = []
   ITEM_COUNT.times do |index|
     orders << {:name => "Order #%d" % index,
                :advertiser_id => advertiser_id,

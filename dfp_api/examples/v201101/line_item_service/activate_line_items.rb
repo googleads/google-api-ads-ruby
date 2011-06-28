@@ -61,8 +61,8 @@ def activate_line_items()
 
   # Define initial values.
   offset = 0
-  page = Hash.new
-  line_item_ids = Array.new
+  page = {}
+  line_item_ids = []
 
   begin
     # Create a statement to get one page with current offset.

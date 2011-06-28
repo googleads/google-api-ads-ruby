@@ -354,7 +354,7 @@ module AdwordsApi
 
     # Makes sure object is an array.
     def self.arrayize(object)
-      return Array.new if object.nil?
+      return [] if object.nil?
       return object.is_a?(Array) ? object : [object]
     end
 

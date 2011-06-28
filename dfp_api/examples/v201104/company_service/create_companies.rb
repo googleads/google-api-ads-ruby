@@ -41,7 +41,7 @@ def create_companies()
   company_service = dfp.service(:CompanyService, API_VERSION)
 
   # Create an array to store local company objects.
-  companies = Array.new
+  companies = []
   ITEM_COUNT.times do |index|
     companies << {:name => "Advertiser #%d" % index, :type => 'ADVERTISER'}
   end

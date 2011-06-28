@@ -50,8 +50,8 @@ def delete_custom_targeting_values()
 
   # Define initial values.
   offset = 0
-  page = Hash.new
-  custom_target_value_ids = Array.new
+  page = {}
+  custom_target_value_ids = []
   statement = {
       :values => [
           {:key => 'key_id',

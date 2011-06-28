@@ -107,7 +107,7 @@ module AdwordsApi
     def initialize(provided_config = nil)
       super(provided_config)
       @credential_handler = AdwordsApi::CredentialHandler.new(@config)
-      @drivers = Hash.new
+      @drivers = {}
       @total_units = 0
       @last_units = 0
       @mutex = Mutex.new

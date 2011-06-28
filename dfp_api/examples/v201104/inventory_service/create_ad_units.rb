@@ -51,7 +51,7 @@ def create_ad_units()
   puts "Using effective root ad unit: %d" % effective_root_ad_unit_id
 
   # Create an array to store local ad unit objects.
-  ad_units = Array.new
+  ad_units = []
   ITEM_COUNT.times do |index|
     ad_units << {
         :name => "Ad_Unit_%d" % index,

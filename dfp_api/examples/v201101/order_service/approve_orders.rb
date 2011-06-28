@@ -45,8 +45,8 @@ def approve_orders()
 
   # Define initial values.
   offset = 0
-  page = Hash.new
-  order_ids = Array.new
+  page = {}
+  order_ids = []
 
   begin
     # Create a statement to get one page with current offset.

@@ -40,7 +40,7 @@ def get_all_ad_units()
 
   # Define initial values.
   offset = 0
-  page = Hash.new
+  page = {}
 
   begin
     # Create a statement to get one page with current offset.

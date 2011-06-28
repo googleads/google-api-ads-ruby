@@ -56,7 +56,7 @@ module AdsCommon
             "Unknown or unspecified environment: \"%s\"" % env_string
       end
 
-      @wrappers = Hash.new
+      @wrappers = {}
     end
 
     # Sets the logger to use.

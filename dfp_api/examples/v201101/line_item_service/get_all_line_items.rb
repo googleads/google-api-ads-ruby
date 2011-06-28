@@ -41,7 +41,7 @@ def get_all_line_items()
 
   # Define initial values.
   offset = 0
-  page = Hash.new
+  page = {}
 
   begin
     # Create a statement to get one page with current offset.

@@ -41,7 +41,7 @@ def get_all_placements()
 
   # Define initial values.
   offset = 0
-  page = Hash.new
+  page = {}
 
   begin
     # Create statement for one page with current offset.

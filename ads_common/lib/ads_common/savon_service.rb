@@ -74,7 +74,7 @@ module AdsCommon
     # - resolve xsi:type where required;
     # - convert some native types to xml.
     def validate_args(action_name, args)
-      validated_args = Hash.new
+      validated_args = {}
       in_params = get_service_registry.get_method_signature(action_name)[:input]
       in_params.each_with_index do |in_param, index|
         key = in_param[:name]
@@ -203,7 +203,7 @@ module AdsCommon
           sub_type[:fields].each do |sub_type_field|
             if output_data[field_sym].is_a?(Array)
               items_list = output_data[field_sym]
-              output_data[field_sym] = Array.new
+              output_data[field_sym] = []
               items_list.each do |item|
                 output_data[field_sym] <<
                     normalize_output_field(item, sub_type_field,
@@ -259,7 +259,7 @@ module AdsCommon
 
     # Makes sure object is an array.
     def arrayize(object)
-      return Array.new if object.nil?
+      return [] if object.nil?
       return object.is_a?(Array) ? object : [object]
     end
 
@@ -273,7 +273,7 @@ module AdsCommon
 
     # Returns all inherited fields of superclasses for given type.
     def implode_parent(data_type)
-      result = Array.new
+      result = []
       if data_type and data_type[:base]
         parent_type = get_service_registry.get_type_signature(data_type[:base])
         result += parent_type[:fields] if parent_type[:fields]

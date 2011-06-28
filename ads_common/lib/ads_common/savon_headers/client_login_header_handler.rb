@@ -45,7 +45,7 @@ module AdsCommon
             request_header[auth_header] = {
                 prepend_namespace('token') => value
             }
-            request_header[:attributes!] ||= Hash.new
+            request_header[:attributes!] ||= {}
             request_header[:attributes!][auth_header] = {
                 'xsi:type' => prepend_namespace('ClientLogin'),
             }
