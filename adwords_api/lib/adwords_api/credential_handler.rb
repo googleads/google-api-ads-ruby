@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 #
 # Authors:: api.sgomes@gmail.com (Sérgio Gomes)
+#           api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
@@ -24,8 +25,6 @@ require 'adwords_api/api_config'
 
 module AdwordsApi
   class CredentialHandler < AdsCommon::CredentialHandler
-    SERVICE_NAME = 'adwords'
-
     # Whether we're making MCC-level requests.
     attr_accessor :use_mcc
     # Whether we're making validate-only requests.
@@ -34,7 +33,7 @@ module AdwordsApi
     attr_accessor :partial_failure
 
     def initialize(config)
-      super
+      super(config)
       @use_mcc = false
       @validate_only = false
       @partial_failure = false
@@ -44,18 +43,25 @@ module AdwordsApi
     # generation.
     def credentials(version = nil)
       validate_headers_for_server
-      result = {}
-      client_lib = 'Ruby-AwApi-%s|' % AdwordsApi::ApiConfig::CLIENT_LIB_VERSION
-      user_agent = @credentials[:user_agent]
-      user_agent = $0 if user_agent.nil?
-      user_agent = client_lib + user_agent
-      if (version == :v13)
-        result[:useragent] = user_agent
-      else
-        result[:userAgent] = user_agent
+      method = @credentials[:method].to_s.upcase.to_sym
+      result = case method
+        when :CLIENTLOGIN
+          {:email => @credentials[:email],
+           :password => @credentials[:password]}
+        when :OAUTH
+          {:oauth_consumer_key => @credentials[:oauth_consumer_key],
+           :oauth_consumer_secret => @credentials[:oauth_consumer_secret],
+           :oauth_verification_code => @credentials[:oauth_verification_code],
+           :oauth_token => @credentials[:oauth_token],
+           :oauth_token_secret => @credentials[:oauth_token_secret],
+           :oauth_callback => @credentials[:oauth_callback],
+           :oauth_method => @credentials[:oauth_method]}
       end
-      result[:email] = @credentials[:email]
-      result[:password] = @credentials[:password]
+      client_lib = 'Ruby-AwApi-%s|' % AdwordsApi::ApiConfig::CLIENT_LIB_VERSION
+      user_agent = @credentials[:user_agent] || $0
+      user_agent = client_lib + user_agent
+      user_agent_symbol = (version == :v13) ? :useragent : :userAgent
+      result[user_agent_symbol] = user_agent
       result[:developerToken] = @credentials[:developer_token]
       unless @use_mcc
         if @credentials[:client_email]
@@ -64,13 +70,11 @@ module AdwordsApi
           result[:clientCustomerId] = @credentials[:client_customer_id]
         end
       end
-      if version != :v13 and @validate_only
-        result[:validateOnly] = 'true'
+      if version != :v13
+        result[:validateOnly] = 'true' if @validate_only
+        result[:partialFailure] = 'true' if @partial_failure
       end
-      if version != :v13 and @partial_failure
-        result[:partialFailure] = 'true'
-      end
-      return result
+      return result.reject {|k,v| v.nil?}
     end
 
     private
@@ -83,28 +87,39 @@ module AdwordsApi
     # being used for production or vice-versa.
     #
     def validate_headers_for_server
-      email = @credentials[:email]
+      method = @credentials[:method].to_s.upcase.to_sym
       token = @credentials[:developer_token]
-      client = @credentials[:client_email]
-      environment = @config.read('service.environment').to_s.upcase
-
-      sandbox_token = (token =~ /#{Regexp.escape(email)}\+\+[a-zA-Z]{3}/)
-      sandbox_client = (client =~ /client_[1-5]\+#{Regexp.escape(email)}/)
-
-      # Only check the token, because 'client_n+x@y.tld' may be a valid client
-      # email for some customers.
-      if environment == 'PRODUCTION' and sandbox_token
-        raise AdsCommon::Errors::EnvironmentMismatchError,
-            'Attempting to connect to production with sandbox credentials.'
-      # Check if either the token or client email do not follow the correct
-      # format. Client email may not exist, though.
-      elsif environment == 'SANDBOX' and (!sandbox_token or
-          (client.length > 0 and !sandbox_client))
-        raise AdsCommon::Errors::EnvironmentMismatchError,
-            'Attempting to connect to the sandbox with malformatted ' +
-            'credentials. Please check ' +
-            'http://code.google.com/apis/adwords/docs/developer/' +
-            'adwords_api_sandbox.html#requestheaders for details.'
+      client_email = @credentials[:client_email]
+      (sandbox_token, sandbox_client) = case method
+        when :CLIENTLOGIN
+          email = @credentials[:email]
+          [(token =~ /#{Regexp.escape(email)}\+\+[a-zA-Z]{3}/),
+           (client_email =~ /client_[1-5]\+#{Regexp.escape(email)}/)]
+        when :OAUTH
+          [(token =~ /.+@.+\+\+[a-zA-Z]{3}/),
+           (client_email =~ /client_[1-5]\+.+@.+/)]
+        else
+          [nil, nil]
+      end
+      environment = @config.read('service.environment')
+      case environment
+        when :PRODUCTION
+          # Only check the token, because 'client_n+x@y.tld' may be a valid
+          # client email for some customers.
+          if sandbox_token
+            raise AdsCommon::Errors::EnvironmentMismatchError,
+                'Attempting to connect to production with sandbox credentials.'
+          end
+        when :SANDBOX
+          # Check if either the token or client email do not follow the
+          # correct format. Client email may not exist, though.
+          if (!sandbox_token or (!client_email.empty? and !sandbox_client))
+            raise AdsCommon::Errors::EnvironmentMismatchError,
+                'Attempting to connect to the sandbox with malformatted ' +
+                'credentials. Please check ' +
+                'http://code.google.com/apis/adwords/docs/developer/' +
+                'adwords_api_sandbox.html#requestheaders for details.'
+          end
       end
     end
   end

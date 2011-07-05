@@ -28,16 +28,27 @@ module DfpApi
     # generation.
     def credentials(version = nil)
       validate_headers_for_server()
+
+      method = @credentials[:method].to_s.upcase.to_sym
+      result = case method
+        when :CLIENTLOGIN
+          {:email => @credentials[:email],
+           :password => @credentials[:password],
+           :auth_token => @credentials[:auth_token]}
+        when :OAUTH
+          {:oauth_consumer_key => @credentials[:oauth_consumer_key],
+           :oauth_consumer_secret => @credentials[:oauth_consumer_secret],
+           :oauth_verification_code => @credentials[:oauth_verification_code],
+           :oauth_token => @credentials[:oauth_token],
+           :oauth_token_secret => @credentials[:oauth_token_secret],
+           :oauth_callback => @credentials[:oauth_callback],
+           :oauth_method => @credentials[:oauth_method]}
+      end
       client_lib = "Ruby-DfpApi-%s" % DfpApi::ApiConfig::CLIENT_LIB_VERSION
       application_name = @credentials[:application_name] || $0
-      result = {
-          :email => @credentials[:email],
-          :password => @credentials[:password],
-          :applicationName => "%s|%s" % [client_lib, application_name]
-      }
-      network_code = @credentials[:network_code]
-      result[:networkCode] = network_code if !network_code.nil?
-      return result
+      result[:applicationName] = "%s|%s" % [client_lib, application_name]
+      result[:networkCode] = @credentials[:network_code]
+      return result.reject {|k, v| v.nil?}
     end
 
     private
@@ -45,12 +56,6 @@ module DfpApi
     # Validates that the right credentials are being used for the chosen
     # environment.
     def validate_headers_for_server()
-      if @credentials[:email].nil?
-        raise AdsCommon::Errors::AuthError, "Login email is not specified"
-      end
-      if @credentials[:password].nil?
-        raise AdsCommon::Errors::AuthError, "Password is not specified"
-      end
       if @credentials[:application_name].nil?
         raise AdsCommon::Errors::AuthError, "Application name is not specified"
       end

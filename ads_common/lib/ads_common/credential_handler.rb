@@ -2,7 +2,7 @@
 #
 # Authors:: api.sgomes@gmail.com (Sérgio Gomes)
 #
-# Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -21,15 +21,11 @@
 
 module AdsCommon
   class CredentialHandler
+    attr_reader :credentials
 
     def initialize(config)
       @config = config
       load_from_config
-    end
-
-    # Retrieve all credentials (optional parameter specifying API version).
-    def credentials(version = nil)
-      return @credentials
     end
 
     # Set the credentials hash to a new one. Calculate difference, and call the
@@ -59,7 +55,7 @@ module AdsCommon
     # appropriately.
     def set_credential(credential, value)
       @credentials[credential] = value
-      @auth_handler.property_changed(credential, value) if auth_handler
+      @auth_handler.property_changed(credential, value) if @auth_handler
     end
 
     private

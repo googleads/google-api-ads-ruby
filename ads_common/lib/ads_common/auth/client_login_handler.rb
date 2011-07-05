@@ -1,7 +1,6 @@
 #!/usr/bin/ruby
 #
-# Authors:: api.sgomes@gmail.com (Sérgio Gomes)
-#           api.dklimkin@gmail.com (Danial Klimkin)
+# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
@@ -32,15 +31,13 @@ module AdsCommon
 
     # Credentials class to handle ClientLogin authentication.
     class ClientLoginHandler < AdsCommon::Auth::BaseHandler
-
       ACCOUNT_TYPE = 'GOOGLE'
       AUTH_PATH = '/accounts/ClientLogin'
       IGNORED_FIELDS = [:email, :password, :auth_token]
 
       # Initializes the ClientLoginHandler with all the necessary details.
       def initialize(config, server, service_name)
-        @token = config.read('authentication.auth_token')
-        @config = config
+        super(config)
         @server = server
         @service_name = service_name
       end
@@ -48,10 +45,7 @@ module AdsCommon
       # Invalidates the stored token if the email, password or provided auth
       # token have changed.
       def property_changed(prop, value)
-        case prop
-        when :auth_token
-          @token = config.read('authentication.auth_token')
-        when :email, :password
+        if [:auth_token, :email, :password].include?(prop)
           @token = nil
         end
       end
@@ -65,23 +59,20 @@ module AdsCommon
 
       # Returns all of the fields that this auth handler will fill.
       def header_list(credentials)
-        result = []
-        result << :authToken
-        credentials.each do |p, v|
-          result << p unless IGNORED_FIELDS.include?(p)
+        result = credentials.keys.map.reject do |field|
+          IGNORED_FIELDS.include?(field)
         end
+        result << :authToken
         return result
       end
 
       # Returns all of the credentials received from the CredentialHandler,
-      # except for email and password.
+      # except for ignored fields.
       def headers(credentials)
-        @token = generate_token(credentials) if @token == nil
-        result = {}
-        result[:authToken] = @token
-        credentials.each do |p, v|
-          result[p] = v unless IGNORED_FIELDS.include?(p)
+        result = credentials.reject do |field, value|
+          IGNORED_FIELDS.include?(field)
         end
+        result[:authToken] = get_token(credentials)
         return result
       end
 
@@ -93,9 +84,8 @@ module AdsCommon
       # - credentials: a hash with the credentials for the account being
       #   accessed
       #
-      #
       # Raises:
-      # AdsCommon::Errors::AuthError if validation fails.
+      # - AdsCommon::Errors::AuthError if validation fails
       #
       def validate_credentials(credentials)
         if credentials.nil?
@@ -114,7 +104,7 @@ module AdsCommon
         end
       end
 
-      # Auxiliary method to generate an authentication token for logging via
+      # Auxiliary method to generate an authentication token for login in via
       # the ClientLogin API.
       #
       # Args:
@@ -122,11 +112,18 @@ module AdsCommon
       #   accessed
       #
       # Returns:
-      # The auth token for the account (as a string).
+      # - The auth token for the account (as a string)
       #
       # Raises:
-      # AdsCommon::Errors::AuthError if authentication fails.
+      # - AdsCommon::Errors::AuthError if authentication fails
       #
+      def create_token(credentials)
+        token = @config.read('authentication.auth_token') ||
+            generate_token(credentials)
+        return token
+      end
+
+      # Generates new client login token based on credentials.
       def generate_token(credentials)
         validate_credentials(credentials)
 
@@ -162,10 +159,10 @@ module AdsCommon
       # Extracts key-value pairs from ClientLogin server response.
       #
       # Args:
-      # - text: server response string.
+      # - text: server response string
       #
       # Returns:
-      #   Hash of key-value pairs.
+      #   Hash of key-value pairs
       #
       def parse_token_text(text)
         result = {}

@@ -2,7 +2,7 @@
 #
 # Authors:: api.sgomes@gmail.com (Sérgio Gomes)
 #
-# Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -24,6 +24,13 @@
 module AdsCommon
   module Auth
     class BaseHandler
+      # Default initializer.
+      def initialize(config)
+        @config = config
+        @logger = @config.read('library.logger')
+        @token = nil
+      end
+
       # Callback to be used by CredentialHandlers to notify the auth handler of
       # a change in one of the credentials. Useful for e.g. invalidating a
       # token. The generic method does nothing.
@@ -40,13 +47,25 @@ module AdsCommon
       # This method returns the set of fields to be included in the header.
       # The generic method simply returns everything passed to it.
       def header_list(credentials)
-        return credentials.keys
+        return credentials.keys.dup()
       end
 
       # This method returns the key value pairs to be included in the header.
       # The generic method simply returns everything passed to it.
       def headers(credentials)
-        return credentials
+        return credentials.dup()
+      end
+
+      # Returns authorization token of some kind. Attempts to create a new one
+      # if the token has not yet been created and credentials present.
+      def get_token(credentials = nil)
+        @token = create_token(credentials) if @token.nil? and credentials
+        return @token
+      end
+
+      # Creates authorization token. Needs to be overriden.
+      def create_token(credentials)
+        raise NotImplementedError, 'create_token not overriden.'
       end
     end
   end

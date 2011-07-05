@@ -22,7 +22,7 @@
 
 require 'rubygems'
 gem 'soap4r', '=1.5.8'
-gem 'google-ads-common', '~>0.4.0'
+gem 'google-ads-common', '~>0.5.0'
 require 'thread'
 require 'uri'
 require 'ads_common/soap4r_patches'
@@ -93,13 +93,22 @@ module AdwordsApi
         end
         return header_handlers
       else
-        ns =
-            api_config.headers_config[:HEADER_NAMESPACE_PREAMBLE] + version.to_s
-        top_ns = wrapper.namespace
-        return [AdsCommon::Soap4rHeaders::NestedHeaderHandler.new(
-            @credential_handler, auth_handler,
-            api_config.headers_config[:REQUEST_HEADER],
-            top_ns, ns, version)]
+        auth_method = @config.read('authentication.method',
+            'ClientLogin').to_s.upcase.to_sym
+        handlers = case auth_method
+          when :CLIENTLOGIN
+            ns = api_config.headers_config[:HEADER_NAMESPACE_PREAMBLE] +
+                version.to_s
+            top_ns = wrapper.namespace
+            [AdsCommon::Soap4rHeaders::NestedHeaderHandler.new(
+                @credential_handler, auth_handler,
+                api_config.headers_config[:REQUEST_HEADER],
+                top_ns, ns, version)]
+          when :OAUTH
+            raise NotImplementedError, 'OAuth authentication method is not ' +
+                'supported for Soap4r backend.'
+        end
+        return handlers
       end
     end
 
@@ -223,24 +232,16 @@ module AdwordsApi
     # ClientLogin one to avoid generating multiple tokens unnecessarily).
     #
     # Args:
-    # - version: intended API version
     # - environment: the current working environment (production, sandbox, etc.)
+    # - version: intended API version
     #
     # Returns:
     # - auth handler
     #
-    def create_auth_handler(environment, version)
-      if version == :v13
-        return AdwordsApi::Auth::V13LoginHandler.new
-      else
-        if @client_login_handler.nil?
-          auth_server = api_config.auth_server(environment)
-          @client_login_handler =
-              AdsCommon::Auth::ClientLoginHandler.new(config, auth_server,
-                  api_config.headers_config[:LOGIN_SERVICE_NAME])
-        end
-        return @client_login_handler
-      end
+    def create_auth_handler(environment, version = nil)
+      return (version == :v13) ?
+          AdwordsApi::Auth::V13LoginHandler.new :
+          super(environment)
     end
 
     # Handle loading of a single service.
@@ -271,7 +272,7 @@ module AdwordsApi
       wrapper_class = api_config.wrapper_name(version, service)
       wrapper = eval("#{wrapper_class}.new(driver, self)")
 
-      auth_handler = create_auth_handler(environment, version)
+      auth_handler = get_auth_handler(environment, version)
       header_list =
           auth_handler.header_list(@credential_handler.credentials(version))
 

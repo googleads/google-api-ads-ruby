@@ -177,16 +177,18 @@ module AdsCommon
       def get_element_fields(element)
         fields = []
         REXML::XPath.each(element, 'descendant::element') do |item|
-          fields << {:name => get_element_name(item).snakecase.to_sym,
+          field = {:name => get_element_name(item).snakecase.to_sym,
               :type => item.attribute('type').to_s.gsub(/^.+:/, ''),
               :min_occurs => attribute_to_int(item.attribute('minOccurs')),
               :max_occurs => attribute_to_int(item.attribute('maxOccurs'))}
+          fields << field.reject {|k, v| v.nil?}
         end
         return fields
       end
 
       # Simple converter for int values.
       def attribute_to_int(attribute)
+        return nil if attribute.nil?
         return attribute.value.eql?('unbounded') ? nil : attribute.value.to_i
       end
 

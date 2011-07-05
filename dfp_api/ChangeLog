@@ -1,4 +1,6 @@
 0.2.2:
+  - Support for OAuth authentication method.
+  - Require google-ads-common 0.5.0 or later from now on.
 
 0.2.1:
   - Ruby1.9 compatible.

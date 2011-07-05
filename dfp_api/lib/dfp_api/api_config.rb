@@ -65,11 +65,13 @@ module DfpApi
     # Configure the different environments, with the base URL for each one
     @@environment_config = {
       :PRODUCTION => {
+        :oauth_scope => 'https://www.google.com/apis/ads/publisher/',
         :v201101 => 'https://www.google.com/apis/ads/publisher/',
         :v201103 => 'https://www.google.com/apis/ads/publisher/',
         :v201104 => 'https://www.google.com/apis/ads/publisher/'
       },
       :SANDBOX => {
+        :oauth_scope => 'https://sandbox.google.com/apis/ads/publisher/',
         :v201101 => 'https://sandbox.google.com/apis/ads/publisher/',
         :v201103 => 'https://sandbox.google.com/apis/ads/publisher/',
         :v201104 => 'https://sandbox.google.com/apis/ads/publisher/'

@@ -2,7 +2,7 @@
 #
 # Authors:: api.sgomes@gmail.com (Sérgio Gomes)
 #
-# Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ module AdsCommon
       # Handles callback.
       def on_simple_outbound
         main_header = SOAP::SOAPElement.new(nil)
-        credentials = @credential_handler.credentials(@version)
+        credentials = @credential_handler.credentials
         @auth_handler.headers(credentials).each do |cred, value|
           cred_header = SOAP::SOAPElement.new(XSD::QName.new(@ns, cred), value)
           main_header.add(cred_header)

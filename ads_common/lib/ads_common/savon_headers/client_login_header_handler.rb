@@ -30,16 +30,14 @@ module AdsCommon
       # definition.
       #
       # Args:
-      #  - None.
+      #  - None
       #
       # Returns:
-      #  - Hash containing a header with filled in credentials.
+      #  - Hash containing a header with filled in credentials
       #
       def generate_request_header()
-        request_header = {}
-        credentials = @credential_handler.credentials(@version)
-        headers = @auth_handler.headers(credentials)
-        headers.each do |header, value|
+        headers = @auth_handler.headers(@credential_handler.credentials)
+        return headers.inject({}) do |request_header, (header, value)|
           if header == :authToken
             auth_header = prepend_namespace('authentication')
             request_header[auth_header] = {
@@ -52,8 +50,8 @@ module AdsCommon
           else
             request_header[prepend_namespace(header)] = value
           end
+          request_header
         end
-        return request_header
       end
     end
   end

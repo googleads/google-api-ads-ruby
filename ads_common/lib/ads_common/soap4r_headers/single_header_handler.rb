@@ -2,7 +2,7 @@
 #
 # Authors:: api.sgomes@gmail.com (Sérgio Gomes)
 #
-# Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -36,7 +36,7 @@ module AdsCommon
       end
 
       def on_simple_outbound
-        credentials = @credential_handler.credentials(@version)
+        credentials = @credential_handler.credentials
         return @auth_handler.headers(credentials)[@element_name]
       end
     end

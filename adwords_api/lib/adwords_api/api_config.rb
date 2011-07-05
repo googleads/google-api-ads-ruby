@@ -40,7 +40,7 @@ module AdwordsApi
     # Set other constants
     API_NAME = 'AdwordsApi'
     API_PATH = 'adwords_api'
-    CLIENT_LIB_VERSION = '0.2.0'
+    CLIENT_LIB_VERSION = '0.2.1'
     DEFAULT_CONFIG_FILENAME = 'adwords_api.yml'
 
     # Configure the services available to each version
@@ -85,6 +85,7 @@ module AdwordsApi
     # Configure the different environments, with the base URL for each one
     @@environment_config = {
       :PRODUCTION => {
+        :oauth_scope => 'https://adwords.google.com/api/adwords/',
         :v13 => 'https://adwords.google.com/api/adwords/',
         :v200909 => 'https://adwords.google.com/api/adwords/',
         :v201003 => 'https://adwords.google.com/api/adwords/',
@@ -92,6 +93,7 @@ module AdwordsApi
         :v201101 => 'https://adwords.google.com/api/adwords/'
       },
       :SANDBOX => {
+        :oauth_scope => 'https://adwords-sandbox.google.com/api/adwords/',
         :v13 => 'https://sandbox.google.com/api/adwords/',
         :v200909 => 'https://adwords-sandbox.google.com/api/adwords/',
         :v201003 => 'https://adwords-sandbox.google.com/api/adwords/',

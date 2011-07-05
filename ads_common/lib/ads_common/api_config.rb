@@ -26,7 +26,7 @@ module AdsCommon
   # Contains helper methods for loading and managing the available services.
   # This module is meant to be imported into API-specific modules.
   module ApiConfig
-    ADS_COMMON_VERSION = '0.4.1'
+    ADS_COMMON_VERSION = '0.5.0'
 
     # Get the available API versions.
     #
@@ -156,8 +156,7 @@ module AdsCommon
     def auth_server(environment)
       auth_server_url =
           ENV['ADSAPI_AUTH_URL'] ||
-          auth_server_config[environment] ||
-          auth_server_config[default_environment()]
+          auth_server_config[environment]
       return auth_server_url
     end
 

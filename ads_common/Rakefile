@@ -51,6 +51,7 @@ spec = Gem::Specification.new do |s|
   s.add_dependency('soap4r', '= 1.5.8')
   s.add_dependency('httpclient', '>= 2.1.6')
   s.add_dependency('httpi', '~> 0.9.2')
+  s.add_dependency('oauth', '~> 0.4.5')
 end
 
 desc 'Default target - build'

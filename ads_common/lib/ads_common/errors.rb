@@ -27,9 +27,17 @@ module AdsCommon
     class Error < ::StandardError
     end
 
-    # Raised if an attempt is made to authenticate via the ClientLogin API with
-    # missing or wrong information
+    # Raised if an attempt is made to authenticate with missing or wrong
+    # information.
     class AuthError < Error
+    end
+
+    # Raised when OAuth access token is required.
+    class OAuthVerificationRequired < AuthError
+      attr_reader :oauth_url
+      def initialize(oauth_url)
+        @oauth_url = oauth_url
+      end
     end
 
     # Raised if setting a non-existant property on an object
@@ -57,14 +65,10 @@ module AdsCommon
     # Superclass for API exceptions. Each client library should implement its
     # own subclass with extra fields.
     class ApiException < Error
-
       attr_reader :message
-
       def initialize(message = nil)
         @message = message
       end
-
     end
-
   end
 end

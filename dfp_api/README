@@ -84,6 +84,21 @@ constructor:
 
 An example of configuration file is available as part of this library.
 
+== Using OAuth
+
+It is recommended to use OAuth authentication method instead of explicit
+email/password combination. OAuth support is almost transparent to the library
+user. In order to use OAuth you just need to:
+
+  - set authentication method to 'OAuth' in configuration;
+
+  - include oauth_consumer_key and oauth_consumer_secret;
+
+  - handle OAuthVerificationRequired error and pass verification code to the
+    library.
+
+See 'dfp_api.yml' configuration file and 'common/oauth_handling.rb' example for
+more details.
 
 == Accessing services
 
@@ -168,7 +183,7 @@ is planned for next releases.
 External dependencies should be pulled automatically on gem install. Here is the
 list though:
 
-  - Google Ads Common library (google-ads-common-0.4.0);
+  - Google Ads Common library (google-ads-common-0.5.0);
   - Savon 'the heavy metal Ruby SOAP client' (savon-0.9.1 or later).
 
 

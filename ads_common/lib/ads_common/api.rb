@@ -22,8 +22,8 @@
 require 'logger'
 
 require 'ads_common/errors'
-require 'ads_common/auth/base_handler'
 require 'ads_common/auth/client_login_handler'
+require 'ads_common/auth/oauth_handler'
 
 module AdsCommon
   class Api
@@ -46,16 +46,17 @@ module AdsCommon
           create_default_logger() : provided_logger
 
       # Check for valid environment.
-      env_string = config.read('service.environment')
+      env_string = @config.read('service.environment')
       environment = (env_string.nil?) ? api_config.default_environment :
           env_string.to_s.upcase.to_sym
       if api_config.environments.include?(environment)
-        config.set('service.environment', environment)
+        @config.set('service.environment', environment)
       else
         raise AdsCommon::Errors::Error,
             "Unknown or unspecified environment: \"%s\"" % env_string
       end
 
+      # Service wrappers.
       @wrappers = {}
     end
 
@@ -112,6 +113,43 @@ module AdsCommon
       return wrapper
     end
 
+    # Authorize with specified authentication method.
+    #
+    # Args:
+    #  - parameters - hash of credentials to add to configuration
+    #  - block - code block to handle auth login url
+    #
+    # Returns:
+    #  - Auth token for the method
+    #
+    # Throws:
+    #  - AdsCommon::Errors::AuthError or derived if authetication error has
+    #    occured
+    #
+    def authorize(parameters = {}, &block)
+      parameters.each_pair do |key, value|
+        @credential_handler.set_credential(key, value)
+      end
+      @auth_handler = get_auth_handler(@config.read('service.environment'))
+
+      # Token might still be valid, if not ask for a new one.
+      token = @auth_handler.get_token() ||
+        begin
+          @auth_handler.get_token(@credential_handler.credentials)
+        rescue AdsCommon::Errors::OAuthVerificationRequired => e
+          verification_code = (block_given?) ? yield(e.oauth_url) : nil
+          # Retry with verification code if one provided.
+          if verification_code
+            @credential_handler.set_credential(
+                :oauth_verification_code, verification_code)
+            retry
+          else
+            raise e
+          end
+        end
+      return token
+    end
+
     private
 
     # Retrieve the SOAP header handlers to plug into the drivers. Needs to
@@ -132,19 +170,43 @@ module AdsCommon
       raise NotImplementedError, 'soap_header_handlers not overriden.'
     end
 
-    # Auxiliary method to create an authentication handler. Needs to be
-    # implemented on the specific API because of the different nesting models
-    # used in different APIs and API versions.
+    # Auxiliary method to get an authentication handler. Creates a new one if
+    # the handler has not been initialized yet.
     #
     # Args:
     # - environment: the current working environment (production, sandbox, etc.)
-    # - version: intended API version
     #
     # Returns:
     # - auth handler
     #
-    def create_auth_handler(environment, version)
-      raise NotImplementedError, 'create_auth_handler not overriden.'
+    def get_auth_handler(environment)
+      @auth_handler = create_auth_handler(environment) if @auth_handler.nil?
+      return @auth_handler
+    end
+
+    # Auxiliary method to create an authentication handler.
+    #
+    # Args:
+    # - environment: the current working environment (production, sandbox, etc.)
+    #
+    # Returns:
+    # - auth handler
+    #
+    def create_auth_handler(environment)
+      auth_method_str = @config.read('authentication.method', 'ClientLogin')
+      auth_method = auth_method_str.to_s.upcase.to_sym
+      return case auth_method
+        when :CLIENTLOGIN
+          auth_server = api_config.auth_server(environment)
+          AdsCommon::Auth::ClientLoginHandler.new(config, auth_server,
+              api_config.headers_config[:LOGIN_SERVICE_NAME])
+        when :OAUTH
+          scope = api_config.environment_config()[environment][:oauth_scope]
+          AdsCommon::Auth::OAuthHandler.new(config, scope)
+        else
+          raise AdsCommon::Errors::Error,
+              "Unknown authentication method '%s'." % auth_method_str
+        end
     end
 
     # Handle loading of a single service wrapper. Needs to be implemented on

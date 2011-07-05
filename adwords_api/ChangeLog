@@ -1,3 +1,7 @@
+0.2.1:
+  - Changes for future OAuth support.
+  - Require google-ads-common 0.5.0 or later from now on.
+
 0.2.0:
   - Better support for UTF reports in download extensions.
   - Require google-ads-common 0.4.0 or later from now on.

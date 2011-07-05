@@ -20,12 +20,13 @@
 # Contains the main classes for the client library. Takes care of all
 # dependencies.
 
-gem 'google-ads-common', '~>0.4.0'
+gem 'google-ads-common', '~>0.5.0'
 require 'logger'
 require 'ads_common/api'
 require 'ads_common/config'
 require 'ads_common/auth/client_login_handler'
 require 'ads_common/savon_headers/client_login_header_handler'
+require 'ads_common/savon_headers/oauth_header_handler'
 require 'ads_common/savon_headers/simple_header_handler'
 require 'dfp_api/errors'
 require 'dfp_api/api_config'
@@ -62,29 +63,20 @@ module DfpApi
 
     private
 
-    # Creates an appropriate authentication handler for each service (reuses the
-    # ClientLogin one to avoid generating multiple tokens unnecessarily).
-    def create_auth_handler(environment, version)
-      if @client_login_handler.nil?
-        auth_server = api_config.auth_server(environment)
-        @client_login_handler =
-            AdsCommon::Auth::ClientLoginHandler.new(config, auth_server,
-                api_config.headers_config[:LOGIN_SERVICE_NAME])
-      end
-      return @client_login_handler
-    end
-
     # Retrieve DFP HeaderHandlers per credential.
     def soap_header_handlers(auth_handler, header_list, version)
-      ns = api_config.headers_config[:HEADER_NAMESPACE_PREAMBLE] + version.to_s
-      handler = case version
-          when :v201101 then AdsCommon::SavonHeaders::SimpleHeaderHandler
-          when :v201103 then AdsCommon::SavonHeaders::ClientLoginHeaderHandler
-          when :v201104 then AdsCommon::SavonHeaders::ClientLoginHeaderHandler
-          else
-            raise AdsCommon::Errors::Error,
-                "Unknown or unspecified version: \"%s\"" % version.to_s
+      handler = nil
+      auth_method = @config.read('authentication.method',
+          'ClientLogin').to_s.upcase.to_sym
+      handler = case auth_method
+        when :CLIENTLOGIN
+          (version == :v201101) ?
+              AdsCommon::SavonHeaders::SimpleHeaderHandler :
+              AdsCommon::SavonHeaders::ClientLoginHeaderHandler
+        when :OAUTH
+          AdsCommon::SavonHeaders::OAuthHeaderHandler
       end
+      ns = api_config.headers_config[:HEADER_NAMESPACE_PREAMBLE] + version.to_s
       return [handler.new(@credential_handler, auth_handler,
           api_config.headers_config[:REQUEST_HEADER], ns, version)]
     end
@@ -107,7 +99,7 @@ module DfpApi
       endpoint_url = endpoint.nil? ? nil : endpoint.to_s + service.to_s
       wrapper = class_for_path(interface_class_name).new(endpoint_url)
 
-      auth_handler = create_auth_handler(environment, version)
+      auth_handler = get_auth_handler(environment)
       header_list =
           auth_handler.header_list(@credential_handler.credentials(version))
 

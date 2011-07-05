@@ -127,7 +127,9 @@ module AdsCommon
 
     # Executes each handler to generate SOAP headers.
     def set_headers(soap, args)
-      @headerhandler.each {|handler| handler.prepare_soap(soap, args)}
+      @headerhandler.each do |handler|
+        handler.prepare_request(@client.http, soap, args)
+      end
     end
 
     # Checks for errors in response and raises appropriate exception.
