@@ -61,7 +61,7 @@ def get_ad_units_by_statement()
   page = inventory_service.get_ad_units_by_statement(statement)
 
   if page[:results]
-    # Print details about each creative in results.
+    # Print details about each ad unit in results.
     page[:results].each_with_index do |ad_unit, index|
       puts "%d) Ad unit ID: %d, name: %s, status: %s." %
           [index, ad_unit[:id], ad_unit[:name], ad_unit[:status]]
