@@ -48,7 +48,7 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = true
   s.extra_rdoc_files = docs
   s.add_dependency('google-ads-common', '~> 0.5.0')
-  s.add_dependency('savon', '~> 0.9.1')
+  s.add_dependency('savon', '= 0.9.2')
 end
 
 package_task = Gem::PackageTask.new(spec) do |pkg|

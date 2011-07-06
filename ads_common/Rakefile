@@ -47,7 +47,7 @@ spec = Gem::Specification.new do |s|
   s.test_files = tests
   s.has_rdoc = true
   s.extra_rdoc_files = docs
-  s.add_dependency('savon', '~> 0.9.1')
+  s.add_dependency('savon', '= 0.9.2')
   s.add_dependency('soap4r', '= 1.5.8')
   s.add_dependency('httpclient', '>= 2.1.6')
   s.add_dependency('httpi', '~> 0.9.2')
