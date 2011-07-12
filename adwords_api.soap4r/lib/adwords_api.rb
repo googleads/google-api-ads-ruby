@@ -27,10 +27,7 @@ require 'thread'
 require 'uri'
 require 'ads_common/soap4r_patches'
 require 'ads_common/api'
-require 'ads_common/config'
 require 'ads_common/auth/client_login_handler'
-require 'ads_common/soap4r_headers/nested_header_handler'
-require 'ads_common/soap4r_headers/single_header_handler'
 require 'ads_common/soap4r_logger'
 require 'adwords_api/auth/v13_login_handler'
 require 'adwords_api/errors'
@@ -39,6 +36,8 @@ require 'adwords_api/extensions'
 require 'adwords_api/soap4r_response_handler'
 require 'adwords_api/credential_handler'
 require 'adwords_api/utils'
+require 'adwords_api/nested_header_handler'
+require 'adwords_api/single_header_handler'
 
 # Main namespace for all the client library's modules and classes.
 module AdwordsApi
@@ -86,10 +85,9 @@ module AdwordsApi
     #
     def soap_header_handlers(auth_handler, header_list, version, wrapper)
       if version == :v13
-        header_handlers = []
-        header_list.each do |header|
-          header_handlers << AdsCommon::Soap4rHeaders::SingleHeaderHandler.new(
-              @credential_handler, auth_handler, header, nil, version)
+        header_handlers = header_list.map do |header|
+          AdwordsApi::SingleHeaderHandler.new(@credential_handler, auth_handler,
+              header, nil, version)
         end
         return header_handlers
       else
@@ -100,9 +98,8 @@ module AdwordsApi
             ns = api_config.headers_config[:HEADER_NAMESPACE_PREAMBLE] +
                 version.to_s
             top_ns = wrapper.namespace
-            [AdsCommon::Soap4rHeaders::NestedHeaderHandler.new(
-                @credential_handler, auth_handler,
-                api_config.headers_config[:REQUEST_HEADER],
+            [AdwordsApi::NestedHeaderHandler.new(@credential_handler,
+                auth_handler, api_config.headers_config[:REQUEST_HEADER],
                 top_ns, ns, version)]
           when :OAUTH
             raise NotImplementedError, 'OAuth authentication method is not ' +

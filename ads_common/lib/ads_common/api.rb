@@ -21,6 +21,7 @@
 
 require 'logger'
 
+require 'ads_common/config'
 require 'ads_common/errors'
 require 'ads_common/auth/client_login_handler'
 require 'ads_common/auth/oauth_handler'

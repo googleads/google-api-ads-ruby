@@ -17,28 +17,31 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Handles soap headers for AdWords v13-style SOAP requests (flat headers).
+# Handles soap headers for AdWords v2009-style SOAP requests (nested headers).
 
 require 'soap/header/simplehandler'
 
-module AdsCommon
-  module Soap4rHeaders
+module AdwordsApi
+  class NestedHeaderHandler < SOAP::Header::SimpleHandler
 
-    class SingleHeaderHandler < SOAP::Header::SimpleHandler
+    def initialize(credential_handler, auth_handler, top_element_name,
+        top_namespace, inner_namespace, version = nil)
+      super(XSD::QName.new(top_namespace, top_element_name))
+      @credential_handler = credential_handler
+      @auth_handler = auth_handler
+      @ns = inner_namespace
+      @version = version
+    end
 
-      def initialize(credential_handler, auth_handler,
-          element_name, element_namespace = nil, version = nil)
-        super(XSD::QName.new(element_namespace, element_name))
-        @credential_handler = credential_handler
-        @auth_handler = auth_handler
-        @element_name = element_name
-        @version = version
+    # Handles callback.
+    def on_simple_outbound
+      main_header = SOAP::SOAPElement.new(nil)
+      credentials = @credential_handler.credentials
+      @auth_handler.headers(credentials).each do |cred, value|
+        cred_header = SOAP::SOAPElement.new(XSD::QName.new(@ns, cred), value)
+        main_header.add(cred_header)
       end
-
-      def on_simple_outbound
-        credentials = @credential_handler.credentials
-        return @auth_handler.headers(credentials)[@element_name]
-      end
+      return main_header
     end
   end
 end

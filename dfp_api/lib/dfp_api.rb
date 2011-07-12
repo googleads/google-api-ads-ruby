@@ -23,15 +23,14 @@
 gem 'google-ads-common', '~>0.5.0'
 require 'logger'
 require 'ads_common/api'
-require 'ads_common/config'
 require 'ads_common/auth/client_login_handler'
-require 'ads_common/savon_headers/client_login_header_handler'
 require 'ads_common/savon_headers/oauth_header_handler'
 require 'ads_common/savon_headers/simple_header_handler'
 require 'dfp_api/errors'
 require 'dfp_api/api_config'
 require 'dfp_api/extensions'
 require 'dfp_api/credential_handler'
+require 'dfp_api/client_login_header_handler'
 
 # Main namespace for all the client library's modules and classes.
 module DfpApi
@@ -72,7 +71,7 @@ module DfpApi
         when :CLIENTLOGIN
           (version == :v201101) ?
               AdsCommon::SavonHeaders::SimpleHeaderHandler :
-              AdsCommon::SavonHeaders::ClientLoginHeaderHandler
+              DfpApi::ClientLoginHeaderHandler
         when :OAUTH
           AdsCommon::SavonHeaders::OAuthHeaderHandler
       end
