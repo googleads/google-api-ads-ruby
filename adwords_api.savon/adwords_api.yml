@@ -1,0 +1,38 @@
+---
+# This is an example configuration file for the AdWords API client library.
+# Please fill in the required fields, and copy it over to your home directory.
+:authentication:
+  # Authentication method, methods currently supported: OAuth, ClientLogin.
+  :method: ClientLogin
+
+  # Auth parameters for OAuth method.
+  # Set the OAuth consumer key and secret. Anonymous values can be used for
+  # testing, and real values can be obtained by registering your application:
+  # http://code.google.com/apis/accounts/docs/RegistrationForWebAppsAuto.html
+  #:oauth_consumer_key: anonymous
+  #:oauth_consumer_secret: anonymous
+  # If you manage or store access token manually, you can specify it here.
+  #:oauth_token: INSERT_OAUTH_TOKEN_HERE
+  # If you need to change signature method, specify it here.
+  #:oauth_signature_method: HMAC-SHA1
+  # Token secret for HMAC-SHA1 method.
+  #:oauth_token_secret: INSERT_OAUTH_TOKEN_SECRET_HERE
+
+  # Auth parameters for ClientLogin method.
+  :password: INSERT_YOUR_PASSWORD_HERE
+  :email: INSERT_YOUR_LOGIN_EMAIL_HERE
+  # To manage your auth tokens manually, use the 'auth_token' property.
+  #:auth_token: INSERT_AUTH_TOKEN_HERE
+
+  # Other parameters.
+  :developer_token: INSERT_YOUR_DEVELOPER_TOKEN_HERE
+  :client_email: INSERT_YOUR_CLIENT_EMAIL_HERE
+  :user_agent: INSERT_YOUR_USER_AGENT_HERE
+:service:
+  :environment: SANDBOX
+:connection:
+  # If your proxy connection requires authentication, make sure to include it in
+  # the URL, e.g.: http://user:password@proxy_hostname:8080/path
+  # :proxy: INSERT_PROXY_HERE
+:library:
+  :log_level: INFO
