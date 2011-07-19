@@ -32,11 +32,17 @@ module AdsCommon
       attr_reader :soap_exceptions
       attr_reader :soap_methods
       attr_reader :soap_types
+      attr_reader :soap_namespaces
 
       # Initializes the instance.
+      #
       # Args:
-      #   wsdl - string containing wsdl to parse.
-      def initialize(wsdl)
+      # - wsdl: string containing wsdl to parse
+      # - options: variuos generation options
+      #
+      def initialize(wsdl, options = {})
+        @options = options
+        @default_namespace = options[:namespace]
         do_process_wsdl(wsdl)
       end
 
@@ -47,6 +53,7 @@ module AdsCommon
         @soap_exceptions = []
         @soap_types = []
         @soap_methods = []
+        @soap_namespaces = []
 
         doc = REXML::Document.new(wsdl.to_xml)
         process_types(doc)
@@ -56,16 +63,34 @@ module AdsCommon
 
       # Extracts different types from XML.
       def process_types(doc)
-        get_complex_types(doc).each do |ctype|
-          ctype_name = get_element_name(ctype)
-          if ctype_name.match('.+Exception$')
-            @soap_exceptions << extract_exception(ctype)
-          elsif ctype_name.match('.+Error$')
-            # We don't use it at the moment.
-          else
-            @soap_types << extract_type(ctype)
+        REXML::XPath.each(doc, '//schema') do |schema|
+          ns_index = process_namespace(schema)
+          get_complex_types(schema).each do |ctype|
+            ctype_name = get_element_name(ctype)
+            if ctype_name.match('.+Exception$')
+              @soap_exceptions << extract_exception(ctype)
+            elsif ctype_name.match('.+Error$')
+              # We don't use it at the moment.
+            else
+              @soap_types << extract_type(ctype, ns_index)
+            end
           end
         end
+      end
+
+      # Returns index of namespace for given schema. Adds namespace to internal
+      # array if not yet present. Returns nil for service default namespace.
+      def process_namespace(schema)
+        namespace_url = schema.attribute('targetNamespace').value
+        unless namespace_url == @default_namespace
+          ns_index = @soap_namespaces.index(namespace_url)
+          if ns_index.nil?
+            ns_index = @soap_namespaces.length
+            @soap_namespaces << namespace_url
+          end
+          return ns_index
+        end
+        return nil
       end
 
       # Extracts SOAP actions as methods.
@@ -76,13 +101,9 @@ module AdsCommon
         end
       end
 
-      # Extracts ComplexTypes from XML into an array.
-      def get_complex_types(doc)
-        complex_types = []
-        REXML::XPath.each(doc, '//schema/complexType') do |ctype|
-          complex_types << ctype
-        end
-        return complex_types
+      # Extracts ComplexTypes from node into an array.
+      def get_complex_types(node)
+        return REXML::XPath.each(node, 'complexType').to_a
       end
 
       # Extracts exception parameters from ComplexTypes element.
@@ -110,13 +131,14 @@ module AdsCommon
 
       # Extracts definition of all types. If a non standard undefined type is
       # found it process it recursively.
-      def extract_type(type_element)
+      def extract_type(type_element, ns_index)
         type = {:name => get_element_name(type_element), :fields => []}
         if attribute_to_boolean(type_element.attribute('abstract'))
           type[:abstract] = true
         end
         base_type = get_element_base(type_element)
         type[:base] = base_type if base_type
+        type[:ns] = ns_index if ns_index
         REXML::XPath.each(type_element,
             'sequence | complexContent/extension/sequence') do |seq_node|
           type[:fields] += get_element_fields(seq_node)

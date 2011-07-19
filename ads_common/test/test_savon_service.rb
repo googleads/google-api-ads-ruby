@@ -21,11 +21,14 @@
 
 require 'rubygems'
 require 'test/unit'
-require 'pp'
+
 require 'ads_common/savon_service'
 
 # SavonService is abstract, defining a child class for the test.
 class SomeService < AdsCommon::SavonService
+  def initialize(namespace, endpoint, version)
+    super(nil, namespace, endpoint, version)
+  end
   def private_get_service_registry()
     return get_service_registry
   end
@@ -49,18 +52,20 @@ end
 class TestSavonService < Test::Unit::TestCase
   TEST_NAMESPACE = 'namespace'
   TEST_ENDPOINT = 'endpoint'
+  TEST_VERSION = :vVersion
 
   # Initialize tests.
   def setup
-    @some_service = SomeService.new(TEST_NAMESPACE, TEST_ENDPOINT)
+    @some_service = SomeService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
   end
 
   def test_initialize_abstract
     assert_raises(NoMethodError) do
-      AdsCommon::SavonService.new(TEST_NAMESPACE, TEST_ENDPOINT)
+      AdsCommon::SavonService.new(nil, TEST_NAMESPACE, TEST_ENDPOINT,
+          TEST_VERSION)
     end
     assert_nothing_raised do
-      SomeService.new(TEST_NAMESPACE, TEST_ENDPOINT)
+      SomeService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
     end
   end
 

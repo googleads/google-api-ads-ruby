@@ -35,18 +35,27 @@ module AdsCommon
 
       require 'ads_common/savon_service'
       require '<%= @require_path %>/<%= @service_name.to_s.snakecase %>_registry'
+      <% unless @extensions.empty? %>
+      require '<%= @api_name.snakecase %>/extensions'
+      <% end %>
 
       <%= @modules_open_string %>
 
         class <%= @service_name %> < AdsCommon::SavonService
-          def initialize(endpoint)
+          def initialize(api, endpoint)
             namespace = '<%= @namespace %>'
-            super(endpoint, namespace)
+            super(api, endpoint, namespace, :<%= @version %>)
           end
           <% @actions.each do |action| %>
 
           def <%= action %>(*args)
             return execute_action('<%= action %>', args)
+          end
+          <% end %>
+          <% @extensions.each do |extention| %>
+
+          def <%= extention %>(*args)
+            return <%= @api_name %>::Extensions.<%= extention %>(self, args)
           end
           <% end %>
 
@@ -57,7 +66,7 @@ module AdsCommon
           end
 
           def get_module()
-            return <%= @module_name %>
+            return <%= [@api_name, @version.to_s.upcase, @service_name].join('::') %>
           end
         end
       <%= @modules_close_string %>
@@ -67,10 +76,15 @@ module AdsCommon
       def initialize(args)
         super(args)
         @actions = []
+        @extensions = []
       end
 
       def add_actions(actions)
         @actions += actions
+      end
+
+      def add_extensions(extensions)
+        @extensions += extensions
       end
 
       def get_code_template()

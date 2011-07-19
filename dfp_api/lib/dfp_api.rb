@@ -96,7 +96,7 @@ module DfpApi
       endpoint = api_config.endpoint(environment, version, service)
       interface_class_name = api_config.interface_name(version, service)
       endpoint_url = endpoint.nil? ? nil : endpoint.to_s + service.to_s
-      wrapper = class_for_path(interface_class_name).new(endpoint_url)
+      wrapper = class_for_path(interface_class_name).new(self, endpoint_url)
 
       auth_handler = get_auth_handler(environment)
       header_list =

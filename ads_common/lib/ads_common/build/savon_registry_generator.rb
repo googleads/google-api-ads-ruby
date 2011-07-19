@@ -39,6 +39,7 @@ module AdsCommon
         class <%= @service_name %>Registry
           <%= @service_name.upcase %>_METHODS = <%= format_signature(@methods) %>
           <%= @service_name.upcase %>_TYPES = <%= format_signature(@types) %>
+          <%= @service_name.upcase %>_NAMESPACES = <%= format_array(@namespaces) %>
 
           def self.get_method_signature(method_name)
             return <%= @service_name.upcase %>_METHODS[method_name.to_sym]
@@ -46,6 +47,10 @@ module AdsCommon
 
           def self.get_type_signature(type_name)
             return <%= @service_name.upcase %>_TYPES[type_name.to_sym]
+          end
+
+          def self.get_namespace(index)
+            return <%= @service_name.upcase %>_NAMESPACES[index]
           end
         end
         <% @exceptions.each do |exception| %>
@@ -63,7 +68,7 @@ module AdsCommon
           <% end %>
           <% if !(array_fields.empty?) %>
           def initialize(exception_fault)
-            @array_fields = [] if !defined?(@array_fields)
+            @array_fields ||= []
             <% array_fields.each do |field| %>
             @array_fields << '<%= field.to_s %>'
             <% end %>
@@ -81,8 +86,8 @@ module AdsCommon
         @exceptions = []
         @methods = []
         @types = []
-        @default_exception_base = "%s::Errors::ApiException" %
-            @module_name.split('::').first
+        @namespaces = []
+        @default_exception_base = "%s::Errors::ApiException" % @api_name
       end
 
       def get_code_template()
@@ -99,6 +104,10 @@ module AdsCommon
 
       def add_types(types)
         @types += types
+      end
+
+      def add_namespaces(namespaces)
+        @namespaces += namespaces
       end
 
       private
@@ -120,17 +129,19 @@ module AdsCommon
         return PP.singleline_pp(objects_hash, '')
       end
 
+      # Prepares string representing a simple array.
+      def format_array(objects_array)
+        return (objects_array.nil?) ? '[]' : PP.singleline_pp(objects_array, '')
+      end
+
       # Converts an array of hashes to a hash based on ":name" fields:
       # [{:name => 'foo', :data => 'bar'}] => {:foo => {:data => 'bar'}}
       def get_hash_for_names_array(input)
-        output = {}
-        input.each do |e|
+        return input.inject({}) do |output, e|
           key = e[:name].to_sym
-          value = e.dup
-          value.delete(:name)
-          output[key] = value
+          output[key] = e.reject {|k, v| k.equal?(:name)}
+          output
         end
-        return output
       end
     end
   end

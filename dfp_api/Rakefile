@@ -74,10 +74,8 @@ task :generate do
     wsdls = DfpApi::ApiConfig.get_wsdls(version)
     wsdls.each do |service_name, wsdl_url|
       logger.info("Processing %s at [%s]..." % [service_name, wsdl_url])
-      module_name = "%s::%s::%s" % [api_config.api_name, version.to_s.upcase,
-                                    service_name]
       generator = AdsCommon::Build::SavonGenerator.new(wsdl_url, code_path,
-                      service_name, module_name)
+          api_config.api_name, version, service_name)
       generator.process_wsdl()
     end
     package_task.package_files.include(FileList[code_path + '/*'].to_a)

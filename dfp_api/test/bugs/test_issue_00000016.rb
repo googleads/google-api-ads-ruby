@@ -36,7 +36,8 @@ class TestDfpApi < Test::Unit::TestCase
   def test_issue_16
     assert_nothing_raised do
       service = StubService.new(
-          'https://www.google.com/apis/ads/publisher/v201101/LineItemService')
+          'https://www.google.com/apis/ads/publisher/v201104/LineItemService',
+          :v201104)
       result = service.stub_get_line_items_by_statement(get_xml_text)
       targeting = result[:results][0][:targeting][:inventory_targeting]
       assert_equal([1234567, 23456], targeting[:targeted_placement_ids])
@@ -44,7 +45,10 @@ class TestDfpApi < Test::Unit::TestCase
   end
 
   def get_xml_text
-    return <<EOT
+    return DATA.read
+  end
+end
+__END__
 <?xml version="1.0"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
  <soap:Header>
@@ -149,6 +153,3 @@ class TestDfpApi < Test::Unit::TestCase
   </getLineItemsByStatementResponse>
  </soap:Body>
 </soap:Envelope>
-EOT
-  end
-end

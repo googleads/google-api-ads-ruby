@@ -20,7 +20,6 @@
 # Generates the wrappers for API services. Only used during the
 # 'rake generate' step of library setup.
 
-gem 'savon', '~>0.9.1'
 require 'savon'
 
 require 'ads_common/build/savon_service_generator'
@@ -34,25 +33,29 @@ module AdsCommon
     # Contains the methods that handle wrapper code generation.
     class SavonGenerator
 
-      # Create a new generator for given WSDL
+      # Create a new generator for given WSDL.
       #
       # Args:
-      #   wsdl_url local or remote URL to pull WSDL data
-      #   code_path local path to store generated files
-      #   service_name a service name to generate stubs from
-      #   module_name a fully-qualified module name
-      def initialize(wsdl_url, code_path, service_name, module_name)
+      # - wsdl_url local or remote URL to pull WSDL data
+      # - code_path local path to store generated files
+      # - api_name an API name to generate for
+      # - version a version of the service
+      # - service_name a service name to generate stubs for
+      # - extensions an optional list of extensions to include
+      #
+      def initialize(wsdl_url, code_path, api_name, version, service_name,
+          extensions = [])
         @wsdl_url = wsdl_url
         @code_path = code_path
-        @service_name = service_name
+        @extensions = extensions
+        @generator_args = {
+            :api_name => api_name,
+            :version => version,
+            :service_name => service_name,
+            :require_path => @code_path.sub(/^lib\//, '')
+        }
         @logger = Logger.new(STDOUT)
         @logger.level = Logger::INFO
-        @generator_args = {
-            :service_name => service_name,
-            :module_name  => module_name,
-            :require_path => @code_path.sub(/^lib\//, ''),
-            :logger => @logger
-        }
         Savon.configure do |config|
           config.logger = @logger
           config.log_level = :debug
@@ -61,13 +64,13 @@ module AdsCommon
       end
 
       #
-      # Pull, parse and generate wrapper for WSDL on given URL
+      # Pull, parse and generate wrapper for WSDL on given URL.
       #
       # Args:
-      #   none, instance variables are used.
+      # - none, instance variables are used
       #
       # Returns:
-      #   none
+      # - none
       def process_wsdl()
         client = Savon::Client.new(@wsdl_url)
         begin
@@ -82,13 +85,12 @@ module AdsCommon
 
       private
 
-      # Generate code for given Savon client
+      # Generate code for given Savon client.
       def do_process_wsdl_client(client)
-        service_file_name = @service_name.to_s.snakecase
-
         wsdl = client.wsdl
         check_service(wsdl)
 
+        service_file_name = @generator_args[:service_name].to_s.snakecase
         wrapper_file_name = "%s/%s.rb" % [@code_path, service_file_name]
         write_wrapper(wsdl, wrapper_file_name)
 
@@ -104,36 +106,38 @@ module AdsCommon
         end
       end
 
-      # Generates wrapper file
+      # Generates wrapper file.
       def write_wrapper(wsdl, file_name)
         wrapper_file = create_new_file(file_name)
         generator = SavonServiceGenerator.new(@generator_args)
         generator.add_actions(wsdl.soap_actions.dup)
+        generator.add_extensions(@extensions)
         wrapper_file.write(generator.generate_code())
         wrapper_file.close
       end
 
-      # Generates registry file
+      # Generates registry file.
       def write_registry(wsdl, file_name)
         registry_file = create_new_file(file_name)
         generator = SavonRegistryGenerator.new(@generator_args)
-        registry = SavonRegistry.new(wsdl)
-        generator.add_exceptions(registry.soap_exceptions.dup)
-        generator.add_methods(registry.soap_methods.dup)
-        generator.add_types(registry.soap_types.dup)
+        registry = SavonRegistry.new(wsdl, @generator_args)
+        generator.add_exceptions(registry.soap_exceptions)
+        generator.add_methods(registry.soap_methods)
+        generator.add_namespaces(registry.soap_namespaces)
+        generator.add_types(registry.soap_types)
         registry_file.write(generator.generate_code())
         registry_file.close
       end
 
       # Creates a new file on specified path, overwriting existing one if it
-      # exists
+      # exists.
       def create_new_file(file_name)
         @logger.info("Creating %s..." % [file_name])
         make_dir_for_path(file_name)
         new_file = File.new(file_name, File::WRONLY|File::TRUNC|File::CREAT)
       end
 
-      # Creates a directory for the file path specified if not exists
+      # Creates a directory for the file path specified if not exists.
       def make_dir_for_path(path)
         dir_name = File.dirname(path)
         Dir.mkdir(dir_name) if !File.directory?(dir_name)

@@ -19,18 +19,27 @@
 #
 # Base class for all generated API services based on Savon backend.
 
-gem 'savon', '~>0.9.1'
+gem 'savon', '= 0.9.2'
 require 'savon'
 
 module AdsCommon
   class SavonService
+    # Default namespace name.
+    DEFAULT_NAMESPACE = 'wsdl'
+
     attr_accessor :headerhandler
+    attr_reader :api
+    attr_reader :version
+    attr_reader :namespace
 
     # Creates a new service.
-    def initialize(endpoint, namespace)
+    def initialize(api, endpoint, namespace, version)
       if self.class() == AdsCommon::SavonService
         raise NoMethodError, "Tried to instantiate an abstract class"
       end
+      @api = api
+      @version = version
+      @namespace = namespace
       @headerhandler = []
       @client = Savon::Client.new do |wsdl|
         wsdl.namespace = namespace
@@ -79,18 +88,25 @@ module AdsCommon
       in_params.each_with_index do |in_param, index|
         key = in_param[:name]
         value = deep_copy(args[index])
-        validated_args[key] = (value.nil?) ? nil :
-            validate_arg(value, validated_args, key)
+        validated_args[key] = (value.nil?) ?
+             nil : validate_arg(value, validated_args, key, in_param[:type])
       end
       return validated_args
     end
 
     # Validates method argument. Runs recursively if hash or array encountered.
     # Also handles some types that need special conversions.
-    def validate_arg(arg, parent = nil, key = nil)
+    def validate_arg(arg, parent = nil, key = nil, field_type_name = nil)
+      field_type = (field_type_name.nil?) ? nil :
+          get_service_registry.get_type_signature(field_type_name)
+      if field_type and field_type[:base]
+        field_type[:fields] += implode_parent(field_type)
+      end
       result = case arg
-        when Hash then validate_hash_arg(arg, parent, key)
-        when Array then arg.map {|item| validate_arg(item, parent, key)}
+        when Hash then validate_hash_arg(arg, parent, key, field_type)
+        when Array then arg.map do |item|
+           validate_arg(item, parent, key, field_type_name)
+          end
         when Time then time_to_xml_hash(arg)
         else arg
       end
@@ -99,7 +115,7 @@ module AdsCommon
 
     # Validates hash argument recursively. Keeps tracking of correct place
     # for xsi:type and adds is when required.
-    def validate_hash_arg(arg, parent = nil, key = nil)
+    def validate_hash_arg(arg, parent = nil, key = nil, field_type = nil)
       xsi_type = arg.delete('xsi:type') || arg.delete(:xsi_type)
       if xsi_type
         if parent and key
@@ -110,19 +126,51 @@ module AdsCommon
                   [xsi_type, parent, key])
         end
       end
-      return arg.inject({}) do |result, (key, value)|
-        result[key] = (key == :attributes!) ? value :
-            validate_arg(value, result, key)
+      # Non-default namespace should be used, overriding default.
+      if field_type and field_type.include?(:ns)
+        namespace = get_service_registry.get_namespace(field_type[:ns])
+        add_attribute(parent, prefix_key(key), 'xmlns', namespace)
+      end
+      return arg.inject({}) do |result, (k, v)|
+        if (k == :attributes!)
+          result[k] = v
+        else
+          subfield = (field_type.nil?) ? nil :
+              get_field_by_name(field_type[:fields], k)
+          # Here we will give up if the field is unknown. For full validation
+          # we have to handle nil here and also take into consideration user-
+          # specified xsi:type.
+          subtype_name, subtype = if subfield and subfield.include?(:type)
+            subtype_name = subfield[:type]
+            subtype = (subtype_name.nil?) ? nil :
+                get_service_registry.get_type_signature(subtype_name)
+            [subtype_name, subtype]
+          end
+          # In case of non-default namespace, the children should be in
+          # overriden namespace but the node has to be in the default.
+          prefixed_key = (subtype and subtype[:ns]) ? prefix_key(k) : k
+          result[prefixed_key] = validate_arg(v, result, k, subtype_name)
+        end
         result
       end
     end
 
     # Adds ":attributes!" record for Savon to specify xsi:type.
     def add_xsi_type(parent, key, xsi_type)
-      parent[:attributes!] ||= {}
-      parent[:attributes!][key] ||= {}
-      parent[:attributes!][key]["xsi:type"] ||= []
-      parent[:attributes!][key]["xsi:type"] << xsi_type
+      add_attribute(parent, key, 'xsi:type', xsi_type)
+    end
+
+    # Adds Savon attribute for given node, key, name and value.
+    def add_attribute(node, key, name, value)
+      node[:attributes!] ||= {}
+      node[:attributes!][key] ||= {}
+      node[:attributes!][key][name] ||= []
+      node[:attributes!][key][name] << value
+    end
+
+    # Prefixes default namespace.
+    def prefix_key(key)
+      return "%s:%s" % [DEFAULT_NAMESPACE, key.to_s.lower_camelcase]
     end
 
     # Executes each handler to generate SOAP headers.
