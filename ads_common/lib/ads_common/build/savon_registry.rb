@@ -55,7 +55,7 @@ module AdsCommon
         @soap_methods = []
         @soap_namespaces = []
 
-        doc = REXML::Document.new(wsdl.to_xml)
+        doc = REXML::Document.new(wsdl.xml)
         process_types(doc)
         process_methods(doc)
         sort_exceptions()

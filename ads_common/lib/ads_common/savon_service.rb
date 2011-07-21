@@ -19,7 +19,6 @@
 #
 # Base class for all generated API services based on Savon backend.
 
-gem 'savon', '= 0.9.2'
 require 'savon'
 
 module AdsCommon

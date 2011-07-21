@@ -61,7 +61,7 @@ module AdsCommon
         soap.namespace = @namespace
         soap.body = args if args
         # Sets the default namespace for the body.
-        soap.input[1] = {:xmlns => @namespace}
+        soap.input[2] = {:xmlns => @namespace}
       end
 
       # Adds namespace to the given string.
