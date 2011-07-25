@@ -235,8 +235,8 @@ module AdsCommon
       # - AdsCommon::Errors::OAuthVerificationRequired in all cases
       #
       def raise_oauth_verification_error(request_token, callback)
-        auth_url = request_token.authorize_url({:oauth_callback => callback})
-        raise AdsCommon::Errors::OAuthVerificationRequired, auth_url
+        oauth_url = request_token.authorize_url({:oauth_callback => callback})
+        raise AdsCommon::Errors::OAuthVerificationRequired, oauth_url
       end
 
       # Extracts key-value pairs from OAuth server response.

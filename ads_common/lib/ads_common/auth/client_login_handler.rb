@@ -144,15 +144,13 @@ module AdsCommon
         else
           error_message = "Login failed for email %s: HTTP code %d." %
               [credentials[:email], response.code]
-          if results.include?(:Error)
-            error_message += " Error: %s." % results[:Error]
-          else
-            error_message += " Raw error: %s." % response.body
-          end
+          error_str = results[:Error] || response.body
+          error_message += " Error: %s." % error_str if error_str
           if results.include?(:Info)
             error_message += " Info: %s." % results[:Info]
           end
-          raise AdsCommon::Errors::AuthError, error_message
+          raise AdsCommon::Errors::AuthError.new(error_message, error_str,
+              results[:Info])
         end
       end
 
