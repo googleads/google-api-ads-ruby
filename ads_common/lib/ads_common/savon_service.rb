@@ -281,7 +281,8 @@ module AdsCommon
       # If field signature allows an array, forcing array structure even for one
       # item.
       if !field[:min_occurs].nil? and
-          (field[:max_occurs].nil? or field[:max_occurs] > 1)
+          (field[:max_occurs] == :unbounded ||
+              (!field[:max_occurs].nil? and field[:max_occurs] > 1))
         result = arrayize(result)
       end
       return result

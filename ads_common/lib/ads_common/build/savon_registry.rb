@@ -25,8 +25,6 @@ require 'rexml/document'
 
 module AdsCommon
   module Build
-    STANDARD_TYPES = ['long', 'boolean', 'int', 'string', 'double']
-
     # Contains the methods that extracts WSDL data.
     class SavonRegistry
       attr_reader :soap_exceptions
@@ -211,7 +209,8 @@ module AdsCommon
       # Simple converter for int values.
       def attribute_to_int(attribute)
         return nil if attribute.nil?
-        return attribute.value.eql?('unbounded') ? nil : attribute.value.to_i
+        return attribute.value.eql?('unbounded') ?
+            :unbounded : attribute.value.to_i
       end
 
       # Simple converter for boolean values.

@@ -64,7 +64,9 @@ module AdsCommon
         class <%= exception[:name] %> < <%= base_text  %>
           <% exception[:fields].each do |field| %>
           attr_reader :<%= field[:name] %>  # <%= field[:type] %>
-            <% array_fields << field[:name] if field[:max_occurs].nil? || (field[:max_occurs] > 1) %>
+            <% is_array_field = (field[:max_occurs].nil?) ? false :
+                   ((field[:max_occurs] == :unbounded) || (field[:max_occurs] > 1)) %>
+            <% array_fields << field[:name] if is_array_field %>
           <% end %>
           <% if !(array_fields.empty?) %>
           def initialize(exception_fault)
