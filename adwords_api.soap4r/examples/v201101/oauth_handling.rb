@@ -51,7 +51,7 @@ def oauth_handling()
     response = campaign_srv.get(selector)
   rescue AdsCommon::Errors::OAuthVerificationRequired => e
     if retry_count < MAX_RETRIES
-      puts "Hit Auth error, please navigate to URL:\n\t%s" % e.auth_url
+      puts "Hit Auth error, please navigate to URL:\n\t%s" % e.oauth_url
       print 'log in and type the verification code: '
       verification_code = gets.chomp
       adwords.credential_handler.set_credential(
