@@ -99,10 +99,13 @@ module AdsCommon
       field_type = (field_type_name.nil?) ? nil :
           get_service_registry.get_type_signature(field_type_name)
       if field_type and field_type[:base]
-        field_type[:fields] += implode_parent(field_type)
+        field_type[:fields] = implode_parent(field_type)
       end
       result = case arg
-        when Hash then validate_hash_arg(arg, parent, key, field_type)
+        when Hash
+          result = validate_hash_arg(arg, parent, key, field_type)
+          result[:order!] = generate_order_for_args(result, field_type[:fields])
+          result
         when Array then arg.map do |item|
            validate_arg(item, parent, key, field_type_name)
           end
@@ -110,6 +113,16 @@ module AdsCommon
         else arg
       end
       return result
+    end
+
+    # Generates order of XML elements for SOAP request. Takes into account
+    # possible namespace override. Returns only items existing in arg.
+    def generate_order_for_args(arg, fields)
+      all_keys = fields.inject([]) do |result, field|
+        key = field[:name]
+        result << key << prefix_key(key)
+      end
+      return all_keys & arg.keys
     end
 
     # Validates hash argument recursively. Keeps tracking of correct place
@@ -246,7 +259,7 @@ module AdsCommon
       sub_type = get_service_registry.get_type_signature(
           field_definition[:type])
       if sub_type
-        sub_type[:fields] += implode_parent(sub_type)
+        sub_type[:fields] = implode_parent(sub_type)
         if sub_type[:fields]
           # go recursive
           sub_type[:fields].each do |sub_type_field|
@@ -324,11 +337,11 @@ module AdsCommon
     # Returns all inherited fields of superclasses for given type.
     def implode_parent(data_type)
       result = []
-      if data_type and data_type[:base]
+      if data_type[:base]
         parent_type = get_service_registry.get_type_signature(data_type[:base])
-        result += parent_type[:fields] if parent_type[:fields]
-        result += implode_parent(parent_type) if parent_type[:base]
+        result += implode_parent(parent_type)
       end
+      result += data_type[:fields]
       return result
     end
 
