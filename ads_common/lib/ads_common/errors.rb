@@ -30,12 +30,20 @@ module AdsCommon
     # Raised if an attempt is made to authenticate with missing or wrong
     # information.
     class AuthError < Error
+      attr_reader :error
+      attr_reader :info
+      def initialize(message = self.class.to_s, error = nil, info = nil)
+        super(message)
+        @error = error
+        @info = info
+      end
     end
 
     # Raised when OAuth access token is required.
     class OAuthVerificationRequired < AuthError
       attr_reader :oauth_url
       def initialize(oauth_url)
+        super()
         @oauth_url = oauth_url
       end
     end
