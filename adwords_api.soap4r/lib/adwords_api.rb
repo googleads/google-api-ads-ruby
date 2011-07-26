@@ -227,7 +227,7 @@ module AdwordsApi
 
     # Overrides AdsCommon::Api.get_auth_handler to allow version-specific
     # handlers.
-    def get_auth_handler(environment, version)
+    def get_auth_handler(environment, version = nil)
       if @auth_handler.nil?
         @auth_handler = create_auth_handler(environment, version)
       end
