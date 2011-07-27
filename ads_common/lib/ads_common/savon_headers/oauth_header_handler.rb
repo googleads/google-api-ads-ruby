@@ -22,6 +22,7 @@
 require 'oauth'
 
 require 'ads_common/savon_headers/base_header_handler'
+require 'ads_common/savon_headers/httpi_request_proxy'
 
 module AdsCommon
   module SavonHeaders
@@ -60,7 +61,7 @@ module AdsCommon
         request_header = headers.inject({}) do |request_header, (header, value)|
           if header == :access_token
             request.headers['Authorization'] =
-                generate_oauth_parameters_string(value, soap.endpoint)
+                generate_oauth_parameters_string(request, value, soap.endpoint)
           else
             request_header[prepend_namespace(header)] = value
           end
@@ -72,16 +73,19 @@ module AdsCommon
       # Generates auth string for OAuth method of authentication.
       #
       # Args:
+      # - request: a HTTPI::Request to sign
       # - access_token: an initialized OAuth AccessToken
       # - url: request URL to generate auth string for
       #
       # Returns:
       # - Authentication string
       #
-      def generate_oauth_parameters_string(access_token, url)
-        consumer = @auth_handler.get_oauth_consumer()
-        request = consumer.create_signed_request(:post, url, access_token)
-        return request.get_fields('Authorization').first
+      def generate_oauth_parameters_string(request, access_token, url)
+        request.url = url
+        oauth_params = {:consumer => @auth_handler.get_oauth_consumer(),
+                        :token => access_token}
+        oauth_helper = OAuth::Client::Helper.new(request, oauth_params)
+        return oauth_helper.header
       end
     end
   end
