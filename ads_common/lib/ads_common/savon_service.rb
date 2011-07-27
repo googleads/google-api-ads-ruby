@@ -176,8 +176,7 @@ module AdsCommon
     def add_attribute(node, key, name, value)
       node[:attributes!] ||= {}
       node[:attributes!][key] ||= {}
-      node[:attributes!][key][name] ||= []
-      node[:attributes!][key][name] << value
+      node[:attributes!][key][name] = value
     end
 
     # Prefixes default namespace.
