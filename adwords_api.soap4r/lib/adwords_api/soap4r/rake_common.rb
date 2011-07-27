@@ -20,21 +20,23 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Common Rake tasks for Ads client libraries.
+# Common Rake tasks for Soap4r-based AdWords client library.
 
-require 'fileutils'
-require 'logger'
 require 'rubygems'
 gem 'rake'
+gem 'soap4r', '=1.5.8'
+require 'fileutils'
+require 'logger'
 require 'rake/gempackagetask'
 require 'rake/rdoctask'
 require 'rake/clean'
 require 'rake/testtask'
-gem 'soap4r', '=1.5.8'
 require 'wsdl/soap/wsdl2ruby'
 require 'xsd/codegen/classdef'
-require 'ads_common/soap4r_patches'
+
 require 'ads_common/http'
+
+require 'adwords_api/soap4r/soap4r_patches'
 
 $API_CONFIG = $MODULE::ApiConfig
 

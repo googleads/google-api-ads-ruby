@@ -21,22 +21,24 @@
 
 require 'logger'
 
-module AdsCommon
-  class Soap4rLogger
-    # Constructor for Soap4rLogger.
-    #
-    # Args:
-    # - logger: a ruby logger to log to.
-    # - log_level: default log_level for streams, defaults to INFO.
-    #
-    def initialize(logger, log_level = Logger::INFO)
-      @logger = logger
-      @log_level = log_level
-    end
+module AdwordsApi
+  module Soap4r
+    class Soap4rLogger
+      # Constructor for Soap4rLogger.
+      #
+      # Args:
+      # - logger: a ruby logger to log to
+      # - log_level: default log_level for streams, defaults to INFO
+      #
+      def initialize(logger, log_level = Logger::INFO)
+        @logger = logger
+        @log_level = log_level
+      end
 
-    # Overload << operator to perform logging.
-    def << (text)
-      @logger.add(@log_level) {text.to_s}
+      # Overload << operator to perform logging.
+      def << (text)
+        @logger.add(@log_level) {text.to_s}
+      end
     end
   end
 end

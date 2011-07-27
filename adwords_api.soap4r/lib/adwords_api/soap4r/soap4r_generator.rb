@@ -17,11 +17,11 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Generates the wrappers for API services. Only used during the
+# Generates the wrappers for AdWords API services. Only used during the
 # 'rake generate' step of library setup.
 
-module AdsCommon
-  module Build
+module AdwordsApi
+  module Soap4r
 
     # Contains the methods that handle wrapper code generation.
     module Soap4rGenerator
@@ -562,4 +562,3 @@ module AdsCommon
     end
   end
 end
-

@@ -25,19 +25,19 @@ gem 'soap4r', '=1.5.8'
 gem 'google-ads-common', '~>0.5.0'
 require 'thread'
 require 'uri'
-require 'ads_common/soap4r_patches'
 require 'ads_common/api'
 require 'ads_common/auth/client_login_handler'
-require 'ads_common/soap4r_logger'
 require 'adwords_api/auth/v13_login_handler'
 require 'adwords_api/errors'
 require 'adwords_api/api_config'
 require 'adwords_api/extensions'
-require 'adwords_api/soap4r_response_handler'
 require 'adwords_api/credential_handler'
-require 'adwords_api/utils'
 require 'adwords_api/nested_header_handler'
 require 'adwords_api/single_header_handler'
+require 'adwords_api/soap4r/soap4r_logger'
+require 'adwords_api/soap4r/soap4r_patches'
+require 'adwords_api/soap4r/soap4r_response_handler'
+require 'adwords_api/utils'
 
 # Main namespace for all the client library's modules and classes.
 module AdwordsApi
@@ -54,11 +54,6 @@ module AdwordsApi
     # Number of units spent in total, via this API object
     attr_accessor :total_units
 
-    # Accessor for client login handler, so that we can access the token.
-    attr_accessor :client_login_handler
-
-    public
-
     # Getter for the API service configurations
     def api_config
       AdwordsApi::ApiConfig
@@ -67,7 +62,7 @@ module AdwordsApi
     # Auxiliary method to create a new Soap4rResponseHandler, of the type we
     # want to use for AdWords logging
     def create_callback_handler
-      AdwordsApi::Soap4rResponseHandler.new(self)
+      AdwordsApi::Soap4r::Soap4rResponseHandler.new(self)
     end
 
     # Retrieve single NestedHeaderHandler for v20xx and one SingleHeaderHandler
@@ -117,6 +112,28 @@ module AdwordsApi
       @total_units = 0
       @last_units = 0
       @mutex = Mutex.new
+    end
+
+    # Accessor for client login handler, so that we can access the token.
+    # This is a temporary solution for v13 and for v2009+ until full OAuth
+    # support is available.
+    def client_login_handler()
+      if @client_login_handler.nil?
+        auth_method_str = @config.read('authentication.method', 'ClientLogin')
+        auth_method = auth_method_str.to_s.upcase.to_sym
+        environment = @config.read('service.environment')
+        if auth_method == :CLIENTLOGIN
+          # We use client login, so we can reuse general AuthHandler.
+          @client_login_handler = get_auth_handler(environment, nil)
+        else
+          # We are using OAuth or something else and need to generate a handler.
+          auth_server = api_config.auth_server(environment)
+          @client_login_handler = AdsCommon::Auth::ClientLoginHandler.new(
+              @config, auth_server,
+              api_config.headers_config[:LOGIN_SERVICE_NAME])
+        end
+      end
+      return @client_login_handler
     end
 
     # Helper method to provide a simple way of doing an MCC-level operation
@@ -292,7 +309,8 @@ module AdwordsApi
       # Add response handler to this driver for API unit usage processing.
       driver.callbackhandler = create_callback_handler
       # Plug the wiredump to our XML logger.
-      driver.wiredump_dev = AdsCommon::Soap4rLogger.new(@logger, Logger::DEBUG)
+      driver.wiredump_dev =
+          AdwordsApi::Soap4r::Soap4rLogger.new(@logger, Logger::DEBUG)
       driver.options['protocol.http.ssl_config.verify_mode'] = nil
       proxy = config.read('connection.proxy')
       driver.options['protocol.http.proxy'] = proxy if proxy

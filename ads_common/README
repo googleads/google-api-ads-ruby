@@ -17,8 +17,7 @@ Install it using the gem install command.
    $ gem install --local google-ads-common-VERSION.gem
 
 The following gem libraries are required:
- - soap4r v1.5.8 (only for soap4r-based libraries);
- - savon v0.9.6 (for savon-enabled libraries);
+ - savon v0.9.6;
  - httpi v0.9.2 or greater;
  - httpclient v2.1.6 or greater.
 
@@ -32,8 +31,6 @@ The following gem libraries are required:
   - +build/+: Contains classes that handle code generation, packaging and other
     build-time tasks for client libraries (not for google-ads-common).
   - +savon_headers/+: Contains classes that handle header injection into savon
-    requests.
-  - +soap4r_headers/+: Contains classes that handle header injection into soap4r
     requests.
 - +test/+: Contains the unit tests for the library.
 
