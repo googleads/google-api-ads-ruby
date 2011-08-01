@@ -109,13 +109,10 @@ module AdsCommon
       return result
     end
 
-    # Generates order of XML elements for SOAP request. Takes into account
-    # possible namespace override. Returns only items existing in arg.
+    # Generates order of XML elements for SOAP request. Returns only items
+    # existing in arg.
     def generate_order_for_args(arg, fields)
-      all_keys = fields.inject([]) do |result, field|
-        key = field[:name]
-        result << key << prefix_key(key)
-      end
+      all_keys = fields.map {|field| field[:name]}
       return all_keys & arg.keys
     end
 
@@ -171,11 +168,23 @@ module AdsCommon
           end
           # In case of non-default namespace, the children should be in
           # overriden namespace but the node has to be in the default.
-          prefixed_key = (subtype and subtype[:ns]) ? prefix_key(k) : k
-          result[prefixed_key] = validate_arg(v, result, k, subtype_name)
+          # We also have to fix order! list if we alter the key name.
+          new_key = if (subtype and subtype[:ns])
+            prefixed_key = prefix_key(k)
+            replace_item!(arg[:order!], k, prefixed_key)
+            prefixed_key
+          else
+            k
+          end
+          result[new_key] = validate_arg(v, result, k, subtype_name)
         end
         result
       end
+    end
+
+    # Replaces an item in an array with a different one into the same position.
+    def replace_item!(data, old_item, new_item)
+      data.map! {|item| (item == old_item) ? new_item : item}
     end
 
     # Adds ":attributes!" record for Savon to specify xsi:type.
