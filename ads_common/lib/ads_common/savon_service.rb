@@ -96,16 +96,10 @@ module AdsCommon
     # Validates method argument. Runs recursively if hash or array encountered.
     # Also handles some types that need special conversions.
     def validate_arg(arg, parent = nil, key = nil, field_type_name = nil)
-      field_type = (field_type_name.nil?) ? nil :
-          get_service_registry.get_type_signature(field_type_name)
-      if field_type and field_type[:base]
-        field_type[:fields] = implode_parent(field_type)
-      end
+      field_type = get_full_type_signature(field_type_name)
       result = case arg
         when Hash
-          result = validate_hash_arg(arg, parent, key, field_type)
-          result[:order!] = generate_order_for_args(result, field_type[:fields])
-          result
+          validate_hash_arg(arg, parent, key, field_type)
         when Array then arg.map do |item|
            validate_arg(item, parent, key, field_type_name)
           end
@@ -128,8 +122,23 @@ module AdsCommon
     # Validates hash argument recursively. Keeps tracking of correct place
     # for xsi:type and adds is when required.
     def validate_hash_arg(arg, parent = nil, key = nil, field_type = nil)
+      # Non-default namespace should be used, overriding default.
+      if field_type and field_type.include?(:ns)
+        namespace = get_service_registry.get_namespace(field_type[:ns])
+        add_attribute(parent, prefix_key(key), 'xmlns', namespace)
+      end
+
+      # Handling custom xsi:type.
       xsi_type = arg.delete('xsi:type') || arg.delete(:xsi_type)
       if xsi_type
+        xsi_field_type = get_full_type_signature(xsi_type)
+        if xsi_field_type.nil?
+          raise AdsCommon::Errors::ApiException.new(
+              "Incorrect xsi:type specified: %s" % [xsi_type])
+        else
+          # TODO: make sure xsi_type is derived from field_type.
+          field_type = xsi_field_type
+        end
         if parent and key
           add_xsi_type(parent, key, xsi_type)
         else
@@ -138,20 +147,22 @@ module AdsCommon
                   [xsi_type, parent, key])
         end
       end
-      # Non-default namespace should be used, overriding default.
-      if field_type and field_type.include?(:ns)
-        namespace = get_service_registry.get_namespace(field_type[:ns])
-        add_attribute(parent, prefix_key(key), 'xmlns', namespace)
+
+      # Adding :order! key to keep correct order in SOAP elements.
+      if field_type and field_type.include?(:fields)
+        arg[:order!] =
+            generate_order_for_args(arg, field_type[:fields])
       end
+
+      # Processing each key-value pair.
       return arg.inject({}) do |result, (k, v)|
-        if (k == :attributes!)
+        if (k == :attributes! or k == :order!)
           result[k] = v
         else
           subfield = (field_type.nil?) ? nil :
               get_field_by_name(field_type[:fields], k)
           # Here we will give up if the field is unknown. For full validation
-          # we have to handle nil here and also take into consideration user-
-          # specified xsi:type.
+          # we have to handle nil here.
           subtype_name, subtype = if subfield and subfield.include?(:type)
             subtype_name = subfield[:type]
             subtype = (subtype_name.nil?) ? nil :
@@ -255,26 +266,22 @@ module AdsCommon
       output_data[field_sym] = normalize_type(output_data[field_sym],
           field_definition)
 
-      sub_type = get_service_registry.get_type_signature(
-          field_definition[:type])
-      if sub_type
-        sub_type[:fields] = implode_parent(sub_type)
-        if sub_type[:fields]
-          # go recursive
-          sub_type[:fields].each do |sub_type_field|
-            if output_data[field_sym].is_a?(Array)
-              items_list = output_data[field_sym]
-              output_data[field_sym] = []
-              items_list.each do |item|
-                output_data[field_sym] <<
-                    normalize_output_field(item, sub_type_field,
-                                           sub_type_field[:name])
-              end
-            else
-              output_data[field_sym] =
-                  normalize_output_field(output_data[field_sym], sub_type_field,
+      sub_type = get_full_type_signature(field_definition[:type])
+      if sub_type and sub_type[:fields]
+        # go recursive
+        sub_type[:fields].each do |sub_type_field|
+          if output_data[field_sym].is_a?(Array)
+            items_list = output_data[field_sym]
+            output_data[field_sym] = []
+            items_list.each do |item|
+              output_data[field_sym] <<
+                  normalize_output_field(item, sub_type_field,
                                          sub_type_field[:name])
             end
+          else
+            output_data[field_sym] =
+                normalize_output_field(output_data[field_sym], sub_type_field,
+                                       sub_type_field[:name])
           end
         end
       end
@@ -347,6 +354,16 @@ module AdsCommon
     # Returns copy of object and its sub-objects ("deep" copy).
     def deep_copy(data)
       return Marshal.load(Marshal.dump(data))
+    end
+
+    # Returns type signature with all inherited fields.
+    def get_full_type_signature(type_name)
+      result = (type_name.nil?) ? nil :
+          get_service_registry.get_type_signature(type_name)
+      if result and result[:base]
+        result[:fields] = implode_parent(result)
+      end
+      return result
     end
   end
 end
