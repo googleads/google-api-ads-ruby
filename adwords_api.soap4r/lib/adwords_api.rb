@@ -73,12 +73,12 @@ module AdwordsApi
     #   handle authentication
     # - header_list: the list of headers to be handled
     # - version: intended API version
-    # - wrapper: wrapper object for the service being handled
+    # - namespace: namespace to use as default for body
     #
     # Returns:
     # - a list of SOAP header handlers; one per provided header
     #
-    def soap_header_handlers(auth_handler, header_list, version, wrapper)
+    def soap_header_handlers(auth_handler, header_list, version, namespace)
       if version == :v13
         header_handlers = header_list.map do |header|
           AdwordsApi::SingleHeaderHandler.new(@credential_handler, auth_handler,
@@ -92,10 +92,9 @@ module AdwordsApi
           when :CLIENTLOGIN
             ns = api_config.headers_config[:HEADER_NAMESPACE_PREAMBLE] +
                 version.to_s
-            top_ns = wrapper.namespace
             [AdwordsApi::NestedHeaderHandler.new(@credential_handler,
                 auth_handler, api_config.headers_config[:REQUEST_HEADER],
-                top_ns, ns, version)]
+                namespace, ns, version)]
           when :OAUTH
             raise NotImplementedError, 'OAuth authentication method is not ' +
                 'supported for Soap4r backend.'
@@ -300,7 +299,7 @@ module AdwordsApi
           auth_handler.header_list(@credential_handler.credentials(version))
 
       soap_handlers = soap_header_handlers(auth_handler, header_list, version,
-          wrapper)
+          wrapper.namespace)
 
       soap_handlers.each do |handler|
         driver.headerhandler << handler

@@ -30,6 +30,7 @@ require 'ads_common/savon_headers/simple_header_handler'
 require 'dfp_api/api_config'
 require 'dfp_api/client_login_header_handler'
 require 'dfp_api/credential_handler'
+require 'dfp_api/errors'
 
 # Main namespace for all the client library's modules and classes.
 module DfpApi
@@ -62,7 +63,7 @@ module DfpApi
     private
 
     # Retrieve DFP HeaderHandlers per credential.
-    def soap_header_handlers(auth_handler, header_list, version)
+    def soap_header_handlers(auth_handler, header_list, version, namespace)
       handler = nil
       auth_method = @config.read('authentication.method',
           'ClientLogin').to_s.upcase.to_sym

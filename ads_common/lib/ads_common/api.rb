@@ -176,12 +176,13 @@ module AdsCommon
     #
     # Args:
     # - environment: the current working environment (production, sandbox, etc.)
+    # - version: intended API version, must be a symbol, optional
     #
     # Returns:
     # - auth handler
     #
-    def get_auth_handler(environment)
-      @auth_handler = create_auth_handler(environment) if @auth_handler.nil?
+    def get_auth_handler(environment, version = nil)
+      @auth_handler ||= create_auth_handler(environment, version)
       return @auth_handler
     end
 
@@ -189,11 +190,12 @@ module AdsCommon
     #
     # Args:
     # - environment: the current working environment (production, sandbox, etc.)
+    # - version: intended API version, must be a symbol, optional
     #
     # Returns:
     # - auth handler
     #
-    def create_auth_handler(environment)
+    def create_auth_handler(environment, version = nil)
       auth_method_str = @config.read('authentication.method', 'ClientLogin')
       auth_method = auth_method_str.to_s.upcase.to_sym
       return case auth_method
