@@ -210,18 +210,36 @@ module AdsCommon
         end
     end
 
-    # Handle loading of a single service wrapper. Needs to be implemented on
-    # specific API level.
+    # Handle loading of a single service.
+    # Creates the driver, sets up handlers, declares the appropriate wrapper
+    # class and creates an instance of it.
     #
     # Args:
-    # - version: intended API version. Must be a symbol.
-    # - service: name for the intended service. Must be a symbol.
+    # - version: intended API version, must be a symbol
+    # - service: name for the intended service
     #
     # Returns:
-    # - a wrapper generated for the service.
+    # - a simplified wrapper generated for the driver
     #
     def prepare_wrapper(version, service)
-      raise NotImplementedError, 'prepare_wrapper not overriden.'
+      environment = config.read('service.environment')
+      api_config.do_require(version, service)
+      endpoint = api_config.endpoint(environment, version, service)
+      interface_class_name = api_config.interface_name(version, service)
+      endpoint_url = endpoint.nil? ? nil : endpoint + service.to_s
+      wrapper = class_for_path(interface_class_name).new(self, endpoint_url)
+
+      auth_handler = get_auth_handler(environment, version)
+      header_list =
+          auth_handler.header_list(@credential_handler.credentials(version))
+
+      soap_handlers = soap_header_handlers(auth_handler, header_list,
+                                           version, wrapper.namespace)
+      soap_handlers.each do |handler|
+        wrapper.headerhandler << handler
+      end
+
+      return wrapper
     end
 
     # Auxiliary method to create a default Logger.
@@ -258,6 +276,13 @@ module AdsCommon
         end
       end
       return result
+    end
+
+    # Converts complete class path into class object.
+    def class_for_path(path)
+      path.split('::').inject(Kernel) do |scope, const_name|
+        scope.const_get(const_name)
+      end
     end
   end
 end

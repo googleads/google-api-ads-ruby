@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 #
 # Authors:: api.sgomes@gmail.com (Sérgio Gomes)
+#           api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
@@ -19,9 +20,10 @@
 #
 # Contains the main classes for the client library.
 
-require 'rubygems'
 gem 'google-ads-common', '~>0.5.0'
-require 'thread'
+
+require 'savon'
+
 require 'ads_common/api'
 require 'ads_common/auth/oauth_handler'
 require 'ads_common/savon_headers/oauth_header_handler'
@@ -40,25 +42,24 @@ module AdwordsApi
   # Holds all the services, as well as login credentials.
   #
   class Api < AdsCommon::Api
-    # Mutex object for controlling concurrent access to API object data
-    attr_reader :mutex
-    # Number of units spent on the last operation via this API object
-    attr_accessor :last_units
-    # Number of units spent in total, via this API object
-    attr_accessor :total_units
+    # Constructor for API.
+    def initialize(provided_config = nil)
+      super(provided_config)
+      @credential_handler = AdwordsApi::CredentialHandler.new(@config)
+    end
 
     # Getter for the API service configurations
     def api_config
       AdwordsApi::ApiConfig
     end
 
-    # Constructor for API.
-    def initialize(provided_config = nil)
-      super(provided_config)
-      @credential_handler = AdwordsApi::CredentialHandler.new(@config)
-      @total_units = 0
-      @last_units = 0
-      @mutex = Mutex.new
+    # Sets the logger to use.
+    def logger=(logger)
+      super(logger)
+      Savon.configure do |config|
+        config.log_level = :debug
+        config.logger = logger
+      end
     end
 
     # Retrieve single NestedHeaderHandler for v20xx and one SingleHeaderHandler
@@ -257,45 +258,6 @@ module AdwordsApi
     def create_auth_handler(environment, version = nil)
       return (version == :v13) ?
           AdwordsApi::V13LoginHandler.new : super(environment)
-    end
-
-    # Handle loading of a single service.
-    # Creates the driver, sets up handlers and logger, declares the appropriate
-    # wrapper class and creates an instance of it.
-    #
-    # Args:
-    # - version: intended API version. Must be a symbol.
-    # - service: name for the intended service
-    #
-    # Returns:
-    # - the simplified wrapper generated for the driver
-    #
-    def prepare_wrapper(version, service)
-      environment = config.read('service.environment')
-      api_config.do_require(version, service)
-      endpoint = api_config.endpoint(environment, version, service)
-      interface_class_name = api_config.interface_name(version, service)
-      endpoint_url = endpoint.nil? ? nil : endpoint + service.to_s
-      wrapper = class_for_path(interface_class_name).new(self, endpoint_url)
-
-      auth_handler = get_auth_handler(environment, version)
-      header_list =
-          auth_handler.header_list(@credential_handler.credentials(version))
-
-      soap_handlers = soap_header_handlers(auth_handler, header_list,
-                                           version, wrapper.namespace)
-      soap_handlers.each do |handler|
-        wrapper.headerhandler << handler
-      end
-
-      return wrapper
-    end
-
-    # Converts complete class path into class object.
-    def class_for_path(path)
-      path.split('::').inject(Kernel) do |scope, const_name|
-        scope.const_get(const_name)
-      end
     end
   end
 end
