@@ -21,7 +21,7 @@
 # a very large baby boom and lack of creativity). To determine which users
 # exist, run get_all_users.rb.
 #
-# Tags: UserService.updateUsers
+# Tags: UserService.getUsersByStatement, UserService.updateUsers
 
 require 'rubygems'
 require 'dfp_api'

@@ -53,17 +53,14 @@ def create_creatives()
   image_data_base64 = Base64.encode64(image_data)
 
   # Create an array to store local creative objects.
-  creatives = []
-  ITEM_COUNT.times do |index|
-    creatives << {
-        :xsi_type => 'ImageCreative',
-        :name => "Image creative #%d" % index,
-        :advertiser_id => advertiser_id,
-        :destination_url => 'http://www.google.com',
-        :image_name => 'image.jpg',
-        :size => {:width => 300, :height => 250, :is_aspect_ratio => false},
-        :image_byte_array => image_data_base64
-    }
+  creatives = (1..ITEM_COUNT).map do |index|
+    {:xsi_type => 'ImageCreative',
+     :name => "Image creative #%d" % index,
+     :advertiser_id => advertiser_id,
+     :destination_url => 'http://www.google.com',
+     :image_name => 'image.jpg',
+     :size => {:width => 300, :height => 250, :is_aspect_ratio => false},
+     :image_byte_array => image_data_base64}
   end
 
   # Create the creatives on the server.

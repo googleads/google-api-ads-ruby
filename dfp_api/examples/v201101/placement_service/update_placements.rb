@@ -20,7 +20,8 @@
 # This example updates all placements to allow for AdSense targeting up to the
 # first 500. To determine which placements exist, run get_all_placements.rb.
 #
-# Tags: PlacementService.updatePlacements
+# Tags: PlacementService.getPlacementsByStatement,
+#       PlacementService.updatePlacements
 
 require 'rubygems'
 require 'dfp_api'

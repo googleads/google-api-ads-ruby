@@ -21,7 +21,7 @@
 # the first 500. To determine which line items exist, run get_all_line_items.rb.
 # To determine which order exist, run get_all_orders.rb.
 #
-# Tags: LineItemService.updateLineItems
+# Tags: LineItemService.getLineItemsByStatement, LineItemService.updateLineItems
 
 require 'rubygems'
 require 'dfp_api'

@@ -20,7 +20,7 @@
 # This example updates the notes of each order up to the first 500.
 # To determine which orders exist, run get_all_orders.rb.
 #
-# Tags: OrderService.updateOrders
+# Tags: OrderService.getOrdersByStatement, OrderService.updateOrders
 
 require 'rubygems'
 require 'dfp_api'

@@ -18,7 +18,7 @@
 #           limitations under the License.
 #
 # This example creates new companies. To determine which companies exist, run
-# get_all_companies.java.
+# get_all_companies.rb.
 
 # Tags: CompanyService.createCompanies
 
@@ -41,9 +41,8 @@ def create_companies()
   company_service = dfp.service(:CompanyService, API_VERSION)
 
   # Create an array to store local company objects.
-  companies = []
-  ITEM_COUNT.times do |index|
-    companies << {:name => "Advertiser #%d" % index, :type => 'ADVERTISER'}
+  companies = (1..ITEM_COUNT).map do |index|
+    {:name => "Advertiser #%d" % index, :type => 'ADVERTISER'}
   end
 
   # Create the companies on the server.

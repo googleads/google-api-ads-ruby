@@ -21,7 +21,7 @@
 # determine which ad units exist, run get_all_ad_units.rb or
 # get_inventory_tree.rb.
 #
-# Tags: InventoryService.updateAdUnits
+# Tags: InventoryService.getAdUnitsByStatement, InventoryService.updateAdUnits
 
 require 'rubygems'
 require 'dfp_api'

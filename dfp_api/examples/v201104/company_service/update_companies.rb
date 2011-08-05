@@ -19,9 +19,9 @@
 #
 # This example updates the names of all companies that are advertisers by
 # appending "LLC." up to the first 500. To determine which companies exist, run
-# get_all_companies.rb
+# get_all_companies.rb.
 #
-# Tags: CompanyService.updateCompanies
+# Tags: CompanyService.getCompaniesByStatement, CompanyService.updateCompanies
 
 require 'rubygems'
 require 'dfp_api'

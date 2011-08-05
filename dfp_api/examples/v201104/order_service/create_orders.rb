@@ -49,12 +49,11 @@ def create_orders()
   trafficker_id = 'INSERT_TRAFFICKER_ID_HERE'.to_i
 
   # Create an array to store local order objects.
-  orders = []
-  ITEM_COUNT.times do |index|
-    orders << {:name => "Order #%d" % index,
-               :advertiser_id => advertiser_id,
-               :salesperson_id => salesperson_id,
-               :trafficker_id => trafficker_id}
+  orders = (1..ITEM_COUNT).map do |index|
+    {:name => "Order #%d" % index,
+     :advertiser_id => advertiser_id,
+     :salesperson_id => salesperson_id,
+     :trafficker_id => trafficker_id}
   end
 
   # Create the orders on the server.

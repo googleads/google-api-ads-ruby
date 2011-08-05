@@ -51,16 +51,13 @@ def create_ad_units()
   puts "Using effective root ad unit: %d" % effective_root_ad_unit_id
 
   # Create an array to store local ad unit objects.
-  ad_units = []
-  ITEM_COUNT.times do |index|
-    ad_units << {
-        :name => "Ad_Unit_%d" % index,
-        :parent_id => effective_root_ad_unit_id,
-        :description => 'Ad unit description.',
-        :target_window => 'BLANK',
-        # Set the size of possible creatives that can match this ad unit.
-        :sizes => [{:width => 300, :height => 250, :is_aspect_ratio => false}]
-    }
+  ad_units = (1..ITEM_COUNT).map do |index|
+    {:name => "Ad_Unit_%d" % index,
+     :parent_id => effective_root_ad_unit_id,
+     :description => 'Ad unit description.',
+     :target_window => 'BLANK',
+     # Set the size of possible creatives that can match this ad unit.
+     :sizes => [{:width => 300, :height => 250, :is_aspect_ratio => false}]}
   end
 
   # Create the ad units on the server.

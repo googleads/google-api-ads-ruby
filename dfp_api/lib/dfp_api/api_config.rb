@@ -20,8 +20,9 @@
 # Helper methods for loading and managing the available services in the DFP
 # API.
 
-require 'ads_common/api_config'
 require 'savon'
+
+require 'ads_common/api_config'
 
 module DfpApi
 
@@ -33,14 +34,14 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201104
+    DEFAULT_VERSION = :v201107
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201104
+    LATEST_VERSION = :v201107
 
     # Set other constants
     API_NAME = 'DfpApi'
     API_PATH = 'dfp_api'
-    CLIENT_LIB_VERSION = '0.2.2'
+    CLIENT_LIB_VERSION = '0.2.3'
     DEFAULT_CONFIG_FILENAME = 'dfp_api.yml'
 
     # Configure the services available to each version
@@ -59,7 +60,13 @@ module DfpApi
                    :InventoryService, :LineItemCreativeAssociationService,
                    :LineItemService, :NetworkService, :OrderService,
                    :PlacementService, :ReportService, :UserService,
-                   :CustomTargetingService, :PublisherQueryLanguageService]
+                   :CustomTargetingService, :PublisherQueryLanguageService],
+      :v201107 => [:CompanyService, :CreativeService, :ForecastService,
+                   :InventoryService, :LineItemCreativeAssociationService,
+                   :LineItemService, :NetworkService, :OrderService,
+                   :PlacementService, :ReportService, :UserService,
+                   :CustomTargetingService, :PublisherQueryLanguageService,
+                   :LabelService]
     }
 
     # Configure the different environments, with the base URL for each one
@@ -68,13 +75,15 @@ module DfpApi
         :oauth_scope => 'https://www.google.com/apis/ads/publisher/',
         :v201101 => 'https://www.google.com/apis/ads/publisher/',
         :v201103 => 'https://www.google.com/apis/ads/publisher/',
-        :v201104 => 'https://www.google.com/apis/ads/publisher/'
+        :v201104 => 'https://www.google.com/apis/ads/publisher/',
+        :v201107 => 'https://www.google.com/apis/ads/publisher/'
       },
       :SANDBOX => {
         :oauth_scope => 'https://sandbox.google.com/apis/ads/publisher/',
         :v201101 => 'https://sandbox.google.com/apis/ads/publisher/',
         :v201103 => 'https://sandbox.google.com/apis/ads/publisher/',
-        :v201104 => 'https://sandbox.google.com/apis/ads/publisher/'
+        :v201104 => 'https://sandbox.google.com/apis/ads/publisher/',
+        :v201107 => 'https://sandbox.google.com/apis/ads/publisher/'
       }
     }
 

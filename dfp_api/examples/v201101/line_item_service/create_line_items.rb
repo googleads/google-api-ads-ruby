@@ -72,8 +72,7 @@ def create_line_items()
                :inventory_targeting => inventory_targeting}
 
   # Create an array to store local line item objects.
-  line_items = []
-  ITEM_COUNT.times do |index|
+  line_items = (1..ITEM_COUNT).map do |index|
     line_item = {:name => "Line item #%d" % index,
                  :order_id => order_id,
                  :targeting => targeting,
@@ -102,7 +101,7 @@ def create_line_items()
     line_item[:units_bought] = 500000
     line_item[:unit_type] = 'IMPRESSIONS'
 
-    line_items << line_item
+    line_item
   end
 
   # Create the line items on the server.

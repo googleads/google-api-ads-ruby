@@ -19,7 +19,7 @@
 #
 # This example creates new placements for various ad unit sizes. To determine
 # which placements exist, run get_all_placements.rb.
-
+#
 # Tags: PlacementService.createPlacements,
 #       InventoryService.getAdUnitsByStatement
 
