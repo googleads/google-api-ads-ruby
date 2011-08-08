@@ -279,18 +279,15 @@ module AdsCommon
       if sub_type and sub_type[:fields]
         # go recursive
         sub_type[:fields].each do |sub_type_field|
-          if output_data[field_sym].is_a?(Array)
-            items_list = output_data[field_sym]
-            output_data[field_sym] = []
-            items_list.each do |item|
-              output_data[field_sym] <<
-                  normalize_output_field(item, sub_type_field,
-                                         sub_type_field[:name])
+          field_data = output_data[field_sym]
+          if field_data.is_a?(Array)
+            field_data.each do |item|
+              normalize_output_field(item, sub_type_field,
+                                     sub_type_field[:name])
             end
           else
-            output_data[field_sym] =
-                normalize_output_field(output_data[field_sym], sub_type_field,
-                                       sub_type_field[:name])
+            normalize_output_field(field_data, sub_type_field,
+                                   sub_type_field[:name])
           end
         end
       end
@@ -356,7 +353,11 @@ module AdsCommon
         parent_type = get_service_registry.get_type_signature(data_type[:base])
         result += implode_parent(parent_type)
       end
-      result += data_type[:fields]
+      data_type[:fields].each do |field|
+        # If the parent type includes a field with the same name, overwrite it.
+        result.reject! {|parent_field| parent_field[:name].eql?(field[:name])}
+        result << field
+      end
       return result
     end
 
