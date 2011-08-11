@@ -17,7 +17,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Generic Api class, to be inherited from and extended by specific APIs.
+# Generic API class, to be inherited from and extended by specific APIs.
 
 require 'logger'
 
@@ -41,24 +41,8 @@ module AdsCommon
 
     # Constructor for API.
     def initialize(provided_config = nil)
-      load_config(provided_config)
-      provided_logger = @config.read('library.logger')
-      self.logger = (provided_logger.nil?) ?
-          create_default_logger() : provided_logger
-
-      # Check for valid environment.
-      env_string = @config.read('service.environment')
-      environment = (env_string.nil?) ? api_config.default_environment :
-          env_string.to_s.upcase.to_sym
-      if api_config.environments.include?(environment)
-        @config.set('service.environment', environment)
-      else
-        raise AdsCommon::Errors::Error,
-            "Unknown or unspecified environment: \"%s\"" % env_string
-      end
-
-      # Service wrappers.
       @wrappers = {}
+      load_config(provided_config)
     end
 
     # Sets the logger to use.
@@ -87,14 +71,20 @@ module AdsCommon
 
       # Check if version exists.
       if !api_config.versions.include?(version)
-        raise AdsCommon::Errors::Error, "Unknown version '%s'." % version
+        raise AdsCommon::Errors::Error, "Unknown version '%s'" % version
       end
 
       # Check if the current environment supports the requested version.
       environment = @config.read('service.environment')
+
+      if !api_config.environments.include?(environment)
+        raise AdsCommon::Errors::Error,
+            "Unknown or unspecified environment: '%s'" % environment
+      end
+
       if !api_config.environment_has_version(environment, version)
         raise AdsCommon::Errors::Error,
-            "Environment '%s' does not support version '%s'." %
+            "Environment '%s' does not support version '%s'" %
             [environment, version]
       end
 
@@ -168,7 +158,7 @@ module AdsCommon
     # - a list of SOAP header handlers; one per provided header
     #
     def soap_header_handlers(auth_handler, header_list, version, wrapper)
-      raise NotImplementedError, 'soap_header_handlers not overriden.'
+      raise NotImplementedError, 'soap_header_handlers not overridden.'
     end
 
     # Auxiliary method to get an authentication handler. Creates a new one if
@@ -196,8 +186,7 @@ module AdsCommon
     # - auth handler
     #
     def create_auth_handler(environment, version = nil)
-      auth_method_str = @config.read('authentication.method', 'ClientLogin')
-      auth_method = auth_method_str.to_s.upcase.to_sym
+      auth_method = @config.read('authentication.method', :CLIENTLOGIN)
       return case auth_method
         when :CLIENTLOGIN
           auth_server = api_config.auth_server(environment)
@@ -208,7 +197,7 @@ module AdsCommon
           AdsCommon::Auth::OAuthHandler.new(config, scope)
         else
           raise AdsCommon::Errors::Error,
-              "Unknown authentication method '%s'." % auth_method_str
+              "Unknown authentication method '%s'" % auth_method
         end
     end
 
@@ -256,13 +245,33 @@ module AdsCommon
     def load_config(provided_config = nil)
       @config = (provided_config.nil?) ?
           AdsCommon::Config.new(
-              File.join(ENV['HOME'], default_config_filename)) :
+              File.join(ENV['HOME'], api_config.default_config_filename)) :
           AdsCommon::Config.new(provided_config)
+      init_config()
     end
 
-    # Gets the default config filename.
-    def default_config_filename()
-      return api_config.default_config_filename
+    # Initializes config with default values and converts existing if required.
+    def init_config()
+      # Set up logger.
+      provided_logger = @config.read('library.logger')
+      self.logger = (provided_logger.nil?) ?
+          create_default_logger() : provided_logger
+
+      # Validating most important parameters.
+      ['service.environment', 'authentication.method'].each do |parameter|
+        symbolize_config_value(parameter)
+      end
+    end
+
+    # Converts value of a config key to uppercase symbol.
+    def symbolize_config_value(key)
+      value_str = @config.read(key).to_s
+      if !value_str.nil? and !value_str.empty?
+        value = value_str.upcase.to_sym
+        @config.set(key, value)
+      else
+        @logger.warn("Empty value for required parameter: '%s'" % key)
+      end
     end
 
     # Converts log level string (from config) to Logger value.

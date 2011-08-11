@@ -60,7 +60,7 @@ def add_keywords_performance_report_definition()
           :max => end_date
         }
       },
-      :report_name => 'Keywords performance report #%s' %
+      :report_name => "Keywords performance report #%d" %
           (Time.new.to_f * 1000).to_i,
       :report_type => 'KEYWORDS_PERFORMANCE_REPORT',
       :date_range_type => 'CUSTOM_DATE',
@@ -72,7 +72,7 @@ def add_keywords_performance_report_definition()
   response = report_def_srv.mutate([operation])
   if response
     response.each do |report_definition|
-      puts 'Report definition with name \'%s\' and id \'%s\' was added' %
+      puts "Report definition with name '%s' and ID %d was added." %
           [report_definition[:report_name], report_definition[:id]]
     end
   end

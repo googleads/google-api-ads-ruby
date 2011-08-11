@@ -45,7 +45,7 @@ def add_conversion()
       # being created. It's only necessary when you must provide an explicit
       # type that the client library can't infer.
       :xsi_type => 'AdWordsConversionTracker',
-      :name => 'Earth to Mars Cruises Conversion #%s' %
+      :name => "Earth to Mars Cruises Conversion #%d" %
           (Time.new.to_f * 1000).to_i,
       :category => 'DEFAULT',
       :markup_language => 'HTML',
@@ -58,9 +58,9 @@ def add_conversion()
   response = conv_tracker_srv.mutate([operation])
   if response and response[:value]
     conversion = response[:value].first
-    puts "Conversion with id #{conversion[:id]}, name " +
-        "\"#{conversion[:name]}\", status \"#{conversion[:status]}\" and " +
-        " category \"#{conversion[:category]}\" was added."
+    puts "Conversion with ID #{conversion[:id]}, name " +
+        "'#{conversion[:name]}', status '#{conversion[:status]}' and " +
+        " category '#{conversion[:category]}' was added."
   else
     puts 'No conversions were added.'
   end

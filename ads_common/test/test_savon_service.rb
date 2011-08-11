@@ -186,17 +186,22 @@ class TestSavonService < Test::Unit::TestCase
     result1 = @some_service.private_normalize_type('42',
         {:type => 'double', :min_occurs => '0', :max_occurs => 1})
     assert_kind_of(Float, result1)
-    assert_equal(42.0, result1, 'Float expected for max_occurs 1')
+    assert_equal(42.0, result1, 'Float is expected for max_occurs 1')
 
     result2 = @some_service.private_normalize_type('42',
-        {:type => 'double', :min_occurs => '0', :max_occurs => nil})
+        {:type => 'double', :min_occurs => '0', :max_occurs => :unbounded})
     assert_instance_of(Array, result2)
-    assert_equal(42.0, result2[0], 'Array is expected for undefined max_occurs')
+    assert_equal(42.0, result2[0], 'Array is expected for unbounded max_occurs')
 
     result3 = @some_service.private_normalize_type('42',
         {:type => 'double', :min_occurs => '0', :max_occurs => 2})
     assert_instance_of(Array, result3)
     assert_equal(42.0, result3[0], 'Array is expected for max_occurs > 1')
+
+    result4 = @some_service.private_normalize_type('42',
+        {:type => 'double', :min_occurs => '0', :max_occurs => nil})
+    assert_instance_of(Float, result4)
+    assert_equal(42.0, result4, 'Float is expected for nil max_occurs')
   end
 
   def test_deep_copy_simple

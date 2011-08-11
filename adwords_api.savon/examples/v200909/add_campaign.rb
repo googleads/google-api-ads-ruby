@@ -41,7 +41,7 @@ def add_campaign()
   operation = {
     :operator => 'ADD',
     :operand => {
-      :name => 'Interplanetary Cruise #%s' % (Time.new.to_f * 1000).to_i,
+      :name => "Interplanetary Cruise #%d" % (Time.new.to_f * 1000).to_i,
       :status => 'PAUSED',
       :bidding_strategy => {
         # The 'xsi_type' field allows you to specify the xsi:type of the object
@@ -63,7 +63,7 @@ def add_campaign()
   response = campaign_srv.mutate([operation])
   if response and response[:value]
     campaign = response[:value].first
-    puts 'Campaign with name "%s" and id %d was added.' %
+    puts "Campaign with name '%s' and ID %d was added." %
         [campaign[:name], campaign[:id]]
   else
     puts 'No campaigns were added.'

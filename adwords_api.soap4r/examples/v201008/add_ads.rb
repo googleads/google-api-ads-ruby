@@ -79,7 +79,7 @@ def add_ads()
       :ad_group_id => ad_group_id,
       :ad => {
         :xsi_type => 'ImageAd',
-        :name => 'Cruise to mars image ad #%s' % (Time.new.to_f * 1000).to_i,
+        :name => "Cruise to mars image ad #%d" % (Time.new.to_f * 1000).to_i,
         :url => 'http://www.example.com',
         :display_url => 'www.example.com',
         :image => {
@@ -93,7 +93,7 @@ def add_ads()
   template_ad_operation = {
     :operator => 'ADD',
     :operand => {
-      :adGroupId => ad_group_id,
+      :ad_group_id => ad_group_id,
       :ad => {
         :xsi_type => 'TemplateAd',
         :template_id => 9,
@@ -101,7 +101,7 @@ def add_ads()
           :width => 300,
           :height => 250
         },
-        :name => 'Mars cruise video ad #%s' % (Time.new.to_f * 1000).to_i,
+        :name => "Mars cruise video ad #%d" % (Time.new.to_f * 1000).to_i,
         :display_url => 'www.example.com',
         :url => 'http://www.example.com',
         :template_elements => [{
@@ -145,11 +145,11 @@ def add_ads()
     ads = response[:value]
     puts "Added #{ads.length} ad(s) to ad group #{ad_group_id}."
     ads.each do |ad|
-      puts "  Ad id is #{ad[:ad][:id]}, type is #{ad[:ad][:xsi_type]} and " +
-          "status is \"#{ad[:status]}\"."
+      puts "  Ad ID is #{ad[:ad][:id]}, type is '#{ad[:ad][:xsi_type]}' and " +
+          "status is '#{ad[:status]}'."
     end
   else
-    puts "No ads were added."
+    puts 'No ads were added.'
   end
 end
 

@@ -45,7 +45,7 @@ def add_ad_group()
   operation = {
     :operator => 'ADD',
     :operand => {
-      :name => 'Earth to Mars Cruises #%s' % (Time.new.to_f * 1000).to_i,
+      :name => "Earth to Mars Cruises #%d" % (Time.new.to_f * 1000).to_i,
       :status => 'ENABLED',
       :campaign_id => campaign_id,
       :bids => {
@@ -65,7 +65,7 @@ def add_ad_group()
   # Add ad group.
   response = ad_group_srv.mutate([operation])
   ad_group = response[:value].first
-  puts 'Ad group id %d was successfully added.' % ad_group[:id]
+  puts "Ad group ID %d was successfully added." % ad_group[:id]
 end
 
 if __FILE__ == $0

@@ -41,7 +41,7 @@ def add_user_list()
   conv_tracker_srv = adwords.service(:ConversionTrackerService, API_VERSION)
 
   # Prepare for adding remarketing user list.
-  name = 'Mars cruise customers #%s' % (Time.new.to_f * 1000).to_i
+  name = "Mars cruise customers #%d" % (Time.new.to_f * 1000).to_i
   operation = {
     :operator => 'ADD',
     :operand => {
@@ -78,12 +78,12 @@ def add_user_list()
         conversions = conv_tracker_response[:entries]
       end
     end
-    puts 'User list with name "%s" and id %d was added.' %
+    puts "User list with name '%s' and ID %d was added." %
         [user_list[:name], user_list[:id]]
     # Display user list associated conversion code snippets.
     if conversions
       conversions.each do |conversion|
-        puts "Conversion type code snipped associated to the list:\n%s\n" %
+        puts "Conversion type code snipped associated to the list:\n\t\t%s\n" %
           conversion[:snippet]
       end
     end

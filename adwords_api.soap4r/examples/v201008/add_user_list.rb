@@ -39,7 +39,7 @@ def add_user_list()
   user_list_srv = adwords.service(:UserListService, API_VERSION)
 
   # Prepare for adding remarketing user list.
-  name = 'Mars cruise customers #%s' % (Time.new.to_f * 1000).to_i
+  name = "Mars cruise customers #%d" % (Time.new.to_f * 1000).to_i
   operation = {
     :operator => 'ADD',
     :operand => {
@@ -59,7 +59,7 @@ def add_user_list()
   response = user_list_srv.mutate([operation])
   if response and response[:value]
     user_list = response[:value].first
-    puts 'User list with name "%s" and id %d was added.' %
+    puts "User list with name '%s' and ID %d was added." %
         [user_list[:name], user_list[:id]]
   else
     puts 'No user lists were added.'

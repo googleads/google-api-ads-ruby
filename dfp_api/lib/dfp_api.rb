@@ -20,7 +20,7 @@
 # Contains the main classes for the client library. Takes care of all
 # dependencies.
 
-gem 'google-ads-common', '~>0.5.0'
+gem 'google-ads-common', '~>0.5.1'
 
 require 'savon'
 
@@ -65,8 +65,7 @@ module DfpApi
     # Retrieve DFP HeaderHandlers per credential.
     def soap_header_handlers(auth_handler, header_list, version, namespace)
       handler = nil
-      auth_method = @config.read('authentication.method',
-          'ClientLogin').to_s.upcase.to_sym
+      auth_method = @config.read('authentication.method', :CLIENTLOGIN)
       handler = case auth_method
         when :CLIENTLOGIN
           (version == :v201101) ?

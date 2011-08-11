@@ -29,8 +29,7 @@ module DfpApi
     def credentials(version = nil)
       validate_headers_for_server()
 
-      method = @credentials[:method].to_s.upcase.to_sym
-      result = case method
+      result = case @credentials[:method]
         when :CLIENTLOGIN
           {:email => @credentials[:email],
            :password => @credentials[:password],

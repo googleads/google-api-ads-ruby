@@ -2,7 +2,7 @@
 #
 # Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -54,10 +54,10 @@ module AdsCommon
       if property_path
         last_node = @config
         last_name = property_path.split('.').inject(nil) do |last_name, section|
-          last_node = last_node[last_name.to_sym] ||= {} unless last_name.nil?
-          section
+          last_node = last_node[last_name] ||= {} unless last_name.nil?
+          section.to_sym
         end
-        last_node[last_name.to_sym] = value
+        last_node[last_name] = value
       end
       return nil
     end
@@ -65,6 +65,21 @@ module AdsCommon
     # Writes an entire set of properties.
     def set_all(properties)
       @config = process_hash_keys(properties)
+      return nil
+    end
+
+    # Reads a configuration file into instance variable as a Ruby structure with
+    # the complete set of keys and values.
+    #
+    # Args:
+    # - filename: config file to be read (*String*)
+    #
+    # Raises:
+    # - <b>Errno::ENOENT</b> if the file does not exist.
+    #
+    def load(filename)
+      @config = YAML::load_file(filename)
+      return nil
     end
 
     private
@@ -88,20 +103,6 @@ module AdsCommon
             key = section.to_sym
             (node.is_a?(Hash) and node.include?(key)) ? node[key] : nil
           end
-    end
-
-    # Reads a configuration file into instance variable as a Ruby structure with
-    # the complete set of keys and values.
-    #
-    # Args:
-    # - filename: config file to be read (*String*)
-    #
-    # Raises:
-    # - <b>Errno::ENOENT</b> if the file does not exist.
-    #
-    def load(filename)
-      @config = YAML::load_file(filename)
-      return nil
     end
   end
 end

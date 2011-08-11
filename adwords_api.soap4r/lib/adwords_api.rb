@@ -22,7 +22,7 @@
 
 require 'rubygems'
 gem 'soap4r', '=1.5.8'
-gem 'google-ads-common', '~>0.5.0'
+gem 'google-ads-common', '~>0.5.1'
 require 'thread'
 require 'uri'
 require 'ads_common/api'
@@ -86,8 +86,7 @@ module AdwordsApi
         end
         return header_handlers
       else
-        auth_method = @config.read('authentication.method',
-            'ClientLogin').to_s.upcase.to_sym
+        auth_method = @config.read('authentication.method', :CLIENTLOGIN)
         handlers = case auth_method
           when :CLIENTLOGIN
             ns = api_config.headers_config[:HEADER_NAMESPACE_PREAMBLE] +
@@ -118,8 +117,7 @@ module AdwordsApi
     # support is available.
     def client_login_handler()
       if @client_login_handler.nil?
-        auth_method_str = @config.read('authentication.method', 'ClientLogin')
-        auth_method = auth_method_str.to_s.upcase.to_sym
+        auth_method = @config.read('authentication.method', :CLIENTLOGIN)
         environment = @config.read('service.environment')
         if auth_method == :CLIENTLOGIN
           # We use client login, so we can reuse general AuthHandler.

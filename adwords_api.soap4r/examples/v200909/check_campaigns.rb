@@ -46,7 +46,7 @@ def check_campaigns()
   operation = {
     :operator => 'ADD',
     :operand => {
-      :name => 'Interplanetary Cruise #%s' % (Time.new.to_f * 1000).to_i,
+      :name => "Interplanetary Cruise #%d" % (Time.new.to_f * 1000).to_i,
       :status => 'PAUSED',
       :bidding_strategy => {
         # The 'xsi_type' field allows you to specify the xsi:type of the object
@@ -81,7 +81,7 @@ def check_campaigns()
   operation = {
     :operator => 'ADD',
     :operand => {
-      :name => 'Interplanetary Cruise #%s' % (Time.new.to_f * 1000).to_i,
+      :name => "Interplanetary Cruise #%d" % (Time.new.to_f * 1000).to_i,
       :status => 'PAUSED',
       :bidding_strategy => nil,
       :budget => {

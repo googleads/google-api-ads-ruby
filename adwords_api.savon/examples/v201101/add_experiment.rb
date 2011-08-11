@@ -53,16 +53,16 @@ def add_experiment()
     :operator => 'ADD',
     :operand => {
       :campaign_id => campaign_id,
-      :name => 'Interplanetary Experiment #%s' % (Time.new.to_f * 1000).to_i,
+      :name => "Interplanetary Experiment #%d" % (Time.new.to_f * 1000).to_i,
       :query_percentage => 10,
-      :start_date_time => Time.now.strftime("%Y%m%d %H%M%S")
+      :start_date_time => Time.now.strftime('%Y%m%d %H%M%S')
     }
   }
 
   # Add experiment.
   response = experiment_srv.mutate([operation])
   experiment = response[:value].first
-  puts 'Experiment with name "%s" and id %d was added.' %
+  puts "Experiment with name '%s' and ID %d was added." %
       [experiment[:name], experiment[:id]]
 
   experiment_id = experiment[:id]
@@ -93,7 +93,7 @@ def add_experiment()
   # Update ad group.
   response = ad_group_srv.mutate([operation])
   ad_group = response[:value].first
-  puts 'Ad group id %d was updated for the experiment.' % ad_group[:id]
+  puts "Ad group ID %d was updated for the experiment." % ad_group[:id]
 
   # Setup ad group criterion for the experiment.
   ad_group_criterion = {
@@ -126,7 +126,7 @@ def add_experiment()
   # Update criterion.
   response = ad_group_criterion_srv.mutate([operation])
   criterion = response[:value].first
-  puts 'Criterion id %d was successfully updated for the experiment.' %
+  puts "Criterion ID %d was successfully updated for the experiment." %
       [criterion[:criterion][:id]]
 
 end

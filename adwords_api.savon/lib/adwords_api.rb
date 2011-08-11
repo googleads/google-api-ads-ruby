@@ -20,7 +20,7 @@
 #
 # Contains the main classes for the client library.
 
-gem 'google-ads-common', '~>0.5.0'
+gem 'google-ads-common', '~>0.5.1'
 
 require 'savon'
 
@@ -76,8 +76,7 @@ module AdwordsApi
     # - a list of SOAP header handlers; one per provided header
     #
     def soap_header_handlers(auth_handler, header_list, version, namespace)
-      auth_method = @config.read('authentication.method',
-          'ClientLogin').to_s.upcase.to_sym
+      auth_method = @config.read('authentication.method', :CLIENTLOGIN)
 
       handlers = []
 
@@ -113,8 +112,7 @@ module AdwordsApi
     # support is available.
     def client_login_handler()
       if @client_login_handler.nil?
-        auth_method_str = @config.read('authentication.method', 'ClientLogin')
-        auth_method = auth_method_str.to_s.upcase.to_sym
+        auth_method = @config.read('authentication.method', :CLIENTLOGIN)
         environment = @config.read('service.environment')
         if auth_method == :CLIENTLOGIN
           # We use client login, so we can reuse general AuthHandler.

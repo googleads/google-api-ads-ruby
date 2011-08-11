@@ -76,7 +76,7 @@ def add_ads()
       :ad_group_id => ad_group_id,
       :ad => {
         :xsi_type => 'ImageAd',
-        :name => 'Cruise to mars image ad #%s' % (Time.new.to_f * 1000).to_i,
+        :name => "Cruise to mars image ad #%d" % (Time.new.to_f * 1000).to_i,
         :url => 'http://www.example.com',
         :display_url => 'www.example.com',
         :image => {
@@ -96,7 +96,7 @@ def add_ads()
           "status is \"#{ad[:status]}\"."
     end
   else
-    puts "No ads were added."
+    puts 'No ads were added.'
   end
 end
 

@@ -43,8 +43,7 @@ module AdwordsApi
     # generation.
     def credentials(version = nil)
       validate_headers_for_server
-      method = @credentials[:method].to_s.upcase.to_sym
-      result = case method
+      result = case @credentials[:method]
         when :CLIENTLOGIN
           {:email => @credentials[:email],
            :password => @credentials[:password]}
@@ -87,10 +86,9 @@ module AdwordsApi
     # being used for production or vice-versa.
     #
     def validate_headers_for_server
-      method = @credentials[:method].to_s.upcase.to_sym
       token = @credentials[:developer_token]
       client_email = @credentials[:client_email]
-      (sandbox_token, sandbox_client) = case method
+      (sandbox_token, sandbox_client) = case @credentials[:method]
         when :CLIENTLOGIN
           email = @credentials[:email]
           [(token =~ /#{Regexp.escape(email)}\+\+[a-zA-Z]{3}/),
