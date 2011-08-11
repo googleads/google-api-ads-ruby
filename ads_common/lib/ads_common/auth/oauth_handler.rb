@@ -144,6 +144,8 @@ module AdsCommon
         validate_credentials(credentials)
         if @consumer.nil?
           oauth_config = OAUTH_CONFIG.merge({:scope => @scope})
+          proxy = @config.read('connection.proxy')
+          oauth_config[:proxy] = proxy if !proxy.nil?
           @consumer = OAuth::Consumer.new(credentials[:oauth_consumer_key],
               credentials[:oauth_consumer_secret], oauth_config)
         end

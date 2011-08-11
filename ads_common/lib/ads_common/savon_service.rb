@@ -36,26 +36,32 @@ module AdsCommon
       if self.class() == AdsCommon::SavonService
         raise NoMethodError, "Tried to instantiate an abstract class"
       end
-      @api = api
-      @version = version
-      @namespace = namespace
+      @api, @version, @namespace = api, version, namespace
       @headerhandler = []
-      @client = Savon::Client.new do |wsdl|
-        wsdl.namespace = namespace
-        wsdl.endpoint = endpoint
-      end
+      @client = create_savon_client(endpoint, namespace)
     end
 
     private
 
-    # Returns ServiceRegistry for the current service. Has to be overriden.
+    # Returns ServiceRegistry for the current service. Has to be overridden.
     def get_service_registry()
-      raise NoMethodError, "This methods needs to be overriden"
+      raise NoMethodError, 'This method needs to be overridden'
     end
 
-    # Returns Module for the current service. Has to be overriden.
+    # Returns Module for the current service. Has to be overridden.
     def get_module()
-      raise NoMethodError, "This methods needs to be overriden"
+      raise NoMethodError, 'This method needs to be overridden'
+    end
+
+    # Creates and sets up Savon client.
+    def create_savon_client(endpoint, namespace)
+      proxy = @api.config.read('connection.proxy')
+      client = Savon::Client.new do |wsdl, http|
+        wsdl.endpoint = endpoint
+        wsdl.namespace = namespace
+        http.proxy = proxy if !proxy.nil?
+      end
+      return client
     end
 
     # Executes SOAP action specified as a string with given arguments.
@@ -167,7 +173,7 @@ module AdsCommon
             [subtype_name, subtype]
           end
           # In case of non-default namespace, the children should be in
-          # overriden namespace but the node has to be in the default.
+          # overridden namespace but the node has to be in the default.
           # We also have to fix order! list if we alter the key name.
           new_key = if (subtype and subtype[:ns])
             prefixed_key = prefix_key(k)

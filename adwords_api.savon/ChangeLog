@@ -1,4 +1,6 @@
 0.4.1:
+  - Support for proxies.
+  - Require google-ads-common 0.5.1 or later from now on.
 
 0.4.0:
   - First experimental Savon-based release.

@@ -47,7 +47,7 @@ spec = Gem::Specification.new do |s|
   s.test_files = tests
   s.has_rdoc = true
   s.extra_rdoc_files = docs
-  s.add_dependency('google-ads-common', '~> 0.5.0')
+  s.add_dependency('google-ads-common', '~> 0.5.1')
   s.add_dependency('savon', '= 0.9.6')
 end
 

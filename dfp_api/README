@@ -174,8 +174,14 @@ to the Ruby Logger documentation.
 
 == What if I am behind an HTTP Proxy server?
 
-The Ruby Client Libraries does not support proxy servers in this version but it
-is planned for next releases.
+You can specify a proxy server to be used for all requests as part of
+configuration hash:
+
+   config[:connection] = {
+     :proxy => 'http://user:password@proxy_hostname:8080'
+   }
+
+or via configuration file (see example).
 
 
 = External dependencies:
@@ -183,7 +189,7 @@ is planned for next releases.
 External dependencies should be pulled automatically on gem install. Here is the
 list though:
 
-  - Google Ads Common library (google-ads-common-0.5.0);
+  - Google Ads Common library (google-ads-common-0.5.1);
   - Savon 'the heavy metal Ruby SOAP client' (savon-0.9.6).
 
 

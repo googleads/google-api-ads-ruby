@@ -27,9 +27,9 @@ Buyer client library examples. You need the AdWords library in order to use it
 which is installed automatically as a dependency.
 
 The following gem libraries are required:
-- savon v0.9.6
-- httpclient v2.1.2 or greater
-- google-ads-common v0.5.0 or later.
+  - savon v0.9.6
+  - httpclient v2.1.2 or greater
+  - google-ads-common v0.5.1 or later.
 
 
 == 2 - Using the client library:
@@ -82,7 +82,7 @@ See the code in the examples directory for working examples you can build from.
 *Note*: if your setup requires you to send connections through a proxy server,
 please set the appropriate options in the config file or config hash. E.g.:
    config[:connection] = {
-     :proxy => 'http://user:password@proxy_hostname:8080/path'
+     :proxy => 'http://user:password@proxy_hostname:8080'
    }
 
 

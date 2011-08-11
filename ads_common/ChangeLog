@@ -1,5 +1,6 @@
 0.5.1:
   - Major performance improvements.
+  - Support for proxies.
 
 0.5.0:
   - Now support Savon 0.9.6.

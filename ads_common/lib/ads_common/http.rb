@@ -62,7 +62,7 @@ module AdsCommon
     def self.prepare_request(config, url, headers = nil, data = nil)
       request = HTTPI::Request.new(url)
       proxy = config.read('connection.proxy', nil)
-      request.proxy = proxy if proxy
+      request.proxy = proxy if !proxy.nil?
       strict_ssl = config.nil? or
           !(config.read('connection.strict_ssl_verification') == 'false')
       request.auth.ssl.verify_mode = strict_ssl ? :peer : :none
