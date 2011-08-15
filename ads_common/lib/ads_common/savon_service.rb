@@ -259,7 +259,24 @@ module AdsCommon
       action = method[:output][:name].to_sym
       result = response.to_hash
       result = result[action] if result.include?(action)
-      return normalize_output(result, method)
+      result = normalize_output(result, method)
+      result[:header] = extract_header_data(response)
+      return result
+    end
+
+    # Extracts misc data from response header.
+    def extract_header_data(response)
+      header_type = get_full_type_signature(:SoapResponseHeader)
+      headers = response.header[:response_header].dup
+      result = headers.inject({}) do |result, (key, v)|
+        # Attributes start with '@' and are not included in type definition.
+        if !(key.to_s.start_with?('@'))
+          normalize_output_field(headers, header_type[:fields], key)
+          result[key] = headers[key]
+        end
+        result
+      end
+      return result
     end
 
     # Normalizes output starting with root node "rval".

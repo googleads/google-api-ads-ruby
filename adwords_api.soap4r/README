@@ -30,7 +30,7 @@ which is installed automatically as a dependency.
 The following gem libraries are required:
 - soap4r v1.5.8
 - httpclient v2.1.2 or greater
-- google-ads-common v0.5.0 or later.
+- google-ads-common v0.5.1 or later.
 
 
 == 2 - Using the client library:
@@ -76,7 +76,8 @@ Then, just specify which service you're looking to use, and which version:
 
 and you should now be able to just use the API methods in the object you were
 returned:
-   campaigns = campaign_srv.get({})    # Empty selector to get all
+   # Get 'Id', 'Name' and 'Status' fields of all campaigns.
+   campaigns = campaign_srv.get({:fields => ['Id', 'Name', 'Status']})
 
 See the code in the examples directory for working examples you can build from.
 

@@ -1,6 +1,8 @@
 0.4.1:
   - Support for proxies.
   - Require google-ads-common 0.5.1 or later from now on.
+  - Units spent count and other header information is now returned in response
+    as :header field.
 
 0.4.0:
   - First experimental Savon-based release.

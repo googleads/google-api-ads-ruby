@@ -75,7 +75,8 @@ Then, just specify which service you're looking to use, and which version:
 
 and you should now be able to just use the API methods in the object you were
 returned:
-   campaigns = campaign_srv.get({})    # Empty selector to get all
+   # Get 'Id', 'Name' and 'Status' fields of all campaigns.
+   campaigns = campaign_srv.get({:fields => ['Id', 'Name', 'Status']})
 
 See the code in the examples directory for working examples you can build from.
 
@@ -139,6 +140,17 @@ this, you should create a standard Logger object and pass it to the library:
 Request details and units spend are logged at the INFO log level, while raw HTTP
 headers and XML dumps are logged at the DEBUG log level. For more details on
 using Logger refer to the Ruby Logger documentation.
+
+=== 2.4 - Calculating unit spend:
+
+Each AdWords API operation performed consumes a certain number of API units, as
+specified in the rate sheet:
+  http://code.google.com/apis/adwords/docs/ratesheet.html
+
+The amount of units spent is returned in the header part of the SOAP response.
+This information is passed by the library as a ':header' subhash of the response
+hash:
+  units_spent = response[:header][:units]
 
 
 = Docs for Developers
