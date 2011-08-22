@@ -136,20 +136,14 @@ module AdwordsApi
     # - accepts a block, which it will execute as an MCC-level operation
     #
     # Returns:
-    # - Boolean indicating whether MCC-level operations are currently enabled or
-    # disabled
+    # - block execution result, if block given
+    # - boolean indicating whether MCC-level operations are currently
+    #   enabled or disabled, if no block provided
     #
-    def use_mcc
-      if block_given?
-        previous = @credential_handler.use_mcc
-        begin
-          @credential_handler.use_mcc = true
-          yield
-        ensure
-          @credential_handler.use_mcc = previous
-        end
-      end
-      return @credential_handler.use_mcc
+    def use_mcc(&block)
+      return (block_given?) ?
+        run_with_temporary_flag(:@use_mcc, true, block) :
+        @credential_handler.use_mcc
     end
 
     # Helper method to provide a simple way of doing an MCC-level operation
@@ -171,20 +165,14 @@ module AdwordsApi
     # - accepts a block, which it will execute as a validate-only operation
     #
     # Returns:
-    # - Boolean indicating whether validate-only operations are currently
-    #   enabled or disabled
+    # - block execution result, if block given
+    # - boolean indicating whether validate-only operations are currently
+    #   enabled or disabled, if no block provided
     #
-    def validate_only
-      if block_given?
-        previous = @credential_handler.validate_only
-        begin
-          @credential_handler.validate_only = true
-          yield
-        ensure
-          @credential_handler.validate_only = previous
-        end
-      end
-      return @credential_handler.validate_only
+    def validate_only(&block)
+      return (block_given?) ?
+        run_with_temporary_flag(:@validate_only, true, block) :
+        @credential_handler.validate_only
     end
 
     # Helper method to provide a simple way of performing validate-only
@@ -206,20 +194,14 @@ module AdwordsApi
     # - accepts a block, which it will execute as a partial failure operation
     #
     # Returns:
-    # - Boolean indicating whether partial failure operations are currently
-    # enabled or disabled
+    # - block execution result, if block given
+    # - boolean indicating whether partial failure operations are currently
+    # enabled or disabled, if no block provided
     #
-    def partial_failure
-      if block_given?
-        previous = @credential_handler.partial_failure
-        begin
-          @credential_handler.partial_failure = true
-          yield
-        ensure
-          @credential_handler.partial_failure = previous
-        end
-      end
-      return @credential_handler.partial_failure
+    def partial_failure(&block)
+      return (block_given?) ?
+        run_with_temporary_flag(:partial_failure, true, block) :
+        @credential_handler.partial_failure
     end
 
     # Helper method to provide a simple way of performing requests with support
@@ -256,6 +238,18 @@ module AdwordsApi
     def create_auth_handler(environment, version = nil)
       return (version == :v13) ?
           AdwordsApi::V13LoginHandler.new : super(environment)
+    end
+
+    # Executes block with a temporary flag set to a given value. Returns block
+    # result.
+    def run_with_temporary_flag(flag_name, flag_value, block)
+      previous = @credential_handler.instance_variable_get(flag_name)
+      @credential_handler.instance_variable_set(flag_name, flag_value)
+      begin
+        return block.call
+      ensure
+        @credential_handler.instance_variable_set(flag_name, previous)
+      end
     end
   end
 end
