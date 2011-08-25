@@ -260,7 +260,7 @@ module AdsCommon
       result = response.to_hash
       result = result[action] if result.include?(action)
       result = normalize_output(result, method)
-      result[:header] = extract_header_data(response)
+      result[:header] = extract_header_data(response) if result.kind_of?(Hash)
       return result
     end
 
@@ -295,8 +295,8 @@ module AdsCommon
       return nil if output_data.nil?
       field_definition = get_field_by_name(fields_list, field_name)
       field_sym = field_name.to_sym
-      output_data[field_sym] = normalize_type(output_data[field_sym],
-          field_definition)
+      field_data = normalize_type(output_data[field_sym], field_definition)
+      output_data[field_sym] = field_data if field_data
 
       sub_type = get_full_type_signature(field_definition[:type])
       if sub_type and sub_type[:fields]
