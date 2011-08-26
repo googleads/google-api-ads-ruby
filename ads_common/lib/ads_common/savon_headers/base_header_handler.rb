@@ -19,6 +19,8 @@
 #
 # Base class for handlers of SOAP headers.
 
+require 'savon'
+
 module AdsCommon
   module SavonHeaders
     class BaseHeaderHandler
@@ -62,7 +64,11 @@ module AdsCommon
         soap.body = args if args
         # Sets the default namespace for the body.
         soap.input[2] = {:xmlns => @namespace}
+        # Sets User-Agent in the HTTP header.
+        request.headers['User-Agent'] = generate_user_agent_string()
       end
+
+      private
 
       # Adds namespace to the given string.
       #
@@ -74,6 +80,17 @@ module AdsCommon
       #
       def prepend_namespace(str)
         return "%s:%s" % [DEFAULT_NAMESPACE, str]
+      end
+
+      # Generates User-Agent text for HTTP request.
+      def generate_user_agent_string()
+        credentials = @credential_handler.credentials
+        app_name = credentials[:user_agent]
+        # We don't know the library version here. A breaking change needs to be
+        # introduced. This is scheduled for 0.6.0, using Common version for now.
+        lib_version = '0.5.1'
+        soap_user_agent = "Common-Ruby-%s; %s" % [lib_version, app_name]
+        return "Savon/%s (%s)" % [Savon::Version, soap_user_agent]
       end
     end
   end

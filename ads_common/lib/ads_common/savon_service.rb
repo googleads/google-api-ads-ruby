@@ -19,6 +19,7 @@
 #
 # Base class for all generated API services based on Savon backend.
 
+require 'httpi'
 require 'savon'
 
 module AdsCommon
@@ -34,7 +35,7 @@ module AdsCommon
     # Creates a new service.
     def initialize(api, endpoint, namespace, version)
       if self.class() == AdsCommon::SavonService
-        raise NoMethodError, "Tried to instantiate an abstract class"
+        raise NoMethodError, 'Tried to instantiate an abstract class'
       end
       @api, @version, @namespace = api, version, namespace
       @headerhandler = []
@@ -42,6 +43,16 @@ module AdsCommon
     end
 
     private
+
+    # Sets the logger in Savon-specific way. Also sets it for HTTPI used by it.
+    def self.logger=(logger)
+      Savon.configure do |config|
+        config.log_level = :debug
+        config.logger = logger
+      end
+      HTTPI.logger = logger
+      HTTPI.log_level = :debug
+    end
 
     # Returns ServiceRegistry for the current service. Has to be overridden.
     def get_service_registry()
@@ -137,7 +148,7 @@ module AdsCommon
         xsi_field_type = get_full_type_signature(xsi_type)
         if xsi_field_type.nil?
           raise AdsCommon::Errors::ApiException.new(
-              "Incorrect xsi:type specified: %s" % [xsi_type])
+              "Incorrect xsi:type specified: '%s'" % [xsi_type])
         else
           # TODO: make sure xsi_type is derived from field_type.
           field_type = xsi_field_type

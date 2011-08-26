@@ -22,10 +22,9 @@
 
 gem 'google-ads-common', '~>0.5.1'
 
-require 'savon'
-
 require 'ads_common/api'
 require 'ads_common/auth/oauth_handler'
+require 'ads_common/savon_service'
 require 'ads_common/savon_headers/oauth_header_handler'
 require 'ads_common/savon_headers/simple_header_handler'
 require 'adwords_api/api_config'
@@ -56,10 +55,7 @@ module AdwordsApi
     # Sets the logger to use.
     def logger=(logger)
       super(logger)
-      Savon.configure do |config|
-        config.log_level = :debug
-        config.logger = logger
-      end
+      AdsCommon::SavonService.logger = logger
     end
 
     # Retrieve single NestedHeaderHandler for v20xx and one SingleHeaderHandler

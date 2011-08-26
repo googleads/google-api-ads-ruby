@@ -43,7 +43,7 @@ module DfpApi
            :oauth_callback => @credentials[:oauth_callback],
            :oauth_method => @credentials[:oauth_method]}
       end
-      client_lib = "Ruby-DfpApi-%s" % DfpApi::ApiConfig::CLIENT_LIB_VERSION
+      client_lib = "DfpApi-Ruby-%s" % DfpApi::ApiConfig::CLIENT_LIB_VERSION
       application_name = @credentials[:application_name] || $0
       result[:applicationName] = "%s|%s" % [client_lib, application_name]
       result[:networkCode] = @credentials[:network_code]
@@ -56,7 +56,7 @@ module DfpApi
     # environment.
     def validate_headers_for_server()
       if @credentials[:application_name].nil?
-        raise AdsCommon::Errors::AuthError, "Application name is not specified"
+        raise AdsCommon::Errors::AuthError, 'Application name is not specified'
       end
       return nil
     end

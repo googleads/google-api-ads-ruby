@@ -34,6 +34,8 @@ module AdsCommon
       #
       # <%= @generator_stamp %>
 
+      require '<%= @api_name.snakecase %>/errors'
+
       <%= @modules_open_string %>
 
         class <%= @service_name %>Registry

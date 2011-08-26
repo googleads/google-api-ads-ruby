@@ -22,12 +22,25 @@
 require 'rubygems'
 require 'test/unit'
 
+require 'ads_common/config'
 require 'ads_common/savon_service'
 
+# AdsCommon::Api is abstract, defining a stub class for the test.
+class StubApi
+  attr_accessor :config
+  def initialize()
+    @config = AdsCommon::Config.new
+  end
+  def self.get_instance()
+    @api ||= StubApi.new
+    return @api
+  end
+end
+
 # SavonService is abstract, defining a child class for the test.
-class SomeService < AdsCommon::SavonService
+class StubService < AdsCommon::SavonService
   def initialize(namespace, endpoint, version)
-    super(nil, namespace, endpoint, version)
+    super(StubApi.get_instance(), namespace, endpoint, version)
   end
   def private_get_service_registry()
     return get_service_registry
@@ -56,7 +69,7 @@ class TestSavonService < Test::Unit::TestCase
 
   # Initialize tests.
   def setup
-    @some_service = SomeService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
+    @stub_service = StubService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
   end
 
   def test_initialize_abstract
@@ -65,35 +78,35 @@ class TestSavonService < Test::Unit::TestCase
           TEST_VERSION)
     end
     assert_nothing_raised do
-      SomeService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
+      StubService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
     end
   end
 
   def test_get_service_registry_abstract
-    assert_raises(NoMethodError) { @some_service.private_get_service_registry }
+    assert_raises(NoMethodError) { @stub_service.private_get_service_registry }
   end
 
   def test_get_module_abstract
-    assert_raises(NoMethodError) { @some_service.private_get_module }
+    assert_raises(NoMethodError) { @stub_service.private_get_module }
   end
 
   def test_arrayize_empty
-    result1 = @some_service.private_arrayize(nil)
+    result1 = @stub_service.private_arrayize(nil)
     assert_instance_of(Array, result1, 'returned object is not an Array')
     assert_equal(0, result1.size, 'array is not empty')
 
-    result2 = @some_service.private_arrayize([])
+    result2 = @stub_service.private_arrayize([])
     assert_instance_of(Array, result2, 'returned object is not an Array')
     assert_equal(0, result2.size, 'array is not empty')
   end
 
   def test_arrayize_on_array
-    result1 = @some_service.private_arrayize([nil])
+    result1 = @stub_service.private_arrayize([nil])
     assert_instance_of(Array, result1, 'returned object is not an Array')
     assert_equal(1, result1.size, 'array changed size')
     assert_equal(nil, result1[0], 'array changed data')
 
-    result2 = @some_service.private_arrayize(['a', 'b'])
+    result2 = @stub_service.private_arrayize(['a', 'b'])
     assert_instance_of(Array, result2, 'returned object is not an Array')
     assert_equal(2, result2.size, 'array changed size')
     assert_equal('a', result2[0], 'array changed data')
@@ -101,124 +114,124 @@ class TestSavonService < Test::Unit::TestCase
   end
 
   def test_normalize_type_int
-    result1 = @some_service.private_normalize_type(5, {:type => 'int'})
+    result1 = @stub_service.private_normalize_type(5, {:type => 'int'})
     assert_kind_of(Integer, result1)
     assert_equal(5, result1, 'bad conversion')
 
-    result2 = @some_service.private_normalize_type(2147483648, {:type => 'int'})
+    result2 = @stub_service.private_normalize_type(2147483648, {:type => 'int'})
     assert_kind_of(Integer, result2)
     assert_equal(2147483648, result2, 'bad conversion')
   end
 
   def test_normalize_type_string
-    result1 = @some_service.private_normalize_type('foobar',
+    result1 = @stub_service.private_normalize_type('foobar',
         {:type => 'string'})
     assert_kind_of(String, result1)
     assert_equal('foobar', result1, 'bad conversion')
 
-    result2 = @some_service.private_normalize_type('', {:type => 'string'})
+    result2 = @stub_service.private_normalize_type('', {:type => 'string'})
     assert_kind_of(String, result2)
     assert_equal('', result2, 'bad conversion')
   end
 
   def test_normalize_type_long
-    result1 = @some_service.private_normalize_type(2147483648,
+    result1 = @stub_service.private_normalize_type(2147483648,
         {:type => 'long'})
     assert_kind_of(Integer, result1)
     assert_equal(2147483648, result1, 'bad conversion')
 
-    result2 = @some_service.private_normalize_type(-1, {:type => 'long'})
+    result2 = @stub_service.private_normalize_type(-1, {:type => 'long'})
     assert_kind_of(Integer, result2)
     assert_equal(-1, result2, 'bad conversion')
   end
 
   def test_normalize_type_boolean
-    result1 = @some_service.private_normalize_type(true, {:type => 'boolean'})
+    result1 = @stub_service.private_normalize_type(true, {:type => 'boolean'})
     assert_kind_of(TrueClass, result1)
 
-    result2 = @some_service.private_normalize_type(false, {:type => 'boolean'})
+    result2 = @stub_service.private_normalize_type(false, {:type => 'boolean'})
     assert_kind_of(FalseClass, result2)
 
-    result3 = @some_service.private_normalize_type('true', {:type => 'boolean'})
+    result3 = @stub_service.private_normalize_type('true', {:type => 'boolean'})
     assert_kind_of(TrueClass, result3)
 
-    result4 = @some_service.private_normalize_type('false',
+    result4 = @stub_service.private_normalize_type('false',
         {:type => 'boolean'})
     assert_kind_of(FalseClass, result4)
 
-    result5 = @some_service.private_normalize_type('True',
+    result5 = @stub_service.private_normalize_type('True',
         {:type => 'boolean'})
     assert_kind_of(TrueClass, result3)
 
-    result6 = @some_service.private_normalize_type('False',
+    result6 = @stub_service.private_normalize_type('False',
         {:type => 'boolean'})
     assert_kind_of(FalseClass, result4)
   end
 
   def test_normalize_type_object
-    result1 = @some_service.private_normalize_type({:a => 'b'},
-        {:type => 'SomeClass'})
+    result1 = @stub_service.private_normalize_type({:a => 'b'},
+        {:type => 'StubClass'})
     assert_equal('b', result1[:a], 'object corrupted')
 
-    result2 = @some_service.private_normalize_type(@some_service,
+    result2 = @stub_service.private_normalize_type(@stub_service,
         {:type => 'SavonService'})
-    assert_equal(@some_service.hash, result2.hash, 'object corrupted')
+    assert_equal(@stub_service.hash, result2.hash, 'object corrupted')
   end
 
   def test_normalize_type_double
-    result1 = @some_service.send(:private_normalize_type, 3.14,
+    result1 = @stub_service.send(:private_normalize_type, 3.14,
         {:type => 'double'})
     assert_kind_of(Float, result1)
     assert_equal(3.14, result1, 'bad conversion')
 
-    result2 = @some_service.send(:private_normalize_type, '-3.14',
+    result2 = @stub_service.send(:private_normalize_type, '-3.14',
         {:type => 'double'})
     assert_kind_of(Float, result2)
     assert_equal(-3.14, result2, 'bad conversion')
 
-    result3 = @some_service.send(:private_normalize_type, '42',
+    result3 = @stub_service.send(:private_normalize_type, '42',
         {:type => 'double'})
     assert_kind_of(Float, result3)
     assert_equal(42.0, result3, 'bad conversion')
   end
 
   def test_normalize_type_single_array_item
-    result1 = @some_service.private_normalize_type('42',
+    result1 = @stub_service.private_normalize_type('42',
         {:type => 'double', :min_occurs => '0', :max_occurs => 1})
     assert_kind_of(Float, result1)
     assert_equal(42.0, result1, 'Float is expected for max_occurs 1')
 
-    result2 = @some_service.private_normalize_type('42',
+    result2 = @stub_service.private_normalize_type('42',
         {:type => 'double', :min_occurs => '0', :max_occurs => :unbounded})
     assert_instance_of(Array, result2)
     assert_equal(42.0, result2[0], 'Array is expected for unbounded max_occurs')
 
-    result3 = @some_service.private_normalize_type('42',
+    result3 = @stub_service.private_normalize_type('42',
         {:type => 'double', :min_occurs => '0', :max_occurs => 2})
     assert_instance_of(Array, result3)
     assert_equal(42.0, result3[0], 'Array is expected for max_occurs > 1')
 
-    result4 = @some_service.private_normalize_type('42',
+    result4 = @stub_service.private_normalize_type('42',
         {:type => 'double', :min_occurs => '0', :max_occurs => nil})
     assert_instance_of(Float, result4)
     assert_equal(42.0, result4, 'Float is expected for nil max_occurs')
   end
 
   def test_deep_copy_simple
-    result1 = @some_service.private_deep_copy(42)
+    result1 = @stub_service.private_deep_copy(42)
     assert_equal(42, result1)
 
-    result2 = @some_service.private_deep_copy('Hello World')
+    result2 = @stub_service.private_deep_copy('Hello World')
     assert_equal('Hello World', result2)
 
-    result3 = @some_service.private_deep_copy(nil)
+    result3 = @stub_service.private_deep_copy(nil)
     assert_nil(result3)
 
-    result4 = @some_service.private_deep_copy([])
+    result4 = @stub_service.private_deep_copy([])
     assert_equal([], result4)
     assert_not_same([], result4)
 
-    result5 = @some_service.private_deep_copy({})
+    result5 = @stub_service.private_deep_copy({})
     assert_equal({}, result5)
     assert_not_same({}, result5)
   end
@@ -226,11 +239,11 @@ class TestSavonService < Test::Unit::TestCase
   def test_deep_copy_complex
     data = {:ab => 'ab', :cd => ['cd', 'de', 'ef']}
 
-    result1 = @some_service.private_deep_copy(data)
+    result1 = @stub_service.private_deep_copy(data)
     assert_equal(data, result1)
     assert_not_same(data, result1)
 
-    result2 = @some_service.private_deep_copy(data)
+    result2 = @stub_service.private_deep_copy(data)
     assert_equal(result2, result1)
     assert_not_same(result2, result1)
 

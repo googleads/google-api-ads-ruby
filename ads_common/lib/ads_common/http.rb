@@ -30,7 +30,7 @@ module AdsCommon
     # Performs a get on a URL, using all of the connection options in the
     # client library, returning a HTTPI::Response.
     def self.get_response(url, config = nil, headers = nil)
-      request = prepare_request(config, url, headers)
+      request = prepare_request(url, config, headers)
       response = HTTPI.get(request)
       return response
     end
@@ -44,7 +44,7 @@ module AdsCommon
     # Performs a post on a URL, using all of the connection options in the
     # client library, returning a HTTPI::Response.
     def self.post_response(url, data, config = nil, headers = nil)
-      request = prepare_request(config, url, headers, data)
+      request = prepare_request(url, config, headers, data)
       response = HTTPI.post(request)
       return response
     end
@@ -59,17 +59,22 @@ module AdsCommon
 
     # Returns a suitably configured request object for a given URL and options.
     # Defaulting to stricter :peer validation.
-    def self.prepare_request(config, url, headers = nil, data = nil)
+    def self.prepare_request(url, config = nil, headers = nil, data = nil)
       request = HTTPI::Request.new(url)
-      proxy = config.read('connection.proxy', nil)
-      request.proxy = proxy if !proxy.nil?
-      strict_ssl = config.nil? or
-          !(config.read('connection.strict_ssl_verification') == 'false')
-      request.auth.ssl.verify_mode = strict_ssl ? :peer : :none
       request.headers = headers if headers
       request.body = data if data
-      logger = config.read('library.logger')
-      HTTPI.logger = logger if logger
+      if config
+        proxy = config.read('connection.proxy', nil)
+        request.proxy = proxy if !proxy.nil?
+        strict_ssl =
+            !(config.read('connection.strict_ssl_verification') == 'false')
+        request.auth.ssl.verify_mode = strict_ssl ? :peer : :none
+        logger = config.read('library.logger')
+        if logger
+          HTTPI.logger = logger
+          HTTPI.log_level = :debug
+        end
+      end
       return request
     end
   end

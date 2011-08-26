@@ -61,6 +61,7 @@ module AdsCommon
           config.log_level = :debug
         end
         HTTPI.logger = @logger
+        HTTPI.log_level = :debug
       end
 
       #

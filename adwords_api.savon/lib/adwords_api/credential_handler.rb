@@ -56,7 +56,7 @@ module AdwordsApi
            :oauth_callback => @credentials[:oauth_callback],
            :oauth_method => @credentials[:oauth_method]}
       end
-      client_lib = 'Ruby-AwApi-%s|' % AdwordsApi::ApiConfig::CLIENT_LIB_VERSION
+      client_lib = 'AwApi-Ruby-%s|' % AdwordsApi::ApiConfig::CLIENT_LIB_VERSION
       user_agent = @credentials[:user_agent] || $0
       user_agent = client_lib + user_agent
       user_agent_symbol = (version == :v13) ? :useragent : :userAgent
