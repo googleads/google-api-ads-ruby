@@ -27,6 +27,9 @@ module AdsCommon
     # Default namespace name.
     DEFAULT_NAMESPACE = 'wsdl'
 
+    # HTTP read timeout in seconds.
+    HTTP_READ_TIMEOUT = 15 * 60
+
     attr_accessor :headerhandler
     attr_reader :api
     attr_reader :version
@@ -71,6 +74,7 @@ module AdsCommon
         wsdl.endpoint = endpoint
         wsdl.namespace = namespace
         http.proxy = proxy if !proxy.nil?
+        http.read_timeout = HTTP_READ_TIMEOUT
       end
       return client
     end
