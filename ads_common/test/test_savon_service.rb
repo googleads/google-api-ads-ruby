@@ -60,6 +60,9 @@ class StubService < AdsCommon::SavonService
   def private_deep_copy(object)
     return deep_copy(object)
   end
+  def private_add_attribute(node, key, name, value)
+    return add_attribute(node, key, name, value)
+  end
 end
 
 class TestSavonService < Test::Unit::TestCase
@@ -250,5 +253,30 @@ class TestSavonService < Test::Unit::TestCase
     result2[:cd] = nil
     assert_not_equal(data, result2)
     assert_equal(data, result1)
+  end
+
+  def test_add_attribute
+    node = {}
+
+    key, name, value1, value2, value3 = 'key', 'name', 'Lorem', 'ipsum', 'dolor'
+
+    @stub_service.private_add_attribute(node, key, name, value1)
+    assert_kind_of(Hash, node)
+    assert_kind_of(Hash, node[:attributes!])
+    assert_kind_of(Hash, node[:attributes!][key])
+    assert_equal(value1, node[:attributes!][key][name])
+
+    @stub_service.private_add_attribute(node, key, name, value2)
+    assert_kind_of(Hash, node)
+    assert_kind_of(Hash, node[:attributes!])
+    assert_kind_of(Hash, node[:attributes!][key])
+    assert_kind_of(Array, node[:attributes!][key][name])
+    assert_equal(value1, node[:attributes!][key][name][0])
+    assert_equal(value2, node[:attributes!][key][name][1])
+
+    @stub_service.private_add_attribute(node, key, name, value3)
+    assert_equal(value1, node[:attributes!][key][name][0])
+    assert_equal(value2, node[:attributes!][key][name][1])
+    assert_equal(value3, node[:attributes!][key][name][2])
   end
 end

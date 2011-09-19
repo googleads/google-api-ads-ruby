@@ -217,7 +217,12 @@ module AdsCommon
     def add_attribute(node, key, name, value)
       node[:attributes!] ||= {}
       node[:attributes!][key] ||= {}
-      node[:attributes!][key][name] = value
+      if node[:attributes!][key].include?(name)
+        node[:attributes!][key][name] = arrayize(node[:attributes!][key][name])
+        node[:attributes!][key][name] << value
+      else
+        node[:attributes!][key][name] = value
+      end
     end
 
     # Prefixes default namespace.
@@ -309,6 +314,11 @@ module AdsCommon
     def normalize_output_field(output_data, fields_list, field_name)
       return nil if output_data.nil?
       field_definition = get_field_by_name(fields_list, field_name)
+      if field_definition.nil?
+        @api.logger.warn("Can not determine type for field: %s" % field_name)
+        return output_data
+      end
+
       field_sym = field_name.to_sym
       field_data = normalize_type(output_data[field_sym], field_definition)
       output_data[field_sym] = field_data if field_data
