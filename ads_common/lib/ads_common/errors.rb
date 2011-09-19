@@ -42,9 +42,10 @@ module AdsCommon
     # Raised when OAuth access token is required.
     class OAuthVerificationRequired < AuthError
       attr_reader :oauth_url
-      def initialize(oauth_url)
+      attr_reader :request_token
+      def initialize(oauth_url, request_token)
         super()
-        @oauth_url = oauth_url
+        @oauth_url, @request_token = oauth_url, request_token
       end
     end
 

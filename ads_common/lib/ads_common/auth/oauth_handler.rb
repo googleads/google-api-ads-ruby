@@ -200,9 +200,9 @@ module AdsCommon
         callback = credentials[:oauth_callback] || DEFAULT_CALLBACK
         begin
           if @request_token.nil?
-            @request_token = @consumer.get_request_token(
-                {:oauth_callback => callback}, {:scope => @scope})
-            raise_oauth_verification_error(@request_token, callback)
+            @request_token = credentials[:oauth_request_token] ||
+                 @consumer.get_request_token({:oauth_callback => callback},
+                     {:scope => @scope})
           end
           verification_code = credentials[:oauth_verification_code]
           if verification_code.nil? || verification_code.empty?
@@ -238,7 +238,9 @@ module AdsCommon
       #
       def raise_oauth_verification_error(request_token, callback)
         oauth_url = request_token.authorize_url({:oauth_callback => callback})
-        raise AdsCommon::Errors::OAuthVerificationRequired, oauth_url
+        error = AdsCommon::Errors::OAuthVerificationRequired.new(
+            oauth_url, request_token)
+        raise error
       end
 
       # Extracts key-value pairs from OAuth server response.

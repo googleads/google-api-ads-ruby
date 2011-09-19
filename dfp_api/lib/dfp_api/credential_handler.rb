@@ -41,7 +41,8 @@ module DfpApi
            :oauth_token => @credentials[:oauth_token],
            :oauth_token_secret => @credentials[:oauth_token_secret],
            :oauth_callback => @credentials[:oauth_callback],
-           :oauth_method => @credentials[:oauth_method]}
+           :oauth_method => @credentials[:oauth_method],
+           :oauth_request_token => @credentials[:oauth_request_token]}
       end
       client_lib = "DfpApi-Ruby-%s" % DfpApi::ApiConfig::CLIENT_LIB_VERSION
       application_name = @credentials[:application_name] || $0

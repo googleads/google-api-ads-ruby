@@ -54,7 +54,8 @@ module AdwordsApi
            :oauth_token => @credentials[:oauth_token],
            :oauth_token_secret => @credentials[:oauth_token_secret],
            :oauth_callback => @credentials[:oauth_callback],
-           :oauth_method => @credentials[:oauth_method]}
+           :oauth_method => @credentials[:oauth_method],
+           :oauth_request_token => @credentials[:oauth_request_token]}
       end
       client_lib = 'AwApi-Ruby-%s|' % AdwordsApi::ApiConfig::CLIENT_LIB_VERSION
       user_agent = @credentials[:user_agent] || $0
