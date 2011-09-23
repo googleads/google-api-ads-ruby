@@ -112,7 +112,7 @@ module AdwordsApi
         when :SANDBOX
           # Check if either the token or client email do not follow the
           # correct format. Client email may not exist, though.
-          if (!sandbox_token or (!client_email.empty? and !sandbox_client))
+          if (!sandbox_token or (client_email and !sandbox_client))
             raise AdsCommon::Errors::EnvironmentMismatchError,
                 'Attempting to connect to the sandbox with malformatted ' +
                 'credentials. Please check ' +
