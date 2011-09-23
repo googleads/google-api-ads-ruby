@@ -91,7 +91,7 @@ module AdsCommon
       # Check if the specified version has the requested service.
       if !api_config.version_has_service(version, name)
         raise AdsCommon::Errors::Error,
-            "Version '%s' does not contain service '%s'", [version, name]
+            "Version '%s' does not contain service '%s'" % [version, name]
       end
 
       # Try to re-use the service for this version if it was requested before.
