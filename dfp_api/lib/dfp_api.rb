@@ -64,9 +64,7 @@ module DfpApi
       auth_method = @config.read('authentication.method', :CLIENTLOGIN)
       handler = case auth_method
         when :CLIENTLOGIN
-          (version == :v201101) ?
-              AdsCommon::SavonHeaders::SimpleHeaderHandler :
-              DfpApi::ClientLoginHeaderHandler
+          DfpApi::ClientLoginHeaderHandler
         when :OAUTH
           AdsCommon::SavonHeaders::OAuthHeaderHandler
       end

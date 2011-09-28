@@ -1,6 +1,8 @@
 0.2.4:
   - Support for proxies.
   - Require google-ads-common 0.5.1 or later from now on.
+  - Support for v201108.
+  - v201101 is now deprecated.
 
 0.2.3:
   - Support for v201107.

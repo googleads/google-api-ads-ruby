@@ -34,9 +34,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201107
+    DEFAULT_VERSION = :v201108
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201107
+    LATEST_VERSION = :v201108
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -46,11 +46,6 @@ module DfpApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v201101 => [:CompanyService, :CreativeService, :ForecastService,
-                   :InventoryService, :LineItemCreativeAssociationService,
-                   :LineItemService, :NetworkService, :OrderService,
-                   :PlacementService, :ReportService, :UserService,
-                   :CustomTargetingService, :PublisherQueryLanguageService],
       :v201103 => [:CompanyService, :CreativeService, :ForecastService,
                    :InventoryService, :LineItemCreativeAssociationService,
                    :LineItemService, :NetworkService, :OrderService,
@@ -66,24 +61,30 @@ module DfpApi
                    :LineItemService, :NetworkService, :OrderService,
                    :PlacementService, :ReportService, :UserService,
                    :CustomTargetingService, :PublisherQueryLanguageService,
-                   :LabelService]
+                   :LabelService],
+      :v201108 => [:CompanyService, :CreativeService, :ForecastService,
+                   :InventoryService, :LineItemCreativeAssociationService,
+                   :LineItemService, :NetworkService, :OrderService,
+                   :PlacementService, :ReportService, :UserService,
+                   :CustomTargetingService, :PublisherQueryLanguageService,
+                   :LabelService, :ThirdPartySlotService]
     }
 
     # Configure the different environments, with the base URL for each one
     @@environment_config = {
       :PRODUCTION => {
         :oauth_scope => 'https://www.google.com/apis/ads/publisher/',
-        :v201101 => 'https://www.google.com/apis/ads/publisher/',
         :v201103 => 'https://www.google.com/apis/ads/publisher/',
         :v201104 => 'https://www.google.com/apis/ads/publisher/',
-        :v201107 => 'https://www.google.com/apis/ads/publisher/'
+        :v201107 => 'https://www.google.com/apis/ads/publisher/',
+        :v201108 => 'https://www.google.com/apis/ads/publisher/'
       },
       :SANDBOX => {
         :oauth_scope => 'https://sandbox.google.com/apis/ads/publisher/',
-        :v201101 => 'https://sandbox.google.com/apis/ads/publisher/',
         :v201103 => 'https://sandbox.google.com/apis/ads/publisher/',
         :v201104 => 'https://sandbox.google.com/apis/ads/publisher/',
-        :v201107 => 'https://sandbox.google.com/apis/ads/publisher/'
+        :v201107 => 'https://sandbox.google.com/apis/ads/publisher/',
+        :v201108 => 'https://sandbox.google.com/apis/ads/publisher/'
       }
     }
 
