@@ -101,7 +101,7 @@ module AdsCommon
     # Validates input parameters to:
     # - add parameter names;
     # - resolve xsi:type where required;
-    # - convert some native types to xml.
+    # - convert some native types to XML.
     def validate_args(action_name, args)
       validated_args = {}
       in_params = get_service_registry.get_method_signature(action_name)[:input]
@@ -110,6 +110,9 @@ module AdsCommon
         value = deep_copy(args[index])
         validated_args[key] = (value.nil?) ?
              nil : validate_arg(value, validated_args, key, in_param[:type])
+        # Adding :order! key to keep correct order in SOAP elements.
+        validated_args[:order!] =
+            generate_order_for_args(validated_args, in_params)
       end
       return validated_args
     end
