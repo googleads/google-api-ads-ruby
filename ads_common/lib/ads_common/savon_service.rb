@@ -288,12 +288,10 @@ module AdsCommon
     def extract_header_data(response)
       header_type = get_full_type_signature(:SoapResponseHeader)
       headers = response.header[:response_header].dup
+      process_attributes(headers, false)
       result = headers.inject({}) do |result, (key, v)|
-        # Attributes start with '@' and are not included in type definition.
-        if !(key.to_s.start_with?('@'))
-          normalize_output_field(headers, header_type[:fields], key)
-          result[key] = headers[key]
-        end
+        normalize_output_field(headers, header_type[:fields], key)
+        result[key] = headers[key]
         result
       end
       return result
@@ -313,6 +311,9 @@ module AdsCommon
     #  - field_name: specifies field name to normalize
     def normalize_output_field(output_data, fields_list, field_name)
       return nil if output_data.nil?
+
+      process_attributes(output_data, true)
+
       field_definition = get_field_by_name(fields_list, field_name)
       if field_definition.nil?
         @api.logger.warn("Can not determine type for field: %s" % field_name)
@@ -422,6 +423,17 @@ module AdsCommon
         result[:fields] = implode_parent(result)
       end
       return result
+    end
+
+    # Handles attributes received from Savon.
+    def process_attributes(data, keep_xsi_type = false)
+      if data.kind_of?(Hash)
+        if keep_xsi_type
+          xsi_type = data.delete(:"@xsi:type")
+          data[:xsi_type] = xsi_type if xsi_type
+        end
+        data.reject! {|key, value| key.to_s.start_with?('@')}
+      end
     end
   end
 end
