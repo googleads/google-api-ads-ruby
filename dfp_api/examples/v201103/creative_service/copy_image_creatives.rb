@@ -73,8 +73,6 @@ def copy_image_creatives()
       image_url = new_creative.delete(:image_url)
       new_creative[:image_byte_array] =
           Base64.encode64(AdsCommon::Http.get(image_url))
-      # Savon doesn't get us xsi_type back yet so we have to specify it.
-      new_creative[:xsi_type] = 'ImageCreative'
       new_creative
     end
 

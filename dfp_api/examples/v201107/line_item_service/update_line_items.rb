@@ -67,7 +67,6 @@ def update_line_items()
         line_item[:delivery_rate_type] = 'AS_FAST_AS_POSSIBLE'
         new_line_items << line_item
       end
-      # TODO: We also have to specify xsi_types here, issue #10.
       new_line_items
     end
 

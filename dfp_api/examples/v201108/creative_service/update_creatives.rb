@@ -56,8 +56,6 @@ def update_creatives()
     # Update each local creative object by changing its destination URL.
     creatives.each do |creative|
       creative[:destination_url] = 'http://news.google.com'
-      # Savon doesn't get us xsi_type back yet so we have to specify it.
-      creative[:xsi_type] = 'ImageCreative'
     end
 
     # Update the creatives on the server.
