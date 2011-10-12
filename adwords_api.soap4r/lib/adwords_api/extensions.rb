@@ -37,8 +37,9 @@ module AdwordsApi
       [:v201008, :ReportDefinitionService] => [:download_report,
           :download_report_as_file],
       [:v201101, :ReportDefinitionService] => [:download_report,
-          :download_report_as_file, :download_mcc_report,
-          :download_mcc_report_as_file]
+          :download_report_as_file],
+      [:v201109, :ReportDefinitionService] => [:download_report,
+          :download_report_as_file]
     }
 
     # Defines the parameter list for every extension method.
@@ -46,10 +47,7 @@ module AdwordsApi
       :download_xml_report     => [:job_id],
       :download_csv_report     => [:job_id],
       :download_report         => [:report_definition_id],
-      :download_report_as_file => [:report_definition_id, :path],
-      :download_mcc_report     => [:report_definition_id, :query_token],
-      :download_mcc_report_as_file =>
-          [:report_definition_id, :query_token, :path]
+      :download_report_as_file => [:report_definition_id, :path]
     }
 
     # Return list of all extension methods, indexed by version and service.
@@ -213,76 +211,7 @@ module AdwordsApi
       return report_response.body
     end
 
-    # <i>Extension method</i> -- Download and return a MCC report.
-    #
-    # *Warning*: this method is blocking for the calling thread.
-    #
-    # Args:
-    # - wrapper: the service wrapper object for any API methods that need to be
-    #   called
-    # - report_definition_id: the id for the report definition
-    # - query_token: id from previous calls to the method
-    #
-    # Returns:
-    # A hash with HTTP code and report service response
-    #
-    def self.download_mcc_report(wrapper, report_definition_id, query_token)
-      do_download_mcc_report(wrapper, report_definition_id, query_token, nil)
-    end
-
-    # <i>Extension method</i> -- Download and save a MCC report to file.
-    #
-    # *Warning*: this method is blocking for the calling thread.
-    #
-    # Args:
-    # - wrapper: the service wrapper object for any API methods that need to be
-    #   called
-    # - report_definition_id: the id for the report definition
-    # - query_token: id from previous calls to the method
-    # - path: filename to save downloaded report to
-    #
-    # Returns:
-    # A hash with HTTP code and report service response
-    #
-    def self.download_mcc_report_as_file(wrapper, report_definition_id,
-        query_token, path)
-      do_download_mcc_report(wrapper, report_definition_id, query_token, path)
-    end
-
     private
-
-    # Polls the service once and downloads report into a file or to a hash.
-    def self.do_download_mcc_report(wrapper, report_definition_id, query_token,
-        path = nil)
-      query_token = 'new' if query_token.nil? or query_token.empty?
-      url = get_report_url(wrapper,
-          "?__rd=%s&qt=%s" % [report_definition_id, query_token])
-      report_response = get_report_response(wrapper, url)
-      check_old_error(report_response.body)
-      mcc_response = report_response_to_hash(report_response)
-      result = case report_response.code
-        when 200, 500
-          mcc_response
-        when 301
-          return_or_save_mcc_report_data(wrapper, mcc_response, path)
-        else
-          raise AdwordsApi::Errors::ApiException,
-              "Unknown HTTP error code %d message: %s" %
-              [report_response.code, report_response.body]
-      end
-      return result
-    end
-
-    # Downloads a report body into a hash or a file.
-    def self.return_or_save_mcc_report_data(wrapper, mcc_response, path = nil)
-      report_data = get_report_response(wrapper, mcc_response[:location]).body
-      if path.nil?
-        mcc_response[:report_data] = report_data
-      else
-        save_to_file(report_data, path)
-      end
-      return mcc_response
-    end
 
     # Saves raw data to a file.
     def self.save_to_file(data, path)
@@ -320,45 +249,7 @@ module AdwordsApi
       return headers
     end
 
-    # Converts report response data into a convenient hash.
-    def self.report_response_to_hash(response)
-      result = {}
-      result[:code] = response.code
-      xml = REXML::Document.new(response.body)
-      result[:body] = xml_to_hash(xml.root) if xml and xml.root
-      if !response.headers.nil? and !response.headers['Location'].nil?
-        result[:location] = response.headers['Location']
-      end
-      # Special case for accounts list in failures.
-      if result[:body] and result[:body][:failures]
-        result[:body][:failures][:account] =
-            arrayize(result[:body][:failures][:account])
-      end
-      return result
-    end
-
-    # Converts xml into a convenient hash.
-    def self.xml_to_hash(xml)
-      result = {}
-      xml.elements.each do |item|
-        value = (item.has_elements?) ? xml_to_hash(item) : item.get_text()
-        if result[item.name].nil?
-          result[item.name] = value
-        else
-          result[item.name] = arrayize(result[item.name])
-          result[item.name] << value
-        end
-      end
-      return result
-    end
-
-    # Makes sure object is an array.
-    def self.arrayize(object)
-      return [] if object.nil?
-      return object.is_a?(Array) ? object : [object]
-    end
-
-    # Checks for old-style pre-MCC reporting error.
+    # Checks for old-style v13 reporting error.
     def self.check_old_error(response_text)
       error_message_regex = '^!!!(-?\d+)\|\|\|(-?\d+)\|\|\|(.*)\?\?\?'
       matches = response_text.match(error_message_regex)

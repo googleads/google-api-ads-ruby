@@ -33,9 +33,9 @@ module AdwordsApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201101
+    DEFAULT_VERSION = :v201109
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201101
+    LATEST_VERSION = :v201109
 
     # Set other constants
     API_NAME = 'AdwordsApi'
@@ -45,7 +45,7 @@ module AdwordsApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v13 => [:AccountService, :ReportService, :TrafficEstimatorService],
+      :v13 => [:AccountService, :ReportService],
       :v200909 => [:AdExtensionOverrideService, :AdGroupAdService,
                    :AdGroupCriterionService, :AdGroupService, :AdParamService,
                    :BulkMutateJobService, :CampaignAdExtensionService,
@@ -79,7 +79,19 @@ module AdwordsApi
                    :GeoLocationService, :InfoService, :MediaService,
                    :ReportDefinitionService, :ServicedAccountService,
                    :TargetingIdeaService, :TrafficEstimatorService,
-                   :UserListService]
+                   :UserListService],
+      :v201109 => [:AdExtensionOverrideService, :AdGroupAdService,
+                   :AdGroupCriterionService, :AdGroupService, :AdParamService,
+                   :AlertService, :BulkMutateJobService,
+                   :BulkOpportunityService, :CampaignAdExtensionService,
+                   :CampaignCriterionService, :CampaignService,
+                   :CampaignTargetService, :ConversionTrackerService,
+                   :CustomerSyncService, :DataService, :ExperimentService,
+                   :GeoLocationService, :InfoService, :MediaService,
+                   :ReportDefinitionService, :ServicedAccountService,
+                   :TargetingIdeaService, :TrafficEstimatorService,
+                   :UserListService, :ConstantDataService,
+                   :LocationCriterionService, :MutateJobService]
     }
 
     # Configure the different environments, with the base URL for each one
@@ -90,7 +102,8 @@ module AdwordsApi
         :v200909 => 'https://adwords.google.com/api/adwords/',
         :v201003 => 'https://adwords.google.com/api/adwords/',
         :v201008 => 'https://adwords.google.com/api/adwords/',
-        :v201101 => 'https://adwords.google.com/api/adwords/'
+        :v201101 => 'https://adwords.google.com/api/adwords/',
+        :v201109 => 'https://adwords.google.com/api/adwords/'
       },
       :SANDBOX => {
         :oauth_scope => 'https://adwords-sandbox.google.com/api/adwords/',
@@ -98,7 +111,8 @@ module AdwordsApi
         :v200909 => 'https://adwords-sandbox.google.com/api/adwords/',
         :v201003 => 'https://adwords-sandbox.google.com/api/adwords/',
         :v201008 => 'https://adwords-sandbox.google.com/api/adwords/',
-        :v201101 => 'https://adwords-sandbox.google.com/api/adwords/'
+        :v201101 => 'https://adwords-sandbox.google.com/api/adwords/',
+        :v201109 => 'https://adwords-sandbox.google.com/api/adwords/'
       }
     }
 
@@ -108,7 +122,6 @@ module AdwordsApi
       # v13
       [:v13, :AccountService] => '',
       [:v13, :ReportService] => '',
-      [:v13, :TrafficEstimatorService] => '',
       # v200909
       [:v200909, :AdExtensionOverrideService] => 'cm/',
       [:v200909, :AdGroupAdService] => 'cm/',
@@ -187,7 +200,35 @@ module AdwordsApi
       [:v201101, :ServicedAccountService] => 'mcm/',
       [:v201101, :TargetingIdeaService] => 'o/',
       [:v201101, :TrafficEstimatorService] => 'o/',
-      [:v201101, :UserListService] => 'cm/'
+      [:v201101, :UserListService] => 'cm/',
+      # v201109
+      [:v201109, :AdExtensionOverrideService] => 'cm/',
+      [:v201109, :AdGroupAdService] => 'cm/',
+      [:v201109, :AdGroupCriterionService] => 'cm/',
+      [:v201109, :AdGroupService] => 'cm/',
+      [:v201109, :AdParamService] => 'cm/',
+      [:v201109, :AlertService] => 'mcm/',
+      [:v201109, :BulkMutateJobService] => 'job/',
+      [:v201109, :BulkOpportunityService] => 'o/',
+      [:v201109, :CampaignAdExtensionService] => 'cm/',
+      [:v201109, :CampaignCriterionService] => 'cm/',
+      [:v201109, :CampaignService] => 'cm/',
+      [:v201109, :CampaignTargetService] => 'cm/',
+      [:v201109, :ConversionTrackerService] => 'cm/',
+      [:v201109, :CustomerSyncService] => 'ch/',
+      [:v201109, :DataService] => 'cm/',
+      [:v201109, :ExperimentService] => 'cm/',
+      [:v201109, :GeoLocationService] => 'cm/',
+      [:v201109, :InfoService] => 'info/',
+      [:v201109, :MediaService] => 'cm/',
+      [:v201109, :ReportDefinitionService] => 'cm/',
+      [:v201109, :ServicedAccountService] => 'mcm/',
+      [:v201109, :TargetingIdeaService] => 'o/',
+      [:v201109, :TrafficEstimatorService] => 'o/',
+      [:v201109, :UserListService] => 'cm/',
+      [:v201109, :ConstantDataService] => 'cm/',
+      [:v201109, :LocationCriterionService] => 'cm/',
+      [:v201109, :MutateJobService] => 'cm/'
     }
 
     # Configure the auth servers to use for each environment
