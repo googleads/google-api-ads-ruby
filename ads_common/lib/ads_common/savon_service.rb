@@ -80,11 +80,11 @@ module AdsCommon
     end
 
     # Executes SOAP action specified as a string with given arguments.
-    def execute_action(action_name, args)
+    def execute_action(action_name, args, &block)
       args = validate_args(action_name, args)
       response = execute_soap_request(action_name.to_sym, args)
       handle_errors(response)
-      return extract_result(response, action_name)
+      return extract_result(response, action_name, &block)
     end
 
     # Executes the SOAP request with original SOAP name.
@@ -277,14 +277,28 @@ module AdsCommon
 
     # Extracts the finest results possible for the given result. Returns the
     # response itself in worst case (contents unknown).
-    def extract_result(response, action_name)
+    def extract_result(response, action_name, &block)
       method = get_service_registry.get_method_signature(action_name)
       action = method[:output][:name].to_sym
       result = response.to_hash
       result = result[action] if result.include?(action)
       result = normalize_output(result, method)
-      result[:header] = extract_header_data(response) if result.kind_of?(Hash)
+      run_user_block(response, result, &block) if block_given?
       return result
+    end
+
+    # Yields to user-specified block with additional information such as
+    # headers.
+    def run_user_block(response, body, &block)
+      header = extract_header_data(response)
+      case block.arity
+        when 1: yield(header)
+        when 2: yield(header, body)
+        else
+          raise AdsCommon::Errors::ApiException,
+              "Wrong number of block parameters: %d" % block.arity
+      end
+      return nil
     end
 
     # Extracts misc data from response header.

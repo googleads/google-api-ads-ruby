@@ -1,4 +1,6 @@
 0.5.2:
+  - Additional information such as headers are now available via user-specified
+    block. See API-specific README for more details.
   - Fixed xsi:types were not returned in responses (issue #10).
 
 0.5.1:

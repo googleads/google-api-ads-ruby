@@ -48,8 +48,8 @@ module AdsCommon
           end
           <% @actions.each do |action| %>
 
-          def <%= action %>(*args)
-            return execute_action('<%= action %>', args)
+          def <%= action %>(*args, &block)
+            return execute_action('<%= action %>', args, &block)
           end
           <% end %>
           <% @extensions.each do |extention| %>
