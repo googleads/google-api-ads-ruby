@@ -55,5 +55,17 @@ module AdwordsApi
         return @array_fields.include?(field.to_s)
       end
     end
+
+    # Error for invalid credentials sush as malformed ID.
+    class BadCredentialsError < AdsCommon::Errors::ApiException
+    end
+
+    # Error for malformed report definition.
+    class InvalidReportDefinitionError < AdsCommon::Errors::ApiException
+    end
+
+    # Error for server-side report error.
+    class ReportError < AdsCommon::Errors::ApiException
+    end
   end
 end

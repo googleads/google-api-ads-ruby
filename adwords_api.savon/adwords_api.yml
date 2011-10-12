@@ -26,7 +26,7 @@
 
   # Other parameters.
   :developer_token: INSERT_YOUR_DEVELOPER_TOKEN_HERE
-  :client_email: INSERT_YOUR_CLIENT_EMAIL_HERE
+  :client_customer_id: INSERT_YOUR_CLIENT_CUSTOMER_ID_HERE
   :user_agent: INSERT_YOUR_USER_AGENT_HERE
 :service:
   :environment: SANDBOX

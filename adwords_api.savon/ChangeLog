@@ -1,8 +1,11 @@
 0.4.1:
+  - Support for v201109.
+  - Added support and example for AdHoc reports.
+  - Removed deprecated TrafficEstimatorService (v13 only).
   - Support for proxies.
-  - Require google-ads-common 0.5.1 or later from now on.
-  - Units spent count and other header information is now returned in response
-    as :header field.
+  - Units spent count and other headers information can now be obtained by
+    passing user block to a method call.
+  - Require google-ads-common 0.5.2 or later from now on.
 
 0.4.0:
   - First experimental Savon-based release.

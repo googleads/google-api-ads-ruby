@@ -42,7 +42,7 @@ module AdwordsApi
     # Create the list of credentials to be used by the auth handler for header
     # generation.
     def credentials(version = nil)
-      validate_headers_for_server
+      validate_headers_for_server(version)
       result = case @credentials[:method]
         when :CLIENTLOGIN
           {:email => @credentials[:email],
@@ -64,10 +64,10 @@ module AdwordsApi
       result[user_agent_symbol] = user_agent
       result[:developerToken] = @credentials[:developer_token]
       unless @use_mcc
-        if @credentials[:client_email]
-          result[:clientEmail] = @credentials[:client_email]
-        elsif @credentials[:client_customer_id]
+        if @credentials[:client_customer_id]
           result[:clientCustomerId] = @credentials[:client_customer_id]
+        elsif @credentials[:client_email] and version != :v201109
+          result[:clientEmail] = @credentials[:client_email]
         end
       end
       if version != :v13
@@ -82,13 +82,32 @@ module AdwordsApi
     # Validates that the right credentials are being used for the chosen
     # environment.
     #
-    # Raises:
-    # Adwordsapi::Error::EnvironmentMismatchError if sandbox credentials are
-    # being used for production or vice-versa.
+    # Args:
+    # - version: API version to validate for
     #
-    def validate_headers_for_server
+    # Raises:
+    # - AdsCommon::Error::EnvironmentMismatchError if sandbox credentials are
+    # being used for production or vice-versa.
+    # - AdwordsApi::Errors:BadCredentialsError if supplied credentials are not
+    # valid.
+    #
+    def validate_headers_for_server(version)
       token = @credentials[:developer_token]
       client_email = @credentials[:client_email]
+
+      if client_email and version == :v201109
+        raise AdwordsApi::Errors::BadCredentialsError, 'Deprecated header ' +
+            'clientEmail is no longer supported, please use clientCustomerId'
+      end
+
+      client_customer_id = @credentials[:client_customer_id]
+      if client_customer_id and
+          !(client_customer_id.is_a?(Integer) or
+            (client_customer_id =~ /\d+-\d+-\d+/))
+        raise AdwordsApi::Errors::BadCredentialsError,
+            'Invalid client customer ID: %s' % client_customer_id.to_s
+      end
+
       (sandbox_token, sandbox_client) = case @credentials[:method]
         when :CLIENTLOGIN
           email = @credentials[:email]
@@ -120,6 +139,7 @@ module AdwordsApi
                 'adwords_api_sandbox.html#requestheaders for details.'
           end
       end
+      return nil
     end
   end
 end
