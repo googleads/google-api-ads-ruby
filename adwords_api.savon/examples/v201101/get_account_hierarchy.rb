@@ -39,16 +39,14 @@ def get_account_hierarchy()
 
   serviced_account_srv = adwords.service(:ServicedAccountService, API_VERSION)
 
-  # Get the account hierarchy for this account.
-  selector = {
-    :service_types => ['UI_AND_API', 'API_ONLY'],
-    :enable_paging => false
-  }
+  # Create selector to get all accounts with no paging.
+  selector = {:enable_paging => false}
 
   graph = nil
 
   # Run with MCC account.
   adwords.use_mcc do
+    # Get the account hierarchy for this account.
     graph = serviced_account_srv.get(selector)
   end
 
@@ -71,10 +69,10 @@ def get_account_hierarchy()
 
       # Display the links.
       graph[:links].each do |link|
-        puts "There is a #{link[:type_of_link]} link of type " +
-            "#{link[:service_type]} from " +
-            "#{AdwordsApi::Utils.format_id(link[:manager_id][:id])} to " +
-            "#{AdwordsApi::Utils.format_id(link[:client_id][:id])}"
+        puts "There is a '%s' link from %s to %s"  %
+            [link[:type_of_link],
+             AdwordsApi::Utils.format_id(link[:manager_id][:id]),
+             AdwordsApi::Utils.format_id(link[:client_id][:id])]
       end
     end
   else
