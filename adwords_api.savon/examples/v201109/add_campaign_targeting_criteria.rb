@@ -17,9 +17,10 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets location criteria by name.
+# This example adds various types of targeting criteria to a campaign. To get
+# campaigns list, run get_all_campaigns.rb.
 #
-# Tags: LocationCriterionService.get
+# Tags: CampaignCriterionService.mutate
 
 require 'rubygems'
 require 'adwords_api'
@@ -35,46 +36,44 @@ def get_location_criteria()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  location_criterion_srv =
-      adwords.service(:LocationCriterionService, API_VERSION)
+  campaign_criterion_srv =
+      adwords.service(:CampaignCriterionService, API_VERSION)
 
-  # List of locations to look up.
-  location_names = ['Paris', 'Quebec', 'Spain', 'Deutschland']
-  # Locale to retrieve names in.
-  locale = 'en'
+  campaign_id = 'INSERT_CAMPAIGN_ID_HERE'
 
-  # Get the criteria by names.
-  selector = {
-      :fields => ['Id', 'LocationName', 'CanonicalName', 'DisplayType',
-          'ParentLocations', 'Reach'],
-      :predicates => [
-          # Location names must match exactly, only EQUALS and IN are supported.
-          {:field => 'LocationName',
-           :operator => 'IN',
-           :values => location_names},
-          # Set the locale of the returned location names.
-          {:field => 'Locale', :operator => 'EQUALS', :values => locale}
-    ]
-  }
-  criteria = location_criterion_srv.get(selector)
+  # Create campaign criteria.
+  campaign_criteria = [
+    # Location criteria. The IDs can be found in the documentation or retrieved
+    # with the LocationCriterionService.
+    {:xsi_type => 'Location', :id => 21137}, # California, USA
+    {:xsi_type => 'Location', :id => 2484},  # Mexico
+    # Language criteria. The IDs can be found in the documentation or retrieved
+    # with the ConstantDataService.
+    {:xsi_type => 'Language', :id => 1000},  # English
+    {:xsi_type => 'Language', :id => 1003},  # Spanish
+    # Platform criteria. The IDs can be found in the documentation.
+    {:xsi_type => 'Platform', :id => 30001}, # Mobile
+    {:xsi_type => 'Platform', :id => 30002}  # Tablets
+  ]
 
-  if criteria
-    criteria.each do |criterion|
-      # Extract all parent location names as one comma-separated string.
-      parent_location = if criterion[:location][:parent_locations] and
-          !criterion[:location][:parent_locations].empty?
-        locations_array = criterion[:location][:parent_locations].map do |loc|
-          loc[:location_name]
-        end
-        locations_array.join(', ')
-      else
-        'N/A'
-      end
-      puts ("The search term '%s' returned the location '%s' of type '%s' " +
-          "with ID %d, parent locations '%s' and reach %d") %
-          [criterion[:search_term], criterion[:location][:location_name],
-           criterion[:location][:criterion_type], criterion[:location][:id],
-           parent_location, criterion[:reach]]
+  # Create operations.
+  operations = campaign_criteria.map do |criterion|
+    {:operator => 'ADD',
+     :operand => {
+         :campaign_id => campaign_id,
+         :criterion => criterion}
+    }
+  end
+
+  response = campaign_criterion_srv.mutate(operations)
+
+  if response and response[:value]
+    criteria = response[:value]
+    criteria.each do |campaign_criterion|
+      criterion = campaign_criterion[:criterion]
+      puts ("Campaign criterion with campaign ID %d, criterion ID %d and " +
+          "type '%s' was added.") % [campaign_criterion[:campaign_id],
+          criterion[:id], criterion[:criterion_type]]
     end
   else
     puts 'No criteria were returned.'

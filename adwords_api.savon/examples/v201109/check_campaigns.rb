@@ -96,7 +96,7 @@ def check_campaigns()
   # Validate campaign add operation.
   begin
     response = campaign_srv.mutate([operation])
-  rescue AdwordsApi::Errors::ApiException => e
+  rescue AdsCommon::Errors::ApiException => e
     puts "Validation correctly failed: #{e.message}"
   end
 end
