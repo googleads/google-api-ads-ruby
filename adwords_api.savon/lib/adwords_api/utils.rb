@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Author:: sgomes@google.com (Sérgio Gomes)
+# Author:: api.sgomes@gmail.com (Sérgio Gomes)
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
@@ -31,7 +31,10 @@ module AdwordsApi
     # - hash constructed from map entries
     #
     def self.map(entries)
-      return entries.map {|entry| {entry[:key] => entry[:value]}}
+      return entries.inject({}) do |result, entry|
+        result[entry[:key]] = entry[:value]
+        result
+      end
     end
 
     # Returns the source operation index for an error.
