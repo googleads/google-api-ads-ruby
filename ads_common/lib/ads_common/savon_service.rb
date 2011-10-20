@@ -146,7 +146,8 @@ module AdsCommon
       # Non-default namespace should be used, overriding default.
       if field_type and field_type.include?(:ns)
         namespace = get_service_registry.get_namespace(field_type[:ns])
-        add_attribute(parent, prefix_key(key), 'xmlns', namespace)
+        key = prefix_key(key)
+        add_attribute(parent, key, 'xmlns', namespace)
       end
 
       # Handling custom xsi:type.
@@ -384,7 +385,7 @@ module AdsCommon
       return (item.nil?) ? item :
           case type_name
             when 'long', 'int' then Integer(item)
-            when 'double' then Float(item)
+            when 'double', 'float' then Float(item)
             when 'boolean' then item.kind_of?(String) ?
                 item.casecmp('true') == 0 : item
             else item
