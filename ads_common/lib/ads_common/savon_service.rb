@@ -293,8 +293,8 @@ module AdsCommon
     def run_user_block(response, body, &block)
       header = extract_header_data(response)
       case block.arity
-        when 1: yield(header)
-        when 2: yield(header, body)
+        when 1 then yield(header)
+        when 2 then yield(header, body)
         else
           raise AdsCommon::Errors::ApiException,
               "Wrong number of block parameters: %d" % block.arity

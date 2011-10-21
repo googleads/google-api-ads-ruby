@@ -1,3 +1,6 @@
+0.5.3:
+  - Ruby 1.9 compatibility hotfix.
+
 0.5.2:
   - Additional information such as headers are now available via user-specified
     block. See API-specific README for more details.
