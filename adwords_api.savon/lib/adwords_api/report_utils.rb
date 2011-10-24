@@ -102,8 +102,8 @@ module AdwordsApi
     # and Hash (renders XML).
     def get_report_definition_text(report_definition)
       return case report_definition
-        when String: report_definition
-        when Hash: report_definition_to_xml(report_definition)
+        when String then report_definition
+        when Hash then report_definition_to_xml(report_definition)
         else
           raise AdwordsApi::Errors::InvalidReportDefinitionError,
               "Unknown object for report definition: %s" %
