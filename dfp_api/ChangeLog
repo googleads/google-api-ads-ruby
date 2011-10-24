@@ -1,3 +1,6 @@
+0.2.5:
+  - Require google-ads-common 0.5.3 or later from now on.
+
 0.2.4:
   - Support for proxies.
   - Require google-ads-common 0.5.1 or later from now on.

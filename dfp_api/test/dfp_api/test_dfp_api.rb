@@ -73,7 +73,7 @@ class TestDfpApi < Test::Unit::TestCase
 
   # Utility method to check the actual data.
   def check_config_data(config)
-    assert_equal('ClientLogin', config.read('authentication.method'))
+    assert_equal(:CLIENTLOGIN, config.read('authentication.method'))
     assert_equal('ruby_test_suit',
         config.read('authentication.application_name'))
     assert_equal('mySecretPassword', config.read('authentication.password'))
