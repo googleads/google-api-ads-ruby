@@ -56,10 +56,17 @@ def create_line_items()
 
   # Create geographical targeting.
   geo_targeting = {
-      # Include the US and Quebec, Canada.
-      :targeted_locations => [{:id => 2840}, {:id => 20123}],
-      # Exclude Chicago and the New York metro area.
-      :excluded_locations => [{:id => 1016367}, {:id => 200501}]
+      # Include targets.
+      :targeted_locations => [
+          {:id => 2840},    # USA.
+          {:id => 20123},   # Quebec, Canada.
+          {:id => 9000093}  # Postal code B3P (Canada).
+      ],
+      # Exclude targets.
+      :excluded_locations => [
+          {:id => 1016367}, # Chicago.
+          {:id => 200501}   # New York.
+      ]
   }
 
   # Create user domain targeting. Exclude domains that are not under the
@@ -100,7 +107,7 @@ def create_line_items()
 
   # Create an array to store local line item objects.
   line_items = (1..ITEM_COUNT).map do |index|
-    line_item = {:name => "Line item #%d" % index,
+    line_item = {:name => "Line item #%d-%d" % [Time.new.to_f * 1000, index],
                  :order_id => order_id,
                  :targeting => targeting,
                  :line_item_type => 'STANDARD',
