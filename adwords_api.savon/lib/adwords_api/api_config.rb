@@ -41,7 +41,6 @@ module AdwordsApi
 
     # Set other constants
     API_NAME = 'AdwordsApi'
-    API_PATH = 'adwords_api'
     CLIENT_LIB_VERSION = '0.4.2'
     DEFAULT_CONFIG_FILENAME = 'adwords_api.yml'
 
@@ -265,10 +264,6 @@ module AdwordsApi
       API_NAME
     end
 
-    def self.api_path
-      API_PATH
-    end
-
     def self.service_config
       @@service_config
     end
@@ -293,32 +288,10 @@ module AdwordsApi
       @@headers_config
     end
 
-    # Returns the full interface class name for a given service. Overriding this
-    # method from ads_common to fix odd behaviour with v13 class names.
-    #
-    # Args:
-    # - version: the API version (as an integer)
-    # - service: the service name (as a string)
-    #
-    # Returns:
-    # The full interface class name for the given service (as a string)
-    #
-    def self.interface_name(version, service)
-      service_str = service.to_s
-      service_str = service_str.sub(/Service$/, '') if version == :v13
-      return module_name(version, service) + "::" + service_str
-    end
-
-    def self.do_require(version, service)
-      service_name = service.to_s.snakecase()
-      filename = "%s/%s/%s" % [api_path, version, service_name]
-      require filename
-    end
-
     # Get the download URL for reports.
     #
     # Args:
-    # - environment: the service environment to be used (as a string)
+    # - environment: the service environment to be used
     # - version: the API version (as a symbol)
     #
     # Returns:
@@ -335,7 +308,7 @@ module AdwordsApi
     # Get the download URL for Ad Hoc reports.
     #
     # Args:
-    # - environment: the service environment to be used (as a string)
+    # - environment: the service environment to be used
     # - version: the API version (as a symbol)
     #
     # Returns:

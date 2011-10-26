@@ -29,7 +29,7 @@ which is installed automatically as a dependency.
 The following gem libraries are required:
   - savon v0.9.6
   - httpclient v2.1.2 or greater
-  - google-ads-common v0.5.2 or later.
+  - google-ads-common v0.5.4 or later.
 
 
 == 2 - Using the client library:

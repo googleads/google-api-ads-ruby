@@ -84,8 +84,8 @@ module AdsCommon
 
       # Generates User-Agent text for HTTP request.
       def generate_user_agent_string()
-        credentials = @credential_handler.credentials
-        app_name = credentials[:user_agent]
+        credentials = @credential_handler.credentials(@version)
+        app_name = credentials[:userAgent] || credentials[:useragent]
         # We don't know the library version here. A breaking change needs to be
         # introduced. This is scheduled for 0.6.0, using Common version for now.
         lib_version = '0.5.4'

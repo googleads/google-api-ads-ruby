@@ -98,13 +98,18 @@ module AdsCommon
       environment_config.keys
     end
 
+    # Get the API name.
+    def api_name
+      raise NotImplementedError, 'api_name not overriden.'
+    end
+
     # Get the default environment.
     #
     # Returns:
     # Default environment (as a string)
     #
     def default_environment
-      nil
+      raise NotImplementedError, 'default_environment not overriden.'
     end
 
     # Get the default filename for the config file.
@@ -160,29 +165,37 @@ module AdsCommon
       return auth_server_url
     end
 
-    # Perform the loading of the necessary source files for a version
+    # Perform the loading of the necessary source files for a version.
     #
     # Args:
-    # - version: the API version (as an integer)
-    #
-    def do_require(version, service)
-      eval("require '#{api_path}/#{version}/#{service}Wrapper.rb'")
-    end
-
-    # Returns the full module name for a given service
-    #
-    # Args:
-    # - version: the API version (as an integer)
-    # - service: the service name (as a string)
+    # - version: the API version (as a symbol)
+    # - service: service name (as a symbol)
     #
     # Returns:
-    # The full module name for the given service (as a string)
+    # The filename that was loaded.
     #
-    def module_name(version, service)
-      return "#{api_name}::#{version.to_s.upcase}::#{service}"
+    def do_require(version, service)
+      filename = "%s/%s/%s" %
+          [api_name.to_s.snakecase, version.to_s, service.to_s.snakecase]
+      require filename
+      return filename
     end
 
-    # Returns the full interface class name for a given service
+    # Returns the full module name for a given service.
+    #
+    # Args:
+    # - version: the API version (as a symbol)
+    # - service: the service name (as a symbol)
+    #
+    # Returns:
+    # The full module name for the given service (as a string).
+    #
+    def module_name(version, service)
+      return "%s::%s::%s" %
+          [api_name, version.to_s.upcase, service.to_s]
+    end
+
+    # Returns the full interface class name for a given service.
     #
     # Args:
     # - version: the API version (as an integer)
@@ -192,7 +205,7 @@ module AdsCommon
     # The full interface class name for the given service (as a string)
     #
     def interface_name(version, service)
-      return module_name(version, service) + "::#{service}Interface"
+      return module_name(version, service) + "::" + service.to_s
     end
 
     # Returns the full wrapper class name for a given service
@@ -237,7 +250,7 @@ module AdsCommon
     # the base URL via environmental variable.
     #
     # Args:
-    #   - environment: environment to use like SANDBOX or PRODUCTION
+    #   - environment: environment to use like :SANDBOX or :PRODUCTION
     #   - version: the API version.
     #
     # Returns:

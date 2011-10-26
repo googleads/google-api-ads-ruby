@@ -54,11 +54,9 @@ module AdsCommon
       #  - Hash containing a header with filled in credentials
       #
       def generate_request_header()
-        headers = @auth_handler.headers(@credential_handler.credentials)
-        return headers.inject({}) do |request_header, (header, value)|
-          request_header[prepend_namespace(header)] = value
-          request_header
-        end
+        headers = @auth_handler.headers(
+            @credential_handler.credentials(@version))
+        return headers[@element_name]
       end
     end
   end

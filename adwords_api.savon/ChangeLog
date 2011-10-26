@@ -1,4 +1,6 @@
 0.4.2:
+  - Fix for old v13 services compatibility.
+  - Require google-ads-common 0.5.4 or later from now on.
 
 0.4.1:
   - Support for v201109.

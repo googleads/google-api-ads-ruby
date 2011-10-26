@@ -60,6 +60,23 @@ module AdwordsApi
     end
 
     private
+    # Generates SOAP request header with login credentials and namespace
+    # definition.
+    #
+    # Args:
+    #  - None
+    #
+    # Returns:
+    #  - Hash containing a header with filled in credentials
+    #
+    def generate_request_header()
+      headers = @auth_handler.headers(@credential_handler.credentials(@version))
+      return headers.inject({}) do |request_header, (header, value)|
+        request_header[prepend_namespace(header)] = value
+        request_header
+      end
+    end
+
     # Skips namespace prefixes for all elements except top level. Use default
     # (inherited) prefixing for the top level key.
     #

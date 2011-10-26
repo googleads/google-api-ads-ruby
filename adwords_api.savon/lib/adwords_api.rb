@@ -20,7 +20,7 @@
 #
 # Contains the main classes for the client library.
 
-gem 'google-ads-common', '~>0.5.2'
+gem 'google-ads-common', '~>0.5.4'
 
 require 'ads_common/api'
 require 'ads_common/auth/oauth_handler'
@@ -84,7 +84,7 @@ module AdwordsApi
         end
         handlers = header_list.map do |header|
           AdsCommon::SavonHeaders::SimpleHeaderHandler.new(
-              @credential_handler, auth_handler, header, nil, version)
+              @credential_handler, auth_handler, header, namespace, version)
         end
       else
         handlers = case auth_method
@@ -249,7 +249,7 @@ module AdwordsApi
     #
     def create_auth_handler(environment, version = nil)
       return (version == :v13) ?
-          AdwordsApi::V13LoginHandler.new : super(environment)
+          AdwordsApi::V13LoginHandler.new(@config) : super(environment)
     end
 
     # Executes block with a temporary flag set to a given value. Returns block
