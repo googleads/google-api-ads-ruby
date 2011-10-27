@@ -17,18 +17,18 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example deletes an experiment. To get experiments, run
-# get_all_experiments.rb. To add an experiment, run add_experiment.rb.
+# This example illustrates how to retrieve geo location information for
+# addresses.
 #
-# Tags: ExperimentService.mutate
+# Tags: GeoLocationService.get
 
 require 'rubygems'
 gem 'google-adwords-api'
 require 'adwords_api'
 
-API_VERSION = :v201101
+API_VERSION = :v201109
 
-def delete_experiment()
+def get_geo_location_info()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -37,29 +37,50 @@ def delete_experiment()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  experiment_srv = adwords.service(:ExperimentService, API_VERSION)
+  geo_location_srv = adwords.service(:GeoLocationService, API_VERSION)
 
-  experiment_id = 'INSERT_EXPERIMENT_ID_HERE'.to_i
-
-  # Prepare for deleting experiment.
-  operation = {
-    :operator => 'SET',
-    :operand => {
-      :id => experiment_id,
-      :status => 'DELETED'
-    }
+  selector = {
+    :addresses => [
+      {
+        :street_address => '1600 Amphitheatre Parkway',
+        :city_name => 'Mountain View',
+        :province_code => 'US-CA',
+        :province_name => 'California',
+        :postal_code => '94043',
+        :country_code => 'US'
+      },
+      {
+        :street_address => '76 Ninth Avenue',
+        :city_name => 'New York',
+        :province_code => 'US-NY',
+        :province_name => 'New York',
+        :postal_code => '10011',
+        :country_code => 'US'
+      },
+      {
+        :street_address => '五四大街1号, Beijing东城区',
+        :country_code => 'CN'
+      }
+    ]
   }
 
-  # Delete experiment.
-  response = experiment_srv.mutate([operation])
-  experiment = response[:value].first
-  puts 'Experiment with name "%s" and id %d was deleted.' %
-      [experiment[:name], experiment[:id]]
+  # Get the geo location info for the various addresses.
+  locations = geo_location_srv.get(selector)
+
+  if locations
+    locations.each do |location|
+      puts "Address \"#{location[:address][:street_address]}\" has latitude " +
+          "#{location[:geo_point][:latitude_in_micro_degrees]} and " +
+          "longitude #{location[:geo_point][:longitude_in_micro_degrees]}."
+    end
+  else
+    puts "No geo locations were returned."
+  end
 end
 
 if __FILE__ == $0
   begin
-    delete_experiment()
+    get_geo_location_info()
 
   # Connection error. Likely transitory.
   rescue Errno::ECONNRESET, SOAP::HTTPStreamError, SocketError => e

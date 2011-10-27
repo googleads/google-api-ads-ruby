@@ -17,19 +17,18 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example promotes an experiment, which permanently applies all the
-# experiment changes made to its related ad groups, criteria and ads. To get
-# experiments, run get_all_experiments.rb.
+# This example deletes a campaign by setting the status to 'DELETED'. To get
+# campaigns, run get_all_campaigns.rb.
 #
-# Tags: ExperimentService.mutate
+# Tags: CampaignService.mutate
 
 require 'rubygems'
 gem 'google-adwords-api'
 require 'adwords_api'
 
-API_VERSION = :v201101
+API_VERSION = :v201109
 
-def promote_experiment()
+def delete_campaign()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -38,29 +37,29 @@ def promote_experiment()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  experiment_srv = adwords.service(:ExperimentService, API_VERSION)
+  campaign_srv = adwords.service(:CampaignService, API_VERSION)
 
-  experiment_id = 'INSERT_EXPERIMENT_ID_HERE'.to_i
+  campaign_id = 'INSERT_CAMPAIGN_ID_HERE'.to_i
 
-  # Prepare for updating experiment.
+  # Prepare for deleting campaign.
   operation = {
     :operator => 'SET',
     :operand => {
-      :id => experiment_id,
-      :status => 'PROMOTED',
+      :id => campaign_id,
+      :status => 'DELETED',
     }
   }
 
-  # Update experiment.
-  response = experiment_srv.mutate([operation])
-  experiment = response[:value].first
-  puts 'Experiment with name "%s" and id %d was promoted.' %
-      [experiment[:name], experiment[:id]]
+  # Delete campaign.
+  response = campaign_srv.mutate([operation])
+  campaign = response[:value].first
+  puts 'Campaign with name "%s" and id %d was deleted.' %
+      [campaign[:name], campaign[:id]]
 end
 
 if __FILE__ == $0
   begin
-    promote_experiment()
+    delete_campaign()
 
   # Connection error. Likely transitory.
   rescue Errno::ECONNRESET, SOAP::HTTPStreamError, SocketError => e

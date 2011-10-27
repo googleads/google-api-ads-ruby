@@ -17,18 +17,18 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets all experiments in a campaign. To add an experiment, run
-# add_experiment.rb. To get campaigns, run get_all_campaigns.rb.
+# This example illustrates how to retrieve all the paused campaigns for an
+# account.
 #
-# Tags: ExperimentService.get
+# Tags: CampaignService.get
 
 require 'rubygems'
 gem 'google-adwords-api'
 require 'adwords_api'
 
-API_VERSION = :v201008
+API_VERSION = :v201109
 
-def get_all_experiments()
+def get_all_paused_campaigns()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -37,35 +37,34 @@ def get_all_experiments()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  experiment_srv = adwords.service(:ExperimentService, API_VERSION)
+  campaign_srv = adwords.service(:CampaignService, API_VERSION)
 
-  campaign_id = 'INSERT_CAMPAIGN_ID_HERE'.to_i
-
-  # Get all the experiments for this campaign.
+  # Get all the paused campaigns for this account.
   selector = {
-    :campaign_ids => [campaign_id],
-    :include_stats => true
+    :fields => ['Id', 'Name', 'Status'],
+    :ordering => [{:field => 'Name', :sort_order => 'ASCENDING'}],
+    :predicates => [{
+      :field => 'Status',
+      :operator => 'IN',
+      :values => ['PAUSED']
+    }]
   }
-  response = experiment_srv.get(selector)
+  response = campaign_srv.get(selector)
 
   if response and response[:entries]
-    experiments = response[:entries]
-    experiments.each do |experiment|
-      experiment_stats = experiment[:experiment_summary_stats]
-      puts "Experiment with name \"#{experiment[:name]}\", " +
-          "id #{experiment[:id]} and control id " +
-          "#{experiment[:control_id]} was found and it includes " +
-          "#{experiment_stats[:ad_groups_count]} ad group(s) and " +
-          "#{experiment_stats[:ad_group_criteria_count]} criteria.\n"
+    campaigns = response[:entries]
+    campaigns.each do |campaign|
+      puts "Campaign name is \"#{campaign[:name]}\", id is #{campaign[:id]} " +
+          "and status is \"#{campaign[:status]}\"."
     end
   else
-    puts "No experiments were found."
+    puts "No campaigns were found."
   end
 end
 
 if __FILE__ == $0
   begin
-    get_all_experiments()
+    get_all_paused_campaigns()
 
   # Connection error. Likely transitory.
   rescue Errno::ECONNRESET, SOAP::HTTPStreamError, SocketError => e

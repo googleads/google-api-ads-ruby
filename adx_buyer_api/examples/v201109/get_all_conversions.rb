@@ -17,18 +17,18 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example deletes an experiment. To get experiments, run
-# get_all_experiments.rb. To add an experiment, run add_experiment.rb.
+# This example gets all conversions in the account. To add conversions, run
+# add_conversion.rb.
 #
-# Tags: ExperimentService.mutate
+# Tags: ConversionTrackerService.get
 
 require 'rubygems'
 gem 'google-adwords-api'
 require 'adwords_api'
 
-API_VERSION = :v201008
+API_VERSION = :v201109
 
-def delete_experiment()
+def get_all_conversions()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -37,29 +37,30 @@ def delete_experiment()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  experiment_srv = adwords.service(:ExperimentService, API_VERSION)
+  conv_tracker_srv = adwords.service(:ConversionTrackerService, API_VERSION)
 
-  experiment_id = 'INSERT_EXPERIMENT_ID_HERE'.to_i
-
-  # Prepare for deleting experiment.
-  operation = {
-    :operator => 'SET',
-    :operand => {
-      :id => experiment_id,
-      :status => 'DELETED'
-    }
+  # Get all conversions.
+  selector = {
+    :fields => ['Id', 'Name', 'Status', 'Category'],
+    :ordering => [{:field => 'Name', :sort_order => 'ASCENDING'}],
   }
-
-  # Delete experiment.
-  response = experiment_srv.mutate([operation])
-  experiment = response[:value].first
-  puts 'Experiment with name "%s" and id %d was deleted.' %
-      [experiment[:name], experiment[:id]]
+  response = conv_tracker_srv.get(selector)
+  if response and response[:entries]
+    conversions = response[:entries]
+    puts "#{conversions.length} conversions(s) found."
+    conversions.each do |conversion|
+      puts "  Conversion with id \"#{conversion[:id]}\", status \"" +
+          "#{conversion[:status]}\" and category \"#{conversion[:category]}\"" +
+          " was found. Code snippet: \n#{conversion[:snippet]}\n"
+    end
+  else
+    puts "No conversions found."
+  end
 end
 
 if __FILE__ == $0
   begin
-    delete_experiment()
+    get_all_conversions()
 
   # Connection error. Likely transitory.
   rescue Errno::ECONNRESET, SOAP::HTTPStreamError, SocketError => e

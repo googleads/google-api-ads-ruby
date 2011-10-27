@@ -17,18 +17,18 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets all experiments in a campaign. To add an experiment, run
-# add_experiment.rb. To get campaigns, run get_all_campaigns.rb.
+# This example illustrates how to retrieve all the criteria for an ad group.
+# To add criteria to an existing ad group, run add_ad_group_criteria.rb.
 #
-# Tags: ExperimentService.get
+# Tags: AdGroupCriterionService.get
 
 require 'rubygems'
 gem 'google-adwords-api'
 require 'adwords_api'
 
-API_VERSION = :v201101
+API_VERSION = :v201109
 
-def get_all_experiments()
+def get_all_ad_group_criteria()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -37,40 +37,40 @@ def get_all_experiments()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  experiment_srv = adwords.service(:ExperimentService, API_VERSION)
+  ad_group_criterion_srv =
+      adwords.service(:AdGroupCriterionService, API_VERSION)
 
-  campaign_id = 'INSERT_CAMPAIGN_ID_HERE'.to_i
+  ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
 
-  # Get all the experiments for this campaign.
+  # Get all the criteria for this ad group.
   selector = {
-    :fields => ['Id', 'Name', 'ControlId', 'AdGroupsCount'],
-    :ordering => [{:field => 'Name', :sort_order => 'ASCENDING'}],
+    :fields => ['Id'],
+    :ordering => [{
+      :field => 'AdGroupId',
+      :sort_order => 'ASCENDING'
+    }],
     :predicates => [{
-      :field => 'CampaignId',
+      :field => 'AdGroupId',
       :operator => 'IN',
-      :values => [campaign_id]
+      :values => [ad_group_id]
     }]
   }
-  response = experiment_srv.get(selector)
-
+  response = ad_group_criterion_srv.get(selector)
   if response and response[:entries]
-    experiments = response[:entries]
-    experiments.each do |experiment|
-      experiment_stats = experiment[:experiment_summary_stats]
-      puts "Experiment with name \"#{experiment[:name]}\", " +
-          "id #{experiment[:id]} and control id " +
-          "#{experiment[:control_id]} was found and it includes " +
-          "#{experiment_stats[:ad_groups_count]} ad group(s) and " +
-          "#{experiment_stats[:ad_group_criteria_count]} criteria.\n"
+    ad_group_criteria = response[:entries]
+    puts "Ad group ##{ad_group_id} has #{ad_group_criteria.length} criteria."
+    ad_group_criteria.each do |ad_group_criterion|
+      puts "  Criterion id is #{ad_group_criterion[:criterion][:id]} and " +
+          "type is #{ad_group_criterion[:criterion][:xsi_type]}."
     end
   else
-    puts "No experiments were found."
+    puts "No criteria found for ad group ##{ad_group_id}."
   end
 end
 
 if __FILE__ == $0
   begin
-    get_all_experiments()
+    get_all_ad_group_criteria()
 
   # Connection error. Likely transitory.
   rescue Errno::ECONNRESET, SOAP::HTTPStreamError, SocketError => e

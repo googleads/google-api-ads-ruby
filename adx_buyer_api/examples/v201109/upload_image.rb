@@ -17,19 +17,18 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example promotes an experiment, which permanently applies all the
-# experiment changes made to its related ad groups, criteria and ads. To get
-# experiments, run get_all_experiments.rb.
+# This example uploads an image. To get images, run get_all_images.rb.
 #
-# Tags: ExperimentService.mutate
+# Tags: MediaService.upload
 
 require 'rubygems'
 gem 'google-adwords-api'
 require 'adwords_api'
+require 'base64'
 
-API_VERSION = :v201008
+API_VERSION = :v201109
 
-def promote_experiment()
+def upload_image()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -38,29 +37,39 @@ def promote_experiment()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  experiment_srv = adwords.service(:ExperimentService, API_VERSION)
+  media_srv = adwords.service(:MediaService, API_VERSION)
 
-  experiment_id = 'INSERT_EXPERIMENT_ID_HERE'.to_i
-
-  # Prepare for updating experiment.
-  operation = {
-    :operator => 'SET',
-    :operand => {
-      :id => experiment_id,
-      :status => 'PROMOTED',
-    }
+  # Create image.
+  image_url = 'https://sandbox.google.com/sandboximages/image.jpg'
+  # This utility method retrieves the contents of a URL using all of the config
+  # options provided to the Api object.
+  image_data = AdsCommon::Http.get(image_url, adwords.config)
+  base64_image_data = Base64.encode64(image_data)
+  image = {
+    # The 'xsi_type' field allows you to specify the xsi:type of the object
+    # being created. It's only necessary when you must provide an explicit
+    # type that the client library can't infer.
+    :xsi_type => 'Image',
+    :data => base64_image_data,
+    :type => 'IMAGE'
   }
 
-  # Update experiment.
-  response = experiment_srv.mutate([operation])
-  experiment = response[:value].first
-  puts 'Experiment with name "%s" and id %d was promoted.' %
-      [experiment[:name], experiment[:id]]
+  # Upload image.
+  response = media_srv.upload([image])
+  if response and !response.empty?
+    ret_image = response.first
+    dimensions = AdwordsApi::Utils.map(ret_image[:dimensions])
+    puts "Image with id #{ret_image[:media_id]}, dimensions " +
+        "#{dimensions['FULL'][:height]}x#{dimensions['FULL'][:width]} " +
+        "and MIME type \"#{ret_image[:mime_type]}\" uploaded successfully."
+  else
+    puts "No images uploaded."
+  end
 end
 
 if __FILE__ == $0
   begin
-    promote_experiment()
+    upload_image()
 
   # Connection error. Likely transitory.
   rescue Errno::ECONNRESET, SOAP::HTTPStreamError, SocketError => e
