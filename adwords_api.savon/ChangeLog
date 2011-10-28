@@ -1,4 +1,5 @@
 0.4.2:
+  - Updated Reporting error codes handling.
   - Fix for old v13 services compatibility.
   - Require google-ads-common 0.5.4 or later from now on.
 

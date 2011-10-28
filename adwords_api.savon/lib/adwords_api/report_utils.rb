@@ -89,7 +89,7 @@ module AdwordsApi
     # Send POST request for a report and returns Response object.
     def get_report_response(report_definition)
       definition_text = get_report_definition_text(report_definition)
-      data = {"__rdxml" => definition_text}
+      data = {'__rdxml' => definition_text}
       url = @api.api_config.adhoc_report_download_url(
           @api.config.read('service.environment'), @version)
       headers = get_report_request_headers()
@@ -131,20 +131,23 @@ module AdwordsApi
     # Checks downloaded data for error signature. Raises ReportError if it
     # detects an error.
     def check_for_errors(response)
-      # Check for error code.
-      unless response.code == 200
-        raise AdwordsApi::Errors::ReportError,
-            "Report download error occured, http code: %d" % response.code
-      end
       # Check for error in body.
       report_body = response.body
-      error_message_regex = '^!!!(-?\d+)\|\|\|(-?\d+)\|\|\|(.*)\?\?\?'
-      data = report_body.slice(0, 1024)
-      matches = data.match(error_message_regex)
-      if matches
-        message = (matches[3].nil?) ? data : matches[3]
-        raise AdwordsApi::Errors::ReportError,
-            "Report download error occured: %s" % message
+      if report_body
+        error_message_regex = '^!!!(-?\d+)\|\|\|(-?\d+)\|\|\|(.*)\?\?\?'
+        data = report_body.slice(0, 1024)
+        matches = data.match(error_message_regex)
+        if matches
+          message = (matches[3].nil?) ? data : matches[3]
+          raise AdwordsApi::Errors::ReportError.new(response.code,
+              "Report download error occured: %s" % message)
+        end
+      end
+      # Check for error code.
+      unless response.code == 200
+        raise AdwordsApi::Errors::ReportError.new(response.code,
+            "Report download error occured, http code: %d, body: %s" %
+            [response.code, response.body])
       end
       return nil
     end

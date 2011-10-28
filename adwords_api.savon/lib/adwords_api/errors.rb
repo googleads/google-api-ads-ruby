@@ -66,6 +66,12 @@ module AdwordsApi
 
     # Error for server-side report error.
     class ReportError < AdsCommon::Errors::ApiException
+      attr_reader :http_code
+
+      def initialize(http_code, message)
+        super(message)
+        @http_code = http_code
+      end
     end
   end
 end
