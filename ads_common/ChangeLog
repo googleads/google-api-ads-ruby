@@ -1,5 +1,6 @@
 0.5.4:
-  - Clenups and better wsdl compatibility.
+  - Improved support for OAuth.
+  - Cleanups and better wsdl compatibility.
 
 0.5.3:
   - Ruby 1.9 compatibility hotfix.

@@ -98,6 +98,31 @@ module AdsCommon
         return @consumer
       end
 
+      # Returns authorization string.
+      def auth_string(credentials, request)
+        if request.nil?
+          raise AdsCommon::Errors::AuthError,
+              'Request is required for OAuth generator.'
+        end
+        return generate_oauth_parameters_string(credentials, request)
+      end
+
+      # Generates auth string for OAuth method of authentication.
+      #
+      # Args:
+      # - credentials: credentials set for authorization
+      # - request: a HTTPI Request to generate headers for
+      #
+      # Returns:
+      # - Authentication string
+      #
+      def generate_oauth_parameters_string(credentials, request)
+        oauth_params = {:consumer => @consumer,
+                        :token => get_token(credentials)}
+        oauth_helper = OAuth::Client::Helper.new(request, oauth_params)
+        return oauth_helper.header
+      end
+
       private
 
       # Auxiliary method to validate the credentials for token generation.

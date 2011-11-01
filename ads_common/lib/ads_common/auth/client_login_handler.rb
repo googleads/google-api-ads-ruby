@@ -76,6 +76,11 @@ module AdsCommon
         return result
       end
 
+      # Returns authorization string.
+      def auth_string(credentials, request)
+        return ("GoogleLogin auth=%s" % get_token(credentials))
+      end
+
       private
 
       # Auxiliary method to validate the credentials for token generation.
