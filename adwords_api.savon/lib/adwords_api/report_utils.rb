@@ -40,6 +40,7 @@ module AdwordsApi
     #
     # Args:
     # - report_definition: definition of the report in XML text or hash
+    # - cid: optional customer ID to run against
     #
     # Returns:
     # - report body
@@ -49,8 +50,8 @@ module AdwordsApi
     #   definition is invalid
     # - AdwordsApi::Errors::ReportError if server-side error occurred
     #
-    def download_report(report_definition)
-      return get_report_response(report_definition).body
+    def download_report(report_definition, cid = nil)
+      return get_report_response(report_definition, cid).body
     end
 
     # Downloads a report and saves it to a file.
@@ -58,6 +59,7 @@ module AdwordsApi
     # Args:
     # - report_definition: definition of the report in XML text or hash
     # - path: path to save report to
+    # - cid: optional customer ID to run against
     #
     # Returns:
     # - nil
@@ -67,8 +69,8 @@ module AdwordsApi
     #   definition is invalid
     # - AdwordsApi::Errors::ReportError if server-side error occurred
     #
-    def download_report_as_file(report_definition, path)
-      report_body = download_report(report_definition)
+    def download_report_as_file(report_definition, path, cid = nil)
+      report_body = download_report(report_definition, cid)
       save_to_file(report_body, path)
       return nil
     end
@@ -83,17 +85,19 @@ module AdwordsApi
     REPORT_DEFINITION_ORDER = {
       :root => [:selector, :report_name, :report_type, :date_range_type,
           :download_format, :include_zero_impressions],
-      :selector => [:fields, :predicates, :date_range],
-      :predicates => [:field, :operator, :values]
+      :selector => [:fields, :predicates, :date_range, :ordering, :paging],
+      :predicates => [:field, :operator, :values],
+      :ordering => [:field, :sort_order],
+      :paging => [:start_index, :number_results]
     }
 
     # Send POST request for a report and returns Response object.
-    def get_report_response(report_definition)
+    def get_report_response(report_definition, cid = nil)
       definition_text = get_report_definition_text(report_definition)
       data = {'__rdxml' => definition_text}
       url = @api.api_config.adhoc_report_download_url(
           @api.config.read('service.environment'), @version)
-      headers = get_report_request_headers(url)
+      headers = get_report_request_headers(url, cid)
       response = AdsCommon::Http.post_response(url, data, @api.config, headers)
       check_for_errors(response)
       return response
@@ -113,15 +117,16 @@ module AdwordsApi
     end
 
     # Prepares headers for report request.
-    def get_report_request_headers(url)
+    def get_report_request_headers(url, cid = nil)
       credentials = @api.credential_handler.credentials
       auth_handler = @api.get_auth_handler(
           @api.config.read('service.environment'), @version)
       auth_string = auth_handler.auth_string(
           credentials, HTTPI::Request.new(url))
+      customer_id = validate_cid(cid || credentials[:clientCustomerId])
       headers = {
           'Authorization' => auth_string,
-          'ClientCustomerId' => credentials[:clientCustomerId],
+          'ClientCustomerId' => customer_id,
           'Content-Type' => 'multipart/form-data',
           'developerToken' => credentials[:developerToken]
       }
@@ -131,6 +136,20 @@ module AdwordsApi
     # Saves raw data to a file.
     def save_to_file(data, path)
       open(path, 'wb') { |file| file.puts(data) } if path
+    end
+
+    # Validates the customer ID specified is correct.
+    def validate_cid(cid)
+      if (cid.kind_of?(Integer) || (
+          cid.kind_of?(String) && (
+              ((/\d{3}-\d{3}-\d{4}/ =~ cid) == 0) ||
+              ((/\d{10}/ =~ cid) == 0)
+          )))
+        return cid
+      else
+        raise AdwordsApi::Errors::BadCredentialsError,
+            "Invalid client customer ID: %s" % cid
+      end
     end
 
     # Checks downloaded data for error signature. Raises ReportError if it
@@ -195,8 +214,15 @@ module AdwordsApi
       def_order = REPORT_DEFINITION_ORDER[name]
       var_order = def_order.reject {|field| !node.include?(field)}
       node.keys.each do |key|
-        if node[key].is_a?(Hash) and REPORT_DEFINITION_ORDER.include?(key)
-          add_report_definition_hash_order(node[key], key)
+        if REPORT_DEFINITION_ORDER.include?(key)
+          case node[key]
+            when Hash
+              add_report_definition_hash_order(node[key], key)
+            when Array
+              node[key].each do |item|
+                add_report_definition_hash_order(item, key)
+              end
+          end
         end
       end
       node[:order!] = var_order

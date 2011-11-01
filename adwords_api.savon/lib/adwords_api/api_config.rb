@@ -41,7 +41,7 @@ module AdwordsApi
 
     # Set other constants
     API_NAME = 'AdwordsApi'
-    CLIENT_LIB_VERSION = '0.4.2'
+    CLIENT_LIB_VERSION = '0.4.3'
     DEFAULT_CONFIG_FILENAME = 'adwords_api.yml'
 
     # Configure the services available to each version

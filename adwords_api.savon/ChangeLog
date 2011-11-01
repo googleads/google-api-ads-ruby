@@ -1,3 +1,6 @@
+0.4.3:
+  - Added example for client-side cross-client reporting.
+
 0.4.2:
   - Updated Reporting error codes handling.
   - Fix for old v13 services compatibility.
