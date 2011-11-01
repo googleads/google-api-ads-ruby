@@ -20,6 +20,7 @@
 # Contains utility methods specific to reporting.
 
 require 'gyoku'
+require 'httpi/request'
 
 require 'adwords_api/errors'
 
@@ -92,7 +93,7 @@ module AdwordsApi
       data = {'__rdxml' => definition_text}
       url = @api.api_config.adhoc_report_download_url(
           @api.config.read('service.environment'), @version)
-      headers = get_report_request_headers()
+      headers = get_report_request_headers(url)
       response = AdsCommon::Http.post_response(url, data, @api.config, headers)
       check_for_errors(response)
       return response
@@ -112,13 +113,17 @@ module AdwordsApi
     end
 
     # Prepares headers for report request.
-    def get_report_request_headers()
+    def get_report_request_headers(url)
       credentials = @api.credential_handler.credentials
-      auth_string = @api.client_login_handler.headers(credentials)[:authToken]
+      auth_handler = @api.get_auth_handler(
+          @api.config.read('service.environment'), @version)
+      auth_string = auth_handler.auth_string(
+          credentials, HTTPI::Request.new(url))
       headers = {
-          'Authorization' => "GoogleLogin auth=%s" % auth_string,
+          'Authorization' => auth_string,
           'ClientCustomerId' => credentials[:clientCustomerId],
-          'Content-Type' => 'multipart/form-data'
+          'Content-Type' => 'multipart/form-data',
+          'developerToken' => credentials[:developerToken]
       }
       return headers
     end

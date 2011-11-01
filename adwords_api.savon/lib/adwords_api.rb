@@ -226,8 +226,6 @@ module AdwordsApi
       return AdwordsApi::ReportUtils.new(self, version)
     end
 
-    private
-
     # Overrides AdsCommon::Api.get_auth_handler to allow version-specific
     # handlers.
     def get_auth_handler(environment, version = nil)
@@ -236,6 +234,8 @@ module AdwordsApi
       end
       return @auth_handler
     end
+
+    private
 
     # Creates an appropriate authentication handler for each service (reuses the
     # ClientLogin one to avoid generating multiple tokens unnecessarily).

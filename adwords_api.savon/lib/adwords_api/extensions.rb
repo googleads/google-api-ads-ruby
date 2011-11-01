@@ -20,8 +20,10 @@
 # Contains extensions to the API, that is, service helper methods provided in
 # client-side by the client library.
 
-require 'rexml/document'
 require 'csv'
+require 'httpi/request'
+require 'rexml/document'
+
 require 'ads_common/http'
 
 module AdwordsApi
@@ -223,18 +225,19 @@ module AdwordsApi
 
     # Gets a report response for a given parameters.
     def self.get_report_response(wrapper, url)
-      headers = get_report_request_headers(wrapper)
+      headers = get_report_request_headers(wrapper, url)
       report_response = AdsCommon::Http.get_response(url, wrapper.api.config,
           headers)
       return report_response
     end
 
-    def self.get_report_request_headers(wrapper)
+    def self.get_report_request_headers(wrapper, url)
       headers = {}
       credentials = wrapper.api.credential_handler.credentials
-      auth_handler = wrapper.api.client_login_handler
-      headers['Authorization'] = "GoogleLogin auth=%s" %
-          auth_handler.headers(credentials)[:authToken]
+      auth_handler = wrapper.api.get_auth_handler(
+          wrapper.api.config.read('service.environment'), wrapper.version)
+      headers['Authorization'] = auth_handler.auth_string(credentials,
+        HTTPI::Request.new(url))
       if credentials[:clientCustomerId]
         headers['clientCustomerId'] = credentials[:clientCustomerId]
       elsif credentials[:clientEmail]
