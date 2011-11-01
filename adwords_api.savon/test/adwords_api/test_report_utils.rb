@@ -52,7 +52,7 @@ REPLY_TYPES = [
 
 VALID_REPORT = '"Custom ADGROUP_PERFORMANCE_REPORT (Oct 20, 2011-Oct 26, 2011)"\nCampaign ID,Ad group ID,Impressions,Clicks,Cost\nTotal, --,0,0,0.00'
 
-class TestApiConfig < Test::Unit::TestCase
+class TestReportUtils < Test::Unit::TestCase
   # Initialize tests.
   def setup
     @api = AdwordsApi::Api.new
