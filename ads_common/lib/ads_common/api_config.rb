@@ -26,7 +26,7 @@ module AdsCommon
   # Contains helper methods for loading and managing the available services.
   # This module is meant to be imported into API-specific modules.
   module ApiConfig
-    ADS_COMMON_VERSION = '0.5.4'
+    ADS_COMMON_VERSION = '0.5.5'
 
     # Get the available API versions.
     #
@@ -103,6 +103,11 @@ module AdsCommon
       raise NotImplementedError, 'api_name not overriden.'
     end
 
+    # Get the API path.
+    def api_path
+      return api_name.to_s.snakecase
+    end
+
     # Get the default environment.
     #
     # Returns:
@@ -176,7 +181,7 @@ module AdsCommon
     #
     def do_require(version, service)
       filename = "%s/%s/%s" %
-          [api_name.to_s.snakecase, version.to_s, service.to_s.snakecase]
+          [api_path, version.to_s, service.to_s.snakecase]
       require filename
       return filename
     end
