@@ -47,7 +47,7 @@ spec = Gem::Specification.new do |s|
   s.test_files = tests
   s.has_rdoc = true
   s.extra_rdoc_files = docs
-  s.add_dependency('google-ads-common', '~> 0.5.1')
+  s.add_dependency('google-ads-common', '~> 0.5.4')
   s.add_dependency('savon', '= 0.9.6')
 end
 
@@ -70,7 +70,7 @@ task :generate do
   api_config = DfpApi::ApiConfig
   versions = api_config.versions()
   versions.each do |version|
-    code_path = "lib/%s/%s" % [api_config.api_path, version]
+    code_path = "lib/%s/%s" % [api_config.api_name.to_s.snakecase, version]
     wsdls = DfpApi::ApiConfig.get_wsdls(version)
     wsdls.each do |service_name, wsdl_url|
       logger.info("Processing %s at [%s]..." % [service_name, wsdl_url])

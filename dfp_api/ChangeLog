@@ -1,3 +1,9 @@
+0.2.6:
+
+0.2.5:
+  - Added postal code targeting examples.
+  - Require google-ads-common 0.5.4 or later from now on.
+
 0.2.4:
   - Support for proxies.
   - Require google-ads-common 0.5.1 or later from now on.

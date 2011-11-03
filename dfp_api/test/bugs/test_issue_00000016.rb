@@ -22,13 +22,13 @@
 require 'rubygems'
 require 'test/unit'
 require 'dfp_api/errors'
-require 'dfp_api/v201104/line_item_service'
-require 'savon'
+require 'dfp_api/v201108/line_item_service'
+require 'nori'
 
 class TestDfpApi < Test::Unit::TestCase
-  class StubService < DfpApi::V201104::LineItemService::LineItemService
+  class StubService < DfpApi::V201108::LineItemService::LineItemService
     def stub_get_line_items_by_statement(xml_text)
-      data = Savon::SOAP::XML.to_hash(xml_text)
+      data = Nori.parse(xml_text)[:envelope][:body]
       return extract_result(data, 'get_line_items_by_statement')
     end
   end
@@ -36,8 +36,8 @@ class TestDfpApi < Test::Unit::TestCase
   def test_issue_16
     assert_nothing_raised do
       service = StubService.new(
-          'https://www.google.com/apis/ads/publisher/v201104/LineItemService',
-          :v201104)
+          DfpApi::Api.new,
+          'https://www.google.com/apis/ads/publisher/v201108/LineItemService')
       result = service.stub_get_line_items_by_statement(get_xml_text)
       targeting = result[:results][0][:targeting][:inventory_targeting]
       assert_equal([1234567, 23456], targeting[:targeted_placement_ids])
@@ -45,10 +45,7 @@ class TestDfpApi < Test::Unit::TestCase
   end
 
   def get_xml_text
-    return DATA.read
-  end
-end
-__END__
+    return <<EOT
 <?xml version="1.0"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
  <soap:Header>
@@ -153,3 +150,6 @@ __END__
   </getLineItemsByStatementResponse>
  </soap:Body>
 </soap:Envelope>
+EOT
+  end
+end

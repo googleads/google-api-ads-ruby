@@ -1,0 +1,44 @@
+0.4.3:
+  - Added example for client-side cross-client reporting.
+
+0.4.2:
+  - Updated Reporting error codes handling.
+  - Fix for old v13 services compatibility.
+  - Require google-ads-common 0.5.4 or later from now on.
+
+0.4.1:
+  - Support for v201109.
+  - Added support and example for AdHoc reports.
+  - Removed deprecated TrafficEstimatorService (v13 only).
+  - Support for proxies.
+  - Units spent count and other headers information can now be obtained by
+    passing user block to a method call.
+  - Require google-ads-common 0.5.2 or later from now on.
+
+0.4.0:
+  - First experimental Savon-based release.
+  - use_ruby_names is now deprecated and always true.
+
+0.2.1:
+  - Changes for future OAuth support.
+  - Require google-ads-common 0.5.0 or later from now on.
+
+0.2.0:
+  - Better support for UTF reports in download extensions.
+  - Require google-ads-common 0.4.0 or later from now on.
+  - Consolidated log output to single Logger, see README.
+
+0.1.2:
+  - Support for cross-client MCC reports.
+  - Documented library use for DoubleClick Ad Exchange Buyer API.
+  - Require google-ads-common 0.2.1 or later from now on.
+
+0.1.1:
+  - Added support for BulkOpportunityService and CampaignTargetService.
+  - Added examples for the above services.
+  - Bugfix: pointed gem to the correct Google Code project.
+  - Bugfix: correctly handle some API exceptions.
+  - Bugfix: remove non-existent method in extensions.
+
+0.1.0:
+  - First release.

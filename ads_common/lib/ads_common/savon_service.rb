@@ -319,7 +319,7 @@ module AdsCommon
     def normalize_output(output_data, method_definition)
       fields_list = method_definition[:output][:fields]
       result = normalize_output_field(output_data, fields_list, :rval)
-      return result[:rval]
+      return result[:rval] || result
     end
 
     # Normalizes one field of a given data recursively.

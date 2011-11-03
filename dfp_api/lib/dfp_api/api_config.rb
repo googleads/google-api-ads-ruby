@@ -40,8 +40,7 @@ module DfpApi
 
     # Set other constants
     API_NAME = 'DfpApi'
-    API_PATH = 'dfp_api'
-    CLIENT_LIB_VERSION = '0.2.4'
+    CLIENT_LIB_VERSION = '0.2.6'
     DEFAULT_CONFIG_FILENAME = 'dfp_api.yml'
 
     # Configure the services available to each version
@@ -103,16 +102,6 @@ module DfpApi
 
     public
 
-    def self.do_require(version, service)
-      service_name = service.to_s.snakecase()
-      filename = "%s/%s/%s" % [api_path, version, service_name]
-      require filename
-    end
-
-    def self.interface_name(version, service)
-      return module_name(version, service) + "::" + service.to_s
-    end
-
     # Getters for constants and module variables.
     def self.default_version
       DEFAULT_VERSION
@@ -128,10 +117,6 @@ module DfpApi
 
     def self.api_name
       API_NAME
-    end
-
-    def self.api_path
-      API_PATH
     end
 
     def self.service_config

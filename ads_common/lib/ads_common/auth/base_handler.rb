@@ -63,9 +63,14 @@ module AdsCommon
         return @token
       end
 
-      # Creates authorization token. Needs to be overriden.
+      # Creates authorization token. Needs to be overridden.
       def create_token(credentials)
-        raise NotImplementedError, 'create_token not overriden.'
+        raise NotImplementedError, 'create_token not overridden.'
+      end
+
+      # Returns authorization string. Needs to be overridden.
+      def auth_string(credentials, request)
+        raise NotImplementedError, 'auth_string not overridden.'
       end
     end
   end

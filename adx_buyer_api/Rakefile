@@ -28,7 +28,7 @@ docs = ['README', 'COPYING', 'ChangeLog']
 
 spec = Gem::Specification.new do |s|
   s.name = 'google-adx-buyer-api'
-  s.version = '0.3.0'
+  s.version = '0.4.1'
   s.author = 'Danial Klimkin'
   s.email = 'api.dklimkin@gmail.com'
   s.homepage = 'http://code.google.com/p/google-api-ads-ruby/'
@@ -39,7 +39,7 @@ spec = Gem::Specification.new do |s|
   s.files = files
   s.has_rdoc = true
   s.extra_rdoc_files = docs
-  s.add_dependency('google-adwords-api', '~> 0.2.0')
+  s.add_dependency('google-adwords-api', '~> 0.4.1')
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|
