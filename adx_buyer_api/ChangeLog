@@ -1,3 +1,5 @@
+0.4.1:
+
 0.4.0:
   - Compatibility with google-adwords-api-0.4.1.
   - Switched to Savon backend.
