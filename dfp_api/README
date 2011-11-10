@@ -190,7 +190,7 @@ External dependencies should be pulled automatically on gem install. Here is the
 list though:
 
   - Google Ads Common library (google-ads-common-0.5.4);
-  - Savon 'the heavy metal Ruby SOAP client' (savon-0.9.6).
+  - Savon 'the heavy metal Ruby SOAP client' (savon-0.9.7).
 
 
 = Where do I submit bug reports and feature requests?
