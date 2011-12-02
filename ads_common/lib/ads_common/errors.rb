@@ -1,6 +1,6 @@
 #!/usr/bin/ruby
 #
-# Authors:: api.sgomes@gmail.com (Sérgio Gomes)
+# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
@@ -20,6 +20,8 @@
 # Contains common errors across APIs, as well as base classes to inherit from
 # in specific APIs.
 
+require 'pp'
+
 module AdsCommon
   module Errors
 
@@ -30,31 +32,53 @@ module AdsCommon
     # Raised if an attempt is made to authenticate with missing or wrong
     # information.
     class AuthError < Error
-      attr_reader :error
-      attr_reader :info
+      attr_reader :error, :info
       def initialize(message = self.class.to_s, error = nil, info = nil)
         super(message)
-        @error = error
-        @info = info
+        @error, @info = error, info
       end
     end
 
     # Raised when OAuth access token is required.
     class OAuthVerificationRequired < AuthError
-      attr_reader :oauth_url
-      attr_reader :request_token
+      attr_reader :oauth_url, :request_token
       def initialize(oauth_url, request_token)
         super()
         @oauth_url, @request_token = oauth_url, request_token
       end
     end
 
-    # Raised if setting a non-existant property on an object
+    # Raised if a required property on an object is missing.
     class MissingPropertyError < Error
       attr_reader :property, :object_type
       def initialize(property, object_type)
-        @property = property
-        @object_type = object_type
+        @property, @object_type = property, object_type
+      end
+      def to_s()
+        return "%s: name: %s, type: %s" % [super, @property, @object_type]
+      end
+    end
+
+    # Raised if the type of the object provided does not match expected type.
+    class TypeMismatchError < Error
+      attr_reader :expected, :provided, :field_name
+      def initialize(expected, provided, field_name)
+        @expected, @provided, @field_name = expected, provided, field_name
+      end
+      def to_s()
+        return "%s: expected: '%s', provided: '%s' for field '%s'" %
+            [super, @expected, @provided, @field_name]
+      end
+    end
+
+    # Raised if unexpected parameters encountered.
+    class UnexpectedParametersError < Error
+      attr_reader :parameters_list
+      def initialize(parameters_list)
+        @parameters_list = parameters_list
+      end
+      def to_s()
+        return "%s: %s" % [super, PP.singleline_pp(@parameters_list, '')]
       end
     end
 

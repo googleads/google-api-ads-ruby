@@ -22,11 +22,10 @@
 require 'httpi'
 require 'savon'
 
+require 'ads_common/parameters_validator'
+
 module AdsCommon
   class SavonService
-    # Default namespace name.
-    DEFAULT_NAMESPACE = 'wsdl'
-
     # HTTP read timeout in seconds.
     HTTP_READ_TIMEOUT = 15 * 60
 
@@ -81,164 +80,31 @@ module AdsCommon
 
     # Executes SOAP action specified as a string with given arguments.
     def execute_action(action_name, args, &block)
-      args = validate_args(action_name, args)
-      response = execute_soap_request(action_name.to_sym, args)
+      validator = ParametersValidator.new(get_service_registry())
+      args = validator.validate_args(action_name, args)
+      response = execute_soap_request(
+          action_name.to_sym, args, validator.extra_namespaces)
       handle_errors(response)
       return extract_result(response, action_name, &block)
     end
 
     # Executes the SOAP request with original SOAP name.
-    def execute_soap_request(action, args)
+    def execute_soap_request(action, args, extra_namespaces)
       original_action_name =
           get_service_registry.get_method_signature(action)[:original_name]
       original_action_name = action if original_action_name.nil?
       response = @client.request(original_action_name) do |soap|
-        set_headers(soap, args)
+        set_headers(soap, args, extra_namespaces)
       end
       return response
     end
 
-    # Validates input parameters to:
-    # - add parameter names;
-    # - resolve xsi:type where required;
-    # - convert some native types to XML.
-    def validate_args(action_name, args)
-      validated_args = {}
-      in_params = get_service_registry.get_method_signature(action_name)[:input]
-      in_params.each_with_index do |in_param, index|
-        key = in_param[:name]
-        value = deep_copy(args[index])
-        validated_args[key] = (value.nil?) ?
-             nil : validate_arg(value, validated_args, key, in_param[:type])
-        # Adding :order! key to keep correct order in SOAP elements.
-        validated_args[:order!] =
-            generate_order_for_args(validated_args, in_params)
-      end
-      return validated_args
-    end
-
-    # Validates method argument. Runs recursively if hash or array encountered.
-    # Also handles some types that need special conversions.
-    def validate_arg(arg, parent = nil, key = nil, field_type_name = nil)
-      field_type = get_full_type_signature(field_type_name)
-      result = case arg
-        when Hash
-          validate_hash_arg(arg, parent, key, field_type)
-        when Array then arg.map do |item|
-           validate_arg(item, parent, key, field_type_name)
-          end
-        when Time then time_to_xml_hash(arg)
-        else arg
-      end
-      return result
-    end
-
-    # Generates order of XML elements for SOAP request. Returns only items
-    # existing in arg.
-    def generate_order_for_args(arg, fields)
-      all_keys = fields.map {|field| field[:name]}
-      return all_keys & arg.keys
-    end
-
-    # Validates hash argument recursively. Keeps tracking of correct place
-    # for xsi:type and adds is when required.
-    def validate_hash_arg(arg, parent = nil, key = nil, field_type = nil)
-      # Non-default namespace should be used, overriding default.
-      if field_type and field_type.include?(:ns)
-        namespace = get_service_registry.get_namespace(field_type[:ns])
-        key = prefix_key(key)
-        add_attribute(parent, key, 'xmlns', namespace)
-      end
-
-      # Handling custom xsi:type.
-      xsi_type = arg.delete('xsi:type') || arg.delete(:xsi_type)
-      if xsi_type
-        xsi_field_type = get_full_type_signature(xsi_type)
-        if xsi_field_type.nil?
-          raise AdsCommon::Errors::ApiException.new(
-              "Incorrect xsi:type specified: '%s'" % [xsi_type])
-        else
-          # TODO: make sure xsi_type is derived from field_type.
-          field_type = xsi_field_type
-        end
-        if parent and key
-          add_xsi_type(parent, key, xsi_type)
-        else
-          raise AdsCommon::Errors::ApiException.new(
-              "Can't find correct position for xsi:type (%s) [%s], [%s]" %
-                  [xsi_type, parent, key])
-        end
-      end
-
-      # Adding :order! key to keep correct order in SOAP elements.
-      if field_type and field_type.include?(:fields)
-        arg[:order!] =
-            generate_order_for_args(arg, field_type[:fields])
-      end
-
-      # Processing each key-value pair.
-      return arg.inject({}) do |result, (k, v)|
-        if (k == :attributes! or k == :order!)
-          result[k] = v
-        else
-          subfield = (field_type.nil?) ? nil :
-              get_field_by_name(field_type[:fields], k)
-          # Here we will give up if the field is unknown. For full validation
-          # we have to handle nil here.
-          subtype_name, subtype = if subfield and subfield.include?(:type)
-            subtype_name = subfield[:type]
-            subtype = (subtype_name.nil?) ? nil :
-                get_service_registry.get_type_signature(subtype_name)
-            [subtype_name, subtype]
-          end
-          # In case of non-default namespace, the children should be in
-          # overridden namespace but the node has to be in the default.
-          # We also have to fix order! list if we alter the key name.
-          new_key = if (subtype and subtype[:ns])
-            prefixed_key = prefix_key(k)
-            replace_item!(arg[:order!], k, prefixed_key)
-            prefixed_key
-          else
-            k
-          end
-          result[new_key] = validate_arg(v, result, k, subtype_name)
-        end
-        result
-      end
-    end
-
-    # Replaces an item in an array with a different one into the same position.
-    def replace_item!(data, old_item, new_item)
-      data.map! {|item| (item == old_item) ? new_item : item}
-    end
-
-    # Adds ":attributes!" record for Savon to specify xsi:type.
-    def add_xsi_type(parent, key, xsi_type)
-      add_attribute(parent, key, 'xsi:type', xsi_type)
-    end
-
-    # Adds Savon attribute for given node, key, name and value.
-    def add_attribute(node, key, name, value)
-      node[:attributes!] ||= {}
-      node[:attributes!][key] ||= {}
-      if node[:attributes!][key].include?(name)
-        node[:attributes!][key][name] = arrayize(node[:attributes!][key][name])
-        node[:attributes!][key][name] << value
-      else
-        node[:attributes!][key][name] = value
-      end
-    end
-
-    # Prefixes default namespace.
-    def prefix_key(key)
-      return "%s:%s" % [DEFAULT_NAMESPACE, key.to_s.lower_camelcase]
-    end
-
     # Executes each handler to generate SOAP headers.
-    def set_headers(soap, args)
+    def set_headers(soap, args, extra_namespaces)
       @headerhandler.each do |handler|
         handler.prepare_request(@client.http, soap, args)
       end
+      soap.namespaces.merge!(extra_namespaces) unless extra_namespaces.nil?
     end
 
     # Checks for errors in response and raises appropriate exception.
@@ -405,14 +271,6 @@ module AdsCommon
       return object.is_a?(Array) ? object : [object]
     end
 
-    # Converts Time to a hash for XML marshalling.
-    def time_to_xml_hash(time)
-      return {
-          :hour => time.hour, :minute => time.min, :second => time.sec,
-          :date => {:year => time.year, :month => time.month, :day => time.day}
-      }
-    end
-
     # Returns all inherited fields of superclasses for given type.
     def implode_parent(data_type)
       result = []
@@ -426,11 +284,6 @@ module AdsCommon
         result << field
       end
       return result
-    end
-
-    # Returns copy of object and its sub-objects ("deep" copy).
-    def deep_copy(data)
-      return Marshal.load(Marshal.dump(data))
     end
 
     # Returns type signature with all inherited fields.

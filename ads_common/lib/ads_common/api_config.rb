@@ -26,7 +26,7 @@ module AdsCommon
   # Contains helper methods for loading and managing the available services.
   # This module is meant to be imported into API-specific modules.
   module ApiConfig
-    ADS_COMMON_VERSION = '0.5.5'
+    ADS_COMMON_VERSION = '0.6.0'
 
     # Get the available API versions.
     #

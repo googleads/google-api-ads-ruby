@@ -63,11 +63,15 @@ module AdsCommon
       def process_types(doc)
         REXML::XPath.each(doc, '//schema') do |schema|
           ns_index = process_namespace(schema)
-          get_complex_types(schema).each do |ctype|
+          complex_types = get_complex_types(schema)
+          simple_types =  get_simple_types(schema)
+          (complex_types + simple_types).each do |ctype|
             ctype_name = get_element_name(ctype)
             if ctype_name.match('.+Exception$')
               @soap_exceptions << extract_exception(ctype)
             elsif ctype_name.match('.+Error$')
+              # We don't use it at the moment.
+            elsif ctype_name.match('.+\.Reason$')
               # We don't use it at the moment.
             else
               @soap_types << extract_type(ctype, ns_index)
@@ -102,6 +106,11 @@ module AdsCommon
       # Extracts ComplexTypes from node into an array.
       def get_complex_types(node)
         return REXML::XPath.each(node, 'complexType').to_a
+      end
+
+      # Extracts SimpleTypes from node into an array.
+      def get_simple_types(node)
+        return REXML::XPath.each(node, 'simpleType').to_a
       end
 
       # Extracts exception parameters from ComplexTypes element.
