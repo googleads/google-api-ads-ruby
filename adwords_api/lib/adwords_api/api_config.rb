@@ -92,7 +92,8 @@ module AdwordsApi
                    :ReportDefinitionService, :ServicedAccountService,
                    :TargetingIdeaService, :TrafficEstimatorService,
                    :UserListService, :ConstantDataService,
-                   :LocationCriterionService, :MutateJobService]
+                   :LocationCriterionService, :MutateJobService,
+                   :CreateAccountService]
     }
 
     # Configure the different environments, with the base URL for each one
@@ -229,7 +230,8 @@ module AdwordsApi
       [:v201109, :UserListService] => 'cm/',
       [:v201109, :ConstantDataService] => 'cm/',
       [:v201109, :LocationCriterionService] => 'cm/',
-      [:v201109, :MutateJobService] => 'cm/'
+      [:v201109, :MutateJobService] => 'cm/',
+      [:v201109, :CreateAccountService] => 'mcm/'
     }
 
     # Configure the auth servers to use for each environment

@@ -20,25 +20,21 @@
 # Tests issue #31.
 
 require 'rubygems'
+require 'gyoku'
 require 'test/unit'
+
+require 'ads_common/parameters_validator'
 require 'adwords_api'
-require 'adwords_api/v201101/targeting_idea_service'
+require 'adwords_api/v201109/targeting_idea_service_registry'
 
 class TestIssue31 < Test::Unit::TestCase
-  class StubService < AdwordsApi::V201101::TargetingIdeaService::TargetingIdeaService
-    def stub_validate_args(action_name, args)
-      return validate_args(action_name, args)
-    end
-  end
-
   def setup
-    @api = AdwordsApi::Api.new()
-    @service = StubService.new(
-        @api, @api.api_config.environment_config[:PRODUCTION][:v201101])
+    @registry = AdwordsApi::V201109::TargetingIdeaService::TargetingIdeaServiceRegistry
   end
 
   def run_test(selector)
-    result_hash = @service.stub_validate_args('get', [selector])
+    validator = AdsCommon::ParametersValidator.new(@registry)
+    result_hash = validator.validate_args('get', [selector])
     return Gyoku.xml(result_hash)
   end
 

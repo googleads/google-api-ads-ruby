@@ -53,7 +53,7 @@ def get_location_criteria()
            :operator => 'IN',
            :values => location_names},
           # Set the locale of the returned location names.
-          {:field => 'Locale', :operator => 'EQUALS', :values => locale}
+          {:field => 'Locale', :operator => 'EQUALS', :values => [locale]}
     ]
   }
   criteria = location_criterion_srv.get(selector)

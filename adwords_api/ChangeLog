@@ -1,4 +1,7 @@
 0.4.4:
+  - Support for CreateAccountService.
+  - Require google-ads-common 0.6.0 or later from now on.
+  - Better input parameter validation and error reporting.
 
 0.4.3:
   - Added example for client-side cross-client reporting.
