@@ -106,7 +106,7 @@ Once the library object is created you can request services with a 'service'
 method:
   user_service = dfp.service(:UserService, <API_VERSION>)
 
-where <API_VERSION> is required version of DFP API as symbol, e.g. :v201108.
+where <API_VERSION> is required version of DFP API as symbol, e.g. :v201111.
 
 Then you should be able to execute service methods:
 
@@ -139,7 +139,7 @@ Examples can be run by executing by running:
 
 from the "examples/<version>/<service_name>" directory i.e.
 
-  $ cd examples/v201108/user_service
+  $ cd examples/v201111/user_service
   $ ruby get_all_users.rb
 
 Some examples require modification to be functional, like create_order example
@@ -189,7 +189,7 @@ or via configuration file (see example).
 External dependencies should be pulled automatically on gem install. Here is the
 list though:
 
-  - Google Ads Common library (google-ads-common-0.5.4);
+  - Google Ads Common library (google-ads-common-0.6.0);
   - Savon 'the heavy metal Ruby SOAP client' (savon-0.9.7).
 
 

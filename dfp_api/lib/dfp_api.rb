@@ -20,7 +20,7 @@
 # Contains the main classes for the client library. Takes care of all
 # dependencies.
 
-gem 'google-ads-common', '~>0.5.4'
+gem 'google-ads-common', '~>0.6.0'
 
 require 'ads_common/api'
 require 'ads_common/savon_service'
