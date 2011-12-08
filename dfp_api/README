@@ -39,7 +39,7 @@ DoubleClick For Publishers API web services plus more. It includes:
   - Examples: The Ruby client library comes with code samples in the "examples/"
     directory. We encourage you to use code samples to get started writing your
     own application. All the code samples are runnable out of the box, but you
-    will have to set your credentials in "~/dfp_api.yml".
+    will have to set your credentials in the "~/dfp_api.yml" configuration file.
 
 
 = How to get started
@@ -131,8 +131,9 @@ converted to symbols in Ruby native snake_case format:
 
 == Running examples
 
-Before running examples, please ensure that your dfp.yml is filled in and
-placed in your home directory.
+Before running examples, please ensure that your 'dfp_api.yml' is filled in and
+placed in your home directory. You can find the examples as part of the
+installed gem, download them as a tarball or view them online.
 
 Examples can be run by executing by running:
   $ ruby <example_name>
