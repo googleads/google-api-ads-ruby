@@ -1,3 +1,5 @@
+0.6.1:
+
 0.6.0:
   - Better namespace handling in complex cases.
   - Large refactoring on parameter processing code.

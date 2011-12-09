@@ -88,7 +88,7 @@ module AdsCommon
         app_name = credentials[:userAgent] || credentials[:useragent]
         # We don't know the library version here. A breaking change needs to be
         # introduced. This is scheduled for 0.7.0, using Common version for now.
-        lib_version = '0.6.0'
+        lib_version = '0.6.1'
         soap_user_agent = "Common-Ruby-%s; %s" % [lib_version, app_name]
         return "Savon/%s (%s)" % [Savon::Version, soap_user_agent]
       end
