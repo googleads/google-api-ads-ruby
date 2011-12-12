@@ -184,13 +184,25 @@ configuration hash:
 
 or via configuration file (see example).
 
+== How do I enable GZip responses compression?
+
+The library offers a transparent compression option which can be enabled in the
+configuration file or by the following setting:
+
+   config[:connection] = {
+     :enable_gzip => true
+   }
+
+Enabling this option will set the headers required to request the server to
+respond in gzipped format. All requests are sent uncompressed regardless.
+
 
 = External dependencies:
 
 External dependencies should be pulled automatically on gem install. Here is the
 list though:
 
-  - Google Ads Common library (google-ads-common-0.6.0);
+  - Google Ads Common library (google-ads-common-0.6.1);
   - Savon 'the heavy metal Ruby SOAP client' (savon-0.9.7).
 
 

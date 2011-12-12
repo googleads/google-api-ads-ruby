@@ -30,6 +30,8 @@
 :service:
   :environment: SANDBOX
 :connection:
+  # Enable to request all responses to be compressed.
+  :enable_gzip: false
   # If your proxy connection requires authentication, make sure to include it in
   # the URL, e.g.: http://user:password@proxy_hostname:8080
   #:proxy: INSERT_PROXY_HERE

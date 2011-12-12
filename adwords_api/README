@@ -29,7 +29,7 @@ which is installed automatically as a dependency.
 The following gem libraries are required:
   - savon v0.9.7
   - httpclient v2.1.2 or greater
-  - google-ads-common v0.6.0 or later.
+  - google-ads-common v0.6.1 or later.
 
 
 == 2 - Using the client library:
@@ -155,6 +155,18 @@ This information can be obtained by passing a user block during method call:
 
 You can also retrieve the response body as the second block parameter:
   report_def_srv.get(selector) {|header, body| ... }
+
+=== 2.5 - GZip compression
+
+The library offers a transparent compression option which can be enabled in the
+configuration file or by the following setting:
+
+   config[:connection] = {
+     :enable_gzip => true
+   }
+
+Enabling this option will set the headers required to request the server to
+respond in gzipped format. All requests are sent uncompressed regardless.
 
 
 = Docs for Developers

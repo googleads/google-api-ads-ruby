@@ -1,4 +1,6 @@
 0.6.1:
+  - Support for GZip compression.
+  - Added logging of the response HTTP headers.
 
 0.6.0:
   - Better namespace handling in complex cases.

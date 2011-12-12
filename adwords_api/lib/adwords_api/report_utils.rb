@@ -124,12 +124,18 @@ module AdwordsApi
       auth_string = auth_handler.auth_string(
           credentials, HTTPI::Request.new(url))
       customer_id = validate_cid(cid || credentials[:clientCustomerId])
+      app_name = credentials[:userAgent] || credentials[:useragent]
       headers = {
           'Authorization' => auth_string,
           'ClientCustomerId' => customer_id,
           'Content-Type' => 'multipart/form-data',
-          'developerToken' => credentials[:developerToken]
+          'developerToken' => credentials[:developerToken],
+          'User-Agent' => "HTTPI/%s (%s)" % [HTTPI::VERSION, app_name]
       }
+      if @api.config.read('connection.enable_gzip', false)
+        headers['User-Agent'] += ' (gzip)'
+        headers['Accept-Encoding'] = 'gzip,deflate'
+      end
       return headers
     end
 

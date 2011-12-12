@@ -69,11 +69,13 @@ module AdsCommon
     # Creates and sets up Savon client.
     def create_savon_client(endpoint, namespace)
       proxy = @api.config.read('connection.proxy')
+      enable_gzip = @api.config.read('connection.enable_gzip', false)
       client = Savon::Client.new do |wsdl, http|
         wsdl.endpoint = endpoint
         wsdl.namespace = namespace
-        http.proxy = proxy if !proxy.nil?
         http.read_timeout = HTTP_READ_TIMEOUT
+        http.proxy = proxy if proxy
+        http.gzip if enable_gzip
       end
       return client
     end
@@ -84,8 +86,14 @@ module AdsCommon
       args = validator.validate_args(action_name, args)
       response = execute_soap_request(
           action_name.to_sym, args, validator.extra_namespaces)
+      log_headers(response.http.headers)
       handle_errors(response)
       return extract_result(response, action_name, &block)
+    end
+
+    # Logs response headers.
+    def log_headers(headers)
+      @api.logger.debug(headers.map {|k, v| [k, v].join(': ')}.join(', '))
     end
 
     # Executes the SOAP request with original SOAP name.

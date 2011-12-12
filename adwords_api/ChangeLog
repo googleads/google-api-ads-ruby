@@ -1,4 +1,6 @@
 0.4.5:
+  - Support for GZip compression.
+  - Require google-ads-common 0.6.1 or later from now on.
 
 0.4.4:
   - Support for CreateAccountService.

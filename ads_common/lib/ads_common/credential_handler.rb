@@ -58,6 +58,13 @@ module AdsCommon
       @auth_handler.property_changed(credential, value) if @auth_handler
     end
 
+    # Returns current configuration.
+    # TODO: we need better way to access config widely,
+    #       remove after refactoring.
+    def get_config()
+      return @config
+    end
+
     private
 
     # Loads the credentials from the config data.

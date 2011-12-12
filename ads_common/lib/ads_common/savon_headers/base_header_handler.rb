@@ -43,6 +43,7 @@ module AdsCommon
         @element_name = element_name
         @namespace = namespace
         @version = version
+        @config = credential_handler.get_config
         Savon.configure {|config| config.raise_errors = false}
       end
 
@@ -90,7 +91,9 @@ module AdsCommon
         # introduced. This is scheduled for 0.7.0, using Common version for now.
         lib_version = '0.6.1'
         soap_user_agent = "Common-Ruby-%s; %s" % [lib_version, app_name]
-        return "Savon/%s (%s)" % [Savon::Version, soap_user_agent]
+        user_agent = "Savon/%s (%s)" % [Savon::Version, soap_user_agent]
+        user_agent += ' (gzip)' if @config.read('connection.enable_gzip', false)
+        return user_agent
       end
     end
   end
