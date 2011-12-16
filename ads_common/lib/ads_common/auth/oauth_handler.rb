@@ -117,8 +117,11 @@ module AdsCommon
       # - Authentication string
       #
       def generate_oauth_parameters_string(credentials, request)
-        oauth_params = {:consumer => @consumer,
-                        :token => get_token(credentials)}
+        oauth_params = {
+            # get_token() ensures @consumer is initialized.
+            :token => get_token(credentials),
+            :consumer => @consumer
+        }
         oauth_helper = OAuth::Client::Helper.new(request, oauth_params)
         return oauth_helper.header
       end
