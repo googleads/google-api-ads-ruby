@@ -103,7 +103,7 @@ module AdsCommon
       # An array passed when an object is expected.
       if (field[:max_occurs] == 1) and arg.kind_of?(Array)
         raise AdsCommon::Errors::TypeMismatchError.new(
-            field[:type], Array)
+            field[:type], Array, field[:name])
       end
     end
 

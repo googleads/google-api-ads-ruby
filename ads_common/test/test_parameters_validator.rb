@@ -22,11 +22,13 @@
 require 'rubygems'
 require 'test/unit'
 
+require 'ads_common/errors'
 require 'ads_common/parameters_validator'
 
 module AdsCommon
   class ParametersValidator
     public :deep_copy, :add_attribute, :array_from_named_list
+    public :check_required_argument_present
   end
 end
 
@@ -99,5 +101,32 @@ class TestParametersValidator < Test::Unit::TestCase
     src = [{:name => 'foo'}, {:name => 'bar', :bar => :baz}, {:name => 'ipsum'}]
     result = @validator.array_from_named_list(src)
     assert_equal(['foo', 'bar', 'ipsum'], result)
+  end
+
+  def test_check_required_argument_present
+    field1 = {:min_occurs => 1, :max_occurs => 1,
+              :name => 'field1', :type => 'type1'}
+    assert_raises(AdsCommon::Errors::MissingPropertyError) do
+      @validator.check_required_argument_present(nil, field1)
+    end
+    assert_raises(AdsCommon::Errors::TypeMismatchError) do
+      @validator.check_required_argument_present([], field1)
+    end
+    assert_nothing_raised do
+      @validator.check_required_argument_present({}, field1)
+      @validator.check_required_argument_present('foobar', field1)
+      @validator.check_required_argument_present(42, field1)
+    end
+
+    field2 = {:min_occurs => 0, :max_occurs => :unbounded,
+              :name => 'field2', :type => 'type2'}
+    assert_raises(AdsCommon::Errors::TypeMismatchError) do
+      @validator.check_required_argument_present({}, field2)
+    end
+    assert_nothing_raised do
+      @validator.check_required_argument_present(nil, field2)
+      @validator.check_required_argument_present([], field2)
+      @validator.check_required_argument_present([field1, field2], field2)
+    end
   end
 end
