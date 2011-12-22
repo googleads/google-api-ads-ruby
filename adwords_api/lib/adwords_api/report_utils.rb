@@ -163,7 +163,8 @@ module AdwordsApi
     def check_for_errors(response)
       # Check for error in body.
       report_body = response.body
-      if report_body and report_body.valid_encoding?
+      if report_body and
+          ((RUBY_VERSION < '1.9.1') or report_body.valid_encoding?)
         error_message_regex = '^!!!(-?\d+)\|\|\|(-?\d+)\|\|\|(.*)\?\?\?'
         data = report_body.slice(0, 1024)
         matches = data.match(error_message_regex)
