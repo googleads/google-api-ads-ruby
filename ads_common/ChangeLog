@@ -1,6 +1,7 @@
 0.6.1:
   - Support for GZip compression.
   - Added logging of the response HTTP headers.
+  - Updated minimal requirement for httpclient (~>2.2.3) and httpi (~>0.9.3).
 
 0.6.0:
   - Better namespace handling in complex cases.
