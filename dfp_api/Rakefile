@@ -24,6 +24,12 @@ require 'rubygems/package_task'
 require 'rake/testtask'
 require './lib/dfp_api/api_config'
 
+# Workaround for the current mess of different yamlers in Ruby world.
+if RUBY_VERSION>='1.9.2'
+  gem 'psych'
+  YAML::ENGINE.yamler = 'psych'
+end
+
 # Google common ads library used for wrapper code generation.
 gem 'google-ads-common'
 require 'ads_common/build/savon_generator'
