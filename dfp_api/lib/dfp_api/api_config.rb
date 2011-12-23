@@ -40,7 +40,7 @@ module DfpApi
 
     # Set other constants
     API_NAME = 'DfpApi'
-    CLIENT_LIB_VERSION = '0.2.7'
+    CLIENT_LIB_VERSION = '0.2.8'
     DEFAULT_CONFIG_FILENAME = 'dfp_api.yml'
 
     # Configure the services available to each version
