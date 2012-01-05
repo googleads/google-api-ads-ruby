@@ -20,7 +20,6 @@ The following gem libraries are required:
  - savon v0.9.7;
  - httpi v0.9.3 or greater;
  - httpclient v2.2.3 or greater.
- - psych-1.2.2 or greater (for ruby-1.9.2 and later only).
 
 = Docs for Developers
 
