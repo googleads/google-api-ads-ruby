@@ -23,6 +23,8 @@
 require 'rubygems'
 require 'yaml'
 
+require 'ads_common/errors'
+
 module AdsCommon
   class Config
 
@@ -78,7 +80,13 @@ module AdsCommon
     # - <b>Errno::ENOENT</b> if the file does not exist.
     #
     def load(filename)
-      @config = YAML::load_file(filename)
+      new_config = YAML::load_file(filename)
+      if new_config.kind_of?(Hash)
+        @config = new_config
+      else
+        raise AdsCommon::Errors::Error,
+            "Incorrect configuration file: %s" % filename
+      end
       return nil
     end
 
