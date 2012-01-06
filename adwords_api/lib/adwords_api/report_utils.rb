@@ -136,6 +136,10 @@ module AdwordsApi
         headers['User-Agent'] += ' (gzip)'
         headers['Accept-Encoding'] = 'gzip,deflate'
       end
+      money_in_micros = @api.config.read('library.return_money_in_micros')
+      unless money_in_micros.nil?
+        headers['returnMoneyInMicros'] = money_in_micros
+      end
       return headers
     end
 

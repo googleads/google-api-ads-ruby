@@ -1,5 +1,6 @@
 0.4.5:
   - Support for GZip compression.
+  - Support for returnMoneyInMicros header.
   - Require google-ads-common 0.6.1 or later from now on.
 
 0.4.4:

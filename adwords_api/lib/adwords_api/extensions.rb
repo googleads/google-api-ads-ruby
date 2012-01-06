@@ -245,6 +245,11 @@ module AdwordsApi
       elsif credentials[:email]
         headers['clientEmail'] = credentials[:email]
       end
+      money_in_micros =
+          wrapper.api.config.read('library.return_money_in_micros')
+      unless money_in_micros.nil?
+        headers['returnMoneyInMicros'] = money_in_micros
+      end
       return headers
     end
 
