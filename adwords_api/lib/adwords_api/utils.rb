@@ -1,8 +1,8 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 #
-# Author:: api.sgomes@gmail.com (Sérgio Gomes)
+# Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -46,12 +46,9 @@ module AdwordsApi
     # - index for the source operation, nil if none
     #
     def self.operation_index_for_error(error)
-      if error and error[:field_path]
-        parts = error[:field_path].split('.')
-        if parts.length > 0
-          match = parts.first.match(/operations\[(\d)\]/)
-          return match ? match[1].to_i : nil
-        end
+      if error and error[:field_path] and error[:field_path].kind_of?(String)
+        match = error[:field_path].match(/operations\[(\d+)\]/)
+        return match ? match[1].to_i : nil
       end
       return nil
     end
