@@ -1,3 +1,5 @@
+# Encoding: utf-8
+#
 # Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.

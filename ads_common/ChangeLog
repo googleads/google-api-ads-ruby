@@ -1,4 +1,7 @@
 0.6.2:
+  - Requiring Savon as "~>" now.
+  - Updates to file headers.
+  - Marked all sources as utf-8.
 
 0.6.1:
   - Support for GZip compression.

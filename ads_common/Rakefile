@@ -1,8 +1,8 @@
-#!/usr/bin/ruby
+# Encoding: utf-8
 #
 # Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -47,7 +47,7 @@ spec = Gem::Specification.new do |s|
   s.test_files = tests
   s.has_rdoc = true
   s.extra_rdoc_files = docs
-  s.add_dependency('savon', '= 0.9.7')
+  s.add_dependency('savon', '~> 0.9.7')
   s.add_dependency('httpclient', '~> 2.2.3')
   s.add_dependency('httpi', '~> 0.9.3')
   s.add_dependency('oauth', '~> 0.4.5')

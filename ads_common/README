@@ -17,7 +17,7 @@ Install it using the gem install command.
    $ gem install --local google-ads-common-VERSION.gem
 
 The following gem libraries are required:
- - savon v0.9.7;
+ - savon v0.9.7 or greater;
  - httpi v0.9.3 or greater;
  - httpclient v2.2.3 or greater.
 
@@ -45,7 +45,7 @@ to run unit tests on the library
 
 = Copyright/License Info
 
-Copyright 2011, Google Inc. All Rights Reserved.
+Copyright 2010-2012, Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

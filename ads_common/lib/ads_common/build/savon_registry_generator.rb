@@ -1,8 +1,8 @@
-#!/usr/bin/ruby
+# Encoding: utf-8
 #
 # Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -27,7 +27,6 @@ module AdsCommon
   module Build
     class SavonRegistryGenerator < SavonAbstractGenerator
       REGISTRY_TEMPLATE = %q{<% %>
-      #!/usr/bin/env ruby
       # Encoding: utf-8
       #
       # This is auto-generated code, changes will be overwritten.
