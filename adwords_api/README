@@ -6,9 +6,9 @@ AdWords and DoubleClick Ad Exchange Buyer API!
 Please note that this is an early PREVIEW of the client library, still under
 development.
 
-It contains full support for v13, v200909, v201003, v201008, v201101 and
-v201109, with full stubs, and a simplified programming interface that lets you
-handle everything in native Ruby collections.
+It contains full support for v201109, with full stubs, and a simplified
+programming interface that lets you handle everything in native Ruby
+collections.
 
 
 = Docs for Users
