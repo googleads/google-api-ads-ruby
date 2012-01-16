@@ -1,8 +1,8 @@
-#!/usr/bin/ruby
+# Encoding: utf-8
 #
 # Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ require './lib/adwords_api/api_config'
 require './lib/adwords_api/extensions'
 
 # Workaround for the current mess of different yamlers in Ruby world.
-if RUBY_VERSION>='1.9.2'
+if RUBY_VERSION >= '1.9.2' and RUBY_ENGINE == 'ruby'
   gem 'psych'
   YAML::ENGINE.yamler = 'psych'
 end
