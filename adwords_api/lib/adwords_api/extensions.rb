@@ -238,6 +238,7 @@ module AdwordsApi
           wrapper.api.config.read('service.environment'), wrapper.version)
       headers['Authorization'] = auth_handler.auth_string(credentials,
         HTTPI::Request.new(url))
+      headers['developerToken'] = credentials[:developerToken]
       if credentials[:clientCustomerId]
         headers['clientCustomerId'] = credentials[:clientCustomerId]
       elsif credentials[:clientEmail]
