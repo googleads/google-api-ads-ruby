@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# Encoding: utf-8
 #
 # Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #

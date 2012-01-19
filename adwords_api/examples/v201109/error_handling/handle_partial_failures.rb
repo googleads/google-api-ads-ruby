@@ -1,4 +1,5 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
+# Encoding: utf-8
 #
 # Author:: api.sgomes@gmail.com (Sérgio Gomes)
 #

@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+# Encoding: utf-8
 #
 # Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
