@@ -34,23 +34,17 @@ class TestApiConfig < Test::Unit::TestCase
   def test_do_require
     name1 = @config.do_require(:v201109, :InfoService)
     assert_equal('adwords_api/v201109/info_service', name1)
-    name2 = @config.do_require(:v13, :AccountService)
-    assert_equal('adwords_api/v13/account_service', name2)
   end
 
   # Test correct module name.
   def test_module_name
     name1 = @config.module_name(:v201109, :InfoService)
     assert_equal('AdwordsApi::V201109::InfoService', name1)
-    name2 = @config.module_name(:v13, :AccountService)
-    assert_equal('AdwordsApi::V13::AccountService', name2)
   end
 
   # Test correct interface name.
   def test_interface_name
     name1 = @config.interface_name(:v201109, :InfoService)
     assert_equal('AdwordsApi::V201109::InfoService::InfoService', name1)
-    name2 = @config.interface_name(:v13, :AccountService)
-    assert_equal('AdwordsApi::V13::AccountService::AccountService', name2)
   end
 end
