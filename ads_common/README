@@ -19,7 +19,8 @@ Install it using the gem install command.
 The following gem libraries are required:
  - savon v0.9.7 or greater;
  - httpi v0.9.3 or greater;
- - httpclient v2.2.3 or greater.
+ - httpclient v2.2.3 or greater;
+ - oauth v0.4.5 or greater.
 
 = Docs for Developers
 
@@ -36,8 +37,8 @@ The following gem libraries are required:
 
 == 2 - Commands
 
- $ rake package
-to package the gem and create a release
+ $ gem build google-ads-common.gemspec
+to build the gem
 
  $ rake test
 to run unit tests on the library

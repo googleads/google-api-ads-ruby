@@ -1,4 +1,5 @@
 0.2.8:
+  - Added .gemspec and updated packaging process.
 
 0.2.7:
   - Support for GZip compression.

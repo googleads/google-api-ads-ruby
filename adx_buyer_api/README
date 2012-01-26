@@ -163,8 +163,8 @@ You can also retrieve the response body as the second block parameter:
  $ rake generate
 to regenerate the stubs if needed
 
- $ rake package
-to package the gem and create a release
+ $ gem build google-adx-buyer-api.gemspec
+to build the gem
 
  $ rake test
 to run unit tests on the library
@@ -185,7 +185,7 @@ Questions can be asked on forum
 
 == Licence
 
-Copyright 2011, Google Inc. All Rights Reserved.
+Copyright 2010-2012, Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

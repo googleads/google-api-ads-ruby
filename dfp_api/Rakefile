@@ -20,54 +20,24 @@
 # DFP API Rakefile.
 
 require 'rubygems'
-require 'rubygems/package_task'
-require 'rake/testtask'
 require './lib/dfp_api/api_config'
-
-# Workaround for the current mess of different yamlers in Ruby world.
-if RUBY_VERSION>='1.9.2' and RUBY_ENGINE == 'ruby'
-  gem 'psych'
-  YAML::ENGINE.yamler = 'psych'
-end
 
 # Google common ads library used for wrapper code generation.
 gem 'google-ads-common'
 require 'ads_common/build/savon_generator'
 
-files = FileList['{lib,examples}/**/*', 'Rakefile'].to_a
-tests = FileList['test/**/test*.rb']
-docs = ['README', 'COPYING', 'ChangeLog']
-extra_files = ['dfp_api.yml', 'test/dfp_api/test_config.yml']
+desc 'Default target - generate and build.'
+task :default => [:generate, :build]
 
-spec = Gem::Specification.new do |s|
-  s.name = 'google-dfp-api'
-  s.version = DfpApi::ApiConfig::CLIENT_LIB_VERSION
-  s.author = 'Danial Klimkin'
-  s.email = 'api.dklimkin@gmail.com'
-  s.homepage = 'http://code.google.com/p/google-api-ads-ruby/'
-  s.platform = Gem::Platform::RUBY
-  s.summary = 'Ruby Client libraries for DFP API'
-  s.description = "%s is a DFP API client library for Ruby" % s.name
-  s.files = files
-  s.require_path = 'lib'
-  s.test_files = tests
-  s.has_rdoc = true
-  s.extra_rdoc_files = docs
-  s.add_dependency('google-ads-common', '~> 0.6.1')
-  s.add_dependency('savon', '= 0.9.7')
+desc 'Package the DFP API library into a gem file.'
+task :build do
+  system 'gem build google-dfp-api.gemspec'
 end
 
-package_task = Gem::PackageTask.new(spec) do |pkg|
-  pkg.need_tar = true
-  pkg.package_files.include(extra_files)
+desc 'Perform the unit testing.'
+task :test do
+  system 'ruby test/suite_*.rb'
 end
-
-Rake::TestTask.new do |t|
-  t.test_files = tests
-end
-
-desc 'Default target - build'
-task :default => [:generate, :package]
 
 desc 'Generate API stubs only'
 task :generate do
@@ -84,6 +54,5 @@ task :generate do
           api_config.api_name, version, service_name)
       generator.process_wsdl()
     end
-    package_task.package_files.include(FileList[code_path + '/*'].to_a)
   end
 end

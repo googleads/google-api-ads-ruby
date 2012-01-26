@@ -1,8 +1,9 @@
+#!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
+# Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -17,17 +18,15 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Rakefile for the ads_common package.
+# Test suite for unit tests.
 
-desc 'Default target - build.'
-task :default => [:build]
+lib = File.expand_path('../../lib/', __FILE__)
+$:.unshift lib unless $:.include?(lib)
 
-desc 'Package the Common library into a gem file.'
-task :build do
-  system 'gem build google-ads-common.gemspec'
-end
+require 'test/unit'
 
-desc 'Perform the unit testing.'
-task :test do
-  system 'ruby test/*.rb'
-end
+# DFP API units tests.
+Dir.glob('./test/dfp_api/test_*.rb').each {|file| require file}
+
+# Reported bugs tests.
+Dir.glob('./test/bugs/test_*.rb').each {|file| require file}
