@@ -1,3 +1,7 @@
+0.5.1:
+  - Require google-ads-common 0.6.3 or later from now on.
+  - Support for CAPTCHA challenge handling.
+
 0.5.0:
   - Removed deprecated API versions (pre-v201109).
   - Example updates and revamp.

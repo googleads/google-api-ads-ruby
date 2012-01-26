@@ -46,7 +46,9 @@ module AdwordsApi
       result = case @credentials[:method]
         when :CLIENTLOGIN
           {:email => @credentials[:email],
-           :password => @credentials[:password]}
+           :password => @credentials[:password],
+           :logintoken => @credentials[:logintoken],
+           :logincaptcha => @credentials[:logincaptcha]}
         when :OAUTH
           {:oauth_consumer_key => @credentials[:oauth_consumer_key],
            :oauth_consumer_secret => @credentials[:oauth_consumer_secret],
