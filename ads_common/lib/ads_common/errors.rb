@@ -48,6 +48,17 @@ module AdsCommon
       end
     end
 
+    # Raised when ClientLogin Captcha challenge occurs.
+    class CaptchaRequiredError < AuthError
+      attr_reader :error, :captcha_token
+      attr_reader :captcha_url, :auth_url
+      def initialize(error, captcha_token, captcha_url, auth_url)
+        super()
+        @error, @captcha_token  = error, captcha_token
+        @captcha_url, @auth_url = captcha_url, auth_url
+      end
+    end
+
     # Raised if a required property on an object is missing.
     class MissingPropertyError < Error
       attr_reader :property, :object_type

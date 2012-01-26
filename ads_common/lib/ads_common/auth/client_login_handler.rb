@@ -33,6 +33,7 @@ module AdsCommon
     class ClientLoginHandler < AdsCommon::Auth::BaseHandler
       ACCOUNT_TYPE = 'GOOGLE'
       AUTH_PATH = '/accounts/ClientLogin'
+      CAPTCHA_PATH = '/accounts/'
       IGNORED_FIELDS = [:email, :password, :auth_token]
 
       # Initializes the ClientLoginHandler with all the necessary details.
@@ -139,24 +140,43 @@ module AdsCommon
 
         data = "accountType=%s&Email=%s&Passwd=%s&service=%s" %
             [ACCOUNT_TYPE, email, password, @service_name]
+
+        if credentials[:logintoken] and credentials[:logincaptcha]
+          data += "&logintoken=%s&logincaptcha=%s" %
+            [CGI.escape(credentials[:logintoken]),
+             CGI.escape(credentials[:logincaptcha])]
+        end
+
         headers = {'Content-Type' => 'application/x-www-form-urlencoded'}
 
         response = AdsCommon::Http.post_response(url, data, @config, headers)
         results = parse_token_text(response.body)
 
-        if response.code == 200 and results.include?(:Auth)
-          return results[:Auth]
+        if response.code == 200 and results.include?('Auth')
+          return results['Auth']
         else
-          error_message = "Login failed for email %s: HTTP code %d." %
-              [credentials[:email], response.code]
-          error_str = results[:Error] || response.body
-          error_message += " Error: %s." % error_str if error_str
-          if results.include?(:Info)
-            error_message += " Info: %s." % results[:Info]
-          end
-          raise AdsCommon::Errors::AuthError.new(error_message, error_str,
-              results[:Info])
+          handle_login_error(credentials, response, results)
         end
+      end
+
+      # Raises relevant error based on response and parsed results.
+      def handle_login_error(credentials, response, results)
+        # Handling for known errors.
+        if 'CaptchaRequired'.eql?(results['Error'])
+          captcha_url = @server + CAPTCHA_PATH + results['CaptchaUrl']
+          raise AdsCommon::Errors::CaptchaRequiredError.new(results['Error'],
+              results['CaptchaToken'], captcha_url, results['Url'])
+        end
+        # For other errors throwing a generic error.
+        error_message = "ClientLogin failed for email '%s': HTTP code %d." %
+            [credentials[:email], response.code]
+        error_str = results['Error'] || response.body
+        error_message += " Error: %s." % error_str if error_str
+        if results.include?('Info')
+          error_message += " Info: %s." % results['Info']
+        end
+        raise AdsCommon::Errors::AuthError.new(error_message, error_str,
+            results['Info'])
       end
 
       # Extracts key-value pairs from ClientLogin server response.
@@ -168,12 +188,11 @@ module AdsCommon
       #   Hash of key-value pairs
       #
       def parse_token_text(text)
-        result = {}
-        text.split("\n").each do |line|
-          key, value = line.split("=")
-          result[key.to_sym] = value
+        return text.split("\n").inject({}) do |result, line|
+          key, *values = line.split('=')
+          result[key] = values.join('=')
+          result
         end
-        return result
       end
     end
   end
