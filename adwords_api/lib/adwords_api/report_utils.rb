@@ -145,7 +145,7 @@ module AdwordsApi
 
     # Saves raw data to a file.
     def save_to_file(data, path)
-      open(path, 'wb') { |file| file.puts(data) } if path
+      open(path, 'wb') { |file| file.write(data) } if path
     end
 
     # Validates the customer ID specified is correct.
