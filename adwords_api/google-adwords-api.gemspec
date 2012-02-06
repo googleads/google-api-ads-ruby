@@ -20,7 +20,7 @@
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 
-require 'adwords_api/api_config'
+require 'adwords_api/version'
 
 Gem::Specification.new do |s|
   s.name = 'google-adwords-api'

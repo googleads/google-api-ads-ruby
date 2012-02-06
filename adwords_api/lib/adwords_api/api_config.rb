@@ -24,6 +24,8 @@ require 'savon'
 
 require 'ads_common/api_config'
 
+require 'adwords_api/version'
+
 module AdwordsApi
 
   # Contains helper methods for loading and managing the available services.
@@ -41,7 +43,6 @@ module AdwordsApi
 
     # Set other constants
     API_NAME = 'AdwordsApi'
-    CLIENT_LIB_VERSION = '0.5.1'
     DEFAULT_CONFIG_FILENAME = 'adwords_api.yml'
 
     # Configure the services available to each version

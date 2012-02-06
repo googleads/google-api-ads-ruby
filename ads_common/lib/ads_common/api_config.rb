@@ -21,13 +21,13 @@
 # Helper methods for loading and managing services for an API. Defines methods
 # to be included as class modules in a service class for a specific API.
 
+require 'ads_common/version.rb'
+
 module AdsCommon
 
   # Contains helper methods for loading and managing the available services.
   # This module is meant to be imported into API-specific modules.
   module ApiConfig
-    ADS_COMMON_VERSION = '0.6.3'
-
     # Get the available API versions.
     #
     # Returns:

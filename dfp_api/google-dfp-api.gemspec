@@ -20,7 +20,7 @@
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 
-require 'dfp_api/api_config'
+require 'dfp_api/version'
 
 Gem::Specification.new do |s|
   s.name = 'google-dfp-api'

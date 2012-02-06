@@ -20,11 +20,11 @@
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 
-require 'ads_common/api_config'
+require 'ads_common/version'
 
 Gem::Specification.new do |s|
   s.name = 'google-ads-common'
-  s.version = AdsCommon::ApiConfig::ADS_COMMON_VERSION
+  s.version = AdsCommon::ApiConfig::CLIENT_LIB_VERSION
   s.summary = 'Common code for Google Ads APIs'
   s.description = 'Essential utilities shared by all Ads Ruby client libraries'
   s.homepage = 'http://code.google.com/p/google-api-ads-ruby/'
