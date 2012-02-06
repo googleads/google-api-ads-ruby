@@ -24,7 +24,7 @@ require 'savon'
 
 require 'ads_common/api_config'
 
-require 'adwords_api/version'
+require 'dfp_api/version'
 
 module DfpApi
 

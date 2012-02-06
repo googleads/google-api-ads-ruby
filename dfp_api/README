@@ -165,8 +165,8 @@ this, you should create a standard Logger object and pass it to the library:
    require 'logger'
    logger = Logger.new('path/to/log_filename')
    logger.level = Logger::DEBUG
-   adwords = AdwordsApi::Api.new
-   adwords.logger = logger
+   dfp = DfpApi::Api.new
+   dfp.logger = logger
 
 Request details are logged at the INFO log level, while raw HTTP headers and XML
 dumps are logged at the DEBUG log level. For more details on using Logger refer
