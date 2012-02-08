@@ -1,6 +1,7 @@
 0.6.3:
   - Support for CAPTCHA challenge handling.
   - Added .gemspec and updated packaging process.
+  - Removed explicit require for RubyGems.
 
 0.6.2:
   - Requiring Savon as "~>" now.

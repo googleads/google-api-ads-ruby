@@ -23,7 +23,6 @@
 # Tags: CustomTargetingService.getCustomTargetingKeysByStatement,
 #       CustomTargetingService.getCustomTargetingValuesByStatement
 
-require 'rubygems'
 require 'dfp_api'
 
 API_VERSION = :v201104

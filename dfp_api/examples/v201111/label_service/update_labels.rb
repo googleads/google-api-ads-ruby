@@ -25,7 +25,6 @@
 #
 # Tags: LabelService.getLabelsByStatement, LabelService.updateLabels
 
-require 'rubygems'
 require 'dfp_api'
 
 API_VERSION = :v201111

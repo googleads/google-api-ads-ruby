@@ -22,7 +22,6 @@
 #
 # Tags: ReportService.runReportJob, ReportService.getReportJob
 
-require 'rubygems'
 require 'dfp_api'
 
 API_VERSION = :v201104

@@ -20,8 +20,8 @@
 #
 # Tests the array replies from services.
 
-require 'rubygems'
 require 'test/unit'
+
 require 'ads_common/config'
 
 class TestConfig < Test::Unit::TestCase

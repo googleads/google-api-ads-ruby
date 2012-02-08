@@ -22,7 +22,6 @@
 #
 # Tags: ReportService.getReportDownloadURL
 
-require 'rubygems'
 require 'dfp_api'
 
 require 'open-uri'

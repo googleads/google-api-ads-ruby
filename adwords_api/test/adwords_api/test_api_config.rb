@@ -20,9 +20,9 @@
 #
 # Tests the general API features.
 
-require 'rubygems'
 require 'test/unit'
-require 'adwords_api'
+
+require 'adwords_api/api_config'
 
 class TestApiConfig < Test::Unit::TestCase
   # Initialize tests.

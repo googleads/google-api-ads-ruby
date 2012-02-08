@@ -33,25 +33,16 @@ The following gem libraries are required:
 
 == 2 - Using the client library:
 
-It's pretty easy to use.
-See http://docs.rubygems.org/read/chapter/3#page70 for how to set the rubygem
-environment.
-   $ export RUBYOPT=rubygems
-or
-   $ ruby -rubygems my_program_that_uses_gems
-
-If you are running Ruby 1.8 and do not use the rubygems option, you need to add
-   require 'rubygems'
-at the beginning of your programs.
-
-Then:
-   gem 'google-adwords-api'
+Include the library with 'require':
    require 'adwords_api'
 
+Then create an API instance:
    adwords = AdwordsApi::Api.new
-creates an Api object that will grant you access to all the services for all of
-the currently supported vesions of the APIs. It uses a config file in:
-ENV['HOME']/adwords_api.yml to read all of your configurations.
+
+The created API object will grant you access to all the services for all of the
+currently supported vesions of the APIs. It uses a config file in:
+  ENV['HOME']/adwords_api.yml to read all of your configurations by default.
+
 There is an example configuration file shipped with these libraries.
 
 You can also pass API a manually constructed config hash like:
@@ -84,6 +75,17 @@ please set the appropriate options in the config file or config hash. E.g.:
    config[:connection] = {
      :proxy => 'http://user:password@proxy_hostname:8080'
    }
+
+*Note*: if you are using Ruby 1.8 you may need to include RubyGems to be able
+to require other gems code. There are several ways to do it, the easiest one is
+to pass '-rubygems' parameter to the ruby interpreter:
+   $ ruby -rubygems my_program_that_uses_gems
+
+you can also set this up in the environment:
+   $ export RUBYOPT="rubygems"
+
+or add it to the bash configuration file:
+   $ echo 'export RUBYOPT="rubygems"' >> ~/.bashrc
 
 
 === 2.1 - Ruby names for a Ruby library:

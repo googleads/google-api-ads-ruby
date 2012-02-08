@@ -22,7 +22,6 @@
 #
 # Tags: BulkOpportunityService.get
 
-require 'rubygems'
 require 'adwords_api'
 require 'adwords_api/utils'
 

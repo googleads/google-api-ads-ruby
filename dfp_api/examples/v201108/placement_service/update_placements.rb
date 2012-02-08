@@ -23,7 +23,6 @@
 # Tags: PlacementService.getPlacementsByStatement,
 #       PlacementService.updatePlacements
 
-require 'rubygems'
 require 'dfp_api'
 
 API_VERSION = :v201108

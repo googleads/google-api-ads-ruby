@@ -24,7 +24,6 @@
 #
 # Tags: BulkMutateJobService.mutate
 
-require 'rubygems'
 gem 'google-adwords-api'
 require 'adwords_api'
 

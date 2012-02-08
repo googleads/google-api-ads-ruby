@@ -19,11 +19,11 @@
 #
 # Tests issue #16.
 
-require 'rubygems'
+require 'nori'
 require 'test/unit'
+
 require 'dfp_api/errors'
 require 'dfp_api/v201111/line_item_service'
-require 'nori'
 
 class TestDfpApi < Test::Unit::TestCase
   class StubService < DfpApi::V201111::LineItemService::LineItemService

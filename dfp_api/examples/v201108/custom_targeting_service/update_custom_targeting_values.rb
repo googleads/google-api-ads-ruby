@@ -24,7 +24,6 @@
 # Tags: CustomTargetingService.getCustomTargetingValuesByStatement,
 #       CustomTargetingService.updateCustomTargetingValues
 
-require 'rubygems'
 require 'dfp_api'
 
 API_VERSION = :v201108

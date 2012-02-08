@@ -19,7 +19,6 @@
 #
 # Tests the general API features.
 
-require 'rubygems'
 require 'test/unit'
 require 'dfp_api'
 

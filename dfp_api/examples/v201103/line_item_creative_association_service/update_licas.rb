@@ -24,7 +24,6 @@
 #   LineItemCreativeAssociationService.getLineItemCreativeAssociationsByStatement,
 #   LineItemCreativeAssociationService.updateLineItemCreativeAssociations
 
-require 'rubygems'
 require 'dfp_api'
 
 API_VERSION = :v201103

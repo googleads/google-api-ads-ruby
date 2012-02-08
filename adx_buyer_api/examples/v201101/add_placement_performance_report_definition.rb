@@ -22,7 +22,6 @@
 #
 # Tags: ReportDefinitionService.mutate
 
-require 'rubygems'
 gem 'google-adwords-api'
 require 'adwords_api'
 

@@ -21,7 +21,6 @@
 #
 # Tags: MediaService.upload
 
-require 'rubygems'
 gem 'google-adwords-api'
 require 'adwords_api'
 require 'base64'

@@ -20,7 +20,6 @@
 #
 # Tests client login handler methods.
 
-require 'rubygems'
 require 'test/unit'
 
 require 'ads_common/config'

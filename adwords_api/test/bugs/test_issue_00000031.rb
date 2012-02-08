@@ -20,7 +20,6 @@
 #
 # Tests issue #31.
 
-require 'rubygems'
 require 'gyoku'
 require 'test/unit'
 
