@@ -19,12 +19,13 @@
 #
 # DFP API Rakefile.
 
-require 'rubygems'
-require './lib/dfp_api/api_config'
+lib = File.expand_path('../lib/', __FILE__)
+$:.unshift lib unless $:.include?(lib)
 
 # Google common ads library used for wrapper code generation.
-gem 'google-ads-common'
 require 'ads_common/build/savon_generator'
+
+require 'dfp_api/api_config'
 
 desc 'Default target - generate and build.'
 task :default => [:generate, :build]

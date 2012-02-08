@@ -20,7 +20,6 @@
 # Configuration handler, can load data from a YAML configuration file and
 # rewrite it in memory.
 
-require 'rubygems'
 require 'yaml'
 
 require 'ads_common/errors'

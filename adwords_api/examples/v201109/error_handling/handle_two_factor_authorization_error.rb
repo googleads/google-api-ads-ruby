@@ -20,7 +20,6 @@
 #
 # This example illustrates how to handle 'two factor' authorization error.
 
-require 'rubygems'
 require 'adwords_api'
 
 API_VERSION = :v201109

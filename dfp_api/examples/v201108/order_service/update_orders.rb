@@ -22,7 +22,6 @@
 #
 # Tags: OrderService.getOrdersByStatement, OrderService.updateOrders
 
-require 'rubygems'
 require 'dfp_api'
 
 API_VERSION = :v201108

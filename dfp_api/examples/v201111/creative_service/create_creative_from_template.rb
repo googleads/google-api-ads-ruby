@@ -24,7 +24,6 @@
 #
 # Tags: CreativeService.createCreative
 
-require 'rubygems'
 require 'base64'
 require 'dfp_api'
 

@@ -20,7 +20,6 @@
 #
 # Tests validator methods.
 
-require 'rubygems'
 require 'test/unit'
 
 require 'ads_common/errors'

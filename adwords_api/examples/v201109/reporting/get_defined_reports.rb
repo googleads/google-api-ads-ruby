@@ -23,7 +23,6 @@
 #
 # Tags: ReportDefinitionService.get
 
-require 'rubygems'
 require 'adwords_api'
 
 API_VERSION = :v201109

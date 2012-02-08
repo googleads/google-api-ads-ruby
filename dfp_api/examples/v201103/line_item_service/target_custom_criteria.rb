@@ -24,7 +24,6 @@
 #
 # Tags: LineItemService.getLineItem, LineItemService.updateLineItem
 
-require 'rubygems'
 require 'dfp_api'
 
 require 'pp'

@@ -24,7 +24,6 @@
 #
 # Tags: LineItemService.createLineItems
 
-require 'rubygems'
 require 'dfp_api'
 
 API_VERSION = :v201103

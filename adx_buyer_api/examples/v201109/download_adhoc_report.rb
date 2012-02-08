@@ -19,7 +19,6 @@
 #
 # This example gets and downloads an Ad Hoc report from a XML report definition.
 
-require 'rubygems'
 require 'adwords_api'
 
 API_VERSION = :v201109

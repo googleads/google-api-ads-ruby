@@ -27,7 +27,6 @@
 # Tags: LineItemService.getLineItemsByStatement,
 #       LineItemService.performLineItemAction
 
-require 'rubygems'
 require 'dfp_api'
 
 API_VERSION = :v201103

@@ -23,7 +23,6 @@
 #
 # Tags: CustomerSyncService.get
 
-require 'rubygems'
 require 'adwords_api'
 require 'date'
 require 'pp'

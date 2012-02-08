@@ -20,8 +20,8 @@
 #
 # Tests report utils.
 
-require 'rubygems'
 require 'test/unit'
+
 require 'adwords_api'
 
 API_VERSION = :v201109

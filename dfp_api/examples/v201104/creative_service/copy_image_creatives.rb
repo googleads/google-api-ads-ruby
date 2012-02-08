@@ -23,7 +23,6 @@
 #
 # Tags: CreativeService.getCreativesByStatement, CreativeService.createCreatives
 
-require 'rubygems'
 require 'dfp_api'
 
 require 'base64'

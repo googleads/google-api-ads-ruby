@@ -20,8 +20,8 @@
 #
 # Tests the AdWords API utils.
 
-require 'rubygems'
 require 'test/unit'
+
 require 'adwords_api/utils'
 
 class TestUtils < Test::Unit::TestCase

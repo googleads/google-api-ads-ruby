@@ -23,7 +23,6 @@
 #
 # http://code.google.com/apis/adwords/docs/guides/bestpractices.html#auth_tokens
 
-require 'rubygems'
 require 'adwords_api'
 
 API_VERSION = :v201109

@@ -60,10 +60,6 @@ or if you downloaded the gem package manually, use:
 In order to use the library you need to include its modules:
   require 'dfp_api'
 
-Depending on your configuration you might also need to explicitely require
-the rubygems library first:
-  require 'rubygems'
-
 Then, library object could be instantiated:
   dfp = DfpApi::Api.new
 
@@ -83,6 +79,18 @@ constructor:
    })
 
 An example of configuration file is available as part of this library.
+
+*Note*: if you are using Ruby 1.8 you may need to include RubyGems to be able
+to require other gems code. There are several ways to do it, the easiest one is
+to pass '-rubygems' parameter to the ruby interpreter:
+   $ ruby -rubygems my_program_that_uses_gems
+
+you can also set this up in the environment:
+   $ export RUBYOPT="rubygems"
+
+or add it to the bash configuration file:
+   $ echo 'export RUBYOPT="rubygems"' >> ~/.bashrc
+
 
 == Using OAuth
 

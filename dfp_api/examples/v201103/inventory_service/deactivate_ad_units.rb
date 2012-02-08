@@ -23,7 +23,6 @@
 # Tags: InventoryService.getLineItemsByStatement,
 #       InventoryService.performAdUnitAction
 
-require 'rubygems'
 require 'dfp_api'
 
 API_VERSION = :v201103

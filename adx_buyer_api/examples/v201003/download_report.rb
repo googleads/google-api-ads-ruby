@@ -20,7 +20,6 @@
 # This example gets and downloads a report from a report definition. To get a
 # report definition, run add_keywords_performance_report_definition.rb.
 
-require 'rubygems'
 gem 'google-adwords-api'
 require 'adwords_api'
 

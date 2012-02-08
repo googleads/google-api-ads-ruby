@@ -23,7 +23,6 @@
 #
 # Tags: LineItemService.getLineItemsByStatement, LineItemService.updateLineItems
 
-require 'rubygems'
 require 'dfp_api'
 
 API_VERSION = :v201103
