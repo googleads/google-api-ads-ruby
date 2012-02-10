@@ -3,6 +3,7 @@
   - Support for CAPTCHA challenge handling.
   - Added .gemspec and updated packaging process.
   - Removed explicit require for RubyGems, see README.
+  - Fixed reports retrieval via curb HTTPI backend.
 
 0.5.0:
   - Removed deprecated API versions (pre-v201109).

@@ -22,13 +22,11 @@
 require 'httpi'
 require 'savon'
 
+require 'ads_common/http'
 require 'ads_common/parameters_validator'
 
 module AdsCommon
   class SavonService
-    # HTTP read timeout in seconds.
-    HTTP_READ_TIMEOUT = 15 * 60
-
     attr_accessor :headerhandler
     attr_reader :api
     attr_reader :version
@@ -52,8 +50,6 @@ module AdsCommon
         config.log_level = :debug
         config.logger = logger
       end
-      HTTPI.logger = logger
-      HTTPI.log_level = :debug
     end
 
     # Returns ServiceRegistry for the current service. Has to be overridden.
@@ -68,14 +64,10 @@ module AdsCommon
 
     # Creates and sets up Savon client.
     def create_savon_client(endpoint, namespace)
-      proxy = @api.config.read('connection.proxy')
-      enable_gzip = @api.config.read('connection.enable_gzip', false)
-      client = Savon::Client.new do |wsdl, http|
+      client = Savon::Client.new do |wsdl, httpi|
         wsdl.endpoint = endpoint
         wsdl.namespace = namespace
-        http.read_timeout = HTTP_READ_TIMEOUT
-        http.proxy = proxy if proxy
-        http.gzip if enable_gzip
+        AdsCommon::Http.configure_httpi(@api.config, httpi)
       end
       return client
     end
@@ -92,6 +84,7 @@ module AdsCommon
     end
 
     # Logs response headers.
+    # TODO: this needs to go on http or httpi level.
     def log_headers(headers)
       @api.logger.debug(headers.map {|k, v| [k, v].join(': ')}.join(', '))
     end

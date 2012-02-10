@@ -26,6 +26,9 @@ require 'ads_common/errors'
 
 module AdsCommon
   module Http
+    # HTTP read and open timeouts in seconds.
+    HTTP_READ_TIMEOUT = 15 * 60
+    HTTP_OPEN_TIMEOUT = 5 * 60
 
     # Performs a get on a URL, using all of the connection options in the
     # client library, returning a HTTPI::Response.
@@ -45,8 +48,7 @@ module AdsCommon
     # client library, returning a HTTPI::Response.
     def self.post_response(url, data, config = nil, headers = nil)
       request = prepare_request(url, config, headers, data)
-      response = HTTPI.post(request)
-      return response
+      return HTTPI.post(request)
     end
 
     # Performs a post on a URL, using all of the connection options in the
@@ -63,19 +65,32 @@ module AdsCommon
       request = HTTPI::Request.new(url)
       request.headers = headers if headers
       request.body = data if data
+      configure_httpi(config, request)
+      return request
+    end
+
+    # Configures HTTPI request according to the config provided.
+    def self.configure_httpi(config, httpi)
       if config
-        proxy = config.read('connection.proxy', nil)
-        request.proxy = proxy if !proxy.nil?
-        strict_ssl =
-            !(config.read('connection.strict_ssl_verification') == 'false')
-        request.auth.ssl.verify_mode = strict_ssl ? :peer : :none
+        adapter = config.read('connection.adapter')
+        HTTPI.adapter = adapter if adapter
+        proxy = config.read('connection.proxy')
+        httpi.proxy = proxy if proxy
+        enable_gzip = config.read('connection.enable_gzip', false)
+        httpi.gzip if enable_gzip
         logger = config.read('library.logger')
         if logger
           HTTPI.logger = logger
           HTTPI.log_level = :debug
         end
       end
-      return request
+      httpi.read_timeout = (config.nil?) ? HTTP_READ_TIMEOUT :
+          config.read('connection.read_timeout', HTTP_READ_TIMEOUT)
+      httpi.open_timeout = (config.nil?) ? HTTP_OPEN_TIMEOUT :
+          config.read('connection.open_timeout', HTTP_OPEN_TIMEOUT)
+      strict_ssl = config.nil? or
+          config.read('connection.strict_ssl_verification', true)
+      httpi.auth.ssl.verify_mode = strict_ssl ? :peer : :none
     end
   end
 end

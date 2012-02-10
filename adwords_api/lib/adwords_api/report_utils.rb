@@ -19,9 +19,11 @@
 #
 # Contains utility methods specific to reporting.
 
+require 'cgi'
 require 'gyoku'
 require 'httpi/request'
 
+require 'ads_common/http'
 require 'adwords_api/errors'
 
 module AdwordsApi
@@ -92,9 +94,9 @@ module AdwordsApi
     }
 
     # Send POST request for a report and returns Response object.
-    def get_report_response(report_definition, cid = nil)
+    def get_report_response(report_definition, cid)
       definition_text = get_report_definition_text(report_definition)
-      data = {'__rdxml' => definition_text}
+      data = "__rdxml=%s" % CGI.escape(definition_text)
       url = @api.api_config.adhoc_report_download_url(
           @api.config.read('service.environment'), @version)
       headers = get_report_request_headers(url, cid)
@@ -117,7 +119,7 @@ module AdwordsApi
     end
 
     # Prepares headers for report request.
-    def get_report_request_headers(url, cid = nil)
+    def get_report_request_headers(url, cid)
       credentials = @api.credential_handler.credentials
       auth_handler = @api.get_auth_handler(
           @api.config.read('service.environment'), @version)
@@ -128,7 +130,7 @@ module AdwordsApi
       headers = {
           'Authorization' => auth_string,
           'ClientCustomerId' => customer_id,
-          'Content-Type' => 'multipart/form-data',
+          'Content-Type' => 'application/x-www-form-urlencoded',
           'developerToken' => credentials[:developerToken],
           'User-Agent' => "HTTPI/%s (%s)" % [HTTPI::VERSION, app_name]
       }
