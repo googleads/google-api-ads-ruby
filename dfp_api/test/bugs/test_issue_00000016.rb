@@ -23,10 +23,10 @@ require 'nori'
 require 'test/unit'
 
 require 'dfp_api/errors'
-require 'dfp_api/v201111/line_item_service'
+require 'dfp_api/v201201/line_item_service'
 
 class TestDfpApi < Test::Unit::TestCase
-  class StubService < DfpApi::V201111::LineItemService::LineItemService
+  class StubService < DfpApi::V201201::LineItemService::LineItemService
     def stub_get_line_items_by_statement(xml_text)
       data = Nori.parse(xml_text)[:envelope][:body]
       return extract_result(data, 'get_line_items_by_statement')
@@ -37,7 +37,7 @@ class TestDfpApi < Test::Unit::TestCase
     assert_nothing_raised do
       service = StubService.new(
           DfpApi::Api.new,
-          'https://www.google.com/apis/ads/publisher/v201111/LineItemService')
+          'https://www.google.com/apis/ads/publisher/v201201/LineItemService')
       result = service.stub_get_line_items_by_statement(get_xml_text)
       targeting = result[:results][0][:targeting][:inventory_targeting]
       assert_equal([1234567, 23456], targeting[:targeted_placement_ids])

@@ -36,9 +36,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201111
+    DEFAULT_VERSION = :v201201
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201111
+    LATEST_VERSION = :v201201
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -74,7 +74,15 @@ module DfpApi
                    :PlacementService, :ReportService, :UserService,
                    :CustomTargetingService, :PublisherQueryLanguageService,
                    :LabelService, :ThirdPartySlotService, :ContentService,
-                   :SuggestedAdUnitService, :CreativeTemplateService]
+                   :SuggestedAdUnitService, :CreativeTemplateService],
+      :v201201 => [:CompanyService, :CreativeService, :ForecastService,
+                   :InventoryService, :LineItemCreativeAssociationService,
+                   :LineItemService, :NetworkService, :OrderService,
+                   :PlacementService, :ReportService, :UserService,
+                   :CustomTargetingService, :PublisherQueryLanguageService,
+                   :LabelService, :ThirdPartySlotService, :ContentService,
+                   :SuggestedAdUnitService, :CreativeTemplateService,
+                   :TeamService]
     }
 
     # Configure the different environments, with the base URL for each one
@@ -85,7 +93,8 @@ module DfpApi
         :v201104 => 'https://www.google.com/apis/ads/publisher/',
         :v201107 => 'https://www.google.com/apis/ads/publisher/',
         :v201108 => 'https://www.google.com/apis/ads/publisher/',
-        :v201111 => 'https://www.google.com/apis/ads/publisher/'
+        :v201111 => 'https://www.google.com/apis/ads/publisher/',
+        :v201201 => 'https://www.google.com/apis/ads/publisher/'
       },
       :SANDBOX => {
         :oauth_scope => 'https://sandbox.google.com/apis/ads/publisher/',
@@ -93,7 +102,8 @@ module DfpApi
         :v201104 => 'https://sandbox.google.com/apis/ads/publisher/',
         :v201107 => 'https://sandbox.google.com/apis/ads/publisher/',
         :v201108 => 'https://sandbox.google.com/apis/ads/publisher/',
-        :v201111 => 'https://sandbox.google.com/apis/ads/publisher/'
+        :v201111 => 'https://sandbox.google.com/apis/ads/publisher/',
+        :v201201 => 'https://sandbox.google.com/apis/ads/publisher/'
       }
     }
 

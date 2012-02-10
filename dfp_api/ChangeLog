@@ -1,6 +1,7 @@
 0.2.8:
   - Added .gemspec and updated packaging process.
   - Removed explicit require for RubyGems, see README.
+  - Added support for v201201.
 
 0.2.7:
   - Support for GZip compression.
