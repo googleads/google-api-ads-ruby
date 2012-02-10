@@ -2,6 +2,8 @@
   - Support for CAPTCHA challenge handling.
   - Added .gemspec and updated packaging process.
   - Removed explicit require for RubyGems.
+  - Added configuration directive to choose HTTPI adapter (connection.adapter)
+    and read / open timeouts (connection.read_timeout, connection.open_timeout).
 
 0.6.2:
   - Requiring Savon as "~>" now.
