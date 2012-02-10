@@ -17,7 +17,8 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets all users for an account. To create users run create_user.rb
+# This example gets all users for an account. To create users run
+# create_users.rb.
 #
 # Tags: UserService.getUsersByStatement
 
