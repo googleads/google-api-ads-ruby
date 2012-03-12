@@ -47,19 +47,35 @@ module AdwordsApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v201109 => [:AdExtensionOverrideService, :AdGroupAdService,
-                   :AdGroupCriterionService, :AdGroupService, :AdParamService,
-                   :AlertService, :BulkMutateJobService,
-                   :BulkOpportunityService, :CampaignAdExtensionService,
-                   :CampaignCriterionService, :CampaignService,
-                   :CampaignTargetService, :ConversionTrackerService,
-                   :CustomerSyncService, :DataService, :ExperimentService,
-                   :GeoLocationService, :InfoService, :MediaService,
-                   :ReportDefinitionService, :ServicedAccountService,
-                   :TargetingIdeaService, :TrafficEstimatorService,
-                   :UserListService, :ConstantDataService,
-                   :LocationCriterionService, :MutateJobService,
-                   :CreateAccountService]
+      :v201109 => [
+          :AdExtensionOverrideService,
+          :AdGroupAdService,
+          :AdGroupCriterionService,
+          :AdGroupService,
+          :AdParamService,
+          :AlertService,
+          :BulkMutateJobService,
+          :CampaignAdExtensionService,
+          :CampaignCriterionService,
+          :CampaignService,
+          :CampaignTargetService,
+          :ConstantDataService,
+          :ConversionTrackerService,
+          :CreateAccountService,
+          :CustomerSyncService,
+          :DataService,
+          :ExperimentService,
+          :GeoLocationService,
+          :InfoService,
+          :LocationCriterionService,
+          :MediaService,
+          :MutateJobService,
+          :ReportDefinitionService,
+          :ServicedAccountService,
+          :TargetingIdeaService,
+          :TrafficEstimatorService,
+          :UserListService
+      ]
     }
 
     # Configure the different environments, with the base URL for each one
@@ -85,27 +101,26 @@ module AdwordsApi
       [:v201109, :AdParamService] => 'cm/',
       [:v201109, :AlertService] => 'mcm/',
       [:v201109, :BulkMutateJobService] => 'job/',
-      [:v201109, :BulkOpportunityService] => 'o/',
       [:v201109, :CampaignAdExtensionService] => 'cm/',
       [:v201109, :CampaignCriterionService] => 'cm/',
       [:v201109, :CampaignService] => 'cm/',
       [:v201109, :CampaignTargetService] => 'cm/',
+      [:v201109, :ConstantDataService] => 'cm/',
       [:v201109, :ConversionTrackerService] => 'cm/',
+      [:v201109, :CreateAccountService] => 'mcm/',
       [:v201109, :CustomerSyncService] => 'ch/',
       [:v201109, :DataService] => 'cm/',
       [:v201109, :ExperimentService] => 'cm/',
       [:v201109, :GeoLocationService] => 'cm/',
       [:v201109, :InfoService] => 'info/',
+      [:v201109, :LocationCriterionService] => 'cm/',
       [:v201109, :MediaService] => 'cm/',
+      [:v201109, :MutateJobService] => 'cm/',
       [:v201109, :ReportDefinitionService] => 'cm/',
       [:v201109, :ServicedAccountService] => 'mcm/',
       [:v201109, :TargetingIdeaService] => 'o/',
       [:v201109, :TrafficEstimatorService] => 'o/',
-      [:v201109, :UserListService] => 'cm/',
-      [:v201109, :ConstantDataService] => 'cm/',
-      [:v201109, :LocationCriterionService] => 'cm/',
-      [:v201109, :MutateJobService] => 'cm/',
-      [:v201109, :CreateAccountService] => 'mcm/'
+      [:v201109, :UserListService] => 'cm/'
     }
 
     # Configure the auth servers to use for each environment
