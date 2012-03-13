@@ -47,13 +47,17 @@ end
 class TestParametersValidator < Test::Unit::TestCase
   def setup
     config = AdsCommon::Config.new({})
-    @handler = AdsCommon::Auth::ClientLoginHandler.new(config, nil, nil)
+    @handler = AdsCommon::Auth::ClientLoginHandler.new(
+        config, 'http://www.google.com', nil)
   end
 
   def test_handle_login_error_captcha
     assert_raises (AdsCommon::Errors::CaptchaRequiredError) do
       response = ResponseStub.new(403, '')
-      results = {'Error' => 'CaptchaRequired'}
+      results = {
+          'Error' => 'CaptchaRequired',
+          'CaptchaUrl' => '/account/test-captcha'
+      }
       @handler.handle_login_error({}, response, results)
     end
   end
