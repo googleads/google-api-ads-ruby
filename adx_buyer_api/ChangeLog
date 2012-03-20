@@ -1,5 +1,6 @@
 0.4.1:
   - Added .gemspec and updated packaging process.
+  - Switched to google-adwords-api-0.5.x branch.
 
 0.4.0:
   - Compatibility with google-adwords-api-0.4.1.
