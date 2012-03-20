@@ -24,9 +24,6 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-MAX_RETRIES = 3
-
 def use_oauth()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
@@ -76,6 +73,9 @@ def use_oauth()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+  MAX_RETRIES = 3
+
   begin
     use_oauth()
 

@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def update_campaign()
+def update_campaign(campaign_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -37,8 +35,6 @@ def update_campaign()
   # adwords.logger = Logger.new('adwords_xml.log')
 
   campaign_srv = adwords.service(:CampaignService, API_VERSION)
-
-  campaign_id = 'INSERT_CAMPAIGN_ID_HERE'.to_i
 
   # Prepare for updating campaign.
   operation = {
@@ -63,8 +59,12 @@ def update_campaign()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    update_campaign()
+    # ID of a campaign to update.
+    campaign_id = 'INSERT_CAMPAIGN_ID_HERE'.to_i
+    update_campaign(campaign_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

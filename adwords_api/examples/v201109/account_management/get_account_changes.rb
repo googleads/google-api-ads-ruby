@@ -27,8 +27,6 @@ require 'adwords_api'
 require 'date'
 require 'pp'
 
-API_VERSION = :v201109
-
 def get_account_changes()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
@@ -116,6 +114,8 @@ def get_account_changes()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
     get_account_changes()
 

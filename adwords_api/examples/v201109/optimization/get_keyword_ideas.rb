@@ -25,10 +25,7 @@
 require 'adwords_api'
 require 'adwords_api/utils'
 
-API_VERSION = :v201109
-PAGE_SIZE = 100
-
-def get_keyword_ideas()
+def get_keyword_ideas(keyword_text)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -38,8 +35,6 @@ def get_keyword_ideas()
   # adwords.logger = Logger.new('adwords_xml.log')
 
   targeting_idea_srv = adwords.service(:TargetingIdeaService, API_VERSION)
-
-  keyword_text = 'INSERT_KEYWORD_TEXT_HERE'
 
   # Construct selector object.
   selector = {
@@ -87,8 +82,12 @@ def get_keyword_ideas()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+  PAGE_SIZE = 100
+
   begin
-    get_keyword_ideas()
+    keyword_text = 'INSERT_KEYWORD_TEXT_HERE'
+    get_keyword_ideas(keyword_text)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

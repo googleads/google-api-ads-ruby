@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def set_ad_parameters()
+def set_ad_parameters(ad_group_id, criterion_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -38,9 +36,6 @@ def set_ad_parameters()
 
   ad_group_ad_srv = adwords.service(:AdGroupAdService, API_VERSION)
   ad_param_srv = adwords.service(:AdParamService, API_VERSION)
-
-  ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
-  criterion_id = 'INSERT_CRITERION_ID_HERE'.to_i
 
   # Prepare for adding ad.
   ad_operation = {
@@ -64,7 +59,7 @@ def set_ad_parameters()
   # Add ad.
   response = ad_group_ad_srv.mutate([ad_operation])
   ad = response[:value].first[:ad]
-  puts 'Text ad id %d was successfully added.' % ad[:id]
+  puts "Text ad ID %d was successfully added." % ad[:id]
 
   # Prepare for setting ad parameters.
   price_operation = {
@@ -93,8 +88,13 @@ def set_ad_parameters()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    set_ad_parameters()
+    # IDs of ad group and criterion to set ad parameter for.
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    criterion_id = 'INSERT_CRITERION_ID_HERE'.to_i
+    set_ad_parameters(ad_group_id, criterion_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

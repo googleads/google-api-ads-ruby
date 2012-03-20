@@ -25,14 +25,6 @@ require 'thread'
 require 'adwords_api'
 require 'adwords_api/utils'
 
-API_VERSION = :v201109
-# Number of parallel threads to spawn.
-THREADS = 10
-# Maximum number of retries for 500 errors.
-MAX_RETRIES = 5
-# Timeout between retries in seconds.
-BACKOFF_FACTOR = 5
-
 def parallel_report_download()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
@@ -145,6 +137,14 @@ def parallel_report_download()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+  # Number of parallel threads to spawn.
+  THREADS = 10
+  # Maximum number of retries for 500 errors.
+  MAX_RETRIES = 5
+  # Timeout between retries in seconds.
+  BACKOFF_FACTOR = 5
+
   begin
     parallel_report_download()
 

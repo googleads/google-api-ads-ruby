@@ -3,7 +3,7 @@
 #
 # Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -18,16 +18,15 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to retrieve all images and videos. To upload an
-# image, run upload_image.rb. To upload video, see:
-#   http://adwords.google.com/support/aw/bin/answer.py?hl=en&answer=39454.
+# This example gets various statistics for campaigns that received at least one
+# impression during the last week. To get campaigns, run get_campaigns.rb.
 #
-# Tags: MediaService.get
+# Tags: CampaignService.get
 
 require 'adwords_api'
-require 'adwords_api/utils'
+require 'date'
 
-def get_all_images_and_videos()
+def get_campaign_stats()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -36,17 +35,19 @@ def get_all_images_and_videos()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  media_srv = adwords.service(:MediaService, API_VERSION)
+  campaign_srv = adwords.service(:CampaignService, API_VERSION)
 
-  # Get all the images and videos.
+  # Prepare start and end date for the last week.
+  start_date = DateTime.parse((Date.today - 7).to_s).strftime("%Y%m%d")
+  end_date = DateTime.parse((Date.today - 1).to_s).strftime("%Y%m%d")
+
+  # Get all the campaigns for this account.
   selector = {
-    :fields => ['MediaId', 'Height', 'Width', 'MimeType', 'Urls'],
-    :ordering => [
-      {:field => 'MediaId', :sort_order => 'ASCENDING'}
-    ],
+    :fields => ['Id', 'Name', 'Impressions', 'Clicks', 'Cost', 'Ctr'],
     :predicates => [
-      {:field => 'Type', :operator => 'IN', :values => ['IMAGE', 'VIDEO']}
+      {:field => 'Impressions', :operator => 'GREATER_THAN', :values => [0]}
     ],
+    :date_range => {:min => start_date, :max => end_date},
     :paging => {
       :start_index => 0,
       :number_results => PAGE_SIZE
@@ -57,13 +58,16 @@ def get_all_images_and_videos()
   offset, page = 0, {}
 
   begin
-    page = media_srv.get(selector)
+    page = campaign_srv.get(selector)
     if page[:entries]
-      page[:entries].each do |entry|
-        dimensions = AdwordsApi::Utils.map(entry[:dimensions])
-        puts "Entry ID %d with dimensions %dx%d and MIME type is '%s'" %
-            [entry[:media_id], dimensions['FULL'][:height],
-             dimensions['FULL'][:width], entry[:mime_type]]
+      page[:entries].each do |campaign|
+        puts ("Campaign with ID %d, name '%s' had the following stats during" +
+            " the last week: ") % [campaign[:id], campaign[:name]]
+        stats = campaign[:campaign_stats]
+        puts "\tImpressions: %d" % stats[:impressions]
+        puts "\tClicks:      %d" % stats[:clicks]
+        puts "\tCost:        %.2f" % (stats[:cost][:micro_amount] / 1000000)
+        puts "\tCTR:         %.2f%%" % (stats[:ctr] * 100)
       end
       # Increment values to request the next page.
       offset += PAGE_SIZE
@@ -72,7 +76,7 @@ def get_all_images_and_videos()
   end while page[:total_num_entries] > offset
 
   if page.include?(:total_num_entries)
-    puts "\tFound %d entries." % page[:total_num_entries]
+    puts "Total number of campaigns found: %d." % [page[:total_num_entries]]
   end
 end
 
@@ -81,7 +85,7 @@ if __FILE__ == $0
   PAGE_SIZE = 500
 
   begin
-    get_all_images_and_videos()
+    get_campaign_stats()
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def add_keywords()
+def add_keywords(ad_group_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -39,8 +37,6 @@ def add_keywords()
   ad_group_criterion_srv =
       adwords.service(:AdGroupCriterionService, API_VERSION)
 
-  ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
-
   # Create keywords.
   # The 'xsi_type' field allows you to specify the xsi:type of the object
   # being created. It's only necessary when you must provide an explicit
@@ -51,7 +47,12 @@ def add_keywords()
      :criterion => {
        :xsi_type => 'Keyword',
        :text => 'mars cruise',
-       :match_type => 'BROAD'}},
+       :match_type => 'BROAD'
+     },
+     # Optional fields:
+     :user_status => 'PAUSED',
+     :destination_url => 'http://example.com/mars'
+    },
     {:xsi_type => 'BiddableAdGroupCriterion',
      :ad_group_id => ad_group_id,
      :criterion => {
@@ -65,25 +66,29 @@ def add_keywords()
     {:operator => 'ADD', :operand => keyword}
   end
 
-  # Add criteria.
+  # Add keywords.
   response = ad_group_criterion_srv.mutate(operations)
   if response and response[:value]
     ad_group_criteria = response[:value]
-    puts "Added %d criteria to ad group ID %d:" %
+    puts "Added %d keywords to ad group ID %d:" %
         [ad_group_criteria.length, ad_group_id]
     ad_group_criteria.each do |ad_group_criterion|
-      puts "\tCriterion ID is %d and type is '%s'" %
+      puts "\tKeyword ID is %d and type is '%s'" %
           [ad_group_criterion[:criterion][:id],
            ad_group_criterion[:criterion][:type]]
     end
   else
-    puts 'No criteria were added.'
+    raise StandardError, 'No keywords were added.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    add_keywords()
+    # Ad group ID to add keywords to.
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    add_keywords(ad_group_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

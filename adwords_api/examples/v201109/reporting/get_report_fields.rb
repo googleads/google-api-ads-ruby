@@ -24,9 +24,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def get_report_fields()
+def get_report_fields(report_type)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -37,12 +35,10 @@ def get_report_fields()
 
   report_def_srv = adwords.service(:ReportDefinitionService, API_VERSION)
 
-  report_type = 'INSERT_REPORT_TYPE_HERE'
-
   # Get report fields.
   fields = report_def_srv.get_report_fields(report_type)
   if fields
-    puts 'Report type \'%s\' contains the following fields:' % report_type
+    puts "Report type '%s' contains the following fields:" % report_type
     fields.each do |field|
       puts ' - %s (%s)' % [field[:field_name], field[:field_type]]
       puts '  := [%s]' % field[:enum_values].join(', ') if field[:enum_values]
@@ -51,8 +47,11 @@ def get_report_fields()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    get_report_fields()
+    report_type = 'INSERT_REPORT_TYPE_HERE'
+    get_report_fields(report_type)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

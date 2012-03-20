@@ -1,4 +1,6 @@
 0.5.2:
+  - Rework on examples.
+  - Tests for all examples.
 
 0.5.1:
   - Require google-ads-common 0.6.3 or later from now on.

@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def update_keyword()
+def update_keyword(ad_group_id, criterion_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -38,9 +36,6 @@ def update_keyword()
 
   ad_group_criterion_srv =
       adwords.service(:AdGroupCriterionService, API_VERSION)
-
-  ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
-  criterion_id = 'INSERT_CRITERION_ID_HERE'.to_i
 
   # Prepare for updating a keyword.
   operation = {
@@ -78,8 +73,13 @@ def update_keyword()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    update_keyword()
+    # IDs of a criterion to update and its ad group.
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    criterion_id = 'INSERT_CRITERION_ID_HERE'.to_i
+    update_keyword(ad_group_id, criterion_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

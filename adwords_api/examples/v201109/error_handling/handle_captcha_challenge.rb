@@ -25,10 +25,6 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-MAX_RETRIES = 500
-
 def handle_captcha_challenge()
   # Initialize token variable.
   logintoken = nil
@@ -73,6 +69,9 @@ def handle_captcha_challenge()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+  MAX_RETRIES = 500
+
   begin
     handle_captcha_challenge()
 

@@ -25,9 +25,7 @@
 require 'adwords_api'
 require 'adwords_api/utils'
 
-API_VERSION = :v201109
-
-def handle_partial_failures()
+def handle_partial_failures(ad_group_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -38,8 +36,6 @@ def handle_partial_failures()
 
   ad_group_criterion_srv =
       adwords.service(:AdGroupCriterionService, API_VERSION)
-
-  ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
 
   # Set partial failures flag.
   adwords.partial_failure = true
@@ -106,8 +102,11 @@ def handle_partial_failures()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    handle_partial_failures()
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    handle_partial_failures(ad_group_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

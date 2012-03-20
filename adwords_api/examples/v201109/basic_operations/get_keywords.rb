@@ -25,10 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-PAGE_SIZE = 500
-
-def get_keywords()
+def get_keywords(ad_group_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -39,8 +36,6 @@ def get_keywords()
 
   ad_group_criterion_srv =
       adwords.service(:AdGroupCriterionService, API_VERSION)
-
-  ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
 
   # Get all keywords for this ad group.
   selector = {
@@ -83,8 +78,13 @@ def get_keywords()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+  PAGE_SIZE = 500
+
   begin
-    get_keywords()
+    # Ad group ID to get keywords for.
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    get_keywords(ad_group_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

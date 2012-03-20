@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def add_location_extension()
+def add_location_extension(campaign_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -39,8 +37,6 @@ def add_location_extension()
   campaign_ad_ext_srv =
       adwords.service(:CampaignAdExtensionService, API_VERSION)
   geo_location_srv = adwords.service(:GeoLocationService, API_VERSION)
-
-  campaign_id = 'INSERT_CAMPAIGN_ID_HERE'.to_i
 
   selector = {
     :addresses => [
@@ -78,7 +74,13 @@ def add_location_extension()
          :address => location[:address],
          :geo_point => location[:geo_point],
          :encoded_location => location[:encoded_location],
-         :source => 'ADWORDS_FRONTEND'}}}
+         :source => 'ADWORDS_FRONTEND',
+         # Optional fields:
+         #:company_name => 'ACME Inc.',
+         #:phone_number => '+1-650-253-0000'
+       }
+     }
+    }
   end
 
   # Add location ad extensions.
@@ -90,8 +92,12 @@ def add_location_extension()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    add_location_extension()
+    # ID of campaign to add location extension to.
+    campaign_id = 'INSERT_CAMPAIGN_ID_HERE'.to_i
+    add_location_extension(campaign_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -25,10 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-PAGE_SIZE = 500
-
-def get_ad_groups()
+def get_ad_groups(campaign_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -38,8 +35,6 @@ def get_ad_groups()
   # adwords.logger = Logger.new('adwords_xml.log')
 
   ad_group_srv = adwords.service(:AdGroupService, API_VERSION)
-
-  campaign_id = 'INSERT_CAMPAIGN_ID_HERE'.to_i
 
   # Get all the ad groups for this campaign.
   selector = {
@@ -77,8 +72,13 @@ def get_ad_groups()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+  PAGE_SIZE = 500
+
   begin
-    get_ad_groups()
+    # Campaign ID to get ad groups for.
+    campaign_id = 'INSERT_CAMPAIGN_ID_HERE'.to_i
+    get_ad_groups(campaign_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

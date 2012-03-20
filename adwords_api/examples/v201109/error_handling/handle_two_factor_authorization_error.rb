@@ -22,8 +22,6 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
 def handle_two_factor_authorization_error()
   # Set up credentials with an account that has 2Factor enabled.
   config = {
@@ -66,6 +64,8 @@ def handle_two_factor_authorization_error()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
     handle_two_factor_authorization_error()
 

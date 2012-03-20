@@ -27,9 +27,7 @@
 require 'adwords_api'
 require 'adwords_api/utils'
 
-API_VERSION = :v201109
-
-def get_client_customer_id()
+def get_client_customer_id(client_email)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -40,11 +38,7 @@ def get_client_customer_id()
 
   info_srv = adwords.service(:InfoService, API_VERSION)
 
-  # Email address to find ID for.
-  client_email = 'INSERT_EMAIL_ADDRESS_HERE'
-
   today = Time.new.strftime('%Y%m%d')
-
   selector = {
     :client_emails => [client_email],
     :api_usage_type => 'UNIT_COUNT_FOR_CLIENTS',
@@ -66,8 +60,12 @@ def get_client_customer_id()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    get_client_customer_id()
+    # Email address to find ID for.
+    client_email = 'INSERT_EMAIL_ADDRESS_HERE'
+    get_client_customer_id(client_email)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

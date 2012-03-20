@@ -26,9 +26,7 @@
 require 'adwords_api'
 require 'adwords_api/utils'
 
-API_VERSION = :v201109
-
-def handle_policy_violation_error()
+def handle_policy_violation_error(ad_group_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -38,8 +36,6 @@ def handle_policy_violation_error()
   # adwords.logger = Logger.new('adwords_xml.log')
 
   ad_group_ad_srv = adwords.service(:AdGroupAdService, API_VERSION)
-
-  ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
 
   # Create text ad.
   text_ad_operation = {
@@ -117,8 +113,11 @@ def handle_policy_violation_error()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    handle_policy_violation_error()
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    handle_policy_violation_error(ad_group_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

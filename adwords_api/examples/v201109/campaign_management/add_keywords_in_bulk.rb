@@ -26,11 +26,6 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-RETRY_INTERVAL = 30
-RETRIES_COUNT = 30
-KEYWORD_NUMBER = 100
-
 def add_keywords_in_bulk()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
@@ -129,6 +124,11 @@ def add_keywords_in_bulk()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+  RETRY_INTERVAL = 30
+  RETRIES_COUNT = 30
+  KEYWORD_NUMBER = 100
+
   begin
     add_keywords_in_bulk()
 

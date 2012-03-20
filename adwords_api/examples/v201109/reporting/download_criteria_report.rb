@@ -22,9 +22,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def download_criteria_report()
+def download_criteria_report(file_name)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -35,10 +33,6 @@ def download_criteria_report()
 
   # Get report utilities for the version.
   report_utils = adwords.report_utils(API_VERSION)
-
-  # File name to write report to. To retrieve the report as return value, use
-  # "download_report" method.
-  file_name = 'INSERT_OUTPUT_FILE_NAME_HERE'
 
   # Define report definition. You can also pass your own XML text as a string.
   report_definition = {
@@ -61,13 +55,18 @@ def download_criteria_report()
   }
 
   # Download report, using "download_report_as_file" utility method.
+  # To retrieve the report as return value, use "download_report" method.
   report_utils.download_report_as_file(report_definition, file_name)
   puts "Report was downloaded to '%s'." % file_name
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    download_criteria_report()
+    # File name to write report to.
+    file_name = 'INSERT_OUTPUT_FILE_NAME_HERE'
+    download_criteria_report(file_name)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

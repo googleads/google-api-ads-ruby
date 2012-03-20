@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def add_text_ads()
+def add_text_ads(ad_group_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -38,25 +36,27 @@ def add_text_ads()
 
   ad_group_ad_srv = adwords.service(:AdGroupAdService, API_VERSION)
 
-  ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
-
   # Create text ads.
   # The 'xsi_type' field allows you to specify the xsi:type of the object
   # being created. It's only necessary when you must provide an explicit
   # type that the client library can't infer.
   text_ads = [
-    {:xsi_type => 'TextAd',
-     :headline => 'Luxury Cruise to Mars',
-     :description1 => 'Visit the Red Planet in style.',
-     :description2 => 'Low-gravity fun for everyone!',
-     :url => 'http://www.example.com',
-     :display_url => 'www.example.com'},
-    {:xsi_type => 'TextAd',
-     :headline => 'Luxury Cruise to Mars',
-     :description1 => 'Enjoy your stay at Red Planet.',
-     :description2 => 'Buy your tickets now!',
-     :url => 'http://www.example.com',
-     :display_url => 'www.example.com'}
+    {
+      :xsi_type => 'TextAd',
+      :headline => 'Luxury Cruise to Mars',
+      :description1 => 'Visit the Red Planet in style.',
+      :description2 => 'Low-gravity fun for everyone!',
+      :url => 'http://www.example.com',
+      :display_url => 'www.example.com'
+    },
+    {
+      :xsi_type => 'TextAd',
+      :headline => 'Luxury Cruise to Mars',
+      :description1 => 'Enjoy your stay at Red Planet.',
+      :description2 => 'Buy your tickets now!',
+      :url => 'http://www.example.com',
+      :display_url => 'www.example.com'
+    }
   ]
 
   # Create ad 'ADD' operations.
@@ -75,13 +75,17 @@ def add_text_ads()
           [ad[:ad][:id], ad[:ad][:ad_type], ad[:status]]
     end
   else
-    puts 'No ads were added.'
+    raise StandardError, 'No ads were added.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    add_text_ads()
+    # Ad group ID to add text ads to.
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    add_text_ads(ad_group_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

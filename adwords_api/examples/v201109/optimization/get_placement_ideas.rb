@@ -26,10 +26,7 @@
 require 'adwords_api'
 require 'adwords_api/utils'
 
-API_VERSION = :v201109
-PAGE_SIZE = 100
-
-def get_placement_ideas()
+def get_placement_ideas(url)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -39,8 +36,6 @@ def get_placement_ideas()
   # adwords.logger = Logger.new('adwords_xml.log')
 
   targeting_idea_srv = adwords.service(:TargetingIdeaService, API_VERSION)
-
-  url = 'INSERT_PLACEMENT_URL_HERE'
 
   # Construct selector.
   selector = {
@@ -86,8 +81,12 @@ def get_placement_ideas()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+  PAGE_SIZE = 100
+
   begin
-    get_placement_ideas()
+    url = 'INSERT_PLACEMENT_URL_HERE'
+    get_placement_ideas(url)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

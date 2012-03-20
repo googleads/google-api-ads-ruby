@@ -24,9 +24,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def download_defined_report()
+def download_defined_report(report_definition_id, file_name)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -37,9 +35,6 @@ def download_defined_report()
 
   report_def_srv = adwords.service(:ReportDefinitionService, API_VERSION)
 
-  report_definition_id = 'INSERT_REPORT_DEFINITION_ID'.to_i
-  file_name = 'INSERT_OUTPUT_FILE_NAME_HERE'
-
   # Download report, using "download_report_as_file" extension method.
   report_def_srv.download_report_as_file(report_definition_id, file_name)
   puts 'Report with definition id %d was downloaded to \'%s\'.' %
@@ -47,8 +42,12 @@ def download_defined_report()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    download_defined_report()
+    report_definition_id = 'INSERT_REPORT_DEFINITION_ID'.to_i
+    file_name = 'INSERT_OUTPUT_FILE_NAME_HERE'
+    download_defined_report(report_definition_id, file_name)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

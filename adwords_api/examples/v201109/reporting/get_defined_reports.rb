@@ -25,8 +25,6 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
 def get_defined_reports()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
@@ -54,6 +52,8 @@ def get_defined_reports()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
     get_defined_reports()
 

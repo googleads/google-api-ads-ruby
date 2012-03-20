@@ -26,9 +26,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def add_location_extension_override()
+def add_location_extension_override(ad_id, location_extension_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -39,9 +37,6 @@ def add_location_extension_override()
 
   ad_ext_override_srv =
       adwords.service(:AdExtensionOverrideService, API_VERSION)
-
-  ad_id = 'INSERT_AD_ID_HERE'.to_i
-  location_extension_id = 'INSERT_LOCATION_EXTENSION_ID_HERE'.to_i
 
   # Create operation.
   operation = {
@@ -62,8 +57,13 @@ def add_location_extension_override()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    add_location_extension_override()
+    # IDs of ad and location extension override to add.
+    ad_id = 'INSERT_AD_ID_HERE'.to_i
+    location_extension_id = 'INSERT_LOCATION_EXTENSION_ID_HERE'.to_i
+    add_location_extension_override(ad_id, location_extension_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

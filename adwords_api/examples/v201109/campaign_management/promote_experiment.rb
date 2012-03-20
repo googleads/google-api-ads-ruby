@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def promote_experiment()
+def promote_experiment(experiment_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -37,8 +35,6 @@ def promote_experiment()
   # adwords.logger = Logger.new('adwords_xml.log')
 
   experiment_srv = adwords.service(:ExperimentService, API_VERSION)
-
-  experiment_id = 'INSERT_EXPERIMENT_ID_HERE'.to_i
 
   # Prepare for updating experiment.
   operation = {
@@ -57,8 +53,11 @@ def promote_experiment()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    promote_experiment()
+    experiment_id = 'INSERT_EXPERIMENT_ID_HERE'.to_i
+    promote_experiment(experiment_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

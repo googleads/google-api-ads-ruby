@@ -24,8 +24,6 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
 def estimate_keyword_traffic()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
@@ -108,6 +106,8 @@ def estimate_keyword_traffic()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
     estimate_keyword_traffic()
 
