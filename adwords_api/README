@@ -178,7 +178,8 @@ respond in gzipped format. All requests are sent uncompressed regardless.
 to regenerate the stubs if needed
 
  $ gem build google-adwords-api.gemspec
-to build the gem
+ $ gem build google-adx-buyer-api.gemspec
+to build the gems
 
  $ rake test
 to run unit tests on the library
