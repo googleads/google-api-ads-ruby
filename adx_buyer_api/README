@@ -6,9 +6,9 @@ AdWords and DoubleClick Ad Exchange Buyer API!
 Please note that this is an early PREVIEW of the client library, still under
 development.
 
-It contains full support for v13, v200909, v201003, v201008, v201101 and
-v201109, with full stubs, and a simplified programming interface that lets you
-handle everything in native Ruby collections.
+It contains full support for v201109, with full stubs, and a simplified
+programming interface that lets you handle everything in native Ruby
+collections.
 
 
 = Docs for Users
@@ -28,7 +28,7 @@ which is installed automatically as a dependency.
 
 The following gem libraries are required:
   - savon v0.9.7
-  - google-ads-common v0.5.4 or later.
+  - google-ads-common v0.6.3 or later.
 
 
 == 2 - Using the client library:
@@ -157,6 +157,18 @@ This information can be obtained by passing a user block during method call:
 You can also retrieve the response body as the second block parameter:
   report_def_srv.get(selector) {|header, body| ... }
 
+=== 2.5 - GZip compression
+
+The library offers a transparent compression option which can be enabled in the
+configuration file or by the following setting:
+
+   config[:connection] = {
+     :enable_gzip => true
+   }
+
+Enabling this option will set the headers required to request the server to
+respond in gzipped format. All requests are sent uncompressed regardless.
+
 
 = Docs for Developers
 
@@ -165,8 +177,9 @@ You can also retrieve the response body as the second block parameter:
  $ rake generate
 to regenerate the stubs if needed
 
+ $ gem build google-adwords-api.gemspec
  $ gem build google-adx-buyer-api.gemspec
-to build the gem
+to build the gems
 
  $ rake test
 to run unit tests on the library

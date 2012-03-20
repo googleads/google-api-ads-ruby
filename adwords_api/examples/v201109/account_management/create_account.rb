@@ -26,8 +26,6 @@
 require 'adwords_api'
 require 'adwords_api/utils'
 
-API_VERSION = :v201109
-
 def create_account()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
@@ -59,6 +57,8 @@ def create_account()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
     create_account()
 

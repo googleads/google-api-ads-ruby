@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def validate_text_ad()
+def validate_text_ad(ad_group_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -37,8 +35,6 @@ def validate_text_ad()
   # adwords.logger = Logger.new('adwords_xml.log')
 
   ad_group_ad_srv = adwords.service(:AdGroupAdService, API_VERSION)
-
-  ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
 
   # Enable 'validate only' option.
   adwords.validate_only = true
@@ -77,18 +73,20 @@ def validate_text_ad()
     response = ad_group_ad_srv.mutate([operation])
     if response and response[:value]
       ad = response[:value].first
-      puts "Unexpected ad creation! Name '%s', ID %d and status '%s'." %
-          [campaign[:name], campaign[:id], campaign[:status]]
+      raise StandardError, ("Unexpected ad creation! Name '%s', ID %d and " +
+          "status '%s'.") % [campaign[:name], campaign[:id], campaign[:status]]
     end
   rescue AdwordsApi::Errors::ApiException => e
     puts "Validation correctly failed with an exception: %s" % e.class
-    raise e
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    validate_text_ad()
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    validate_text_ad(ad_group_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

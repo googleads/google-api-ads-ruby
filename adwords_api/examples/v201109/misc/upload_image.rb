@@ -26,8 +26,6 @@ require 'adwords_api'
 require 'adwords_api/utils'
 require 'base64'
 
-API_VERSION = :v201109
-
 def upload_image()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
@@ -69,6 +67,8 @@ def upload_image()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
     upload_image()
 

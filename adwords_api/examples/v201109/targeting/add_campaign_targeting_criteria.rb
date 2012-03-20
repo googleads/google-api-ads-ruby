@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def add_campaign_targeting_criteria()
+def add_campaign_targeting_criteria(campaign_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -38,8 +36,6 @@ def add_campaign_targeting_criteria()
 
   campaign_criterion_srv =
       adwords.service(:CampaignCriterionService, API_VERSION)
-
-  campaign_id = 'INSERT_CAMPAIGN_ID_HERE'
 
   # Create campaign criteria.
   campaign_criteria = [
@@ -98,8 +94,11 @@ def add_campaign_targeting_criteria()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    add_campaign_targeting_criteria()
+    campaign_id = 'INSERT_CAMPAIGN_ID_HERE'
+    add_campaign_targeting_criteria(campaign_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

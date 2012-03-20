@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def get_client_unit_usage()
+def get_client_unit_usage(client_customer_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -37,9 +35,6 @@ def get_client_unit_usage()
   # adwords.logger = Logger.new('adwords_xml.log')
 
   info_srv = adwords.service(:InfoService, API_VERSION)
-
-  # Specify client customer ID for the account to get usage for.
-  client_customer_id = 'INSERT_CLIENT_CUSTOMER_ID_HERE'.to_i
 
   start_date = Time.now.strftime('%Y%m01')
   end_date = Time.now.strftime('%Y%m%d')
@@ -67,8 +62,12 @@ def get_client_unit_usage()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    get_client_unit_usage()
+    # Specify client customer ID for the account to get usage for.
+    client_customer_id = 'INSERT_CLIENT_CUSTOMER_ID_HERE'.to_i
+    get_client_unit_usage(client_customer_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

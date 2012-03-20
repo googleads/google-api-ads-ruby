@@ -24,9 +24,6 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-PAGE_SIZE = 500
-
 def get_campaigns()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
@@ -72,6 +69,9 @@ def get_campaigns()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+  PAGE_SIZE = 500
+
   begin
     get_campaigns()
 

@@ -24,8 +24,6 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
 def add_conversion_tracker()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
@@ -50,7 +48,16 @@ def add_conversion_tracker()
       :category => 'DEFAULT',
       :markup_language => 'HTML',
       :http_protocol => 'HTTP',
-      :text_format => 'HIDDEN'
+      :text_format => 'HIDDEN',
+      # Optional fields:
+      :status => 'ENABLED',
+      :viewthrough_lookback_window => 15,
+      :viewthrough_conversion_de_dup_search => true,
+      :is_product_ads_chargeable => true,
+      :product_ads_chargeable_conversion_window => 15,
+      :conversion_page_language => 'en',
+      :background_color => '#0000FF',
+      :user_revenue_value => 'someJavascriptVariable'
     }
   }
 
@@ -67,6 +74,8 @@ def add_conversion_tracker()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
     add_conversion_tracker()
 

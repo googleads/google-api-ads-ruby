@@ -25,8 +25,6 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
 def add_audience()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
@@ -52,7 +50,9 @@ def add_audience()
       :description => 'A list of mars cruise customers in the last year',
       :status => 'OPEN',
       :membership_life_span => 365,
-      :conversion_types => [{:name => name}]
+      :conversion_types => [{:name => name}],
+      # Optional field.
+      :status => 'OPEN'
     }
   }
 
@@ -92,6 +92,8 @@ def add_audience()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
     add_audience()
 

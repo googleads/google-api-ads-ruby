@@ -26,8 +26,6 @@
 require 'adwords_api'
 require 'adwords_api/utils'
 
-API_VERSION = :v201109
-
 def get_account_hierarchy()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
@@ -72,6 +70,8 @@ def get_account_hierarchy()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
     get_account_hierarchy()
 

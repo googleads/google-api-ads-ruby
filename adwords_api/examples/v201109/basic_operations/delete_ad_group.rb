@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def delete_ad_group()
+def delete_ad_group(ad_group_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -38,9 +36,7 @@ def delete_ad_group()
 
   ad_group_srv = adwords.service(:AdGroupService, API_VERSION)
 
-  ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
-
-  # Retrieve the ad group to obtain it's name. This is optional but recommended
+  # Retrieve the ad group to obtain its name. This is optional but recommended
   # to keep deleted objects searchable. In production the name is already known
   # in most cases.
   selector = {
@@ -81,8 +77,12 @@ def delete_ad_group()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    delete_ad_group()
+    # ID of an ad group to delete.
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    delete_ad_group(ad_group_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def get_all_disapproved_ads()
+def get_all_disapproved_ads(ad_group_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -37,8 +35,6 @@ def get_all_disapproved_ads()
   # adwords.logger = Logger.new('adwords_xml.log')
 
   ad_group_ad_srv = adwords.service(:AdGroupAdService, API_VERSION)
-
-  ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
 
   # Get all the disapproved ads for this campaign.
   selector = {
@@ -72,8 +68,12 @@ def get_all_disapproved_ads()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    get_all_disapproved_ads()
+    # ID of an ad group to get disapproved ads for.
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    get_all_disapproved_ads(ad_group_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

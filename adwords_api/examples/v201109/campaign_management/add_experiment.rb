@@ -27,10 +27,9 @@
 # Tags: ExperimentService.mutate
 
 require 'adwords_api'
+require 'date'
 
-API_VERSION = :v201109
-
-def add_experiment()
+def add_experiment(campaign_id, ad_group_id, criterion_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -44,10 +43,6 @@ def add_experiment()
   ad_group_criterion_srv =
       adwords.service(:AdGroupCriterionService, API_VERSION)
 
-  campaign_id = 'INSERT_CAMPAIGN_ID_HERE'.to_i
-  ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
-  criterion_id = 'INSERT_CRITERION_ID_HERE'.to_i
-
   # Prepare for adding experiment.
   operation = {
     :operator => 'ADD',
@@ -55,7 +50,11 @@ def add_experiment()
       :campaign_id => campaign_id,
       :name => "Interplanetary Experiment #%d" % (Time.new.to_f * 1000).to_i,
       :query_percentage => 10,
-      :start_date_time => Time.now.strftime('%Y%m%d %H%M%S')
+      :start_date_time => Time.now.strftime('%Y%m%d %H%M%S'),
+      # Optional fields:
+      :status => 'ACTIVE',
+      :end_date_time =>
+         DateTime.parse((Date.today + 30).to_s).strftime('%Y%m%d %H%M%S')
     }
   }
 
@@ -132,8 +131,14 @@ def add_experiment()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    add_experiment()
+    # IDs of the required objects.
+    campaign_id = 'INSERT_CAMPAIGN_ID_HERE'.to_i
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    criterion_id = 'INSERT_CRITERION_ID_HERE'.to_i
+    add_experiment(campaign_id, ad_group_id, criterion_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

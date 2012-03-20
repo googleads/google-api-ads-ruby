@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def update_ad_group()
+def update_ad_group(ad_group_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -37,8 +35,6 @@ def update_ad_group()
   # adwords.logger = Logger.new('adwords_xml.log')
 
   ad_group_srv = adwords.service(:AdGroupService, API_VERSION)
-
-  ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
 
   # Prepare for updating ad group.
   operation = {
@@ -60,8 +56,12 @@ def update_ad_group()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    update_ad_group()
+    # ID of an ad group to update.
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    update_ad_group(ad_group_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

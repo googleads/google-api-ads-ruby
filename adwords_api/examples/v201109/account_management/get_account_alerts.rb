@@ -26,9 +26,6 @@
 require 'adwords_api'
 require 'adwords_api/utils'
 
-API_VERSION = :v201109
-PAGE_SIZE = 500
-
 def get_account_alerts()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
@@ -90,6 +87,9 @@ def get_account_alerts()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+  PAGE_SIZE = 500
+
   begin
     get_account_alerts()
 

@@ -25,9 +25,7 @@
 
 require 'adwords_api'
 
-API_VERSION = :v201109
-
-def get_criterion_bid_landscapes()
+def get_criterion_bid_landscapes(ad_group_id, keyword_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -37,9 +35,6 @@ def get_criterion_bid_landscapes()
   # adwords.logger = Logger.new('adwords_xml.log')
 
   data_srv = adwords.service(:DataService, API_VERSION)
-
-  ad_group_id = 'INSERT_ADGROUP_ID_HERE'.to_i
-  keyword_id = 'INSERT_KEYWORD_ID_HERE'.to_i
 
   # Get keyword bid landscape.
   selector = {
@@ -72,8 +67,12 @@ def get_criterion_bid_landscapes()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201109
+
   begin
-    get_criterion_bid_landscapes()
+    ad_group_id = 'INSERT_ADGROUP_ID_HERE'.to_i
+    keyword_id = 'INSERT_KEYWORD_ID_HERE'.to_i
+    get_criterion_bid_landscapes(ad_group_id, keyword_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e
