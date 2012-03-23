@@ -31,7 +31,8 @@ module AdsCommon
     class OAuthHandler < AdsCommon::Auth::BaseHandler
       IGNORED_FIELDS = [
           :email, :password, :auth_token,
-          :oauth_verification_code, :oauth_consumer_secret, :oauth_consumer_key
+          :oauth_verification_code, :oauth_consumer_secret, :oauth_consumer_key,
+          :oauth_token_secret, :oauth_token
       ]
 
       OAUTH_CONFIG = {

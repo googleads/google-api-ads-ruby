@@ -1,4 +1,6 @@
 0.6.4:
+  - Fixed issue #66 (extra fields in OAuth header).
+  - Fixed issue #69 (string names converted to Date).
 
 0.6.3:
   - Support for CAPTCHA challenge handling.

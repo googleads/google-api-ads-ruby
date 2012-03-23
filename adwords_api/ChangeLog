@@ -1,3 +1,6 @@
+0.5.3:
+  - Fixed issue #70 (stricter client id validation).
+
 0.5.2:
   - Rework on examples.
   - Tests for all examples.
