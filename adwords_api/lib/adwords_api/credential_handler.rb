@@ -105,8 +105,7 @@ module AdwordsApi
       client_customer_id = @credentials[:client_customer_id]
       if client_customer_id and
           !(client_customer_id.is_a?(Integer) or
-            (client_customer_id =~ /\d+-\d+-\d+/) or
-            (client_customer_id =~ /\d+/))
+            (client_customer_id =~ /^\d+(-\d+-\d+)?$/))
         raise AdwordsApi::Errors::BadCredentialsError,
             'Invalid client customer ID: %s' % client_customer_id.to_s
       end
