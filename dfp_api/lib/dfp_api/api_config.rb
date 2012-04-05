@@ -20,8 +20,6 @@
 # Helper methods for loading and managing the available services in the DFP
 # API.
 
-require 'savon'
-
 require 'ads_common/api_config'
 
 require 'dfp_api/version'
@@ -36,9 +34,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201201
+    DEFAULT_VERSION = :v201203
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201201
+    LATEST_VERSION = :v201203
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -46,22 +44,6 @@ module DfpApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v201103 => [:CompanyService, :CreativeService, :ForecastService,
-                   :InventoryService, :LineItemCreativeAssociationService,
-                   :LineItemService, :NetworkService, :OrderService,
-                   :PlacementService, :ReportService, :UserService,
-                   :CustomTargetingService, :PublisherQueryLanguageService],
-      :v201104 => [:CompanyService, :CreativeService, :ForecastService,
-                   :InventoryService, :LineItemCreativeAssociationService,
-                   :LineItemService, :NetworkService, :OrderService,
-                   :PlacementService, :ReportService, :UserService,
-                   :CustomTargetingService, :PublisherQueryLanguageService],
-      :v201107 => [:CompanyService, :CreativeService, :ForecastService,
-                   :InventoryService, :LineItemCreativeAssociationService,
-                   :LineItemService, :NetworkService, :OrderService,
-                   :PlacementService, :ReportService, :UserService,
-                   :CustomTargetingService, :PublisherQueryLanguageService,
-                   :LabelService],
       :v201108 => [:CompanyService, :CreativeService, :ForecastService,
                    :InventoryService, :LineItemCreativeAssociationService,
                    :LineItemService, :NetworkService, :OrderService,
@@ -82,35 +64,31 @@ module DfpApi
                    :CustomTargetingService, :PublisherQueryLanguageService,
                    :LabelService, :ThirdPartySlotService, :ContentService,
                    :SuggestedAdUnitService, :CreativeTemplateService,
-                   :TeamService]
+                   :TeamService],
+      :v201203 => [:CompanyService, :CreativeService, :ForecastService,
+                   :InventoryService, :LineItemCreativeAssociationService,
+                   :LineItemService, :NetworkService, :OrderService,
+                   :PlacementService, :ReportService, :UserService,
+                   :CustomTargetingService, :PublisherQueryLanguageService,
+                   :LabelService, :ThirdPartySlotService, :ContentService,
+                   :SuggestedAdUnitService, :CreativeTemplateService,
+                   :TeamService, :AudienceSegmentService]
     }
 
     # Configure the different environments, with the base URL for each one
     @@environment_config = {
       :PRODUCTION => {
         :oauth_scope => 'https://www.google.com/apis/ads/publisher/',
-        :v201103 => 'https://www.google.com/apis/ads/publisher/',
-        :v201104 => 'https://www.google.com/apis/ads/publisher/',
-        :v201107 => 'https://www.google.com/apis/ads/publisher/',
         :v201108 => 'https://www.google.com/apis/ads/publisher/',
         :v201111 => 'https://www.google.com/apis/ads/publisher/',
-        :v201201 => 'https://www.google.com/apis/ads/publisher/'
-      },
-      :SANDBOX => {
-        :oauth_scope => 'https://sandbox.google.com/apis/ads/publisher/',
-        :v201103 => 'https://sandbox.google.com/apis/ads/publisher/',
-        :v201104 => 'https://sandbox.google.com/apis/ads/publisher/',
-        :v201107 => 'https://sandbox.google.com/apis/ads/publisher/',
-        :v201108 => 'https://sandbox.google.com/apis/ads/publisher/',
-        :v201111 => 'https://sandbox.google.com/apis/ads/publisher/',
-        :v201201 => 'https://sandbox.google.com/apis/ads/publisher/'
+        :v201201 => 'https://www.google.com/apis/ads/publisher/',
+        :v201203 => 'https://www.google.com/apis/ads/publisher/'
       }
     }
 
     # Configure the auth servers to use for each environment
     @@auth_server_config = {
-      :PRODUCTION => 'https://www.google.com',
-      :SANDBOX => 'https://www.google.com'
+      :PRODUCTION => 'https://www.google.com'
     }
 
     @@headers_config = {
