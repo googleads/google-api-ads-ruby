@@ -1,4 +1,6 @@
-0.2.9:
+0.3.0:
+  - Added support and examples for v201203.
+  - Removed support for deprecated v201103, v201104, v201107.
 
 0.2.8:
   - Added .gemspec and updated packaging process.

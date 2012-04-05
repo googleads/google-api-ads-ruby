@@ -8,7 +8,7 @@
   # Auth parameters for OAuth method.
   # Set the OAuth consumer key and secret. Anonymous values can be used for
   # testing, and real values can be obtained by registering your application:
-  # http://code.google.com/apis/accounts/docs/RegistrationForWebAppsAuto.html
+  # https://developers.google.com/accounts/docs/RegistrationForWebAppsAuto
   #:oauth_consumer_key: anonymous
   #:oauth_consumer_secret: anonymous
   # If you manage or store access token manually, you can specify it here.
@@ -26,6 +26,10 @@
 
   # Other parameters.
   :application_name: dfp_ruby_examples
+
+  # Starting in v201203, network_code is required for all calls other than
+  # GetAllNetworks and MakeTestNetwork. In earlier versions, networkCode is
+  # optional if the user belongs to only one network.
   :network_code: INSERT_NETWORK_CODE_HERE
 :service:
   :environment: SANDBOX

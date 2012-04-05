@@ -24,9 +24,6 @@ require 'dfp_api'
 
 class TestDfpApi < Test::Unit::TestCase
   DEFAULT_CONFIG_HASH = {
-      :service => {
-          :environment => 'sandbox'
-      },
       :authentication => {
           :method => 'ClientLogin',
           :email => 'root@example.com',
@@ -78,7 +75,6 @@ class TestDfpApi < Test::Unit::TestCase
     assert_equal('mySecretPassword', config.read('authentication.password'))
     assert_equal('root@example.com', config.read('authentication.email'))
     assert_equal(1234567, config.read('authentication.network_code'))
-    assert_equal(:SANDBOX, config.read('service.environment'))
     assert_nil(config.read('item.not.exists'))
     assert_equal(:default, config.read('item.not.exists', :default))
   end
