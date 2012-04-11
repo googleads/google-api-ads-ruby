@@ -1,3 +1,6 @@
+0.3.1:
+  - Now require Savon-0.9.9 (fixes Content-Length bug).
+
 0.3.0:
   - Added support and examples for v201203.
   - Removed support for deprecated v201103, v201104, v201107.
