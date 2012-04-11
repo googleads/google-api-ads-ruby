@@ -90,7 +90,8 @@ module AdwordsApi
       :selector => [:fields, :predicates, :date_range, :ordering, :paging],
       :predicates => [:field, :operator, :values],
       :ordering => [:field, :sort_order],
-      :paging => [:start_index, :number_results]
+      :paging => [:start_index, :number_results],
+      :date_range => [:min, :max]
     }
 
     # Send POST request for a report and returns Response object.
