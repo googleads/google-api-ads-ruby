@@ -27,7 +27,7 @@ Buyer client library examples. You need the AdWords library in order to use it
 which is installed automatically as a dependency.
 
 The following gem libraries are required:
-  - savon v0.9.7
+  - savon v0.9.9;
   - google-ads-common v0.6.3 or later.
 
 

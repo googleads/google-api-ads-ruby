@@ -37,6 +37,6 @@ Gem::Specification.new do |s|
   s.files = Dir.glob('{examples,lib,test}/**/*') +
       %w(COPYING README ChangeLog adwords_api.yml)
   s.test_files = ['test/suite_unittests.rb']
-  s.add_dependency('savon', '~> 0.9.7')
+  s.add_dependency('savon', '~> 0.9.9')
   s.add_dependency('google-ads-common', '~> 0.6.3')
 end

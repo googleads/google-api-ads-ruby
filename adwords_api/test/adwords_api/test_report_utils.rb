@@ -30,6 +30,7 @@ API_VERSION = :v201109
 module AdwordsApi
   class ReportUtils
     public :check_for_errors
+    public :add_report_definition_hash_order
   end
 end
 
@@ -118,5 +119,70 @@ class TestReportUtils < Test::Unit::TestCase
     assert_nothing_raised do
       @report_utils.check_for_errors(response)
     end
+  end
+
+  # Tests generated hash order for root (complete set).
+  def test_add_report_definition_hash_order_root1
+    node = {
+      :include_zero_impressions => false,
+      :download_format => 'CSV',
+      :report_type => 'CRITERIA_PERFORMANCE_REPORT',
+      :selector => {},
+      :report_name => 'report_name',
+      :date_range_type => 'LAST_7_DAYS'
+    }
+    expected = [:selector, :report_name, :report_type, :date_range_type,
+                :download_format, :include_zero_impressions]
+    @report_utils.add_report_definition_hash_order(node)
+    assert_not_nil(node[:order!])
+    assert_equal(expected, node[:order!])
+  end
+
+  # Tests generated hash order for root (incomplete set).
+  def test_add_report_definition_hash_order_root2
+    node = {
+      :download_format => 'CSV',
+      :report_type => 'CRITERIA_PERFORMANCE_REPORT',
+      :selector => {},
+      :report_name => 'report_name',
+      :date_range_type => 'LAST_7_DAYS'
+    }
+    expected = [:selector, :report_name, :report_type, :date_range_type,
+                :download_format]
+    @report_utils.add_report_definition_hash_order(node)
+    assert_not_nil(node[:order!])
+    assert_equal(expected, node[:order!])
+  end
+
+  # Tests generated hash order for whole structure.
+  def test_add_report_definition_hash_order_deep
+    node = {
+      :report_name => 'report_name',
+      :report_type => 'CRITERIA_PERFORMANCE_REPORT',
+      :selector => {
+        :date_range => {:max => '20120405', :min => '20120405'},
+        :predicates => {:operator => 'IN', :field => 'S', :values => ['A']},
+        :fields => ['CampaignId']
+      },
+      :include_zero_impressions => false,
+      :download_format => 'CSV',
+      :date_range_type => 'LAST_7_DAYS'
+    }
+    expected1 = [:selector, :report_name, :report_type, :date_range_type,
+                 :download_format, :include_zero_impressions]
+    expected2 = [:fields, :predicates, :date_range]
+    expected3 = [:min, :max]
+    expected4 = [:field, :operator, :values]
+
+    @report_utils.add_report_definition_hash_order(node)
+    assert_not_nil(node[:order!])
+    assert_not_nil(node[:selector][:order!])
+    assert_not_nil(node[:selector][:date_range][:order!])
+    assert_not_nil(node[:selector][:predicates][:order!])
+
+    assert_equal(expected1, node[:order!])
+    assert_equal(expected2, node[:selector][:order!])
+    assert_equal(expected3, node[:selector][:date_range][:order!])
+    assert_equal(expected4, node[:selector][:predicates][:order!])
   end
 end

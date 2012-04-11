@@ -269,8 +269,6 @@ module AdsCommon
       if !value_str.nil? and !value_str.empty?
         value = value_str.upcase.to_sym
         @config.set(key, value)
-      else
-        @logger.warn("Empty value for required parameter: '%s'" % key)
       end
     end
 
