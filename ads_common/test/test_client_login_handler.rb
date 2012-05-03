@@ -28,14 +28,19 @@ require 'ads_common/auth/client_login_handler'
 module AdsCommon
   module Auth
     class ClientLoginHandler
+
       public :parse_token_text
       public :handle_login_error
+      public :validate_credentials
+      public :create_token_from_string
     end
   end
 end
 
+
 # Stub class for HTTP response.
 class ResponseStub
+
   attr_reader :code
   attr_reader :body
 
@@ -44,14 +49,15 @@ class ResponseStub
   end
 end
 
-class TestParametersValidator < Test::Unit::TestCase
-  def setup
+class TestClientLoginHandler < Test::Unit::TestCase
+
+  def setup()
     config = AdsCommon::Config.new({})
     @handler = AdsCommon::Auth::ClientLoginHandler.new(
-        config, 'http://www.google.com', nil)
+        config, 'http://www.google.com', 'adwords')
   end
 
-  def test_handle_login_error_captcha
+  def test_handle_login_error_captcha()
     assert_raises (AdsCommon::Errors::CaptchaRequiredError) do
       response = ResponseStub.new(403, '')
       results = {
@@ -62,15 +68,15 @@ class TestParametersValidator < Test::Unit::TestCase
     end
   end
 
-  def test_handle_login_error_other
-    assert_raises (AdsCommon::Errors::AuthError) do
+  def test_handle_login_error_other()
+    assert_raises(AdsCommon::Errors::AuthError) do
       response = ResponseStub.new(403, 'Body')
       results = {'Error' => 'SomeError', 'Info' => 'SomeInfo'}
       @handler.handle_login_error({}, response, results)
     end
   end
 
-  def test_parse_token_text_simple
+  def test_parse_token_text_simple()
     error_str = "BadAuthentication"
     text = "Error=%s\n" % error_str
     result = @handler.parse_token_text(text)
@@ -78,7 +84,7 @@ class TestParametersValidator < Test::Unit::TestCase
     assert_equal(['Error'], result.keys)
   end
 
-  def test_parse_token_text_captcha
+  def test_parse_token_text_captcha()
     captcha_token = "3u6_27iOel71j525g2tg252ge6t35g345XJtRuHYEYiTyAxsMPz2222442"
     captcha_url = "Captcha?ctoken=3u245245rgfwrg5g2fw5x3xGqQBrk_AoXXJtRuHY%3a-V"
     error_str = "CaptchaRequired"
@@ -94,5 +100,32 @@ class TestParametersValidator < Test::Unit::TestCase
     assert_equal(url_str, result['Url'])
     assert_equal(['CaptchaToken', 'CaptchaUrl', 'Error', 'Url'],
         result.keys.sort)
+  end
+
+  def test_validate_credentials_valid()
+    credentials1 = {:email => 'email@example.com', :password => 'qwerty'}
+    credentials2 = {:auth_token => 'QazSWXEDEDCE434234'}
+    assert_nothing_raised do
+      @handler.validate_credentials(credentials1)
+    end
+    assert_nothing_raised do
+      @handler.validate_credentials(credentials2)
+    end
+  end
+
+  def test_validate_credentials_invalid()
+    credentials1 = {:email => 'email@example.com'}
+    credentials2 = {:password => 'qwerty'}
+    assert_raises(AdsCommon::Errors::AuthError) do
+      @handler.validate_credentials(credentials1)
+    end
+    assert_raises(AdsCommon::Errors::AuthError) do
+      @handler.validate_credentials(credentials2)
+    end
+  end
+
+  def test_create_token_from_string()
+    test_text = 'fooBar'
+    assert_equal(test_text, @handler.create_token_from_string(test_text))
   end
 end

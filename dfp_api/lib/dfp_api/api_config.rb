@@ -86,13 +86,9 @@ module DfpApi
       }
     }
 
-    # Configure the auth servers to use for each environment
-    @@auth_server_config = {
-      :PRODUCTION => 'https://www.google.com'
-    }
-
-    @@headers_config = {
-      :REQUEST_HEADER => 'RequestHeader',
+    # Auth constants for ClientLogin method.
+    @@client_login_config = {
+      :AUTH_SERVER => 'https://www.google.com',
       :HEADER_NAMESPACE_PREAMBLE =>
           'https://www.google.com/apis/ads/publisher/',
       :LOGIN_SERVICE_NAME => 'gam'
@@ -121,24 +117,21 @@ module DfpApi
       @@service_config
     end
 
-    def self.environment_config
-      @@environment_config
+    def self.environment_config(environment, key)
+      return @@environment_config.include?(environment) ?
+          @@environment_config[environment][key] : nil
     end
 
     def self.subdir_config
       nil
     end
 
-    def self.auth_server_config
-      @@auth_server_config
+    def self.client_login_config(key)
+      return @@client_login_config[key]
     end
 
     def self.default_config_filename
       DEFAULT_CONFIG_FILENAME
-    end
-
-    def self.headers_config
-      @@headers_config
     end
   end
 end

@@ -29,17 +29,11 @@ module AdsCommon
 
     # Credentials class to handle OAuth authentication.
     class OAuthHandler < AdsCommon::Auth::BaseHandler
-      IGNORED_FIELDS = [
-          :email, :password, :auth_token,
-          :oauth_verification_code, :oauth_consumer_secret, :oauth_consumer_key,
-          :oauth_token_secret, :oauth_token
-      ]
-
       OAUTH_CONFIG = {
-          :site => "https://www.google.com",
-          :request_token_path => "/accounts/OAuthGetRequestToken",
-          :access_token_path => "/accounts/OAuthGetAccessToken",
-          :authorize_path => "/accounts/OAuthAuthorizeToken"
+          :site => 'https://www.google.com',
+          :request_token_path => '/accounts/OAuthGetRequestToken',
+          :access_token_path => '/accounts/OAuthGetAccessToken',
+          :authorize_path => '/accounts/OAuthAuthorizeToken'
       }
 
       DEFAULT_CALLBACK = 'oob'
@@ -56,42 +50,17 @@ module AdsCommon
         @scope = scope
       end
 
+      # Invalidates the stored token if the required credential has changed.
+      def property_changed(prop, value)
+        if [:oauth_consumer_key, :oauth_consumer_secret].include?(prop)
+          @consumer, @token, @request_token = nil, nil, nil
+        end
+      end
+
       def handle_error(error)
         # TODO: Add support.
+        get_logger().error(error)
         raise error
-      end
-
-      # Returns all of the fields that this auth handler will fill.
-      #
-      # Args:
-      # - credentials: request credentials
-      #
-      # Returns:
-      # - array with header names
-      #
-      def header_list(credentials)
-        result = credentials.keys.map.reject do |field|
-          IGNORED_FIELDS.include?(field)
-        end
-        result << :access_token
-        return result
-      end
-
-      # Returns all of the credentials received from the CredentialHandler,
-      # except for ignored fields.
-      #
-      # Args:
-      # - credentials: request credentials
-      #
-      # Returns:
-      # - hash with header names and values
-      #
-      def headers(credentials)
-        result = credentials.reject do |field, value|
-          IGNORED_FIELDS.include?(field)
-        end
-        result[:access_token] = get_token(credentials)
-        return result
       end
 
       # Returns OAuth-specific Consumer object.
@@ -108,6 +77,8 @@ module AdsCommon
         return generate_oauth_parameters_string(credentials, request)
       end
 
+      private
+
       # Generates auth string for OAuth method of authentication.
       #
       # Args:
@@ -118,10 +89,11 @@ module AdsCommon
       # - Authentication string
       #
       def generate_oauth_parameters_string(credentials, request)
+        # get_token() ensures @consumer is initialized.
+        token = get_token(credentials)
         oauth_params = {
-            # get_token() ensures @consumer is initialized.
-            :token => get_token(credentials),
-            :consumer => @consumer
+            :consumer => @consumer,
+            :token => token
         }
         oauth_helper = OAuth::Client::Helper.new(request, oauth_params)
         return oauth_helper.header
@@ -152,6 +124,8 @@ module AdsCommon
           raise AdsCommon::Errors::AuthError,
               'Consumer secret not included in credentials.'
         end
+
+        # TODO: add checks for both methods.
       end
 
       # Auxiliary method to generate an authentication token for logging via
@@ -171,15 +145,19 @@ module AdsCommon
       #
       def create_token(credentials)
         validate_credentials(credentials)
-        if @consumer.nil?
-          oauth_config = OAUTH_CONFIG.merge({:scope => @scope})
-          proxy = @config.read('connection.proxy')
-          oauth_config[:proxy] = proxy if !proxy.nil?
-          @consumer = OAuth::Consumer.new(credentials[:oauth_consumer_key],
-              credentials[:oauth_consumer_secret], oauth_config)
-        end
-        return create_token_from_credentials(credentials) ||
-            generate_access_token(credentials)
+        @consumer = create_consumer(credentials) if @consumer.nil?
+        return create_token_from_credentials(credentials, @consumer) ||
+            generate_access_token(credentials, @consumer)
+      end
+
+      def create_consumer(credentials)
+        oauth_config = OAUTH_CONFIG.merge({:scope => @scope})
+        proxy = @config.read('connection.proxy')
+        oauth_config[:proxy] = proxy unless proxy.nil?
+        return OAuth::Consumer.new(
+            credentials[:oauth_consumer_key],
+            credentials[:oauth_consumer_secret],
+            oauth_config)
       end
 
       # Creates access token based on data from credentials.
@@ -187,30 +165,31 @@ module AdsCommon
       # Args:
       # - credentials: a hash with the credentials for the account being
       #   accessed
+      # - consumer: OAuth consumer for the current configuration
       #
       # Returns:
       # - The auth token for the account (as an AccessToken)
       #
-      def create_token_from_credentials(credentials)
-        access_token = nil
-
+      def create_token_from_credentials(credentials, consumer)
         token = credentials[:oauth_token]
-        if !token.nil? and !token.empty?
-          method = credentials[:oauth_method] || DEFAULT_METHOD
-          access_token = case method
-            when 'RSA-SHA1'
-              OAuth::AccessToken.from_hash(@consumer, {:oauth_token => token})
-            when 'HMAC-SHA1'
-              token_secret = credentials[:oauth_token_secret]
-              if token_secret.nil? or token_secret.empty?
-                @logger.warn(("The 'token' specified for method %s but " +
-                    "'token secret' is not available, ignoring token") % method)
-                nil
-              else
-                OAuth::AccessToken.from_hash(@consumer, {
-                    :oauth_token => token, :oauth_token_secret => token_secret})
-              end
-          end
+        if token.nil? or token.empty?
+          return nil
+        end
+
+        method = credentials[:oauth_method] || DEFAULT_METHOD
+        access_token = case method
+          when 'RSA-SHA1'
+            OAuth::AccessToken.from_hash(consumer, {:oauth_token => token})
+          when 'HMAC-SHA1'
+            token_secret = credentials[:oauth_token_secret]
+            if token_secret.nil? or token_secret.empty?
+              get_logger().warn(("The 'token' specified for method %s but " +
+                  "'token secret' is not available, ignoring token") % method)
+              nil
+            else
+              OAuth::AccessToken.from_hash(consumer, {
+                  :oauth_token => token, :oauth_token_secret => token_secret})
+            end
         end
         return access_token
       end
@@ -220,18 +199,21 @@ module AdsCommon
       # Args:
       # - credentials: a hash with the credentials for the account being
       #   accessed
+      # - consumer: OAuth consumer for the current configuration
       #
       # Returns:
       # - The auth token for the account (as an AccessToken)
       #
-      def generate_access_token(credentials)
+      def generate_access_token(credentials, consumer)
         token = nil
         callback = credentials[:oauth_callback] || DEFAULT_CALLBACK
         begin
           if @request_token.nil?
             @request_token = credentials[:oauth_request_token] ||
-                 @consumer.get_request_token({:oauth_callback => callback},
-                     {:scope => @scope})
+                 consumer.get_request_token(
+                     {:oauth_callback => callback},
+                     {:scope => @scope}
+                 )
           end
           verification_code = credentials[:oauth_verification_code]
           if verification_code.nil? || verification_code.empty?

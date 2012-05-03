@@ -21,10 +21,10 @@
 
 require 'cgi'
 require 'gyoku'
-require 'httpi/request'
 
 require 'ads_common/http'
 require 'adwords_api/errors'
+require 'adwords_api/report_header_handler'
 
 module AdwordsApi
   class ReportUtils
@@ -101,6 +101,7 @@ module AdwordsApi
       url = @api.api_config.adhoc_report_download_url(
           @api.config.read('service.environment'), @version)
       headers = get_report_request_headers(url, cid)
+      log_request(url, headers, definition_text)
       response = AdsCommon::Http.post_response(url, data, @api.config, headers)
       check_for_errors(response)
       return response
@@ -121,29 +122,9 @@ module AdwordsApi
 
     # Prepares headers for report request.
     def get_report_request_headers(url, cid)
-      credentials = @api.credential_handler.credentials
-      auth_handler = @api.get_auth_handler(
-          @api.config.read('service.environment'), @version)
-      auth_string = auth_handler.auth_string(
-          credentials, HTTPI::Request.new(url))
-      customer_id = validate_cid(cid || credentials[:clientCustomerId])
-      app_name = credentials[:userAgent] || credentials[:useragent]
-      headers = {
-          'Authorization' => auth_string,
-          'ClientCustomerId' => customer_id,
-          'Content-Type' => 'application/x-www-form-urlencoded',
-          'developerToken' => credentials[:developerToken],
-          'User-Agent' => "HTTPI/%s (%s)" % [HTTPI::VERSION, app_name]
-      }
-      if @api.config.read('connection.enable_gzip', false)
-        headers['User-Agent'] += ' (gzip)'
-        headers['Accept-Encoding'] = 'gzip,deflate'
-      end
-      money_in_micros = @api.config.read('library.return_money_in_micros')
-      unless money_in_micros.nil?
-        headers['returnMoneyInMicros'] = money_in_micros
-      end
-      return headers
+      @header_handler ||= AdwordsApi::ReportHeaderHandler.new(
+          @api.credential_handler, @api.get_auth_handler(), @api.config)
+      return @header_handler.headers(url, cid)
     end
 
     # Saves raw data to a file.
@@ -151,18 +132,13 @@ module AdwordsApi
       open(path, 'wb') { |file| file.write(data) } if path
     end
 
-    # Validates the customer ID specified is correct.
-    def validate_cid(cid)
-      if (cid.kind_of?(Integer) || (
-          cid.kind_of?(String) && (
-              ((/\d{3}-\d{3}-\d{4}/ =~ cid) == 0) ||
-              ((/\d{10}/ =~ cid) == 0)
-          )))
-        return cid
-      else
-        raise AdwordsApi::Errors::BadCredentialsError,
-            "Invalid client customer ID: %s" % cid
-      end
+    # Logs the request on debug level.
+    def log_request(url, headers, body)
+      logger = @api.logger
+      logger.debug("Report request to: '%s'" % url)
+      logger.debug("HTTP headers: [%s]" %
+          (headers.map {|k, v| [k, v].join(': ')}.join(', ')))
+      logger.debug(body)
     end
 
     # Checks downloaded data for error signature. Raises ReportError if it

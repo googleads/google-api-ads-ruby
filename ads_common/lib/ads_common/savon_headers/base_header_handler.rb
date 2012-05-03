@@ -24,27 +24,24 @@ require 'savon'
 module AdsCommon
   module SavonHeaders
     class BaseHeaderHandler
+
       # Default namespace alias.
       DEFAULT_NAMESPACE = 'wsdl'
+      DEFAULT_ELEMENT_NAME = 'RequestHeader'
 
       # Initializes a header handler.
       #
       # Args:
       #  - credential_handler: a header with credential data
       #  - auth_handler: a header with auth data
-      #  - element_name: an API-specific name of header element
       #  - namespace: default namespace to use
       #  - version: services version
       #
-      def initialize(credential_handler, auth_handler, element_name,
-                     namespace, version)
+      def initialize(credential_handler, auth_handler, namespace, version)
         @credential_handler = credential_handler
         @auth_handler = auth_handler
-        @element_name = element_name
         @namespace = namespace
         @version = version
-        @config = credential_handler.get_config
-        Savon.configure {|config| config.raise_errors = false}
       end
 
       # Enriches soap object with API-specific headers like namespaces, login
@@ -55,21 +52,26 @@ module AdsCommon
       # Args:
       #  - request: a HTTPI Request for extra configuration
       #  - soap: a Savon soap object to fill fields in
-      #  - args: request parameters to adjust for namespaces
       #
       # Returns:
       #  - Modified request and soap structures
       #
-      def prepare_request(request, soap, args)
+      def prepare_request(request, soap)
         soap.namespace = @namespace
-        soap.body = args if args
         # Sets the default namespace for the body.
         soap.input[2] = {:xmlns => @namespace}
         # Sets User-Agent in the HTTP header.
-        request.headers['User-Agent'] = generate_user_agent_string()
+        request.headers['User-Agent'] =
+            @credential_handler.generate_http_user_agent()
+        generate_headers(request, soap)
       end
 
       private
+
+      # Returns element name for SOAP header.
+      def get_header_element_name()
+        return DEFAULT_ELEMENT_NAME
+      end
 
       # Adds namespace to the given string.
       #
@@ -83,17 +85,20 @@ module AdsCommon
         return "%s:%s" % [DEFAULT_NAMESPACE, str]
       end
 
-      # Generates User-Agent text for HTTP request.
-      def generate_user_agent_string()
-        credentials = @credential_handler.credentials(@version)
-        app_name = credentials[:userAgent] || credentials[:useragent]
-        # We don't know the library version here. A breaking change needs to be
-        # introduced. This is scheduled for 0.7.0, using Common version for now.
-        lib_version = '0.6.4'
-        soap_user_agent = "Common-Ruby-%s; %s" % [lib_version, app_name]
-        user_agent = "Savon/%s (%s)" % [Savon::Version, soap_user_agent]
-        user_agent += ' (gzip)' if @config.read('connection.enable_gzip', false)
-        return user_agent
+      # Generates SOAP headers with the default request header element.
+      def generate_headers(request, soap)
+        element_name = get_header_element_name()
+        soap.header[prepend_namespace(element_name)] = generate_request_header()
+      end
+
+      # Generates SOAP default request header with all requested headers.
+      def generate_request_header()
+        credentials = @credential_handler.credentials
+        extra_headers = credentials[:extra_headers]
+        return extra_headers.inject({}) do |result, (header, value)|
+          result[prepend_namespace(header)] = value
+          result
+        end
       end
     end
   end

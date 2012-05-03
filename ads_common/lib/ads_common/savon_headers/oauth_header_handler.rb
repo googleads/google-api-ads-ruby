@@ -25,22 +25,6 @@ require 'ads_common/savon_headers/httpi_request_proxy'
 module AdsCommon
   module SavonHeaders
     class OAuthHeaderHandler < BaseHeaderHandler
-      # Enriches soap object with API-specific headers like namespaces, login
-      # credentials etc. Sets the default namespace for the body to the one
-      # specified in initializer.
-      #
-      # Args:
-      #  - request: a HTTPI Request for extra configuration
-      #  - soap: a Savon soap object to fill fields in
-      #  - args: request parameters to adjust for namespaces
-      #
-      # Returns:
-      #  - Modified soap structure
-      #
-      def prepare_request(request, soap, args)
-        super(request, soap, args)
-        generate_headers(request, soap)
-      end
 
       private
 
@@ -55,20 +39,10 @@ module AdsCommon
       #  - Hash containing a header with filled in credentials
       #
       def generate_headers(request, soap)
-        credentials = @credential_handler.credentials
-        headers = @auth_handler.headers(credentials)
-        request_header = headers.inject({}) do |request_header, (header, value)|
-          if header == :access_token
-            request.url = soap.endpoint
-            request.headers['Authorization'] =
-                @auth_handler.generate_oauth_parameters_string(credentials,
-                    request)
-          else
-            request_header[prepend_namespace(header)] = value
-          end
-          request_header
-        end
-        soap.header[prepend_namespace(@element_name)] = request_header
+        super(request, soap)
+        request.url = soap.endpoint
+        request.headers['Authorization'] =
+            @auth_handler.generate_oauth_parameters_string(credentials, request)
       end
     end
   end

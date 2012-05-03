@@ -28,7 +28,7 @@ require 'ads_common/parameters_validator'
 module AdsCommon
   class ParametersValidator
     public :deep_copy, :add_attribute, :array_from_named_list
-    public :check_required_argument_present
+    public :check_required_argument_present, :arrayize
   end
 end
 
@@ -128,5 +128,28 @@ class TestParametersValidator < Test::Unit::TestCase
       @validator.check_required_argument_present([], field2)
       @validator.check_required_argument_present([field1, field2], field2)
     end
+  end
+
+  def test_arrayize_empty
+    result1 = @validator.arrayize(nil)
+    assert_instance_of(Array, result1, 'returned object is not an Array')
+    assert_equal(0, result1.size, 'array is not empty')
+
+    result2 = @validator.arrayize([])
+    assert_instance_of(Array, result2, 'returned object is not an Array')
+    assert_equal(0, result2.size, 'array is not empty')
+  end
+
+  def test_arrayize_on_array
+    result1 = @validator.arrayize([nil])
+    assert_instance_of(Array, result1, 'returned object is not an Array')
+    assert_equal(1, result1.size, 'array changed size')
+    assert_equal(nil, result1[0], 'array changed data')
+
+    result2 = @validator.arrayize(['a', 'b'])
+    assert_instance_of(Array, result2, 'returned object is not an Array')
+    assert_equal(2, result2.size, 'array changed size')
+    assert_equal('a', result2[0], 'array changed data')
+    assert_equal('b', result2[1], 'array changed data')
   end
 end

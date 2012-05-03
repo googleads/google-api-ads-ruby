@@ -24,14 +24,13 @@
 require 'ads_common/version.rb'
 
 module AdsCommon
-
   # Contains helper methods for loading and managing the available services.
   # This module is meant to be imported into API-specific modules.
   module ApiConfig
     # Get the available API versions.
     #
     # Returns:
-    # List of versions available (as integers)
+    # List of versions available
     #
     def versions
       service_config.keys
@@ -40,7 +39,7 @@ module AdsCommon
     # Get the latest API version.
     #
     # Returns:
-    # Latest version (as an integer)
+    # Latest version
     #
     def latest_version
       service_config.keys.select { |service| service.is_a? Integer }.max
@@ -53,8 +52,7 @@ module AdsCommon
     # given version
     #
     def environment_has_version(environment, version)
-      return environment_config.include?(environment) &&
-          environment_config[environment].include?(version)
+      return !environment_config(environment, version).nil?
     end
 
     # Does the given version exist and contain the given service?
@@ -71,7 +69,7 @@ module AdsCommon
     # Get the default API version.
     #
     # Returns:
-    # Default version (as an integer)
+    # Default version
     #
     def default_version
       nil
@@ -83,19 +81,10 @@ module AdsCommon
     # - version: the API version (as an integer)
     #
     # Returns:
-    # List of names of services (as strings) available for given version
+    # List of names of services available for given version
     #
     def services(version)
       service_config[version]
-    end
-
-    # Get the available environments.
-    #
-    # Returns:
-    # List of available environments (as strings)
-    #
-    def environments
-      environment_config.keys
     end
 
     # Get the API name.
@@ -111,7 +100,7 @@ module AdsCommon
     # Get the default environment.
     #
     # Returns:
-    # Default environment (as a string)
+    # Default environment
     #
     def default_environment
       raise NotImplementedError, 'default_environment not overriden.'
@@ -125,32 +114,34 @@ module AdsCommon
     # Get the endpoint for a service on a given environment and API version.
     #
     # Args:
-    # - environment: the service environment to be used (as a string)
-    # - version: the API version (as an integer)
-    # - service: the name of the API service (as a string)
+    # - environment: the service environment to be used
+    # - version: the API version
+    # - service: the name of the API service
     #
     # Returns:
-    # The endpoint URL (as a string)
+    # The endpoint URL
     #
     def endpoint(environment, version, service)
       base = get_wsdl_base(environment, version)
+      # TODO(dklimkin): Unflatten subdir constants. Cross-API refactor 0.7.0.
       if !subdir_config().nil?
         base = base.to_s + subdir_config()[[version, service]].to_s
       end
-      return base.to_s + version.to_s + '/'
+      return base.to_s + version.to_s + '/' + service.to_s
     end
 
     # Get the subdirectory for a service, for a given API version.
     #
     # Args:
-    # - version: the API version (as an integer)
-    # - service: the name of the API service (as a string)
+    # - version: the API version
+    # - service: the name of the API service
     #
     # Returns:
-    # The endpoint URL (as a string)
+    # The subdir infix
     #
     def subdir(version, service)
       return nil if subdir_config().nil?
+      # TODO(dklimkin): Unflatten subdir constants. Cross-API refactor 0.7.0.
       subdir_config()[[version, service]]
     end
 
@@ -158,30 +149,26 @@ module AdsCommon
     # override the auth URL via environmental variable.
     #
     # Args:
-    # - environment: the service environment to be used (as a string)
+    # - environment: the service environment to be used
     #
     # Returns:
-    # The full URL for the auth server.
+    # The full URL for the auth server
     #
     def auth_server(environment)
-      auth_server_url =
-          ENV['ADSAPI_AUTH_URL'] ||
-          auth_server_config[environment]
-      return auth_server_url
+      return ENV['ADSAPI_AUTH_URL'] || auth_server_config[environment]
     end
 
     # Perform the loading of the necessary source files for a version.
     #
     # Args:
-    # - version: the API version (as a symbol)
-    # - service: service name (as a symbol)
+    # - version: the API version
+    # - service: service name
     #
     # Returns:
-    # The filename that was loaded.
+    # The filename that was loaded
     #
     def do_require(version, service)
-      filename = "%s/%s/%s" %
-          [api_path, version.to_s, service.to_s.snakecase]
+      filename = [api_path, version.to_s, service.to_s.snakecase].join('/')
       require filename
       return filename
     end
@@ -189,41 +176,27 @@ module AdsCommon
     # Returns the full module name for a given service.
     #
     # Args:
-    # - version: the API version (as a symbol)
-    # - service: the service name (as a symbol)
+    # - version: the API version
+    # - service: the service name
     #
     # Returns:
-    # The full module name for the given service (as a string).
+    # The full module name for the given service
     #
     def module_name(version, service)
-      return "%s::%s::%s" %
-          [api_name, version.to_s.upcase, service.to_s]
+      return [api_name, version.to_s.upcase, service.to_s].join('::')
     end
 
     # Returns the full interface class name for a given service.
     #
     # Args:
-    # - version: the API version (as an integer)
-    # - service: the service name (as a string)
+    # - version: the API version
+    # - service: the service name
     #
     # Returns:
-    # The full interface class name for the given service (as a string)
+    # The full interface class name for the given service
     #
     def interface_name(version, service)
-      return module_name(version, service) + "::" + service.to_s
-    end
-
-    # Returns the full wrapper class name for a given service
-    #
-    # Args:
-    # - version: the API version (as an integer)
-    # - service: the service name (as a string)
-    #
-    # Returns:
-    # The full wrapper class name for the given service (as a string)
-    #
-    def wrapper_name(version, service)
-      return module_name(version, service) + "::#{service}Wrapper"
+      return [module_name(version, service), service.to_s].join('::')
     end
 
     # Generates an array of WSDL URLs based on defined Services and version
@@ -234,7 +207,7 @@ module AdsCommon
     #   - version: the API version.
     #
     # Returns
-    #   hash of pairs Service => WSDL URL.
+    #   hash of pairs Service => WSDL URL
     #
     def get_wsdls(version)
       res = {}
@@ -256,14 +229,14 @@ module AdsCommon
     #
     # Args:
     #   - environment: environment to use like :SANDBOX or :PRODUCTION
-    #   - version: the API version.
+    #   - version: the API version
     #
     # Returns:
-    #   String containing base URL.
+    #   String containing base URL
+    #
     def get_wsdl_base(environment, version)
-      wsdl_base = ENV['ADSAPI_BASE_URL'] ||
-          wsdl_base = environment_config[environment][version]
-      return wsdl_base
+      return ENV['ADSAPI_BASE_URL'] ||
+          environment_config(environment, version)
     end
   end
 end

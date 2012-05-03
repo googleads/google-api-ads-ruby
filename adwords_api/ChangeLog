@@ -1,3 +1,7 @@
+0.5.4:
+  - Require google-ads-common 0.7.0 or later from now on.
+  - ReportUtil now logs request details on DEBUG level.
+
 0.5.3:
   - Fixed issue #70 (stricter client id validation).
   - Now require Savon-0.9.9 (fixes Content-Length bug).

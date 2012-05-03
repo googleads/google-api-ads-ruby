@@ -33,21 +33,24 @@ module AdsCommon
     class ClientLoginHandler < AdsCommon::Auth::BaseHandler
       ACCOUNT_TYPE = 'GOOGLE'
       AUTH_PATH = '/accounts/ClientLogin'
+      AUTH_PREFIX = 'GoogleLogin auth='
       CAPTCHA_PATH = '/accounts/'
-      IGNORED_FIELDS = [:email, :password, :auth_token]
 
       # Initializes the ClientLoginHandler with all the necessary details.
-      def initialize(config, server, service_name)
+      def initialize(config, auth_server, service_name)
         super(config)
-        @server = server
+        @server = auth_server
         @service_name = service_name
       end
 
       # Invalidates the stored token if the email, password or provided auth
       # token have changed.
       def property_changed(prop, value)
-        if [:auth_token, :email, :password].include?(prop)
+        if [:email, :password].include?(prop)
           @token = nil
+        end
+        if :auth_token.eql?(prop)
+          @token = create_token_from_string(value)
         end
       end
 
@@ -55,31 +58,13 @@ module AdsCommon
       def handle_error(error)
         # TODO: Add support for automatically regenerating auth tokens when they
         # expire.
+        get_logger().error(error)
         raise error
-      end
-
-      # Returns all of the fields that this auth handler will fill.
-      def header_list(credentials)
-        result = credentials.keys.map.reject do |field|
-          IGNORED_FIELDS.include?(field)
-        end
-        result << :authToken
-        return result
-      end
-
-      # Returns all of the credentials received from the CredentialHandler,
-      # except for ignored fields.
-      def headers(credentials)
-        result = credentials.reject do |field, value|
-          IGNORED_FIELDS.include?(field)
-        end
-        result[:authToken] = get_token(credentials)
-        return result
       end
 
       # Returns authorization string.
       def auth_string(credentials, request)
-        return ("GoogleLogin auth=%s" % get_token(credentials))
+        return [AUTH_PREFIX, get_token(credentials)].join
       end
 
       private
@@ -95,18 +80,23 @@ module AdsCommon
       #
       def validate_credentials(credentials)
         if credentials.nil?
-          raise AdsCommon::Errors::AuthError,
-              'No credentials supplied.'
+          raise AdsCommon::Errors::AuthError, 'No credentials supplied.'
         end
 
-        if credentials[:email].nil?
-          raise AdsCommon::Errors::AuthError,
-              'Email address not included in credentials.'
-        end
-
-        if credentials[:password].nil?
-          raise AdsCommon::Errors::AuthError,
-              'Password not included in credentials.'
+        if credentials[:auth_token].nil?
+          if credentials[:email].nil?
+            raise AdsCommon::Errors::AuthError,
+                'Email address not included in credentials.'
+          end
+          if credentials[:password].nil?
+            raise AdsCommon::Errors::AuthError,
+                'Password not included in credentials.'
+          end
+        else
+          if credentials[:email] and credentials[:password]
+            get_logger().warn('Both auth_token and login credentials present' +
+                ', preferring auth_token.')
+          end
         end
       end
 
@@ -118,35 +108,44 @@ module AdsCommon
       #   accessed
       #
       # Returns:
-      # - The auth token for the account (as a string)
+      # - The auth token for the account
       #
       # Raises:
       # - AdsCommon::Errors::AuthError if authentication fails
       #
       def create_token(credentials)
-        token = @config.read('authentication.auth_token') ||
+        token = credentials.include?(:auth_token) ?
+            create_token_from_string(credentials[:auth_token]) :
             generate_token(credentials)
         return token
+      end
+
+      # Creates token for provided auth string. Trivial for this handler.
+      def create_token_from_string(token_string)
+        return token_string
+      end
+
+      # Prepares POST data for ClientLogin request.
+      def get_login_data(credentials)
+        email = CGI.escape(credentials[:email])
+        password = CGI.escape(credentials[:password])
+        service_name = @service_name
+        data = "accountType=%s&Email=%s&Passwd=%s&service=%s" %
+            [ACCOUNT_TYPE, email, password, service_name]
+        if credentials[:logintoken] and credentials[:logincaptcha]
+          data += "&logintoken=%s&logincaptcha=%s" %
+            [CGI.escape(credentials[:logintoken]),
+             CGI.escape(credentials[:logincaptcha])]
+        end
+        return data
       end
 
       # Generates new client login token based on credentials.
       def generate_token(credentials)
         validate_credentials(credentials)
 
-        email = CGI.escape(credentials[:email])
-        password = CGI.escape(credentials[:password])
-
         url = @server + AUTH_PATH
-
-        data = "accountType=%s&Email=%s&Passwd=%s&service=%s" %
-            [ACCOUNT_TYPE, email, password, @service_name]
-
-        if credentials[:logintoken] and credentials[:logincaptcha]
-          data += "&logintoken=%s&logincaptcha=%s" %
-            [CGI.escape(credentials[:logintoken]),
-             CGI.escape(credentials[:logincaptcha])]
-        end
-
+        data = get_login_data(credentials)
         headers = {'Content-Type' => 'application/x-www-form-urlencoded'}
 
         response = AdsCommon::Http.post_response(url, data, @config, headers)

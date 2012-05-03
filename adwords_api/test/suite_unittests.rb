@@ -20,13 +20,15 @@
 #
 # Test suite for unit tests.
 
-lib = File.expand_path('../lib/', __FILE__)
-$:.unshift lib unless $:.include?(lib)
-
 require 'test/unit'
 
+$:.unshift File.expand_path('../../lib/', __FILE__)
+$:.unshift File.expand_path('../../', __FILE__)
+
 # AdWords API units tests.
-Dir.glob('./test/adwords_api/test*.rb').each {|file| require file}
+adwords_mask = File.join(File.dirname(__FILE__), 'adwords_api', 'test_*.rb')
+Dir.glob(adwords_mask).each {|file| require file}
 
 # Reported bugs tests.
-Dir.glob('./test/bugs/test*.rb').each {|file| require file}
+bugs_mask = File.join(File.dirname(__FILE__), 'bugs', 'test_*.rb')
+Dir.glob(bugs_mask).each {|file| require file}

@@ -20,19 +20,15 @@
 #
 # Contains the main classes for the client library.
 
-gem 'google-ads-common', '~>0.6.3'
+gem 'google-ads-common', '~>0.7.0'
 
 require 'ads_common/api'
-require 'ads_common/auth/oauth_handler'
-require 'ads_common/savon_service'
 require 'ads_common/savon_headers/oauth_header_handler'
-require 'ads_common/savon_headers/simple_header_handler'
 require 'adwords_api/api_config'
 require 'adwords_api/client_login_header_handler'
 require 'adwords_api/credential_handler'
 require 'adwords_api/errors'
 require 'adwords_api/report_utils'
-require 'adwords_api/v13_login_handler'
 
 # Main namespace for all the client library's modules and classes.
 module AdwordsApi
@@ -42,6 +38,7 @@ module AdwordsApi
   # Holds all the services, as well as login credentials.
   #
   class Api < AdsCommon::Api
+
     # Constructor for API.
     def initialize(provided_config = nil)
       super(provided_config)
@@ -49,80 +46,34 @@ module AdwordsApi
     end
 
     # Getter for the API service configurations
-    def api_config
+    def api_config()
       AdwordsApi::ApiConfig
     end
 
-    # Sets the logger to use.
-    def logger=(logger)
-      super(logger)
-      AdsCommon::SavonService.logger = logger
-    end
-
-    # Retrieve single NestedHeaderHandler for v20xx and one SingleHeaderHandler
-    # per credential for v13.
+    # Retrieve correct soap_header_handler.
     #
     # Args:
     # - auth_handler: instance of an AdsCommon::Auth::BaseHandler subclass to
     #   handle authentication
-    # - header_list: the list of headers to be handled
     # - version: intended API version
     # - namespace: namespace to use as default for body
     #
     # Returns:
     # - a list of SOAP header handlers; one per provided header
     #
-    def soap_header_handlers(auth_handler, header_list, version, namespace)
+    def soap_header_handler(auth_handler, version, namespace)
       auth_method = @config.read('authentication.method', :CLIENTLOGIN)
-
-      handlers = []
-
-      if version == :v13
-        if auth_method == :OAUTH
-          # v13 has no OAuth support, trying to fallback to ClientLogin.
-          auth_handler = client_login_handler()
-        end
-        handlers = header_list.map do |header|
-          AdsCommon::SavonHeaders::SimpleHeaderHandler.new(
-              @credential_handler, auth_handler, header, namespace, version)
-        end
-      else
-        handlers = case auth_method
-          when :CLIENTLOGIN
-            auth_ns = api_config.headers_config[:AUTH_NAMESPACE_PREAMBLE] +
-                version.to_s
-            [AdwordsApi::ClientLoginHeaderHandler.new(
-             @credential_handler, auth_handler,
-             api_config.headers_config[:REQUEST_HEADER], namespace, auth_ns,
-             version)]
-          when :OAUTH
-            [AdsCommon::SavonHeaders::OAuthHeaderHandler.new(
-             @credential_handler, auth_handler,
-             api_config.headers_config[:REQUEST_HEADER], namespace, version)]
-        end
+      handler = case auth_method
+        when :CLIENTLOGIN
+          auth_ns = api_config.client_login_config(:AUTH_NAMESPACE_PREAMBLE) +
+              version.to_s
+          AdwordsApi::ClientLoginHeaderHandler.new(
+              @credential_handler, auth_handler, namespace, auth_ns, version)
+        when :OAUTH
+          AdsCommon::SavonHeaders::OAuthHeaderHandler.new(
+              @credential_handler, auth_handler, namespace, version)
       end
-      return handlers
-    end
-
-    # Accessor for client login handler, so that we can access the token.
-    # This is a temporary solution for v13 and for v2009+ until full OAuth
-    # support is available.
-    def client_login_handler()
-      if @client_login_handler.nil?
-        auth_method = @config.read('authentication.method', :CLIENTLOGIN)
-        environment = @config.read('service.environment')
-        if auth_method == :CLIENTLOGIN
-          # We use client login, so we can reuse general AuthHandler.
-          @client_login_handler = get_auth_handler(environment)
-        else
-          # We are using OAuth or something else and need to generate a handler.
-          auth_server = api_config.auth_server(environment)
-          @client_login_handler = AdsCommon::Auth::ClientLoginHandler.new(
-              @config, auth_server,
-              api_config.headers_config[:LOGIN_SERVICE_NAME])
-        end
-      end
-      return @client_login_handler
+      return handler
     end
 
     # Helper method to provide a simple way of doing an MCC-level operation
@@ -226,31 +177,7 @@ module AdwordsApi
       return AdwordsApi::ReportUtils.new(self, version)
     end
 
-    # Overrides AdsCommon::Api.get_auth_handler to allow version-specific
-    # handlers.
-    def get_auth_handler(environment, version = nil)
-      if @auth_handler.nil?
-        @auth_handler = create_auth_handler(environment, version)
-      end
-      return @auth_handler
-    end
-
     private
-
-    # Creates an appropriate authentication handler for each service (reuses the
-    # ClientLogin one to avoid generating multiple tokens unnecessarily).
-    #
-    # Args:
-    # - environment: the current working environment (production, sandbox, etc.)
-    # - version: intended API version
-    #
-    # Returns:
-    # - auth handler
-    #
-    def create_auth_handler(environment, version = nil)
-      return (version == :v13) ?
-          AdwordsApi::V13LoginHandler.new(@config) : super(environment)
-    end
 
     # Executes block with a temporary flag set to a given value. Returns block
     # result.

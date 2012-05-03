@@ -25,6 +25,7 @@ require 'ads_common/build/savon_abstract_generator'
 module AdsCommon
   module Build
     class SavonServiceGenerator < SavonAbstractGenerator
+
       SERVICE_TEMPLATE = %q{<% %>
       # Encoding: utf-8
       #
@@ -44,9 +45,9 @@ module AdsCommon
       <%= @modules_open_string %>
 
         class <%= @service_name %> < AdsCommon::SavonService
-          def initialize(api, endpoint)
+          def initialize(config, endpoint)
             namespace = '<%= @namespace %>'
-            super(api, endpoint, namespace, :<%= @version %>)
+            super(config, endpoint, namespace, :<%= @version %>)
           end
           <% @actions.each do |action| %>
 

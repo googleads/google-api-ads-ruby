@@ -52,8 +52,8 @@ module AdsCommon
     end
 
     # Getter for the API service configurations.
-    def api_config
-      AdsCommon::ApiConfig
+    def api_config()
+      return AdsCommon::ApiConfig
     end
 
     # Obtain an API service, given a version and its name.
@@ -68,31 +68,10 @@ module AdsCommon
     def service(name, version = nil)
       name = name.to_sym
       version = (version.nil?) ? api_config.default_version : version.to_sym
-
-      # Check if version exists.
-      if !api_config.versions.include?(version)
-        raise AdsCommon::Errors::Error, "Unknown version '%s'" % version
-      end
-
-      # Check if the current environment supports the requested version.
       environment = @config.read('service.environment')
 
-      if !api_config.environments.include?(environment)
-        raise AdsCommon::Errors::Error,
-            "Unknown or unspecified environment: '%s'" % environment
-      end
-
-      if !api_config.environment_has_version(environment, version)
-        raise AdsCommon::Errors::Error,
-            "Environment '%s' does not support version '%s'" %
-            [environment, version]
-      end
-
-      # Check if the specified version has the requested service.
-      if !api_config.version_has_service(version, name)
-        raise AdsCommon::Errors::Error,
-            "Version '%s' does not contain service '%s'" % [version, name]
-      end
+      # Check if the combination is available.
+      validate_service_request(environment, version, name)
 
       # Try to re-use the service for this version if it was requested before.
       wrapper = if @wrappers.include?(version) && @wrappers[version][name]
@@ -121,12 +100,15 @@ module AdsCommon
       parameters.each_pair do |key, value|
         @credential_handler.set_credential(key, value)
       end
-      @auth_handler = get_auth_handler(@config.read('service.environment'))
 
-      # Token might still be valid, if not ask for a new one.
-      token = @auth_handler.get_token() ||
+      auth_handler = get_auth_handler()
+      token = auth_handler.get_token()
+
+      # If token is invalid ask for a new one.
+      if token.nil?
         begin
-          @auth_handler.get_token(@credential_handler.credentials)
+          credentials = @credential_handler.credentials
+          token = @auth_handler.get_token(credentials)
         rescue AdsCommon::Errors::OAuthVerificationRequired => e
           verification_code = (block_given?) ? yield(e.oauth_url) : nil
           # Retry with verification code if one provided.
@@ -138,63 +120,76 @@ module AdsCommon
             raise e
           end
         end
+      end
       return token
+    end
+
+    # Auxiliary method to get an authentication handler. Creates a new one if
+    # the handler has not been initialized yet.
+    #
+    # Returns:
+    # - auth handler
+    #
+    def get_auth_handler()
+      @auth_handler ||= create_auth_handler()
+      return @auth_handler
     end
 
     private
 
-    # Retrieve the SOAP header handlers to plug into the drivers. Needs to
-    # be implemented on the specific API, because of the different types of
-    # SOAP headers (optional parameter specifying API version).
+    # Auxiliary method to test parameters correctness for the service request.
+    def validate_service_request(environment, version, service)
+      # Check if the current environment supports the requested version.
+      unless api_config.environment_has_version(environment, version)
+        raise AdsCommon::Errors::Error,
+            "Environment '%s' does not support version '%s'" %
+            [environment.to_s, version.to_s]
+      end
+
+      # Check if the specified version has the requested service.
+      unless api_config.version_has_service(version, service)
+        raise AdsCommon::Errors::Error,
+            "Version '%s' does not contain service '%s'" %
+            [version.to_s, name.to_s]
+      end
+    end
+
+    # Retrieve the SOAP header handler to generate headers based on the
+    # configuration. Needs to be implemented on the specific API, because of
+    # the different types of SOAP headers.
     #
     # Args:
     # - auth_handler: instance of an AdsCommon::Auth::BaseHandler subclass to
     #   handle authentication
-    # - header_list: the list of headers to be handled
     # - version: intended API version
     # - wrapper: wrapper object for the service being handled
     #
     # Returns:
     # - a list of SOAP header handlers; one per provided header
     #
-    def soap_header_handlers(auth_handler, header_list, version, wrapper)
-      raise NotImplementedError, 'soap_header_handlers not overridden.'
-    end
-
-    # Auxiliary method to get an authentication handler. Creates a new one if
-    # the handler has not been initialized yet.
-    #
-    # Args:
-    # - environment: the current working environment (production, sandbox, etc.)
-    # - version: intended API version, must be a symbol, optional
-    #
-    # Returns:
-    # - auth handler
-    #
-    def get_auth_handler(environment, version = nil)
-      @auth_handler ||= create_auth_handler(environment, version)
-      return @auth_handler
+    def soap_header_handler(auth_handler, version, wrapper)
+      raise NotImplementedError, 'soap_header_handler not overridden.'
     end
 
     # Auxiliary method to create an authentication handler.
     #
-    # Args:
-    # - environment: the current working environment (production, sandbox, etc.)
-    # - version: intended API version, must be a symbol, optional
-    #
     # Returns:
     # - auth handler
     #
-    def create_auth_handler(environment, version = nil)
+    def create_auth_handler()
       auth_method = @config.read('authentication.method', :CLIENTLOGIN)
       return case auth_method
         when :CLIENTLOGIN
-          auth_server = api_config.auth_server(environment)
-          AdsCommon::Auth::ClientLoginHandler.new(config, auth_server,
-              api_config.headers_config[:LOGIN_SERVICE_NAME])
+          AdsCommon::Auth::ClientLoginHandler.new(
+              @config,
+              api_config.client_login_config(:AUTH_SERVER),
+              api_config.client_login_config(:LOGIN_SERVICE_NAME)
+          )
         when :OAUTH
-          scope = api_config.environment_config()[environment][:oauth_scope]
-          AdsCommon::Auth::OAuthHandler.new(config, scope)
+          AdsCommon::Auth::OAuthHandler.new(
+              @config,
+              api_config.environment_config(environment, :OAUTH_SCOPE)
+          )
         else
           raise AdsCommon::Errors::Error,
               "Unknown authentication method '%s'" % auth_method
@@ -202,33 +197,26 @@ module AdsCommon
     end
 
     # Handle loading of a single service.
-    # Creates the driver, sets up handlers, declares the appropriate wrapper
-    # class and creates an instance of it.
+    # Creates the wrapper, sets up handlers and creates an instance of it.
     #
     # Args:
     # - version: intended API version, must be a symbol
     # - service: name for the intended service
     #
     # Returns:
-    # - a simplified wrapper generated for the driver
+    # - a simplified wrapper generated for the service
     #
     def prepare_wrapper(version, service)
       environment = config.read('service.environment')
       api_config.do_require(version, service)
       endpoint = api_config.endpoint(environment, version, service)
       interface_class_name = api_config.interface_name(version, service)
-      endpoint_url = endpoint.nil? ? nil : endpoint + service.to_s
-      wrapper = class_for_path(interface_class_name).new(self, endpoint_url)
 
-      auth_handler = get_auth_handler(environment, version)
-      header_list =
-          auth_handler.header_list(@credential_handler.credentials(version))
-
-      soap_handlers = soap_header_handlers(auth_handler, header_list,
-                                           version, wrapper.namespace)
-      soap_handlers.each do |handler|
-        wrapper.headerhandler << handler
-      end
+      wrapper = class_for_path(interface_class_name).new(@config, endpoint)
+      auth_handler = get_auth_handler()
+      soap_handler =
+          soap_header_handler(auth_handler, version, wrapper.namespace)
+      wrapper.header_handler = soap_handler
 
       return wrapper
     end
@@ -237,7 +225,7 @@ module AdsCommon
     def create_default_logger()
       logger = Logger.new(STDOUT)
       logger.level = get_log_level_for_string(
-          @config.read('library.log_level', Logger::INFO))
+          @config.read('library.log_level', 'INFO'))
       return logger
     end
 
@@ -274,17 +262,7 @@ module AdsCommon
 
     # Converts log level string (from config) to Logger value.
     def get_log_level_for_string(log_level)
-      result = log_level
-      if log_level.is_a?(String)
-        result = case log_level.upcase
-          when 'FATAL' then Logger::FATAL
-          when 'ERROR' then Logger::ERROR
-          when 'WARN' then Logger::WARN
-          when 'INFO' then Logger::INFO
-          when 'DEBUG' then Logger::DEBUG
-        end
-      end
-      return result
+      return Logger.const_get(log_level)
     end
 
     # Converts complete class path into class object.

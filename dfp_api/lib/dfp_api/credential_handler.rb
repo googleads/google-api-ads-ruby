@@ -26,37 +26,29 @@ module DfpApi
   class CredentialHandler < AdsCommon::CredentialHandler
     # Create the list of credentials to be used by the auth handler for header
     # generation.
-    def credentials(version = nil)
-      validate_headers_for_server()
+    def credentials(credentials_override = nil)
+      result = super(credentials_override)
+      validate_headers_for_server(result)
+      result[:extra_headers] = {
+          'applicationName' => generate_soap_user_agent(),
+          'networkCode' => result[:network_code]
+      }
+      return result
+    end
 
-      result = case @credentials[:method]
-        when :CLIENTLOGIN
-          {:email => @credentials[:email],
-           :password => @credentials[:password],
-           :auth_token => @credentials[:auth_token]}
-        when :OAUTH
-          {:oauth_consumer_key => @credentials[:oauth_consumer_key],
-           :oauth_consumer_secret => @credentials[:oauth_consumer_secret],
-           :oauth_verification_code => @credentials[:oauth_verification_code],
-           :oauth_token => @credentials[:oauth_token],
-           :oauth_token_secret => @credentials[:oauth_token_secret],
-           :oauth_callback => @credentials[:oauth_callback],
-           :oauth_method => @credentials[:oauth_method],
-           :oauth_request_token => @credentials[:oauth_request_token]}
-      end
-      client_lib = "DfpApi-Ruby-%s" % DfpApi::ApiConfig::CLIENT_LIB_VERSION
-      application_name = @credentials[:application_name] || $0
-      result[:applicationName] = "%s|%s" % [client_lib, application_name]
-      result[:networkCode] = @credentials[:network_code]
-      return result.reject {|k, v| v.nil?}
+    # Generates string to user as user agent in SOAP headers.
+    def generate_soap_user_agent(extra_ids = [])
+      extra_ids << ["DfpApi-Ruby-%s" % DfpApi::ApiConfig::CLIENT_LIB_VERSION]
+      super(extra_ids)
     end
 
     private
 
     # Validates that the right credentials are being used for the chosen
     # environment.
-    def validate_headers_for_server()
-      if @credentials[:application_name].nil?
+    # TODO(dklimkin): implement NetworkCode check.
+    def validate_headers_for_server(credentials)
+      if credentials[:application_name].nil?
         raise AdsCommon::Errors::AuthError, 'Application name is not specified'
       end
       return nil
