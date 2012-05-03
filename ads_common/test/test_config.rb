@@ -53,7 +53,7 @@ class TestConfig < Test::Unit::TestCase
   end
 
   # Test initializer with filename argument.
-  def test_initialize_filename
+  def test_initialize_filename_correct
     config = AdsCommon::Config.new(DEFAULT_CONFIG_FILENAME)
     assert_equal(false, config.read('service.use_ruby_names'))
     assert_equal('sandbox', config.read('service.environment'))
@@ -63,12 +63,11 @@ class TestConfig < Test::Unit::TestCase
   end
 
   # Test initializer with an incorrect existing file.
-  def test_initialize_filename
+  def test_initialize_filename_incorrect
     assert_raises (AdsCommon::Errors::Error) do
       config = AdsCommon::Config.new('/dev/null')
     end
   end
-
 
   # Test default result.
   def test_read_default_result
@@ -89,7 +88,7 @@ class TestConfig < Test::Unit::TestCase
   end
 
   # Test subhash.
-  def test_set
+  def test_get_hash
     config = AdsCommon::Config.new(DEFAULT_CONFIG_HASH)
     result = config.read('service')
     assert_instance_of(Hash, result)

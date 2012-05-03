@@ -28,7 +28,7 @@ which is installed automatically as a dependency.
 
 The following gem libraries are required:
   - savon v0.9.9;
-  - google-ads-common v0.6.3 or later.
+  - google-ads-common v0.7.0 or later.
 
 
 == 2 - Using the client library:

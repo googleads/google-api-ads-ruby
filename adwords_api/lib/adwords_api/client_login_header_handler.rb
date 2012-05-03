@@ -19,10 +19,10 @@
 #
 # Handles SOAP headers and namespaces definition for ClientLogin type header.
 
-require 'ads_common/savon_headers/simple_header_handler'
+require 'ads_common/savon_headers/base_header_handler'
 
 module AdwordsApi
-  class ClientLoginHeaderHandler < AdsCommon::SavonHeaders::SimpleHeaderHandler
+  class ClientLoginHeaderHandler < AdsCommon::SavonHeaders::BaseHeaderHandler
     # Initializes a header handler.
     #
     # Args:
@@ -33,9 +33,9 @@ module AdwordsApi
     #  - auth_namespace: namespace to use for auth headers
     #  - version: services version
     #
-    def initialize(credential_handler, auth_handler, element_name,
-                   namespace, auth_namespace, version)
-      super(credential_handler, auth_handler, element_name, namespace, version)
+    def initialize(credential_handler, auth_handler, namespace, auth_namespace,
+        version)
+      super(credential_handler, auth_handler, namespace, version)
       @auth_namespace = auth_namespace
     end
 
@@ -51,32 +51,15 @@ module AdwordsApi
     # Returns:
     #  - Modified soap structure
     #
-    def prepare_request(request, soap, args)
-      super(request, soap, args)
+    def prepare_request(request, soap)
+      super(request, soap)
       soap.header[:attributes!] ||= {}
-      header_name = prepend_namespace(@element_name)
+      header_name = prepend_namespace(get_header_element_name())
       soap.header[:attributes!][header_name] ||= {}
       soap.header[:attributes!][header_name]['xmlns'] = @auth_namespace
     end
 
     private
-    # Generates SOAP request header with login credentials and namespace
-    # definition.
-    #
-    # Args:
-    #  - None
-    #
-    # Returns:
-    #  - Hash containing a header with filled in credentials
-    #
-    def generate_request_header()
-      headers = @auth_handler.headers(@credential_handler.credentials(@version))
-      return headers.inject({}) do |request_header, (header, value)|
-        request_header[prepend_namespace(header)] = value
-        request_header
-      end
-    end
-
     # Skips namespace prefixes for all elements except top level. Use default
     # (inherited) prefixing for the top level key.
     #
@@ -87,7 +70,15 @@ module AdwordsApi
     #  - String with a namespace
     #
     def prepend_namespace(str)
-      return str.equal?(@element_name) ? super(str) : str
+      return get_header_element_name().eql?(str) ? super(str) : str
+    end
+
+    # Generates AdWords API specific request header with ClientLogin data.
+    def generate_request_header()
+      request_header = super()
+      credentials = @credential_handler.credentials
+      request_header['authToken'] = @auth_handler.get_token(credentials)
+      return request_header
     end
   end
 end

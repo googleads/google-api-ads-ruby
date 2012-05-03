@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Authors:: api.sgomes@gmail.com (Sérgio Gomes)
+# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
 #
@@ -24,10 +24,10 @@
 module AdsCommon
   module Auth
     class BaseHandler
+
       # Default initializer.
       def initialize(config)
         @config = config
-        @logger = @config.read('library.logger')
         @token = nil
       end
 
@@ -44,18 +44,6 @@ module AdsCommon
         raise error
       end
 
-      # This method returns the set of fields to be included in the header.
-      # The generic method simply returns everything passed to it.
-      def header_list(credentials)
-        return credentials.keys.dup()
-      end
-
-      # This method returns the key value pairs to be included in the header.
-      # The generic method simply returns everything passed to it.
-      def headers(credentials)
-        return credentials.dup()
-      end
-
       # Returns authorization token of some kind. Attempts to create a new one
       # if the token has not yet been created and credentials present.
       def get_token(credentials = nil)
@@ -63,14 +51,16 @@ module AdsCommon
         return @token
       end
 
-      # Creates authorization token. Needs to be overridden.
-      def create_token(credentials)
-        raise NotImplementedError, 'create_token not overridden.'
-      end
-
       # Returns authorization string. Needs to be overridden.
       def auth_string(credentials, request)
         raise NotImplementedError, 'auth_string not overridden.'
+      end
+
+      private
+
+      # Creates authorization token. Needs to be overridden.
+      def create_token(credentials)
+        raise NotImplementedError, 'create_token not overridden.'
       end
     end
   end

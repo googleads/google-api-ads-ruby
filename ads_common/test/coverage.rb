@@ -18,16 +18,18 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Test suite for example tests.
+# Runs test with coverage tool.
 
-require 'test/unit'
+require 'simplecov'
 
-$:.unshift File.expand_path('../../lib/', __FILE__)
+SimpleCov.start
+
 $:.unshift File.expand_path('../../', __FILE__)
+require File.join(File.dirname(__FILE__), 'suite_unittests.rb')
 
-# v201109 example tests.
-$:.unshift File.expand_path('../../examples/v201109', __FILE__)
-require File.join(File.dirname(__FILE__), 'examples', 'v201109', 'utils.rb')
-v201109_mask =
-    File.join(File.dirname(__FILE__), 'examples', 'v201109', 'test_*.rb')
-Dir.glob(v201109_mask).each {|file| require file}
+# Now loading all files in the library to make sure we hit all untested files.
+lib_base_path = File.expand_path('../../lib', __FILE__)
+$:.unshift lib_base_path
+
+code_files_mask = File.join(lib_base_path, '**/*.rb')
+Dir.glob(code_files_mask).each {|file| require file}

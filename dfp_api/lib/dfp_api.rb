@@ -20,12 +20,10 @@
 # Contains the main classes for the client library. Takes care of all
 # dependencies.
 
-gem 'google-ads-common', '~>0.6.1'
+gem 'google-ads-common', '~>0.7.0'
 
 require 'ads_common/api'
-require 'ads_common/savon_service'
 require 'ads_common/savon_headers/oauth_header_handler'
-require 'ads_common/savon_headers/simple_header_handler'
 require 'dfp_api/api_config'
 require 'dfp_api/client_login_header_handler'
 require 'dfp_api/credential_handler'
@@ -50,27 +48,23 @@ module DfpApi
       DfpApi::ApiConfig
     end
 
-    # Sets the logger to use.
-    def logger=(logger)
-      super(logger)
-      AdsCommon::SavonService.logger = logger
-    end
-
     private
 
-    # Retrieve DFP HeaderHandlers per credential.
-    def soap_header_handlers(auth_handler, header_list, version, namespace)
-      handler = nil
+    # Retrieve DFP HeaderHandler per credential.
+    def soap_header_handler(auth_handler, version, namespace)
       auth_method = @config.read('authentication.method', :CLIENTLOGIN)
       handler = case auth_method
         when :CLIENTLOGIN
           DfpApi::ClientLoginHeaderHandler
         when :OAUTH
           AdsCommon::SavonHeaders::OAuthHeaderHandler
+        else
+          raise AdsCommon::Errors::AuthError,
+              "Unknown auth method: %s" % auth_method
       end
-      ns = api_config.headers_config[:HEADER_NAMESPACE_PREAMBLE] + version.to_s
-      return [handler.new(@credential_handler, auth_handler,
-          api_config.headers_config[:REQUEST_HEADER], ns, version)]
+      ns = api_config.client_login_config(:HEADER_NAMESPACE_PREAMBLE) +
+          version.to_s
+      return handler.new(@credential_handler, auth_handler, ns, version)
     end
   end
 end

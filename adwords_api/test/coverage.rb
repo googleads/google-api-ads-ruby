@@ -1,8 +1,9 @@
+#!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
+# Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -17,15 +18,21 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Handles v13 authentication.
+# Runs test with coverage tool.
 
-require 'ads_common/auth/base_handler'
+require 'simplecov'
 
-module AdwordsApi
-  class V13LoginHandler < AdsCommon::Auth::BaseHandler
-    def header_list(credentials)
-      # Ensure that clientEmail and clientCustomerId are always present.
-      return credentials.keys.dup() | [:clientEmail, :clientCustomerId]
-    end
-  end
+SimpleCov.start do
+  # Skipping auto-generated code.
+  add_filter '/adwords_api/v\d+/'
 end
+
+$:.unshift File.expand_path('../../', __FILE__)
+require File.join(File.dirname(__FILE__), 'suite_unittests.rb')
+
+# Now loading all files in the library to make sure we hit all untested files.
+lib_base_path = File.expand_path('../../lib', __FILE__)
+$:.unshift lib_base_path
+
+code_files_mask = File.join(lib_base_path, '**/*.rb')
+Dir.glob(code_files_mask).each {|file| require file}

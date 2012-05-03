@@ -18,16 +18,13 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Test suite for example tests.
+# Test suite for unit tests.
 
 require 'test/unit'
 
 $:.unshift File.expand_path('../../lib/', __FILE__)
 $:.unshift File.expand_path('../../', __FILE__)
 
-# v201109 example tests.
-$:.unshift File.expand_path('../../examples/v201109', __FILE__)
-require File.join(File.dirname(__FILE__), 'examples', 'v201109', 'utils.rb')
-v201109_mask =
-    File.join(File.dirname(__FILE__), 'examples', 'v201109', 'test_*.rb')
-Dir.glob(v201109_mask).each {|file| require file}
+# Ads Common units tests.
+test_files_mask = File.join(File.dirname(__FILE__), 'test_*.rb')
+Dir.glob(test_files_mask).each {|file| require file}

@@ -22,7 +22,7 @@
 require 'nori'
 require 'test/unit'
 
-require 'dfp_api/errors'
+require 'ads_common/config'
 require 'dfp_api/v201203/line_item_service'
 
 class TestDfpApi < Test::Unit::TestCase
@@ -33,10 +33,11 @@ class TestDfpApi < Test::Unit::TestCase
     end
   end
 
-  def test_issue_16
+  def test_issue_16()
     assert_nothing_raised do
+      config = AdsCommon::Config.new({})
       service = StubService.new(
-          DfpApi::Api.new,
+          config,
           'https://www.google.com/apis/ads/publisher/v201203/LineItemService')
       result = service.stub_get_line_items_by_statement(get_xml_text)
       targeting = result[:results][0][:targeting][:inventory_targeting]
@@ -44,7 +45,7 @@ class TestDfpApi < Test::Unit::TestCase
     end
   end
 
-  def get_xml_text
+  def get_xml_text()
     return <<EOT
 <?xml version="1.0"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">

@@ -27,29 +27,26 @@ require 'ads_common/parameters_validator'
 
 module AdsCommon
   class SavonService
-    attr_accessor :headerhandler
-    attr_reader :api
+
+    attr_accessor :header_handler
+    attr_reader :config
     attr_reader :version
     attr_reader :namespace
 
     # Creates a new service.
-    def initialize(api, endpoint, namespace, version)
+    def initialize(config, endpoint, namespace, version)
       if self.class() == AdsCommon::SavonService
         raise NoMethodError, 'Tried to instantiate an abstract class'
       end
-      @api, @version, @namespace = api, version, namespace
-      @headerhandler = []
+      @config, @version, @namespace = config, version, namespace
       @client = create_savon_client(endpoint, namespace)
     end
 
     private
 
-    # Sets the logger in Savon-specific way. Also sets it for HTTPI used by it.
-    def self.logger=(logger)
-      Savon.configure do |config|
-        config.log_level = :debug
-        config.logger = logger
-      end
+    # Returns currently configured Logger.
+    def get_logger()
+      return @config.read('library.logger')
     end
 
     # Returns ServiceRegistry for the current service. Has to be overridden.
@@ -68,7 +65,12 @@ module AdsCommon
       client = Savon::Client.new do |wsdl, httpi|
         wsdl.endpoint = endpoint
         wsdl.namespace = namespace
-        AdsCommon::Http.configure_httpi(@api.config, httpi)
+        AdsCommon::Http.configure_httpi(@config, httpi)
+      end
+      Savon.configure do |config|
+        config.raise_errors = false
+        config.log_level = :debug
+        config.logger = get_logger()
       end
       return client
     end
@@ -87,7 +89,7 @@ module AdsCommon
     # Logs response headers.
     # TODO: this needs to go on http or httpi level.
     def log_headers(headers)
-      @api.logger.debug(headers.map {|k, v| [k, v].join(': ')}.join(', '))
+      get_logger().debug(headers.map {|k, v| [k, v].join(': ')}.join(', '))
     end
 
     # Executes the SOAP request with original SOAP name.
@@ -96,16 +98,15 @@ module AdsCommon
           get_service_registry.get_method_signature(action)[:original_name]
       original_action_name = action if original_action_name.nil?
       response = @client.request(original_action_name) do |soap|
-        set_headers(soap, args, extra_namespaces)
+        soap.body = args
+        set_headers(soap, extra_namespaces)
       end
       return response
     end
 
     # Executes each handler to generate SOAP headers.
-    def set_headers(soap, args, extra_namespaces)
-      @headerhandler.each do |handler|
-        handler.prepare_request(@client.http, soap, args)
-      end
+    def set_headers(soap, extra_namespaces)
+      header_handler.prepare_request(@client.http, soap)
       soap.namespaces.merge!(extra_namespaces) unless extra_namespaces.nil?
     end
 
@@ -202,7 +203,7 @@ module AdsCommon
 
       field_definition = get_field_by_name(fields_list, field_name)
       if field_definition.nil?
-        @api.logger.warn("Can not determine type for field: %s" % field_name)
+        get_logger().warn("Can not determine type for field: %s" % field_name)
         return output_data
       end
 

@@ -38,7 +38,17 @@ end
 
 desc 'Perform the unit testing.'
 task :test do
-  system 'ruby test/suite_*.rb'
+  system 'ruby test/suite_unittests.rb'
+end
+
+desc 'Perform the examples testing.'
+task :test_examples do
+  system 'ruby test/suite_exampletests.rb'
+end
+
+desc 'Run tests coverage tool.'
+task :coverage do
+  system 'ruby test/coverage.rb'
 end
 
 desc 'Generate the Adwords API stubs.'

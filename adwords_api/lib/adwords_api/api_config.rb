@@ -54,6 +54,7 @@ module AdwordsApi
           :AdGroupService,
           :AdParamService,
           :AlertService,
+          :BudgetOrderService,
           :BulkMutateJobService,
           :CampaignAdExtensionService,
           :CampaignCriterionService,
@@ -100,6 +101,7 @@ module AdwordsApi
       [:v201109, :AdGroupService] => 'cm/',
       [:v201109, :AdParamService] => 'cm/',
       [:v201109, :AlertService] => 'mcm/',
+      [:v201109, :BudgetOrderService] => 'billing/',
       [:v201109, :BulkMutateJobService] => 'job/',
       [:v201109, :CampaignAdExtensionService] => 'cm/',
       [:v201109, :CampaignCriterionService] => 'cm/',
@@ -123,14 +125,9 @@ module AdwordsApi
       [:v201109, :UserListService] => 'cm/'
     }
 
-    # Configure the auth servers to use for each environment
-    @@auth_server_config = {
-      :PRODUCTION => 'https://www.google.com',
-      :SANDBOX => 'https://www.google.com'
-    }
-
-    @@headers_config = {
-      :REQUEST_HEADER => 'RequestHeader',
+    # Auth constants for ClientLogin method.
+    @@client_login_config = {
+      :AUTH_SERVER => 'https://www.google.com',
       :AUTH_NAMESPACE_PREAMBLE =>
           'https://adwords.google.com/api/adwords/cm/',
       :LOGIN_SERVICE_NAME => 'adwords'
@@ -159,16 +156,17 @@ module AdwordsApi
       @@service_config
     end
 
-    def self.environment_config
-      @@environment_config
+    def self.environment_config(environment, key)
+      return @@environment_config.include?(environment) ?
+          @@environment_config[environment][key] : nil
     end
 
     def self.subdir_config
       @@subdir_config
     end
 
-    def self.auth_server_config
-      @@auth_server_config
+    def self.client_login_config(key)
+      return @@client_login_config[key]
     end
 
     def self.default_config_filename
@@ -189,11 +187,7 @@ module AdwordsApi
     # - The endpoint URL (as a string)
     #
     def self.report_download_url(environment, version)
-      base = get_wsdl_base(environment, version)
-      if base and service_config[version].include?(:ReportDefinitionService)
-        base += 'reportdownload'
-      end
-      return base
+      return get_wsdl_base(environment, version) + 'reportdownload'
     end
 
     # Get the download URL for Ad Hoc reports.

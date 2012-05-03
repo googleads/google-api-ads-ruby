@@ -1,4 +1,5 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
+# Encoding: utf-8
 #
 # Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
@@ -19,14 +20,14 @@
 #
 # Handles SOAP headers and namespaces definition for ClientLogin type header.
 
-require 'ads_common/savon_headers/simple_header_handler'
+require 'ads_common/savon_headers/base_header_handler'
 
 module DfpApi
-  class ClientLoginHeaderHandler < AdsCommon::SavonHeaders::SimpleHeaderHandler
+  class ClientLoginHeaderHandler < AdsCommon::SavonHeaders::BaseHeaderHandler
     private
 
-    # Generates SOAP request header with login credentials and namespace
-    # definition.
+    # Generates DFP API specific request header with ClientLogin data in
+    # required namespace.
     #
     # Args:
     #  - None
@@ -35,22 +36,17 @@ module DfpApi
     #  - Hash containing a header with filled in credentials
     #
     def generate_request_header()
-      headers = @auth_handler.headers(@credential_handler.credentials)
-      return headers.inject({}) do |request_header, (header, value)|
-        if header == :authToken
-          auth_header = prepend_namespace('authentication')
-          request_header[auth_header] = {
-              prepend_namespace('token') => value
-          }
-          request_header[:attributes!] ||= {}
-          request_header[:attributes!][auth_header] = {
-              'xsi:type' => prepend_namespace('ClientLogin'),
-          }
-        else
-          request_header[prepend_namespace(header)] = value
-        end
-        request_header
-      end
+      request_header = super()
+      auth_header = prepend_namespace('authentication')
+      credentials = @credential_handler.credentials
+      request_header[auth_header] = {
+          prepend_namespace('token') => @auth_handler.get_token(credentials)
+      }
+      request_header[:attributes!] ||= {}
+      request_header[:attributes!][auth_header] = {
+          'xsi:type' => prepend_namespace('ClientLogin'),
+      }
+      return request_header
     end
   end
 end
