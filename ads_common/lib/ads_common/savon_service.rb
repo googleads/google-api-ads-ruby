@@ -209,13 +209,12 @@ module AdsCommon
 
       field_sym = field_name.to_sym
       field_data = normalize_type(output_data[field_sym], field_definition)
-      output_data[field_sym] = field_data if field_data
+      output_data[field_sym] = field_data
 
       sub_type = get_full_type_signature(field_definition[:type])
       if sub_type and sub_type[:fields]
         # go recursive
         sub_type[:fields].each do |sub_type_field|
-          field_data = output_data[field_sym]
           if field_data.is_a?(Array)
             field_data.each do |item|
               normalize_output_field(item, sub_type_field,

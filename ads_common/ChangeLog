@@ -1,5 +1,6 @@
 0.7.0:
   - Cleaned up unused features.
+  - Now require HTTPI 0.9.7 (fixes issue #61).
 
 0.6.4:
   - Fixed issue #66 (extra fields in OAuth header).
