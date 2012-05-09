@@ -30,7 +30,8 @@ module AdsCommon
     # Instance initializer.
     #
     # Args:
-    #  - service: instance of savon_service to validate for
+    #  - registry: a registry that defines service
+    #
     def initialize(registry)
       @registry = registry
       @extra_namespaces = {}

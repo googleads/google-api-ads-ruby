@@ -41,13 +41,10 @@ module AdsCommon
       # - api_name an API name to generate for
       # - version a version of the service
       # - service_name a service name to generate stubs for
-      # - extensions an optional list of extensions to include
       #
-      def initialize(wsdl_url, code_path, api_name, version, service_name,
-          extensions = [])
+      def initialize(wsdl_url, code_path, api_name, version, service_name)
         @wsdl_url = wsdl_url
         @code_path = code_path
-        @extensions = extensions
         @generator_args = {
             :api_name => api_name,
             :version => version,
@@ -112,7 +109,6 @@ module AdsCommon
         wrapper_file = create_new_file(file_name)
         generator = SavonServiceGenerator.new(@generator_args)
         generator.add_actions(wsdl.soap_actions.dup)
-        generator.add_extensions(@extensions)
         wrapper_file.write(generator.generate_code())
         wrapper_file.close
       end

@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Authors:: api.sgomes@gmail.com (Sérgio Gomes)
+# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
 #
@@ -175,19 +175,6 @@ module AdwordsApi
 
     def self.headers_config
       @@headers_config
-    end
-
-    # Get the download URL for reports.
-    #
-    # Args:
-    # - environment: the service environment to be used
-    # - version: the API version (as a symbol)
-    #
-    # Returns:
-    # - The endpoint URL (as a string)
-    #
-    def self.report_download_url(environment, version)
-      return get_wsdl_base(environment, version) + 'reportdownload'
     end
 
     # Get the download URL for Ad Hoc reports.
