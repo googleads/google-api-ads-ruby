@@ -1,7 +1,8 @@
-0.5.4:
+0.6.0:
   - Require google-ads-common 0.7.0 or later from now on.
   - ReportUtil now logs request details on DEBUG level.
   - Added support for v201109 BudgetOrderService.
+  - Removed outdated extensions.
 
 0.5.3:
   - Fixed issue #70 (stricter client id validation).

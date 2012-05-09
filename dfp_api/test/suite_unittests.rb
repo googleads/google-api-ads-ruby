@@ -27,6 +27,3 @@ require 'test/unit'
 
 # DFP API units tests.
 Dir.glob('./test/dfp_api/test_*.rb').each {|file| require file}
-
-# Reported bugs tests.
-Dir.glob('./test/bugs/test_*.rb').each {|file| require file}
