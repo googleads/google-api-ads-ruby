@@ -1,4 +1,5 @@
 0.6.0:
+  - Added support for API v201109_1.
   - Require google-ads-common 0.7.0 or later from now on.
   - ReportUtil now logs request details on DEBUG level.
   - Added support for v201109 BudgetOrderService.

@@ -76,6 +76,36 @@ module AdwordsApi
           :TargetingIdeaService,
           :TrafficEstimatorService,
           :UserListService
+      ],
+      :v201109_1 => [
+          :AdExtensionOverrideService,
+          :AdGroupAdService,
+          :AdGroupCriterionService,
+          :AdGroupService,
+          :AdParamService,
+          :AlertService,
+          :BudgetOrderService,
+          :BulkMutateJobService,
+          :CampaignAdExtensionService,
+          :CampaignCriterionService,
+          :CampaignService,
+          :CampaignTargetService,
+          :ConstantDataService,
+          :ConversionTrackerService,
+          :CreateAccountService,
+          :CustomerSyncService,
+          :DataService,
+          :ExperimentService,
+          :GeoLocationService,
+          :InfoService,
+          :LocationCriterionService,
+          :MediaService,
+          :MutateJobService,
+          :ReportDefinitionService,
+          :ServicedAccountService,
+          :TargetingIdeaService,
+          :TrafficEstimatorService,
+          :UserListService
       ]
     }
 
@@ -83,11 +113,13 @@ module AdwordsApi
     @@environment_config = {
       :PRODUCTION => {
         :oauth_scope => 'https://adwords.google.com/api/adwords/',
-        :v201109 => 'https://adwords.google.com/api/adwords/'
+        :v201109 => 'https://adwords.google.com/api/adwords/',
+        :v201109_1 => 'https://adwords.google.com/api/adwords/'
       },
       :SANDBOX => {
         :oauth_scope => 'https://adwords-sandbox.google.com/api/adwords/',
-        :v201109 => 'https://adwords-sandbox.google.com/api/adwords/'
+        :v201109 => 'https://adwords-sandbox.google.com/api/adwords/',
+        :v201109_1 => 'https://adwords-sandbox.google.com/api/adwords/'
       }
     }
 
@@ -122,7 +154,36 @@ module AdwordsApi
       [:v201109, :ServicedAccountService] => 'mcm/',
       [:v201109, :TargetingIdeaService] => 'o/',
       [:v201109, :TrafficEstimatorService] => 'o/',
-      [:v201109, :UserListService] => 'cm/'
+      [:v201109, :UserListService] => 'cm/',
+      # v201109_1
+      [:v201109_1, :AdExtensionOverrideService] => 'cm/',
+      [:v201109_1, :AdGroupAdService] => 'cm/',
+      [:v201109_1, :AdGroupCriterionService] => 'cm/',
+      [:v201109_1, :AdGroupService] => 'cm/',
+      [:v201109_1, :AdParamService] => 'cm/',
+      [:v201109_1, :AlertService] => 'mcm/',
+      [:v201109_1, :BudgetOrderService] => 'billing/',
+      [:v201109_1, :BulkMutateJobService] => 'job/',
+      [:v201109_1, :CampaignAdExtensionService] => 'cm/',
+      [:v201109_1, :CampaignCriterionService] => 'cm/',
+      [:v201109_1, :CampaignService] => 'cm/',
+      [:v201109_1, :CampaignTargetService] => 'cm/',
+      [:v201109_1, :ConstantDataService] => 'cm/',
+      [:v201109_1, :ConversionTrackerService] => 'cm/',
+      [:v201109_1, :CreateAccountService] => 'mcm/',
+      [:v201109_1, :CustomerSyncService] => 'ch/',
+      [:v201109_1, :DataService] => 'cm/',
+      [:v201109_1, :ExperimentService] => 'cm/',
+      [:v201109_1, :GeoLocationService] => 'cm/',
+      [:v201109_1, :InfoService] => 'info/',
+      [:v201109_1, :LocationCriterionService] => 'cm/',
+      [:v201109_1, :MediaService] => 'cm/',
+      [:v201109_1, :MutateJobService] => 'cm/',
+      [:v201109_1, :ReportDefinitionService] => 'cm/',
+      [:v201109_1, :ServicedAccountService] => 'mcm/',
+      [:v201109_1, :TargetingIdeaService] => 'o/',
+      [:v201109_1, :TrafficEstimatorService] => 'o/',
+      [:v201109_1, :UserListService] => 'cm/'
     }
 
     # Auth constants for ClientLogin method.
