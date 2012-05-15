@@ -27,7 +27,8 @@ require 'ads_common/results_extractor'
 module AdsCommon
   class ResultsExtractor
 
-    public :normalize_type
+    public :check_array_collapse
+    public :normalize_item
   end
 end
 
@@ -42,104 +43,123 @@ class TestResultsExtractor < Test::Unit::TestCase
     @extractor = AdsCommon::ResultsExtractor.new(registry)
   end
 
-  def test_normalize_type_int()
-    result1 = @extractor.normalize_type(5, {:type => 'int'})
+  def test_normalize_item_nil()
+    result1 = @extractor.normalize_item(nil, {:type => 'unknown'})
+    assert_equal(nil, result1, 'bad conversion')
+  end
+
+  def test_normalize_item_int()
+    result1 = @extractor.normalize_item(5, {:type => 'int'})
     assert_kind_of(Integer, result1)
     assert_equal(5, result1, 'bad conversion')
 
-    result2 = @extractor.normalize_type(2147483648, {:type => 'int'})
+    result2 = @extractor.normalize_item(2147483648, {:type => 'int'})
     assert_kind_of(Integer, result2)
     assert_equal(2147483648, result2, 'bad conversion')
   end
 
-  def test_normalize_type_string()
-    result1 = @extractor.normalize_type('foobar',
+  def test_normalize_item_string()
+    result1 = @extractor.normalize_item('foobar',
         {:type => 'string'})
     assert_kind_of(String, result1)
     assert_equal('foobar', result1, 'bad conversion')
 
-    result2 = @extractor.normalize_type('', {:type => 'string'})
+    result2 = @extractor.normalize_item('', {:type => 'string'})
     assert_kind_of(String, result2)
     assert_equal('', result2, 'bad conversion')
   end
 
-  def test_normalize_type_long()
-    result1 = @extractor.normalize_type(2147483648,
+  def test_normalize_item_long()
+    result1 = @extractor.normalize_item(2147483648,
         {:type => 'long'})
     assert_kind_of(Integer, result1)
     assert_equal(2147483648, result1, 'bad conversion')
 
-    result2 = @extractor.normalize_type(-1, {:type => 'long'})
+    result2 = @extractor.normalize_item(-1, {:type => 'long'})
     assert_kind_of(Integer, result2)
     assert_equal(-1, result2, 'bad conversion')
   end
 
-  def test_normalize_type_boolean()
-    result1 = @extractor.normalize_type(true, {:type => 'boolean'})
+  def test_normalize_item_boolean()
+    result1 = @extractor.normalize_item(true, {:type => 'boolean'})
     assert_kind_of(TrueClass, result1)
 
-    result2 = @extractor.normalize_type(false, {:type => 'boolean'})
+    result2 = @extractor.normalize_item(false, {:type => 'boolean'})
     assert_kind_of(FalseClass, result2)
 
-    result3 = @extractor.normalize_type('true', {:type => 'boolean'})
+    result3 = @extractor.normalize_item('true', {:type => 'boolean'})
     assert_kind_of(TrueClass, result3)
 
-    result4 = @extractor.normalize_type('false',
+    result4 = @extractor.normalize_item('false',
         {:type => 'boolean'})
     assert_kind_of(FalseClass, result4)
 
-    result5 = @extractor.normalize_type('True',
+    result5 = @extractor.normalize_item('True',
         {:type => 'boolean'})
     assert_kind_of(TrueClass, result3)
 
-    result6 = @extractor.normalize_type('False',
+    result6 = @extractor.normalize_item('False',
         {:type => 'boolean'})
     assert_kind_of(FalseClass, result4)
   end
 
-  def test_normalize_type_object()
-    result1 = @extractor.normalize_type({:a => 'b'},
+  def test_normalize_item_object()
+    result1 = @extractor.normalize_item({:a => 'b'},
         {:type => 'StubClass'})
     assert_equal('b', result1[:a], 'object corrupted')
 
-    result2 = @extractor.normalize_type(@extractor,
+    result2 = @extractor.normalize_item(@extractor,
         {:type => 'SavonService'})
     assert_equal(@extractor.hash, result2.hash, 'object corrupted')
   end
 
-  def test_normalize_type_double()
-    result1 = @extractor.normalize_type(3.14, {:type => 'double'})
+  def test_normalize_item_double()
+    result1 = @extractor.normalize_item(3.14, {:type => 'double'})
     assert_kind_of(Float, result1)
     assert_equal(3.14, result1, 'bad conversion')
 
-    result2 = @extractor.normalize_type('-3.14', {:type => 'double'})
+    result2 = @extractor.normalize_item('-3.14', {:type => 'double'})
     assert_kind_of(Float, result2)
     assert_equal(-3.14, result2, 'bad conversion')
 
-    result3 = @extractor.normalize_type('42', {:type => 'double'})
+    result3 = @extractor.normalize_item('42', {:type => 'double'})
     assert_kind_of(Float, result3)
     assert_equal(42.0, result3, 'bad conversion')
   end
 
-  def test_normalize_type_single_array_item()
-    result1 = @extractor.normalize_type('42',
-        {:type => 'double', :min_occurs => '0', :max_occurs => 1})
+  def test_check_array_collapse()
+    result1 = @extractor.check_array_collapse(
+        42.0, {:min_occurs => '0', :max_occurs => 1})
     assert_kind_of(Float, result1)
     assert_equal(42.0, result1, 'Float is expected for max_occurs 1')
 
-    result2 = @extractor.normalize_type('42',
-        {:type => 'double', :min_occurs => '0', :max_occurs => :unbounded})
+    result2 = @extractor.check_array_collapse(
+        42.0, {:min_occurs => '0', :max_occurs => :unbounded})
     assert_instance_of(Array, result2)
-    assert_equal(42.0, result2[0], 'Array is expected for unbounded max_occurs')
+    assert_equal(42.0, result2[0])
 
-    result3 = @extractor.normalize_type('42',
-        {:type => 'double', :min_occurs => '0', :max_occurs => 2})
+    result3 = @extractor.check_array_collapse(
+        42.0, {:min_occurs => '0', :max_occurs => 2})
     assert_instance_of(Array, result3)
-    assert_equal(42.0, result3[0], 'Array is expected for max_occurs > 1')
+    assert_equal(42.0, result3[0])
 
-    result4 = @extractor.normalize_type('42',
-        {:type => 'double', :min_occurs => '0', :max_occurs => nil})
+    result4 = @extractor.check_array_collapse(
+        42.0, {:min_occurs => '0', :max_occurs => nil})
     assert_instance_of(Float, result4)
     assert_equal(42.0, result4, 'Float is expected for nil max_occurs')
+
+    result5 = @extractor.check_array_collapse(
+        [42, -1], {:min_occurs => '0', :max_occurs => :unbounded})
+    assert_instance_of(Array, result5)
+    assert_equal(42, result5[0])
+    assert_equal(-1, result5[1])
+
+    result6 = @extractor.check_array_collapse(
+        {}, {:min_occurs => '0', :max_occurs => 1})
+    assert_equal({}, result6)
+
+    result7 = @extractor.check_array_collapse(
+        {}, {:min_occurs => '0', :max_occurs => :unbounded})
+    assert_equal([{}], result7)
   end
 end

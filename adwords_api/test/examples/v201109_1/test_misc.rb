@@ -18,16 +18,28 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Test suite for example tests.
+# Tests the misc examples.
 
 require 'test/unit'
 
-$:.unshift File.expand_path('../../lib/', __FILE__)
-$:.unshift File.expand_path('../../', __FILE__)
+require 'misc/get_all_images_and_videos'
+require 'misc/upload_image'
+require 'misc/use_oauth'
 
-# v201109 example tests.
-$:.unshift File.expand_path('../../examples/v201109', __FILE__)
-require File.join(File.dirname(__FILE__), 'examples', 'v201109', 'utils.rb')
-v201109_mask =
-    File.join(File.dirname(__FILE__), 'examples', 'v201109', 'test_*.rb')
-Dir.glob(v201109_mask).each {|file| require file}
+class TestMiscV201109_1 < Test::Unit::TestCase
+  def setup
+  end
+
+  def test_get_all_images_and_videos
+    get_all_images_and_videos()
+  end
+
+  def test_upload_image
+    upload_image()
+  end
+
+  # This test is disabled as it requires user input.
+  def disabled_test_use_oauth
+    use_oauth()
+  end
+end

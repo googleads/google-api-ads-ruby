@@ -186,9 +186,11 @@ module AdsCommon
               api_config.client_login_config(:LOGIN_SERVICE_NAME)
           )
         when :OAUTH
+          environment = @config.read('service.environment',
+              api_config.default_environment())
           AdsCommon::Auth::OAuthHandler.new(
               @config,
-              api_config.environment_config(environment, :OAUTH_SCOPE)
+              api_config.environment_config(environment, :oauth_scope)
           )
         else
           raise AdsCommon::Errors::Error,

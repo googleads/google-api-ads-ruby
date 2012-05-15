@@ -42,7 +42,10 @@ end
 
 desc 'Perform the examples testing.'
 task :test_examples do
-  system 'ruby test/suite_exampletests.rb'
+  Dir.glob('test/suite_exampletests_v*.rb').each do |file|
+    puts "Running test suite: %s" % file
+    system "ruby %s" % file
+  end
 end
 
 desc 'Run tests coverage tool.'

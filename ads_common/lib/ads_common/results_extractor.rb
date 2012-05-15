@@ -39,6 +39,7 @@ module AdsCommon
       result = response.to_hash
       result = result[action] if result.include?(action)
       result = normalize_output(result, method)
+      return result[:rval] || result
       return result
     end
 
@@ -57,87 +58,89 @@ module AdsCommon
       return result
     end
 
-    # Normalizes output starting with root node "rval".
+    # Normalizes output starting with root output node.
     def normalize_output(output_data, method_definition)
-      fields_list = method_definition[:output][:fields]
-      result = normalize_output_field(output_data, fields_list, :rval)
-      return result[:rval] || result
+      fields = method_definition[:output][:fields]
+      result = normalize_fields(output_data, fields)
+    end
+
+    # Normalizes all fields for the given data based on the fields list
+    # provided.
+    def normalize_fields(data, fields)
+      fields.each do |field|
+        field_name = field[:name]
+        if data.include?(field_name)
+          field_data = data[field_name]
+          field_data = normalize_output_field(field_data, field)
+          field_data = check_array_collapse(field_data, field)
+          data[field_name] = field_data unless field_data.nil?
+        end
+      end
+      return data
     end
 
     # Normalizes one field of a given data recursively.
+    #
     # Args:
-    #  - output_data: XML data to normalize
-    #  - fields_list: expected list of fields from signature
-    #  - field_name: specifies field name to normalize
-    def normalize_output_field(output_data, fields_list, field_name)
-      return nil if output_data.nil?
-
-      process_attributes(output_data, true)
-
-      field_definition = get_field_by_name(fields_list, field_name)
-      if field_definition.nil?
-        get_logger().warn("Can not determine type for field: %s" % field_name)
-        return output_data
+    #  - field_data: XML data to normalize
+    #  - field_def: field type definition for the data
+    #
+    def normalize_output_field(field_data, field_def)
+      return case field_data
+        when Array
+          normalize_array_field(field_data, field_def)
+        when Hash
+          normalize_hash_field(field_data, field_def)
+        else
+          normalize_item(field_data, field_def)
       end
-
-      field_sym = field_name.to_sym
-      field_data = normalize_type(output_data[field_sym], field_definition)
-      output_data[field_sym] = field_data
-
-      sub_type = get_full_type_signature(field_definition[:type])
-      if sub_type and sub_type[:fields]
-        # go recursive
-        sub_type[:fields].each do |sub_type_field|
-          if field_data.is_a?(Array)
-            field_data.each do |item|
-              normalize_output_field(item, sub_type_field,
-                                     sub_type_field[:name])
-            end
-          else
-            normalize_output_field(field_data, sub_type_field,
-                                   sub_type_field[:name])
-          end
-        end
-      end
-      return output_data
     end
 
-    # Converts XML input string into a native format.
-    def normalize_type(data, field)
-      type_name = field[:type]
-      result = case data
-        when Array
-          data.map {|item| normalize_item(type_name, item)}
-        else
-          normalize_item(type_name, data)
+    # Normalizes every item of an Array.
+    def normalize_array_field(data, field_def)
+      return data.map {|item| normalize_output_field(item, field_def)}
+    end
+
+    # Normalizes every item of a Hash.
+    def normalize_hash_field(field, field_def)
+      process_attributes(field, true)
+      field_type = determine_type(field, field_def[:type])
+      type_signature = get_full_type_signature(field_type)
+      # If we don't know the type, pass as-is.
+      return (type_signature.nil?) ?
+          field : normalize_fields(field, type_signature[:fields])
+    end
+
+    # Returns field type based on the field structure. Allows to override the
+    # type with custom xsi:type.
+    def determine_type(field_data, field_type)
+      if field_data.kind_of?(Hash) and field_data.include?(:xsi_type)
+        field_type = field_data[:xsi_type]
       end
-      # If field signature allows an array, forcing array structure even for one
-      # item.
-      if !field[:min_occurs].nil? and
-          (field[:max_occurs] == :unbounded ||
-              (!field[:max_occurs].nil? and field[:max_occurs] > 1))
-        result = arrayize(result)
-      end
-      return result
+      return field_type
     end
 
     # Converts one leaf item to a built-in type.
-    def normalize_item(type_name, item)
-      return (item.nil?) ? item :
-          case type_name
-            when 'long', 'int' then Integer(item)
-            when 'double', 'float' then Float(item)
-            when 'boolean' then item.kind_of?(String) ?
-                item.casecmp('true') == 0 : item
-            else item
-          end
+    def normalize_item(item, field_def)
+      return case field_def[:type]
+        when 'long', 'int' then Integer(item)
+        when 'double', 'float' then Float(item)
+        when 'boolean' then item.kind_of?(String) ?
+            item.casecmp('true') == 0 : item
+        else item
+      end
     end
 
-    # Finds a field in a list by its name.
-    def get_field_by_name(fields_list, name)
-      fields_array = arrayize(fields_list)
-      index = fields_array.find_index {|field| field[:name].eql?(name)}
-      return (index.nil?) ? nil : fields_array.at(index)
+    # Checks if the field signature allows an array and forces array structure
+    # even for a signle item.
+    def check_array_collapse(data, field_def)
+      result = data
+      if !field_def[:min_occurs].nil? and
+          (field_def[:max_occurs] == :unbounded ||
+              (!field_def[:max_occurs].nil? and field_def[:max_occurs] > 1))
+        result = arrayize(result)
+      end
+      return result
     end
 
     # Makes sure object is an array.
@@ -170,13 +173,11 @@ module AdsCommon
 
     # Handles attributes received from Savon.
     def process_attributes(data, keep_xsi_type = false)
-      if data.kind_of?(Hash)
-        if keep_xsi_type
-          xsi_type = data.delete(:"@xsi:type")
-          data[:xsi_type] = xsi_type if xsi_type
-        end
-        data.reject! {|key, value| key.to_s.start_with?('@')}
+      if keep_xsi_type
+        xsi_type = data.delete(:"@xsi:type")
+        data[:xsi_type] = xsi_type if xsi_type
       end
+      data.reject! {|key, value| key.to_s.start_with?('@')}
     end
   end
 end

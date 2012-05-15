@@ -40,9 +40,10 @@ module AdsCommon
       #
       def generate_headers(request, soap)
         super(request, soap)
+        credentials = @credential_handler.credentials
         request.url = soap.endpoint
         request.headers['Authorization'] =
-            @auth_handler.generate_oauth_parameters_string(credentials, request)
+            @auth_handler.auth_string(credentials, request)
       end
     end
   end

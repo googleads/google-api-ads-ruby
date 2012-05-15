@@ -111,6 +111,10 @@ module AdsCommon
       # - AdsCommon::Errors::AuthError if validation fails
       #
       def validate_credentials(credentials)
+        if @scope.nil?
+          raise AdsCommon::Errors::AuthError, 'Scope is not specified.'
+        end
+
         if credentials.nil?
           raise AdsCommon::Errors::AuthError, 'No credentials supplied.'
         end
@@ -145,7 +149,7 @@ module AdsCommon
       #
       def create_token(credentials)
         validate_credentials(credentials)
-        @consumer = create_consumer(credentials) if @consumer.nil?
+        @consumer ||= create_consumer(credentials)
         return create_token_from_credentials(credentials, @consumer) ||
             generate_access_token(credentials, @consumer)
       end
