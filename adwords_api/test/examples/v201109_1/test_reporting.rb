@@ -24,7 +24,6 @@ require 'test/unit'
 require 'tempfile'
 
 require 'reporting/download_criteria_report'
-require 'reporting/download_defined_report'
 require 'reporting/get_campaign_stats'
 require 'reporting/get_defined_reports'
 require 'reporting/get_report_fields'
