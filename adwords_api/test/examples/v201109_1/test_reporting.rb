@@ -53,17 +53,6 @@ class TestReportingV201109_1 < Test::Unit::TestCase
     end
   end
 
-  def test_download_defined_report
-    report_definition_id = '1234567890'
-    file = Tempfile.new('ruby-examples')
-    begin
-      file.close()
-      download_defined_report(report_definition_id, file.path)
-    ensure
-      file.unlink()
-    end
-  end
-
   def test_get_campaign_stats
     get_campaign_stats()
   end
