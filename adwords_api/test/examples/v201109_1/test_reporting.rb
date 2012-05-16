@@ -24,7 +24,6 @@ require 'test/unit'
 require 'tempfile'
 
 require 'reporting/download_criteria_report'
-require 'reporting/download_defined_report'
 require 'reporting/get_campaign_stats'
 require 'reporting/get_defined_reports'
 require 'reporting/get_report_fields'
@@ -48,17 +47,6 @@ class TestReportingV201109_1 < Test::Unit::TestCase
     begin
       file.close()
       download_criteria_report(file.path)
-    ensure
-      file.unlink()
-    end
-  end
-
-  def test_download_defined_report
-    report_definition_id = '1234567890'
-    file = Tempfile.new('ruby-examples')
-    begin
-      file.close()
-      download_defined_report(report_definition_id, file.path)
     ensure
       file.unlink()
     end
