@@ -70,7 +70,7 @@ def update_line_items()
     end
 
     # Update the line items on the server.
-    return_line_items = line_item_service.update_line_items(line_items)
+    return_line_items = line_item_service.update_line_items(new_line_items)
 
     if return_line_items
       return_line_items.each do |line_item|
