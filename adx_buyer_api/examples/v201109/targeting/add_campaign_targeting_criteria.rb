@@ -61,11 +61,11 @@ def add_campaign_targeting_criteria(campaign_id)
     }
   end
 
-  # Create operation to add a placement.
+  # Create operation to add a negative campaign placement.
   operations << {
     :operator => 'ADD',
     :operand => {
-      :xsi_type => 'CampaignCriterion',
+      :xsi_type => 'NegativeCampaignCriterion',
       :campaign_id => campaign_id,
       :criterion => {
         :xsi_type => 'Placement',
