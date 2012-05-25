@@ -43,20 +43,16 @@ module AdsCommon
       return result
     end
 
-    private
-
     # Extracts misc data from response header.
     def extract_header_data(response)
       header_type = get_full_type_signature(:SoapResponseHeader)
       headers = response.header[:response_header].dup
       process_attributes(headers, false)
-      result = headers.inject({}) do |result, (key, v)|
-        normalize_output_field(headers, header_type[:fields], key)
-        result[key] = headers[key]
-        result
-      end
-      return result
+      headers = normalize_fields(headers, header_type[:fields])
+      return headers
     end
+
+    private
 
     # Normalizes output starting with root output node.
     def normalize_output(output_data, method_definition)

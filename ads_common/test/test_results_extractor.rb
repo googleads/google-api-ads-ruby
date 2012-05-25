@@ -33,6 +33,17 @@ module AdsCommon
 end
 
 class StubRegistry
+  def get_type_signature(type_name)
+    if type_name == :SoapResponseHeader
+      return {:fields => []}
+    else
+      return nil
+    end
+  end
+end
+
+class StubResponse
+  attr_accessor :header
 end
 
 class TestResultsExtractor < Test::Unit::TestCase
@@ -161,5 +172,32 @@ class TestResultsExtractor < Test::Unit::TestCase
     result7 = @extractor.check_array_collapse(
         {}, {:min_occurs => '0', :max_occurs => :unbounded})
     assert_equal([{}], result7)
+  end
+
+  def test_extract_headers_empty()
+    headers = {}
+    response = StubResponse.new()
+    response.header = {:response_header => headers}
+    result = @extractor.extract_header_data(response)
+    assert_equal(headers, result)
+    assert_not_same(headers, result)
+  end
+
+  def test_extract_headers_passthrough()
+    headers = {:a => 'aa', :b => '42'}
+    response = StubResponse.new()
+    response.header = {:response_header => headers}
+    result = @extractor.extract_header_data(response)
+    assert_equal(headers, result)
+    assert_not_same(headers, result)
+  end
+
+  def test_extract_headers_attrs_removed()
+    headers = {:a => 'aa', :@xmlns => '42'}
+    expected = {:a => 'aa'}
+    response = StubResponse.new()
+    response.header = {:response_header => headers}
+    result = @extractor.extract_header_data(response)
+    assert_equal(expected, result)
   end
 end

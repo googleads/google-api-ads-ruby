@@ -1,4 +1,5 @@
 0.7.1:
+  - Fixed issues #63, #73, #74.
 
 0.7.0:
   - Cleaned up unused features.
