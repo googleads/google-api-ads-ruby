@@ -1,4 +1,5 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
+# Encoding: utf-8
 #
 # Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
@@ -34,9 +35,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201203
+    DEFAULT_VERSION = :v201204
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201203
+    LATEST_VERSION = :v201204
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -72,7 +73,16 @@ module DfpApi
                    :CustomTargetingService, :PublisherQueryLanguageService,
                    :LabelService, :ThirdPartySlotService, :ContentService,
                    :SuggestedAdUnitService, :CreativeTemplateService,
-                   :TeamService, :AudienceSegmentService]
+                   :TeamService, :AudienceSegmentService],
+      :v201204 => [:CompanyService, :CreativeService, :ForecastService,
+                   :InventoryService, :LineItemCreativeAssociationService,
+                   :LineItemService, :NetworkService, :OrderService,
+                   :PlacementService, :ReportService, :UserService,
+                   :CustomTargetingService, :PublisherQueryLanguageService,
+                   :LabelService, :ThirdPartySlotService, :ContentService,
+                   :SuggestedAdUnitService, :CreativeTemplateService,
+                   :TeamService, :AudienceSegmentService, :CustomFieldService,
+                   :UserTeamAssociationService]
     }
 
     # Configure the different environments, with the base URL for each one
@@ -82,7 +92,8 @@ module DfpApi
         :v201108 => 'https://www.google.com/apis/ads/publisher/',
         :v201111 => 'https://www.google.com/apis/ads/publisher/',
         :v201201 => 'https://www.google.com/apis/ads/publisher/',
-        :v201203 => 'https://www.google.com/apis/ads/publisher/'
+        :v201203 => 'https://www.google.com/apis/ads/publisher/',
+        :v201204 => 'https://www.google.com/apis/ads/publisher/'
       }
     }
 

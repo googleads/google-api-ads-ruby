@@ -150,7 +150,7 @@ module AdsCommon
       unless api_config.version_has_service(version, service)
         raise AdsCommon::Errors::Error,
             "Version '%s' does not contain service '%s'" %
-            [version.to_s, name.to_s]
+            [version.to_s, service.to_s]
       end
     end
 

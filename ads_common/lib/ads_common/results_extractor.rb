@@ -43,20 +43,16 @@ module AdsCommon
       return result
     end
 
-    private
-
     # Extracts misc data from response header.
     def extract_header_data(response)
       header_type = get_full_type_signature(:SoapResponseHeader)
       headers = response.header[:response_header].dup
       process_attributes(headers, false)
-      result = headers.inject({}) do |result, (key, v)|
-        normalize_output_field(headers, header_type[:fields], key)
-        result[key] = headers[key]
-        result
-      end
-      return result
+      headers = normalize_fields(headers, header_type[:fields])
+      return headers
     end
+
+    private
 
     # Normalizes output starting with root output node.
     def normalize_output(output_data, method_definition)
@@ -104,20 +100,71 @@ module AdsCommon
     # Normalizes every item of a Hash.
     def normalize_hash_field(field, field_def)
       process_attributes(field, true)
-      field_type = determine_type(field, field_def[:type])
-      type_signature = get_full_type_signature(field_type)
-      # If we don't know the type, pass as-is.
-      return (type_signature.nil?) ?
-          field : normalize_fields(field, type_signature[:fields])
+      field_type = field_def[:type]
+      field_def = get_full_type_signature(field_type)
+
+      # First checking for xsi:type provided.
+      xsi_type_override = determine_xsi_type_override(field, field_def)
+      unless xsi_type_override.nil?
+        field_def = get_full_type_signature(xsi_type_override)
+        return normalize_fields(field, field_def[:fields])
+      end
+
+      # Now checking for choice options from wsdl.
+      choice_type_override = determine_choice_type_override(field, field_def)
+      unless choice_type_override.nil?
+        # For overrides we need to process sub-field and than return it
+        # in the original structure.
+        field_key = field.keys.first
+        field_data = field[field_key]
+        field_def = get_full_type_signature(choice_type_override)
+        if !field_def.nil? and field_data.kind_of?(Hash)
+          field_data = normalize_fields(field_data, field_def[:fields])
+        end
+        return {field_key => field_data}
+      end
+
+      # Otherwise using the best we have.
+      field = normalize_fields(field, field_def[:fields]) unless field_def.nil?
+
+      return field
     end
 
-    # Returns field type based on the field structure. Allows to override the
-    # type with custom xsi:type.
-    def determine_type(field_data, field_type)
+    # Determines an xsi:type override for for the field. Returns nil if no
+    # override found.
+    def determine_xsi_type_override(field_data, field_def)
+      result = nil
       if field_data.kind_of?(Hash) and field_data.include?(:xsi_type)
-        field_type = field_data[:xsi_type]
+        result = field_data[:xsi_type]
       end
-      return field_type
+      return result
+    end
+
+    # Determines a choice type override for for the field. Returns nil if no
+    # override found.
+    def determine_choice_type_override(field_data, field_def)
+      result = nil
+      if field_data.kind_of?(Hash) and field_def.include?(:choices)
+        result = determine_choice(field_data, field_def[:choices])
+      end
+      return result
+    end
+
+    # Finds the choice option matching data provided.
+    def determine_choice(field_data, field_choices)
+      result = nil
+      key_name = field_data.keys.first
+      unless key_name.nil?
+        choice = find_named_entry(field_choices, key_name)
+        result = choice[:type] unless choice.nil?
+      end
+      return result
+    end
+
+    # Finds an item in an Array based on its ':name' field.
+    def find_named_entry(data_array, name)
+      index = data_array.index {|item| name.eql?(item[:name])}
+      return index.nil? ? nil : data_array[index]
     end
 
     # Converts one leaf item to a built-in type.
@@ -154,7 +201,7 @@ module AdsCommon
       result = []
       if data_type[:base]
         parent_type = @registry.get_type_signature(data_type[:base])
-        result += implode_parent(parent_type)
+        result += implode_parent(parent_type) unless parent_type.nil?
       end
       data_type[:fields].each do |field|
         # If the parent type includes a field with the same name, overwrite it.

@@ -150,6 +150,10 @@ module AdsCommon
             'sequence | complexContent/extension/sequence') do |seq_node|
           type[:fields] += get_element_fields(seq_node)
         end
+        REXML::XPath.each(type_element, 'choice') do |seq_node|
+          type[:choices] ||= []
+          type[:choices] += get_element_fields(seq_node)
+        end
         return type
       end
 

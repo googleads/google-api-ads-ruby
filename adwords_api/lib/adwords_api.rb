@@ -148,7 +148,7 @@ module AdwordsApi
     #
     def partial_failure(&block)
       return (block_given?) ?
-        run_with_temporary_flag(:partial_failure, true, block) :
+        run_with_temporary_flag(:@partial_failure, true, block) :
         @credential_handler.partial_failure
     end
 
