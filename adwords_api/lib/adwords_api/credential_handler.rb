@@ -57,13 +57,26 @@ module AdwordsApi
       return result
     end
 
+    # Generates string to user as user agent in HTTP headers.
+    def generate_http_user_agent(extra_ids = [])
+      extra_ids, agent_app = get_user_agent_data(extra_ids)
+      super(extra_ids, agent_app)
+    end
+
     # Generates string to user as user agent in SOAP headers.
     def generate_soap_user_agent(extra_ids = [])
-      extra_ids << ["AwApi-Ruby-%s" % AdwordsApi::ApiConfig::CLIENT_LIB_VERSION]
-      super(extra_ids)
+      extra_ids, agent_app = get_user_agent_data(extra_ids)
+      super(extra_ids, agent_app)
     end
 
     private
+
+    # Returns agent name and data for user-agent string generation.
+    def get_user_agent_data(extra_ids)
+      agent_app = @config.read('authentication.user_agent')
+      extra_ids << ["AwApi-Ruby/%s" % AdwordsApi::ApiConfig::CLIENT_LIB_VERSION]
+      return [extra_ids, agent_app]
+    end
 
     # Validates that the right credentials are being used for the chosen
     # environment.

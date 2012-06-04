@@ -20,8 +20,6 @@
 #
 # Contains the main classes for the client library.
 
-gem 'google-ads-common', '~>0.7.0'
-
 require 'ads_common/api'
 require 'ads_common/savon_headers/oauth_header_handler'
 require 'adwords_api/api_config'

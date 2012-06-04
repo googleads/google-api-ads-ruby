@@ -51,9 +51,9 @@ module AdwordsApi
           'Content-Type' => 'application/x-www-form-urlencoded',
           'Authorization' =>
               @auth_handler.auth_string(credentials, HTTPI::Request.new(url)),
+          'User-Agent' => @credential_handler.generate_http_user_agent(),
           'clientCustomerId' => credentials[:client_customer_id],
-          'developerToken' => credentials[:developer_token],
-          'userAgent' => @credential_handler.generate_http_user_agent()
+          'developerToken' => credentials[:developer_token]
       }
       money_in_micros = @config.read('library.return_money_in_micros')
       unless money_in_micros.nil?

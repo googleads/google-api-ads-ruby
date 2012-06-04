@@ -1,4 +1,6 @@
 0.6.1:
+  - Require google-ads-common 0.7.1 or later from now on.
+  - Updated User-Agent to a single standard.
 
 0.6.0:
   - Added support for API v201109_1.
