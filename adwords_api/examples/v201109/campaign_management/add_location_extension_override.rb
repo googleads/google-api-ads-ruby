@@ -53,7 +53,7 @@ def add_location_extension_override(ad_id, location_extension_id)
   response = ad_ext_override_srv.mutate([operation])
   location_extension_override = response[:value].first
   puts "Location extension override with ID %d was successfully added." %
-      location_extension_override[:id]
+      location_extension_override[:ad_extension][:id]
 end
 
 if __FILE__ == $0
