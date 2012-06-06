@@ -1,4 +1,6 @@
 0.3.2:
+  - Require google-ads-common 0.7.1 or later from now on.
+  - Updated User-Agent to a single standard.
 
 0.3.1:
   - Now require Savon-0.9.9 (fixes Content-Length bug).

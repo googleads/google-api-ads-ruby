@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+# Encoding: utf-8
 #
 # Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
@@ -17,10 +17,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Contains the main classes for the client library. Takes care of all
-# dependencies.
-
-gem 'google-ads-common', '~>0.7.0'
+# Contains the main classes for the client library.
 
 require 'ads_common/api'
 require 'ads_common/savon_headers/oauth_header_handler'

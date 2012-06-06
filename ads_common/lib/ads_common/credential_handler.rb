@@ -68,26 +68,29 @@ module AdsCommon
     end
 
     # Generates string for UserAgent to put into HTTP headers.
-    def generate_http_user_agent()
-      agent_data = []
-      agent_data << HTTPI::Adapter.use.to_s
-      ruby_engine = defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'
-      agent_data << [ruby_engine, RUBY_VERSION].join('/')
-      agent_data << (credentials[:user_agent] || $0)
-      user_agent = "HTTPI/%s (%s)" % [HTTPI::VERSION, agent_data.join(', ')]
-      return user_agent
+    def generate_http_user_agent(extra_ids = [], agent_app = nil)
+      return generate_user_agent(extra_ids, agent_app)
     end
 
     # Generates string for UserAgent to put into SOAP headers.
-    def generate_soap_user_agent(extra_ids = [])
-      agent_data = extra_ids
-      agent_data << "Common-Ruby-%s" % AdsCommon::ApiConfig::CLIENT_LIB_VERSION
-      agent_data << (@credentials[:user_agent] || $0)
-      user_agent = "Savon/%s (%s)" % [Savon::Version, agent_data.join(', ')]
-      return user_agent
+    def generate_soap_user_agent(extra_ids = [], agent_app = nil)
+      return generate_user_agent(extra_ids, agent_app)
     end
 
     private
+
+    # Generates user-agent.
+    def generate_user_agent(extra_ids, agent_app)
+      agent_app ||= $0
+      agent_data = extra_ids
+      agent_data << "Common-Ruby/%s" % AdsCommon::ApiConfig::CLIENT_LIB_VERSION
+      agent_data << "Savon/%s" % Savon::Version
+      ruby_engine = defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'
+      agent_data << [ruby_engine, RUBY_VERSION].join('/')
+      agent_data << "HTTPI/%s" % HTTPI::VERSION
+      agent_data << HTTPI::Adapter.use.to_s
+      return "%s (%s)" % [agent_app, agent_data.join(', ')]
+    end
 
     # Loads the credentials from the config data.
     def load_from_config(config)
