@@ -107,7 +107,8 @@ module AdsCommon
       xsi_type_override = determine_xsi_type_override(field, field_def)
       unless xsi_type_override.nil?
         field_def = get_full_type_signature(xsi_type_override)
-        return normalize_fields(field, field_def[:fields])
+        return (field_def.nil?) ? field :
+            normalize_fields(field, field_def[:fields])
       end
 
       # Now checking for choice options from wsdl.
