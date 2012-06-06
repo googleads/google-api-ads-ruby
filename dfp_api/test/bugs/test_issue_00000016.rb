@@ -36,7 +36,6 @@ class TestDfpApi < Test::Unit::TestCase
     data = Nori.parse(get_xml_text())[:envelope][:body]
     extractor = AdsCommon::ResultsExtractor.new(@registry)
     result = extractor.extract_result(data, 'get_line_items_by_statement')
-pp result
     targeting = result[:results][0][:targeting][:inventory_targeting]
     assert_equal([1234567, 23456], targeting[:targeted_placement_ids])
   end
