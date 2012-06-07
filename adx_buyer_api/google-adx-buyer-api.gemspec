@@ -19,7 +19,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'google-adx-buyer-api'
-  s.version = '0.4.1'
+  s.version = '0.4.2'
   s.summary = 'Ruby examples for DoubleClick Ad Exchange Buyer API'
   s.description = "AdWords API and DoubleClick Ad Exchange Buyer API client " +
       "library for Ruby"
@@ -31,5 +31,5 @@ Gem::Specification.new do |s|
   s.rubyforge_project = 'google-adx-buyer-api'
   s.require_path = 'lib'
   s.files = Dir.glob('examples/**/*') + %w(COPYING README ChangeLog)
-  s.add_dependency('google-adwords-api', '~> 0.5.1')
+  s.add_dependency('google-adwords-api', '~> 0.6.1')
 end
