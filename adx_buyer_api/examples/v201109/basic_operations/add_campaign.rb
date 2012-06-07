@@ -61,10 +61,9 @@ def add_campaign()
         :target_content_network => true,
         :target_content_contextual => false
       },
-      :settings => [{
-        :xsi_type => 'RealTimeBiddingSetting',
-        :opt_in => 'true'
-      }]
+      :settings => [
+        {:xsi_type => 'RealTimeBiddingSetting', :opt_in => 'true'}
+      ]
     }
   }
 
