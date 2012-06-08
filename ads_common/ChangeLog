@@ -1,4 +1,5 @@
 0.7.2:
+  - Compatibility with savon-0.9.10 (not backward-compatible).
 
 0.7.1:
   - Fixed issues #63, #73, #74.
