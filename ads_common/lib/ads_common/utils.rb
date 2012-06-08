@@ -17,10 +17,21 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Module to keep the current library version.
+# Misc utilities.
 
 module AdsCommon
-  module ApiConfig
-    CLIENT_LIB_VERSION = '0.7.3'
+  module Utils
+    module String
+
+      # Returns the String in lowerCamelCase.
+      def lower_camelcase()
+        result = dup()
+        result.gsub!(/^([A-Z])/) {$1.downcase()}
+        result.gsub!(/(?:_)([a-zA-Z\d])/) {$1.upcase()}
+        return result
+      end
+    end
   end
 end
+
+String.send(:include, AdsCommon::Utils::String)

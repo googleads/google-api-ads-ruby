@@ -20,8 +20,6 @@
 # Helper methods for loading and managing the available services in the AdWords
 # API.
 
-require 'savon'
-
 require 'ads_common/api_config'
 
 require 'adwords_api/version'

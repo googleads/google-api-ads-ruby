@@ -67,11 +67,8 @@ module AdsCommon
         wsdl.namespace = namespace
         AdsCommon::Http.configure_httpi(@config, httpi)
       end
-      Savon.configure do |config|
-        config.raise_errors = false
-        config.log_level = :debug
-        config.logger = get_logger()
-      end
+      client.config.raise_errors = false
+      client.config.logger.subject = get_logger()
       return client
     end
 
