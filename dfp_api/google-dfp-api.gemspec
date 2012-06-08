@@ -37,6 +37,5 @@ Gem::Specification.new do |s|
   s.files = Dir.glob('{examples,lib,test}/**/*') +
       %w(COPYING README ChangeLog dfp_api.yml)
   s.test_files = Dir.glob('test/**/test_*.rb')
-  s.add_dependency('savon', '~> 0.9.9')
   s.add_dependency('google-ads-common', '~> 0.7.1')
 end
