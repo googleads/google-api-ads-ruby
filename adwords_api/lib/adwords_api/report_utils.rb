@@ -28,7 +28,7 @@ require 'adwords_api/report_header_handler'
 
 module AdwordsApi
   class ReportUtils
-    attr_reader :api
+    attr_reader :config
 
     # Default constructor.
     #
@@ -37,7 +37,7 @@ module AdwordsApi
     # - version: API version to use
     #
     def initialize(api, version)
-      @api, @version = api, version
+      @api, @config, @version = api, api.config, version
     end
 
     # Downloads and returns a report.
@@ -101,10 +101,10 @@ module AdwordsApi
       definition_text = get_report_definition_text(report_definition)
       data = "__rdxml=%s" % CGI.escape(definition_text)
       url = @api.api_config.adhoc_report_download_url(
-          @api.config.read('service.environment'), @version)
+          @config.read('service.environment'), @version)
       headers = get_report_request_headers(url, cid)
       log_request(url, headers, definition_text)
-      response = AdsCommon::Http.post_response(url, data, @api.config, headers)
+      response = AdsCommon::Http.post_response(url, data, @config, headers)
       check_for_errors(response)
       return response
     end
@@ -125,7 +125,7 @@ module AdwordsApi
     # Prepares headers for report request.
     def get_report_request_headers(url, cid)
       @header_handler ||= AdwordsApi::ReportHeaderHandler.new(
-          @api.credential_handler, @api.get_auth_handler(), @api.config)
+          @api.credential_handler, @api.get_auth_handler(), @config)
       return @header_handler.headers(url, cid)
     end
 
