@@ -1,0 +1,30 @@
+<h1>Account hierarchy</h1>
+
+<ul>
+
+<% if @accounts.empty? %>
+  <li>No accounts available.
+<% else %>
+  <% @accounts.each_pair do |id, account| %>
+  <li>
+    <%= link_to(:controller => 'account', :action => 'select', :account_id => account.customer_id) { account.customer_id.to_s } %>
+    (<%= account.login %> / <%= account.company_name %> )
+
+    <% unless account.child_accounts.empty? %>
+    <ul>
+      <% sorted_accounts = account.child_accounts.sort {|a, b| a.customer_id <=> b.customer_id} %>
+      <% sorted_accounts.each do |account| %>
+      <li>
+        <%= link_to(:controller => 'account', :action => 'select', :account_id => account.customer_id) { account.customer_id.to_s } %>
+        (<%= account.login %> / <%= account.company_name %> )
+      <% end %>
+    </ul>
+    <% end %>
+  <% end %>
+<% end %>
+
+</ul>
+
+<div id="local-footer">
+  <span class="small-print"><%= link_to('Back to home', home_index_path) %></span>
+</div>

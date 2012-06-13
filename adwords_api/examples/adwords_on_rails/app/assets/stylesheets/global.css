@@ -1,0 +1,28 @@
+div.small-print {
+  font-size: 0.75em;
+}
+
+#global-alers div {
+  margin: 0 20%;
+  text-align: center;
+}
+
+#global-header {
+  float: right;
+}
+
+#global-footer {
+  margin-top: 25px;
+}
+
+#global-alers div.notice {
+  background-color: #aaf;
+}
+
+#global-alers div.alert {
+  background-color: #faa;
+}
+
+div.notice {
+  font-weight: bold;
+}

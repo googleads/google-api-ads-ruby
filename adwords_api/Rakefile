@@ -53,6 +53,13 @@ task :coverage do
   system 'ruby test/coverage.rb'
 end
 
+desc 'Package demo apps.'
+task :build_demo do
+  ['adwords_on_rails'].each do |app|
+    system "tar cz --mode 644 -C examples -f %s.tar.gz %s" % [app, app]
+  end
+end
+
 desc 'Generate the Adwords API stubs.'
 task :generate do
   logger = Logger.new(STDOUT)
