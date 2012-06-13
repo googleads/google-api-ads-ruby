@@ -28,6 +28,8 @@ require 'adwords_api/report_header_handler'
 
 module AdwordsApi
   class ReportUtils
+    attr_reader :api
+
     # Default constructor.
     #
     # Args:
