@@ -52,4 +52,11 @@ class TestCredentialHandler < Test::Unit::TestCase
     assert_equal(42, credentials[:client_customer_id])
     assert_equal('bar', credentials[:foo])
   end
+
+  def test_generate_user_agent_simple()
+    result1 = @handler.generate_http_user_agent()
+    assert_kind_of(String, result1)
+    result2 = @handler.generate_soap_user_agent()
+    assert_kind_of(String, result2)
+  end
 end

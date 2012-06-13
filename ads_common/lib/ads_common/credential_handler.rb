@@ -19,6 +19,8 @@
 #
 # Generic class to handle credentials across client libraries.
 
+require 'ads_common/api_config'
+
 module AdsCommon
   class CredentialHandler
 
@@ -84,7 +86,7 @@ module AdsCommon
       agent_app ||= $0
       agent_data = extra_ids
       agent_data << "Common-Ruby/%s" % AdsCommon::ApiConfig::CLIENT_LIB_VERSION
-      agent_data << "Savon/%s" % Savon::Version
+      agent_data << "Savon/%s" % Savon::VERSION
       ruby_engine = defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'
       agent_data << [ruby_engine, RUBY_VERSION].join('/')
       agent_data << "HTTPI/%s" % HTTPI::VERSION
