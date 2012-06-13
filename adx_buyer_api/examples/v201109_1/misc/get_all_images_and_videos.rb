@@ -18,13 +18,16 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to create a campaign.
+# This example illustrates how to retrieve all images and videos. To upload an
+# image, run upload_image.rb. To upload video, see:
+#   http://adwords.google.com/support/aw/bin/answer.py?hl=en&answer=39454.
 #
-# Tags: CampaignService.mutate
+# Tags: MediaService.get
 
 require 'adwords_api'
+require 'adwords_api/utils'
 
-def add_campaign()
+def get_all_images_and_videos()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -33,52 +36,52 @@ def add_campaign()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  campaign_srv = adwords.service(:CampaignService, API_VERSION)
+  media_srv = adwords.service(:MediaService, API_VERSION)
 
-  # Prepare for adding campaign.
-  operation = {
-    :operator => 'ADD',
-    :operand => {
-      :name => 'Interplanetary Cruise #%s' % (Time.new.to_f * 1000).to_i,
-      :status => 'PAUSED',
-      :bidding_strategy => {
-        # The 'xsi_type' field allows you to specify the xsi:type of the object
-        # being created. It's only necessary when you must provide an explicit
-        # type that the client library can't infer.
-        :xsi_type => 'ManualCPM'
-      },
-      :budget => {
-        :period => 'DAILY',
-        :amount => {
-          :micro_amount => 50000000
-        },
-        :delivery_method => 'STANDARD'
-      },
-      # Set the campaign network options to Search and Search Network.
-      :network_setting => {
-        :target_google_search => false,
-        :target_search_network => false,
-        :target_content_network => true,
-        :target_content_contextual => false
-      },
-      :settings => [
-        {:xsi_type => 'RealTimeBiddingSetting', :opt_in => 'true'}
-      ]
+  # Get all the images and videos.
+  selector = {
+    :fields => ['MediaId', 'Height', 'Width', 'MimeType', 'Urls'],
+    :ordering => [
+      {:field => 'MediaId', :sort_order => 'ASCENDING'}
+    ],
+    :predicates => [
+      {:field => 'Type', :operator => 'IN', :values => ['IMAGE', 'VIDEO']}
+    ],
+    :paging => {
+      :start_index => 0,
+      :number_results => PAGE_SIZE
     }
   }
 
-  # Add campaign.
-  response = campaign_srv.mutate([operation])
-  campaign = response[:value].first
-  puts "Campaign with name '%s' and ID %d was added." %
-      [campaign[:name], campaign[:id]]
+  # Set initial values.
+  offset, page = 0, {}
+
+  begin
+    page = media_srv.get(selector)
+    if page[:entries]
+      page[:entries].each do |entry|
+        dimensions = AdwordsApi::Utils.map(entry[:dimensions])
+        puts "Entry ID %d with dimensions %dx%d and MIME type is '%s'" %
+            [entry[:media_id], dimensions['FULL'][:height],
+             dimensions['FULL'][:width], entry[:mime_type]]
+      end
+      # Increment values to request the next page.
+      offset += PAGE_SIZE
+      selector[:paging][:start_index] = offset
+    end
+  end while page[:total_num_entries] > offset
+
+  if page.include?(:total_num_entries)
+    puts "\tFound %d entries." % page[:total_num_entries]
+  end
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201109
+  API_VERSION = :v201109_1
+  PAGE_SIZE = 500
 
   begin
-    add_campaign()
+    get_all_images_and_videos()
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

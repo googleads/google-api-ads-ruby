@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
+# Author:: api.sgomes@gmail.com (Sérgio Gomes)
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
@@ -18,13 +18,14 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to create a campaign.
+# This example illustrates how to retrieve all the disapproved ads in a given
+# ad group. To add ads, run add_thirdparty_redirect_ad.rb.
 #
-# Tags: CampaignService.mutate
+# Tags: AdGroupAdService.get
 
 require 'adwords_api'
 
-def add_campaign()
+def get_all_disapproved_ads(ad_group_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -33,52 +34,45 @@ def add_campaign()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  campaign_srv = adwords.service(:CampaignService, API_VERSION)
+  ad_group_ad_srv = adwords.service(:AdGroupAdService, API_VERSION)
 
-  # Prepare for adding campaign.
-  operation = {
-    :operator => 'ADD',
-    :operand => {
-      :name => 'Interplanetary Cruise #%s' % (Time.new.to_f * 1000).to_i,
-      :status => 'PAUSED',
-      :bidding_strategy => {
-        # The 'xsi_type' field allows you to specify the xsi:type of the object
-        # being created. It's only necessary when you must provide an explicit
-        # type that the client library can't infer.
-        :xsi_type => 'ManualCPM'
-      },
-      :budget => {
-        :period => 'DAILY',
-        :amount => {
-          :micro_amount => 50000000
-        },
-        :delivery_method => 'STANDARD'
-      },
-      # Set the campaign network options to Search and Search Network.
-      :network_setting => {
-        :target_google_search => false,
-        :target_search_network => false,
-        :target_content_network => true,
-        :target_content_contextual => false
-      },
-      :settings => [
-        {:xsi_type => 'RealTimeBiddingSetting', :opt_in => 'true'}
-      ]
-    }
+  # Get all the disapproved ads for this campaign.
+  selector = {
+    :fields => ['Id', 'DisapprovalReasons'],
+    :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
+    :predicates => [
+      {:field => 'AdGroupId', :operator => 'IN', :values => [ad_group_id]},
+      {
+        :field => 'CreativeApprovalStatus',
+        :operator => 'IN',
+        :values => ['DISAPPROVED']
+      }
+    ]
   }
-
-  # Add campaign.
-  response = campaign_srv.mutate([operation])
-  campaign = response[:value].first
-  puts "Campaign with name '%s' and ID %d was added." %
-      [campaign[:name], campaign[:id]]
+  response = ad_group_ad_srv.get(selector)
+  if response and response[:entries]
+    ad_group_ads = response[:entries]
+    puts "Ad group ##{ad_group_id} has #{ad_group_ads.length} " +
+        "disapproved ad(s)."
+    ad_group_ads.each do |ad_group_ad|
+      puts "  Ad with id #{ad_group_ad[:ad][:id]} and type " +
+          "#{ad_group_ad[:ad][:xsi_type]} was disapproved for the following " +
+          "reasons:"
+      ad_group_ad[:ad][:disapproval_reasons].each do |reason|
+        puts "    #{reason}"
+      end
+    end
+  else
+    puts "No disapproved ads found for ad group ID %d" % ad_group_id
+  end
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201109
+  API_VERSION = :v201109_1
 
   begin
-    add_campaign()
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    get_all_disapproved_ads(ad_group_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

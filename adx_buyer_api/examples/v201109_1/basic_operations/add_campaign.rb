@@ -75,7 +75,7 @@ def add_campaign()
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201109
+  API_VERSION = :v201109_1
 
   begin
     add_campaign()

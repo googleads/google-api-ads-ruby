@@ -18,13 +18,14 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to create a campaign.
+# This example illustrates how to retrieve all the placements for an ad group.
+# To add a placement to an existing ad group, run add_placements.rb.
 #
-# Tags: CampaignService.mutate
+# Tags: AdGroupCriterionService.get
 
 require 'adwords_api'
 
-def add_campaign()
+def get_placements(ad_group_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -33,52 +34,45 @@ def add_campaign()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  campaign_srv = adwords.service(:CampaignService, API_VERSION)
+  ad_group_criterion_srv =
+      adwords.service(:AdGroupCriterionService, API_VERSION)
 
-  # Prepare for adding campaign.
-  operation = {
-    :operator => 'ADD',
-    :operand => {
-      :name => 'Interplanetary Cruise #%s' % (Time.new.to_f * 1000).to_i,
-      :status => 'PAUSED',
-      :bidding_strategy => {
-        # The 'xsi_type' field allows you to specify the xsi:type of the object
-        # being created. It's only necessary when you must provide an explicit
-        # type that the client library can't infer.
-        :xsi_type => 'ManualCPM'
-      },
-      :budget => {
-        :period => 'DAILY',
-        :amount => {
-          :micro_amount => 50000000
-        },
-        :delivery_method => 'STANDARD'
-      },
-      # Set the campaign network options to Search and Search Network.
-      :network_setting => {
-        :target_google_search => false,
-        :target_search_network => false,
-        :target_content_network => true,
-        :target_content_contextual => false
-      },
-      :settings => [
-        {:xsi_type => 'RealTimeBiddingSetting', :opt_in => 'true'}
-      ]
-    }
+  # Get all the criteria for this ad group.
+  selector = {
+    :fields => ['Id', 'PlacementUrl'],
+    :ordering => [
+      {:field => 'AdGroupId', :sort_order => 'ASCENDING'}
+    ],
+    :predicates => [
+      {:field => 'AdGroupId', :operator => 'IN', :values => [ad_group_id]},
+      {
+        :field => 'CriteriaType',
+        :operator => 'EQUALS',
+        :values => ['PLACEMENT']
+      }
+    ]
   }
-
-  # Add campaign.
-  response = campaign_srv.mutate([operation])
-  campaign = response[:value].first
-  puts "Campaign with name '%s' and ID %d was added." %
-      [campaign[:name], campaign[:id]]
+  response = ad_group_criterion_srv.get(selector)
+  if response and response[:entries]
+    ad_group_criteria = response[:entries]
+    puts "Ad group ID %d has %d placements." %
+        [ad_group_id, ad_group_criteria.length]
+    ad_group_criteria.each do |ad_group_criterion|
+      puts "\tPlacement ID is %d and URL is '%s'." %
+          [ad_group_criterion[:criterion][:id],
+           ad_group_criterion[:criterion][:placement_url]]
+    end
+  else
+    puts "No placements found for ad group ID %d" % ad_group_id
+  end
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201109
+  API_VERSION = :v201109_1
 
   begin
-    add_campaign()
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    get_placements(ad_group_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

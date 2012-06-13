@@ -18,13 +18,14 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to create a campaign.
+# This example illustrates how to update a placement, setting its bid. To create
+# a placement, run add_placements.rb.
 #
-# Tags: CampaignService.mutate
+# Tags: AdGroupCriterionService.mutate
 
 require 'adwords_api'
 
-def add_campaign()
+def update_placement(ad_group_id, placement_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -33,52 +34,47 @@ def add_campaign()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  campaign_srv = adwords.service(:CampaignService, API_VERSION)
+  ad_group_criterion_srv =
+      adwords.service(:AdGroupCriterionService, API_VERSION)
 
-  # Prepare for adding campaign.
+  # Prepare for updating a placement.
   operation = {
-    :operator => 'ADD',
+    :operator => 'SET',
     :operand => {
-      :name => 'Interplanetary Cruise #%s' % (Time.new.to_f * 1000).to_i,
-      :status => 'PAUSED',
-      :bidding_strategy => {
-        # The 'xsi_type' field allows you to specify the xsi:type of the object
-        # being created. It's only necessary when you must provide an explicit
-        # type that the client library can't infer.
-        :xsi_type => 'ManualCPM'
+      # The 'xsi_type' field allows you to specify the xsi:type of the object
+      # being created. It's only necessary when you must provide an explicit
+      # type that the client library can't infer.
+      :xsi_type => 'BiddableAdGroupCriterion',
+      :ad_group_id => ad_group_id,
+      :criterion => {
+        :id => placement_id
       },
-      :budget => {
-        :period => 'DAILY',
-        :amount => {
-          :micro_amount => 50000000
-        },
-        :delivery_method => 'STANDARD'
-      },
-      # Set the campaign network options to Search and Search Network.
-      :network_setting => {
-        :target_google_search => false,
-        :target_search_network => false,
-        :target_content_network => true,
-        :target_content_contextual => false
-      },
-      :settings => [
-        {:xsi_type => 'RealTimeBiddingSetting', :opt_in => 'true'}
-      ]
+      :bids => {
+        :xsi_type => 'ManualCPMAdGroupCriterionBids',
+        :max_cpm => {
+          :amount => {
+            :micro_amount => 1000000
+          }
+        }
+      }
     }
   }
 
-  # Add campaign.
-  response = campaign_srv.mutate([operation])
-  campaign = response[:value].first
-  puts "Campaign with name '%s' and ID %d was added." %
-      [campaign[:name], campaign[:id]]
+  # Update the placement.
+  response = ad_group_criterion_srv.mutate([operation])
+  ad_group_criterion = response[:value].first
+  puts "Placement ID %d was successfully updated, bid set to %.2f." %
+      [ad_group_criterion[:criterion][:id],
+       ad_group_criterion[:bids][:max_cpm][:amount][:micro_amount] / 1000000]
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201109
+  API_VERSION = :v201109_1
 
   begin
-    add_campaign()
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    placement_id = 'INSERT_PLACEMENT_ID_HERE'.to_i
+    update_placement(ad_group_id, placement_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

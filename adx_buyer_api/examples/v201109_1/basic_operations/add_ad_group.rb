@@ -18,13 +18,14 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to create a campaign.
+# This example illustrates how to create an ad group. To create a campaign, run
+# add_campaign.rb.
 #
-# Tags: CampaignService.mutate
+# Tags: AdGroupService.mutate
 
 require 'adwords_api'
 
-def add_campaign()
+def add_ad_group(campaign_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -33,52 +34,41 @@ def add_campaign()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  campaign_srv = adwords.service(:CampaignService, API_VERSION)
+  ad_group_srv = adwords.service(:AdGroupService, API_VERSION)
 
-  # Prepare for adding campaign.
+  # Prepare for adding ad group.
   operation = {
     :operator => 'ADD',
     :operand => {
-      :name => 'Interplanetary Cruise #%s' % (Time.new.to_f * 1000).to_i,
-      :status => 'PAUSED',
-      :bidding_strategy => {
+      :name => 'Earth to Mars Cruises #%s' % (Time.new.to_f * 1000).to_i,
+      :status => 'ENABLED',
+      :campaign_id => campaign_id,
+      :bids => {
         # The 'xsi_type' field allows you to specify the xsi:type of the object
         # being created. It's only necessary when you must provide an explicit
         # type that the client library can't infer.
-        :xsi_type => 'ManualCPM'
+        :xsi_type => 'ManualCPMAdGroupBids',
+        :max_cpc => {
+          :amount => {
+            :micro_amount => 10000000
+          }
+        }
       },
-      :budget => {
-        :period => 'DAILY',
-        :amount => {
-          :micro_amount => 50000000
-        },
-        :delivery_method => 'STANDARD'
-      },
-      # Set the campaign network options to Search and Search Network.
-      :network_setting => {
-        :target_google_search => false,
-        :target_search_network => false,
-        :target_content_network => true,
-        :target_content_contextual => false
-      },
-      :settings => [
-        {:xsi_type => 'RealTimeBiddingSetting', :opt_in => 'true'}
-      ]
     }
   }
 
-  # Add campaign.
-  response = campaign_srv.mutate([operation])
-  campaign = response[:value].first
-  puts "Campaign with name '%s' and ID %d was added." %
-      [campaign[:name], campaign[:id]]
+  # Add ad group.
+  response = ad_group_srv.mutate([operation])
+  ad_group = response[:value].first
+  puts "Ad group ID %d was successfully added." % ad_group[:id]
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201109
+  API_VERSION = :v201109_1
 
   begin
-    add_campaign()
+    campaign_id = 'INSERT_CAMPAIGN_ID_HERE'.to_i
+    add_ad_group(campaign_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

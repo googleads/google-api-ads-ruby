@@ -18,13 +18,13 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to create a campaign.
+# This example illustrates how to use OAuth authentication method.
 #
-# Tags: CampaignService.mutate
+# Tags: CampaignService.get
 
 require 'adwords_api'
 
-def add_campaign()
+def use_oauth()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -35,50 +35,49 @@ def add_campaign()
 
   campaign_srv = adwords.service(:CampaignService, API_VERSION)
 
-  # Prepare for adding campaign.
-  operation = {
-    :operator => 'ADD',
-    :operand => {
-      :name => 'Interplanetary Cruise #%s' % (Time.new.to_f * 1000).to_i,
-      :status => 'PAUSED',
-      :bidding_strategy => {
-        # The 'xsi_type' field allows you to specify the xsi:type of the object
-        # being created. It's only necessary when you must provide an explicit
-        # type that the client library can't infer.
-        :xsi_type => 'ManualCPM'
-      },
-      :budget => {
-        :period => 'DAILY',
-        :amount => {
-          :micro_amount => 50000000
-        },
-        :delivery_method => 'STANDARD'
-      },
-      # Set the campaign network options to Search and Search Network.
-      :network_setting => {
-        :target_google_search => false,
-        :target_search_network => false,
-        :target_content_network => true,
-        :target_content_contextual => false
-      },
-      :settings => [
-        {:xsi_type => 'RealTimeBiddingSetting', :opt_in => 'true'}
-      ]
-    }
+  # Get all the campaigns for this account; empty selector.
+  selector = {
+    :fields => ['Id', 'Name', 'Status'],
+    :ordering => [
+      {:field => 'Name', :sort_order => 'ASCENDING'}
+    ]
   }
 
-  # Add campaign.
-  response = campaign_srv.mutate([operation])
-  campaign = response[:value].first
-  puts "Campaign with name '%s' and ID %d was added." %
-      [campaign[:name], campaign[:id]]
+  retry_count = 0
+
+  begin
+    response = campaign_srv.get(selector)
+  rescue AdsCommon::Errors::OAuthVerificationRequired => e
+    if retry_count < MAX_RETRIES
+      puts "Hit Auth error, please navigate to URL:\n\t%s" % e.oauth_url
+      print 'log in and type the verification code: '
+      verification_code = gets.chomp
+      adwords.credential_handler.set_credential(
+          :oauth_verification_code, verification_code)
+      retry_count += 1
+      retry
+    else
+      raise AdsCommon::Errors::AuthError, 'Failed to authenticate.'
+    end
+  end
+
+  if response and response[:entries]
+    campaigns = response[:entries]
+    campaigns.each do |campaign|
+      puts "Campaign ID %d, name '%s' and status '%s'" %
+          [campaign[:id], campaign[:name], campaign[:status]]
+    end
+  else
+    puts 'No campaigns were found.'
+  end
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201109
+  API_VERSION = :v201109_1
+  MAX_RETRIES = 3
 
   begin
-    add_campaign()
+    use_oauth()
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e
