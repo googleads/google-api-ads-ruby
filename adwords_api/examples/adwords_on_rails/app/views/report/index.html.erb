@@ -1,0 +1,48 @@
+<h1>Retrieve a report</h1>
+
+<% if @selected_account.nil? %>
+  <div class="notice">No account selected!</div>
+
+<% else %>
+  See <a href="https://developers.google.com/adwords/api/docs/appendix/reports">
+  reporting documentation</a> for reports and fields reference. The report will
+  be ran for the last 7 days.<br>
+
+  <% if @reports.empty? %>
+    <ul><li>No reports available.</ul>
+  <% else %>
+    <div class="report-form">
+    <%= form_tag('/report/get', :method => 'post') do %>
+      <div class="report-form-item">
+        Report: <select name="type">
+        <% @reports.each_pair do |key, report| %>
+          <option value="<%= key %>"><%= report.name %>
+        <% end %>
+        </select>
+      </div>
+      <div class="report-form-item">
+      Fields: <input name="fields" value="AccountId, AccountDescriptiveName" size="80">
+      </div>
+      <div class="report-form-item">
+        Format: <select name="format">
+          <% @formats.each_pair do |key, format| %>
+          <option value="<%= key %>"><%= format.name %>
+          <% end %>
+        </select>
+      </div>
+      <div class="report-form-item">
+      <input type="checkbox" name="zeroes" value="true">
+      Include zero impressions
+      </div>
+      <div class="report-form-item">
+      <input type="submit" value="Get report">
+      </div>
+    <% end %>
+    </div>
+  <% end %>
+
+<% end %>
+
+<div id="local-footer">
+  <span class="small-print"><%= link_to("Back to home", home_index_path) %></span>
+</div>

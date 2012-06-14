@@ -1,0 +1,30 @@
+<h1>Campaigns list</h1>
+
+<% if @selected_account.nil? %>
+  <div class="notice">No account selected!</div>
+
+<% else %>
+
+  <% if @campaigns.nil? or @campaigns.empty? %>
+    <ul><li>No campaigns available.</ul>
+  <% else %>
+    <ul><li>Total number of campaigns: <%= @campaign_count %></ul>
+    <table>
+      <tr>
+        <th>ID
+        <th>Name
+        <th>Status
+    <% @campaigns.each do |id, campaign| %>
+      <tr>
+        <td><%= campaign.id %>
+        <td><%= campaign.name %>
+        <td><%= campaign.status %>
+    <% end %>
+    </table>
+  <% end %>
+
+<% end %>
+
+<div id="local-footer">
+  <span class="small-print"><%= link_to("Back to home", home_index_path) %></span>
+</div>

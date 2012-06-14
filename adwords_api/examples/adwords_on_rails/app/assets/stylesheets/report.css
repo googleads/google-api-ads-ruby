@@ -1,0 +1,12 @@
+/*
+  Place all the styles related to the matching controller here.
+  They will automatically be included in application.css.
+*/
+
+div.report-form {
+  margin: 20px 20px 40px;
+}
+
+div.report-form-item {
+  margin-bottom: 10px;
+}

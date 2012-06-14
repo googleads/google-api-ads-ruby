@@ -1,0 +1,11 @@
+<% if @error %>
+  <div class="notice">
+  An error occurred during report retrieval:<br><%= @error %>
+  </div>
+<% else %>
+  <%= @report_data %>
+<% end %>
+
+<div id="local-footer">
+  <span class="small-print"><%= link_to_function('Back', 'history.back()') %></span>
+</div>

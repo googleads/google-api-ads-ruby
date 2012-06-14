@@ -52,7 +52,7 @@ module AdwordsApi
           'Authorization' =>
               @auth_handler.auth_string(credentials, HTTPI::Request.new(url)),
           'User-Agent' => @credential_handler.generate_http_user_agent(),
-          'clientCustomerId' => credentials[:client_customer_id],
+          'clientCustomerId' => credentials[:client_customer_id].to_s,
           'developerToken' => credentials[:developer_token]
       }
       money_in_micros = @config.read('library.return_money_in_micros')
