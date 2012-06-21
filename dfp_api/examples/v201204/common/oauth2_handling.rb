@@ -3,7 +3,7 @@
 #
 # Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -18,11 +18,8 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example shows how to use OAuth1.0a authorization method. It is designed
-# to be run from console and requires user input.
-#
-# NOTE: OAuth1.0a authorization method is deprecated, use OAuth2.0 instead.
-#       See oauth2_handling.rb for an example.
+# This example shows how to use OAuth2.0 authorization method. It is designed to
+# be run from console and requires user input.
 #
 # Tags: UserService.getUsersByStatement
 
@@ -32,7 +29,7 @@ API_VERSION = :v201204
 PAGE_SIZE = 500
 MAX_RETRIES = 3
 
-def oauth_handling()
+def oauth2_handling()
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -68,11 +65,11 @@ def oauth_handling()
     # The second way to do OAuth authentication is to make a request and catch
     # the OAuthVerificationRequired exception. Add the verification code to the
     # credentials once acquired.
-    rescue AdsCommon::Errors::OAuthVerificationRequired => e
+    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
       if retry_count < MAX_RETRIES
         verification_code = get_verification_code(e.oauth_url)
         dfp.credential_handler.set_credential(
-            :oauth_verification_code, verification_code)
+            :oauth2_verification_code, verification_code)
         retry_count += 1
         retry
       else
@@ -111,7 +108,7 @@ end
 
 if __FILE__ == $0
   begin
-    oauth_handling()
+    oauth2_handling()
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -23,6 +23,8 @@
 require 'savon'
 require 'rexml/document'
 
+require 'ads_common/utils'
+
 module AdsCommon
   module Build
     # Contains the methods that extracts WSDL data.

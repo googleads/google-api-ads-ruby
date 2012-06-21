@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   s.name = 'google-adwords-api'
   s.version = AdwordsApi::ApiConfig::CLIENT_LIB_VERSION
   s.summary = 'Ruby Client libraries for AdWords API'
-  s.description = "%s is a AdWords API client library for Ruby" % s.name
+  s.description = '%s is a AdWords API client library for Ruby' % s.name
   s.homepage = 'http://code.google.com/p/google-api-ads-ruby/'
   s.authors = ['Danial Klimkin']
   s.email = ['api.dklimkin@gmail.com']
@@ -37,5 +37,5 @@ Gem::Specification.new do |s|
   s.files = Dir.glob('{lib,test}/**/*') + Dir.glob('examples/v*/**/*') +
       %w(COPYING README ChangeLog adwords_api.yml)
   s.test_files = ['test/suite_unittests.rb']
-  s.add_dependency('google-ads-common', '~> 0.7.1')
+  s.add_dependency('google-ads-common', '~> 0.7.3')
 end

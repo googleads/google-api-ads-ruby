@@ -2,6 +2,7 @@
   - Compatibility with Savon -> 1.0.0 (not backward-compatible).
   - Now require HTTPI ~> 1.0.0.
   - HttpClient is no longer explicitely required.
+  - Support for OAuth2.0 authorization method.
 
 0.7.2:
   - Compatibility with savon-0.9.10 (not backward-compatible).

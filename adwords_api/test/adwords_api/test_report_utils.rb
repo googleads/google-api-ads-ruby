@@ -57,13 +57,13 @@ GZIPPED_REPORT = "\x1F\x8B\b\x00\x00\x00\x00\x00\x00\x00Sr.-.\xC9\xCFUptq\x0F\xF
 
 class TestReportUtils < Test::Unit::TestCase
   # Initialize tests.
-  def setup
+  def setup()
     @api = AdwordsApi::Api.new
     @report_utils = @api.report_utils(API_VERSION)
   end
 
   # Testing HTTP code 400.
-  def test_check_for_errors_400
+  def test_check_for_errors_400()
     REPLY_TYPES.each do |reply_type|
       begin
         response = ResponseStub.new(400, reply_type[:reply])
@@ -77,7 +77,7 @@ class TestReportUtils < Test::Unit::TestCase
   end
 
   # Testing HTTP code 500.
-  def test_check_for_errors_500
+  def test_check_for_errors_500()
     REPLY_TYPES.each do |reply_type|
       begin
         response = ResponseStub.new(500, nil)
@@ -90,7 +90,7 @@ class TestReportUtils < Test::Unit::TestCase
   end
 
   # Testing HTTP code 200 with success.
-  def test_check_for_errors_200_success
+  def test_check_for_errors_200_success()
     response = ResponseStub.new(200, VALID_REPORT)
     assert_nothing_raised do
       @report_utils.check_for_errors(response)
@@ -98,7 +98,7 @@ class TestReportUtils < Test::Unit::TestCase
   end
 
   # Testing HTTP code 200 with failure.
-  def test_check_for_errors_200_success
+  def test_check_for_errors_200_success()
     REPLY_TYPES.each do |reply_type|
       begin
         response = ResponseStub.new(200, reply_type[:reply])
@@ -112,7 +112,7 @@ class TestReportUtils < Test::Unit::TestCase
   end
 
   # Testing correct gzipped reply.
-  def test_gzipped_data
+  def test_gzipped_data()
     report = (RUBY_VERSION >= '1.9.1') ?
         GZIPPED_REPORT.force_encoding('UTF-8') : GZIPPED_REPORT
     response = ResponseStub.new(200, report)
@@ -122,7 +122,7 @@ class TestReportUtils < Test::Unit::TestCase
   end
 
   # Tests generated hash order for root (complete set).
-  def test_add_report_definition_hash_order_root1
+  def test_add_report_definition_hash_order_root1()
     node = {
       :include_zero_impressions => false,
       :download_format => 'CSV',
@@ -139,7 +139,7 @@ class TestReportUtils < Test::Unit::TestCase
   end
 
   # Tests generated hash order for root (incomplete set).
-  def test_add_report_definition_hash_order_root2
+  def test_add_report_definition_hash_order_root2()
     node = {
       :download_format => 'CSV',
       :report_type => 'CRITERIA_PERFORMANCE_REPORT',
@@ -155,7 +155,7 @@ class TestReportUtils < Test::Unit::TestCase
   end
 
   # Tests generated hash order for whole structure.
-  def test_add_report_definition_hash_order_deep
+  def test_add_report_definition_hash_order_deep()
     node = {
       :report_name => 'report_name',
       :report_type => 'CRITERIA_PERFORMANCE_REPORT',

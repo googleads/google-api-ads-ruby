@@ -17,7 +17,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This module manages OAuth authentication.
+# This module manages OAuth1.0a authentication.
 
 require 'oauth'
 
@@ -61,11 +61,6 @@ module AdsCommon
         # TODO: Add support.
         get_logger().error(error)
         raise error
-      end
-
-      # Returns OAuth-specific Consumer object.
-      def get_oauth_consumer()
-        return @consumer
       end
 
       # Returns authorization string.
@@ -256,23 +251,6 @@ module AdsCommon
         error = AdsCommon::Errors::OAuthVerificationRequired.new(
             oauth_url, request_token)
         raise error
-      end
-
-      # Extracts key-value pairs from OAuth server response.
-      #
-      # Args:
-      # - text: server response string
-      #
-      # Returns:
-      # - Hash of key-value pairs
-      #
-      def parse_token_text(text)
-        result = {}
-        text.split('&').each do |line|
-          key, value = line.split("=")
-          result[key.to_sym] = value
-        end
-        return result
       end
     end
   end

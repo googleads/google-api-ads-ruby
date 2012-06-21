@@ -1,5 +1,6 @@
 0.3.2:
-  - Require google-ads-common 0.7.1 or later from now on.
+  - Require google-ads-common 0.7.3 or later from now on.
+  - Support for OAuth2.0 authentication method.
   - Updated User-Agent to a single standard.
 
 0.3.1:

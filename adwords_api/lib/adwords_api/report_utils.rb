@@ -97,7 +97,7 @@ module AdwordsApi
     # Send POST request for a report and returns Response object.
     def get_report_response(report_definition, cid)
       definition_text = get_report_definition_text(report_definition)
-      data = "__rdxml=%s" % CGI.escape(definition_text)
+      data = '__rdxml=%s' % CGI.escape(definition_text)
       url = @api.api_config.adhoc_report_download_url(
           @api.config.read('service.environment'), @version)
       headers = get_report_request_headers(url, cid)
@@ -115,7 +115,7 @@ module AdwordsApi
         when Hash then report_definition_to_xml(report_definition)
         else
           raise AdwordsApi::Errors::InvalidReportDefinitionError,
-              "Unknown object for report definition: %s" %
+              'Unknown object for report definition: %s' %
               report_definition.class
       end
     end
@@ -136,8 +136,8 @@ module AdwordsApi
     def log_request(url, headers, body)
       logger = @api.logger
       logger.debug("Report request to: '%s'" % url)
-      logger.debug("HTTP headers: [%s]" %
-          (headers.map {|k, v| [k, v].join(': ')}.join(', ')))
+      logger.debug('HTTP headers: [%s]' %
+          (headers.map { |k, v| [k, v].join(': ') }.join(', ')))
       logger.debug(body)
     end
 
@@ -154,13 +154,13 @@ module AdwordsApi
         if matches
           message = (matches[3].nil?) ? data : matches[3]
           raise AdwordsApi::Errors::ReportError.new(response.code,
-              "Report download error occured: %s" % message)
+              'Report download error occured: %s' % message)
         end
       end
       # Check for error code.
       unless response.code == 200
         raise AdwordsApi::Errors::ReportError.new(response.code,
-            "Report download error occured, http code: %d, body: %s" %
+            'Report download error occured, http code: %d, body: %s' %
             [response.code, response.body])
       end
       return nil
@@ -202,7 +202,7 @@ module AdwordsApi
     # Adds fields order hint to generator based on specification.
     def add_report_definition_hash_order(node, name = :root)
       def_order = REPORT_DEFINITION_ORDER[name]
-      var_order = def_order.reject {|field| !node.include?(field)}
+      var_order = def_order.reject { |field| !node.include?(field) }
       node.keys.each do |key|
         if REPORT_DEFINITION_ORDER.include?(key)
           case node[key]

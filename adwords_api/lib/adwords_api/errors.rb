@@ -31,7 +31,7 @@ module AdwordsApi
 
       def initialize(exception_fault)
         @array_fields ||= []
-        exception_fault.each {|key, value| set_field(key, value)}
+        exception_fault.each { |key, value| set_field(key, value) }
       end
 
       private

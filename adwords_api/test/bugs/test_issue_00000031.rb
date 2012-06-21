@@ -28,8 +28,9 @@ require 'adwords_api'
 require 'adwords_api/v201109/targeting_idea_service_registry'
 
 class TestIssue31 < Test::Unit::TestCase
-  def setup
-    @registry = AdwordsApi::V201109::TargetingIdeaService::TargetingIdeaServiceRegistry
+  def setup()
+    @registry =
+        AdwordsApi::V201109::TargetingIdeaService::TargetingIdeaServiceRegistry
   end
 
   def run_test(selector)
@@ -38,7 +39,7 @@ class TestIssue31 < Test::Unit::TestCase
     return Gyoku.xml(result_hash)
   end
 
-  def test_issue_31_single_xsi_type
+  def test_issue_31_single_xsi_type()
     selector = {
         :search_parameters => [
             {:xsi_type => 'KeywordMatchTypeSearchParameter',
@@ -52,7 +53,7 @@ class TestIssue31 < Test::Unit::TestCase
         'KeywordMatchTypeSearchParameter')
   end
 
-  def test_issue_31_multiple_xsi_types
+  def test_issue_31_multiple_xsi_types()
     selector = {
         :search_parameters => [
             {:xsi_type => 'AverageTargetedMonthlySearchesSearchParameter',

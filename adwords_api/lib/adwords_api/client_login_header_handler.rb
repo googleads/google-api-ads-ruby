@@ -34,7 +34,7 @@ module AdwordsApi
     #  - version: services version
     #
     def initialize(credential_handler, auth_handler, namespace, auth_namespace,
-        version)
+                   version)
       super(credential_handler, auth_handler, namespace, version)
       @auth_namespace = auth_namespace
     end
@@ -46,10 +46,9 @@ module AdwordsApi
     # Args:
     #  - request: a HTTPI Request for extra configuration (unused)
     #  - soap: a Savon soap object to fill fields in
-    #  - args: request parameters to adjust for namespaces
     #
     # Returns:
-    #  - Modified soap structure
+    #  - modified soap structure
     #
     def prepare_request(request, soap)
       super(request, soap)
@@ -57,6 +56,7 @@ module AdwordsApi
       header_name = prepend_namespace(get_header_element_name())
       soap.header[:attributes!][header_name] ||= {}
       soap.header[:attributes!][header_name]['xmlns'] = @auth_namespace
+      return soap
     end
 
     private
