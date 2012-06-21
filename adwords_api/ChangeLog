@@ -1,4 +1,6 @@
 0.6.2:
+  - Require google-ads-common 0.7.3 or later from now on.
+  - Support for OAuth2.0 authentication method.
 
 0.6.1:
   - Require google-ads-common 0.7.1 or later from now on.

@@ -3,7 +3,7 @@
 #
 # Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -18,16 +18,13 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to use OAuth1.0a authentication method.
-#
-# NOTE: OAuth1.0a authorization method is deprecated, use OAuth2.0 instead.
-#       See use_oauth2.rb for an example.
+# This example illustrates how to use OAuth2.0 authentication method.
 #
 # Tags: CampaignService.get
 
 require 'adwords_api'
 
-def use_oauth()
+def use_oauth2()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -50,13 +47,13 @@ def use_oauth()
 
   begin
     response = campaign_srv.get(selector)
-  rescue AdsCommon::Errors::OAuthVerificationRequired => e
+  rescue AdsCommon::Errors::OAuth2VerificationRequired => e
     if retry_count < MAX_RETRIES
       puts "Hit Auth error, please navigate to URL:\n\t%s" % e.oauth_url
       print 'log in and type the verification code: '
       verification_code = gets.chomp
       adwords.credential_handler.set_credential(
-          :oauth_verification_code, verification_code)
+          :oauth2_verification_code, verification_code)
       retry_count += 1
       retry
     else
@@ -76,11 +73,11 @@ def use_oauth()
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201109_1
+  API_VERSION = :v201109
   MAX_RETRIES = 3
 
   begin
-    use_oauth()
+    use_oauth2()
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

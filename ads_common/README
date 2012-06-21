@@ -4,9 +4,6 @@ This gem is a dependency for the new generation of Ruby Google Ads client
 libraries. It contains common code shared among all of these libraries, such as
 authentication, SOAP stub generation, error handling, logging, etc.
 
-This is an early preview release, so a lot of things are still missing!
-
-
 = Docs for Users
 
 == 1 - Installation:
@@ -14,13 +11,12 @@ This is an early preview release, so a lot of things are still missing!
 google-ads-common is a Ruby gem.  See http://docs.rubygems.org/read/book/1
 
 Install it using the gem install command.
-   $ gem install --local google-ads-common-VERSION.gem
+   $ gem install google-ads-common
 
 The following gem libraries are required:
- - savon v0.9.9 or greater;
- - httpi v0.9.7 or greater;
- - httpclient v2.2.3 or greater;
- - oauth v0.4.5 or greater.
+ - savon
+ - httpi
+ - oauth
 
 = Docs for Developers
 

@@ -29,7 +29,7 @@ require 'adwords_api'
 require 'adwords_api/v201109_1/mutate_job_service_registry'
 
 class TestIssue63 < Test::Unit::TestCase
-  def setup
+  def setup()
     @registry =
         AdwordsApi::V201109_1::MutateJobService::MutateJobServiceRegistry
   end
@@ -40,21 +40,21 @@ class TestIssue63 < Test::Unit::TestCase
     return extractor.extract_result(data, :get_result)
   end
 
-  def test_issue_63_single_mutate_error
+  def test_issue_63_single_mutate_error()
     result = run_test(single_error_xml)
     errors = result[:simple_mutate_result][:errors]
     assert_kind_of(Array, errors)
     assert_equal(1, errors.size)
   end
 
-  def test_issue_63_multiple_mutate_errors
+  def test_issue_63_multiple_mutate_errors()
     result = run_test(multiple_errors_xml)
     errors = result[:simple_mutate_result][:errors]
     assert_kind_of(Array, errors)
     assert_equal(2, errors.size)
   end
 
-  def single_error_xml
+  def single_error_xml()
     return <<EOT
 <?xml version="1.0"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">

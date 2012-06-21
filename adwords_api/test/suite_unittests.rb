@@ -27,8 +27,8 @@ $:.unshift File.expand_path('../../', __FILE__)
 
 # AdWords API units tests.
 adwords_mask = File.join(File.dirname(__FILE__), 'adwords_api', 'test_*.rb')
-Dir.glob(adwords_mask).each {|file| require file}
+Dir.glob(adwords_mask).each { |file| require file }
 
 # Reported bugs tests.
 bugs_mask = File.join(File.dirname(__FILE__), 'bugs', 'test_*.rb')
-Dir.glob(bugs_mask).each {|file| require file}
+Dir.glob(bugs_mask).each { |file| require file }

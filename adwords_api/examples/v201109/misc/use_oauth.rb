@@ -18,7 +18,10 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to use OAuth authentication method.
+# This example illustrates how to use OAuth1.0a authentication method.
+#
+# NOTE: OAuth1.0a authorization method is deprecated, use OAuth2.0 instead.
+#       See use_oauth2.rb for an example.
 #
 # Tags: CampaignService.get
 

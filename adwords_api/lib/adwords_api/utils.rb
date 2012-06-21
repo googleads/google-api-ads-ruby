@@ -21,8 +21,9 @@
 
 module AdwordsApi
   module Utils
+
     # Gets a map from an array of map entries. A map entry is any object that
-    # has a key and value field.
+    # has a key and value hash fields.
     #
     # Args:
     # - entries: list of map entries

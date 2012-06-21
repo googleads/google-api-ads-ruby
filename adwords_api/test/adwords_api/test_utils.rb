@@ -25,7 +25,8 @@ require 'test/unit'
 require 'adwords_api/utils'
 
 class TestUtils < Test::Unit::TestCase
-  def test_map
+
+  def test_map()
     param1 = [
       {:key => 'foo', :value => 'bar'},
       {:key => 'baz', :value => 'zar'},
@@ -38,7 +39,7 @@ class TestUtils < Test::Unit::TestCase
     assert_equal(result2, AdwordsApi::Utils::map(param2))
   end
 
-  def test_operation_index_for_error
+  def test_operation_index_for_error()
     error1 = {:field_path => 'operations[0].operand.adGroupId'}
     assert_equal(0, AdwordsApi::Utils::operation_index_for_error(error1))
 
@@ -49,7 +50,7 @@ class TestUtils < Test::Unit::TestCase
     assert_equal(nil, AdwordsApi::Utils::operation_index_for_error(error3))
   end
 
-  def test_format_id
+  def test_format_id()
     assert_equal('123-456-7890', AdwordsApi::Utils::format_id(1234567890))
     assert_equal('234-567-8901', AdwordsApi::Utils::format_id('2345678901'))
     assert_equal('345-678-9012', AdwordsApi::Utils::format_id('345-678-9012'))

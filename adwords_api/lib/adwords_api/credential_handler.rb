@@ -74,7 +74,7 @@ module AdwordsApi
     # Returns agent name and data for user-agent string generation.
     def get_user_agent_data(extra_ids)
       agent_app = @config.read('authentication.user_agent')
-      extra_ids << ["AwApi-Ruby/%s" % AdwordsApi::ApiConfig::CLIENT_LIB_VERSION]
+      extra_ids << ['AwApi-Ruby/%s' % AdwordsApi::ApiConfig::CLIENT_LIB_VERSION]
       return [extra_ids, agent_app]
     end
 

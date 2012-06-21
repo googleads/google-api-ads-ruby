@@ -53,7 +53,7 @@ module DfpApi
       handler = case auth_method
         when :CLIENTLOGIN
           DfpApi::ClientLoginHeaderHandler
-        when :OAUTH
+        when :OAUTH, :OAUTH2
           AdsCommon::SavonHeaders::OAuthHeaderHandler
         else
           raise AdsCommon::Errors::AuthError,

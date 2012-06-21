@@ -67,7 +67,7 @@ module AdwordsApi
               version.to_s
           AdwordsApi::ClientLoginHeaderHandler.new(
               @credential_handler, auth_handler, namespace, auth_ns, version)
-        when :OAUTH
+        when :OAUTH, :OAUTH2
           AdsCommon::SavonHeaders::OAuthHeaderHandler.new(
               @credential_handler, auth_handler, namespace, version)
       end
