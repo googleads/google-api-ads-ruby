@@ -35,9 +35,9 @@ module AdwordsApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201109
+    DEFAULT_VERSION = :v201206
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201109
+    LATEST_VERSION = :v201206
 
     # Set other constants
     API_NAME = 'AdwordsApi'
@@ -91,16 +91,47 @@ module AdwordsApi
           :ConstantDataService,
           :ConversionTrackerService,
           :CreateAccountService,
+          :CustomerService,
           :CustomerSyncService,
           :DataService,
           :ExperimentService,
           :GeoLocationService,
           :InfoService,
           :LocationCriterionService,
+          :ManagedCustomerService,
           :MediaService,
           :MutateJobService,
           :ReportDefinitionService,
           :ServicedAccountService,
+          :TargetingIdeaService,
+          :TrafficEstimatorService,
+          :UserListService
+      ],
+      :v201206 => [
+          :AdExtensionOverrideService,
+          :AdGroupAdService,
+          :AdGroupCriterionService,
+          :AdGroupService,
+          :AdParamService,
+          :AlertService,
+          :BudgetOrderService,
+          :BulkMutateJobService,
+          :CampaignAdExtensionService,
+          :CampaignCriterionService,
+          :CampaignService,
+          :ConstantDataService,
+          :ConversionTrackerService,
+          :CustomerService,
+          :CustomerSyncService,
+          :DataService,
+          :ExperimentService,
+          :GeoLocationService,
+          :InfoService,
+          :LocationCriterionService,
+          :ManagedCustomerService,
+          :MediaService,
+          :MutateJobService,
+          :ReportDefinitionService,
           :TargetingIdeaService,
           :TrafficEstimatorService,
           :UserListService
@@ -112,12 +143,14 @@ module AdwordsApi
       :PRODUCTION => {
         :oauth_scope => 'https://adwords.google.com/api/adwords/',
         :v201109 => 'https://adwords.google.com/api/adwords/',
-        :v201109_1 => 'https://adwords.google.com/api/adwords/'
+        :v201109_1 => 'https://adwords.google.com/api/adwords/',
+        :v201206 => 'https://adwords.google.com/api/adwords/'
       },
       :SANDBOX => {
         :oauth_scope => 'https://adwords-sandbox.google.com/api/adwords/',
         :v201109 => 'https://adwords-sandbox.google.com/api/adwords/',
-        :v201109_1 => 'https://adwords-sandbox.google.com/api/adwords/'
+        :v201109_1 => 'https://adwords-sandbox.google.com/api/adwords/',
+        :v201206 => 'https://adwords-sandbox.google.com/api/adwords/'
       }
     }
 
@@ -181,7 +214,38 @@ module AdwordsApi
       [:v201109_1, :ServicedAccountService] => 'mcm/',
       [:v201109_1, :TargetingIdeaService] => 'o/',
       [:v201109_1, :TrafficEstimatorService] => 'o/',
-      [:v201109_1, :UserListService] => 'cm/'
+      [:v201109_1, :UserListService] => 'cm/',
+      [:v201109_1, :ManagedCustomerService] => 'mcm/',
+      [:v201109_1, :CustomerService] => 'mcm/',
+      # v201206
+      [:v201206, :AdExtensionOverrideService] => 'cm/',
+      [:v201206, :AdGroupAdService] => 'cm/',
+      [:v201206, :AdGroupCriterionService] => 'cm/',
+      [:v201206, :AdGroupService] => 'cm/',
+      [:v201206, :AdParamService] => 'cm/',
+      [:v201206, :AlertService] => 'mcm/',
+      [:v201206, :BudgetOrderService] => 'billing/',
+      [:v201206, :BulkMutateJobService] => 'job/',
+      [:v201206, :CampaignAdExtensionService] => 'cm/',
+      [:v201206, :CampaignCriterionService] => 'cm/',
+      [:v201206, :CampaignService] => 'cm/',
+      [:v201206, :ConstantDataService] => 'cm/',
+      [:v201206, :ConversionTrackerService] => 'cm/',
+      [:v201206, :CustomerSyncService] => 'ch/',
+      [:v201206, :DataService] => 'cm/',
+      [:v201206, :ExperimentService] => 'cm/',
+      [:v201206, :GeoLocationService] => 'cm/',
+      [:v201206, :InfoService] => 'info/',
+      [:v201206, :LocationCriterionService] => 'cm/',
+      [:v201206, :MediaService] => 'cm/',
+      [:v201206, :MutateJobService] => 'cm/',
+      [:v201206, :ReportDefinitionService] => 'cm/',
+      [:v201206, :ServicedAccountService] => 'mcm/',
+      [:v201206, :TargetingIdeaService] => 'o/',
+      [:v201206, :TrafficEstimatorService] => 'o/',
+      [:v201206, :UserListService] => 'cm/',
+      [:v201206, :ManagedCustomerService] => 'mcm/',
+      [:v201206, :CustomerService] => 'mcm/'
     }
 
     # Auth constants for ClientLogin method.

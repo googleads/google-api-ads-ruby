@@ -77,6 +77,43 @@ module AdwordsApi
       return nil
     end
 
+    # Downloads and returns a report with AWQL.
+    #
+    # Args:
+    # - report_query: query for the report as string
+    # - format: format for the report as string
+    # - cid: optional customer ID to run report against
+    #
+    # Returns:
+    # - report body
+    #
+    # Raises:
+    # - AdwordsApi::Errors::ReportError if a server-side error has occurred
+    #
+    def download_report_with_awql(report_query, format, cid = nil)
+      return get_report_response_with_awql(report_query, format, cid).body
+    end
+
+    # Downloads a report with AWQL and saves it to a file.
+    #
+    # Args:
+    # - report_query: query for the report as string
+    # - format: format for the report as string
+    # - path: path to save report to
+    # - cid: optional customer ID to run report against
+    #
+    # Returns:
+    # - nil
+    #
+    # Raises:
+    # - AdwordsApi::Errors::ReportError if server-side error occurred
+    #
+    def download_report_as_file_with_awql(report_query, format, path, cid = nil)
+      report_body = download_report_with_awql(report_query, format, cid)
+      save_to_file(report_body, path)
+      return nil
+    end
+
     private
 
     # Minimal set of required fields for report definition.
@@ -98,10 +135,22 @@ module AdwordsApi
     def get_report_response(report_definition, cid)
       definition_text = get_report_definition_text(report_definition)
       data = '__rdxml=%s' % CGI.escape(definition_text)
+      return make_adhoc_request(data, cid)
+    end
+
+    # Send POST request for a report with AWQL and returns Response object.
+    def get_report_response_with_awql(report_query, format, cid)
+      data = '__rdquery=%s&__fmt=%s' %
+          [CGI.escape(report_query), CGI.escape(format)]
+      return make_adhoc_request(data, cid)
+    end
+
+    # Makes request and AdHoc service and returns response.
+    def make_adhoc_request(data, cid)
       url = @api.api_config.adhoc_report_download_url(
           @api.config.read('service.environment'), @version)
       headers = get_report_request_headers(url, cid)
-      log_request(url, headers, definition_text)
+      log_request(url, headers, data)
       response = AdsCommon::Http.post_response(url, data, @api.config, headers)
       check_for_errors(response)
       return response
