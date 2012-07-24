@@ -1,3 +1,6 @@
+0.3.3:
+  - Added support and examples for v201206.
+
 0.3.2:
   - Require google-ads-common 0.7.3 or later from now on.
   - Support for OAuth2.0 authentication method.

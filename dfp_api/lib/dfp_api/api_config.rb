@@ -35,9 +35,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201204
+    DEFAULT_VERSION = :v201206
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201204
+    LATEST_VERSION = :v201206
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -82,7 +82,16 @@ module DfpApi
                    :LabelService, :ThirdPartySlotService, :ContentService,
                    :SuggestedAdUnitService, :CreativeTemplateService,
                    :TeamService, :AudienceSegmentService, :CustomFieldService,
-                   :UserTeamAssociationService]
+                   :UserTeamAssociationService],
+      :v201206 => [:CompanyService, :CreativeService, :ForecastService,
+                   :InventoryService, :LineItemCreativeAssociationService,
+                   :LineItemService, :NetworkService, :OrderService,
+                   :PlacementService, :ReportService, :UserService,
+                   :CustomTargetingService, :PublisherQueryLanguageService,
+                   :LabelService, :ThirdPartySlotService, :ContentService,
+                   :SuggestedAdUnitService, :CreativeTemplateService,
+                   :TeamService, :AudienceSegmentService, :CustomFieldService,
+                   :UserTeamAssociationService, :CreativeSetService]
     }
 
     # Configure the different environments, with the base URL for each one
@@ -93,7 +102,8 @@ module DfpApi
         :v201111 => 'https://www.google.com/apis/ads/publisher/',
         :v201201 => 'https://www.google.com/apis/ads/publisher/',
         :v201203 => 'https://www.google.com/apis/ads/publisher/',
-        :v201204 => 'https://www.google.com/apis/ads/publisher/'
+        :v201204 => 'https://www.google.com/apis/ads/publisher/',
+        :v201206 => 'https://www.google.com/apis/ads/publisher/'
       }
     }
 
