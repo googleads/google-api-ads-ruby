@@ -26,12 +26,12 @@ require 'test/unit'
 
 require 'ads_common/results_extractor'
 require 'adwords_api'
-require 'adwords_api/v201109_1/mutate_job_service_registry'
+require 'adwords_api/v201206/mutate_job_service_registry'
 
 class TestIssue63 < Test::Unit::TestCase
   def setup()
     @registry =
-        AdwordsApi::V201109_1::MutateJobService::MutateJobServiceRegistry
+        AdwordsApi::V201206::MutateJobService::MutateJobServiceRegistry
   end
 
   def run_test(xml_text)
@@ -59,7 +59,7 @@ class TestIssue63 < Test::Unit::TestCase
 <?xml version="1.0"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Header>
-    <ResponseHeader xmlns="https://adwords.google.com/api/adwords/cm/v201109_1">
+    <ResponseHeader xmlns="https://adwords.google.com/api/adwords/cm/v201206">
       <requestId>123</requestId>
       <serviceName>MutateJobService</serviceName>
       <methodName>getResult</methodName>
@@ -69,7 +69,7 @@ class TestIssue63 < Test::Unit::TestCase
     </ResponseHeader>
   </soap:Header>
   <soap:Body>
-    <getResultResponse xmlns="https://adwords.google.com/api/adwords/cm/v201109_1">
+    <getResultResponse xmlns="https://adwords.google.com/api/adwords/cm/v201206">
       <rval>
         <SimpleMutateResult>
           <results>
@@ -98,7 +98,7 @@ EOT
 <?xml version="1.0"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Header>
-    <ResponseHeader xmlns="https://adwords.google.com/api/adwords/cm/v201109_1">
+    <ResponseHeader xmlns="https://adwords.google.com/api/adwords/cm/v201206">
       <requestId>123</requestId>
       <serviceName>MutateJobService</serviceName>
       <methodName>getResult</methodName>
@@ -108,7 +108,7 @@ EOT
     </ResponseHeader>
   </soap:Header>
   <soap:Body>
-    <getResultResponse xmlns="https://adwords.google.com/api/adwords/cm/v201109_1">
+    <getResultResponse xmlns="https://adwords.google.com/api/adwords/cm/v201206">
       <rval>
         <SimpleMutateResult>
           <results>

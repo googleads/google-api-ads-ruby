@@ -24,7 +24,7 @@ require 'test/unit'
 
 require 'adwords_api'
 
-API_VERSION = :v201109
+API_VERSION = :v201206
 
 # Overriding default access levels to public for tests.
 module AdwordsApi

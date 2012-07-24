@@ -32,35 +32,35 @@ class TestApiConfig < Test::Unit::TestCase
 
   # Tests correct require path.
   def test_do_require()
-    name1 = @config.do_require(:v201109, :InfoService)
-    assert_equal('adwords_api/v201109/info_service', name1)
+    name1 = @config.do_require(:v201206, :InfoService)
+    assert_equal('adwords_api/v201206/info_service', name1)
   end
 
   # Tests correct module name.
   def test_module_name()
-    name1 = @config.module_name(:v201109, :InfoService)
-    assert_equal('AdwordsApi::V201109::InfoService', name1)
+    name1 = @config.module_name(:v201206, :InfoService)
+    assert_equal('AdwordsApi::V201206::InfoService', name1)
   end
 
   # Tests correct interface name.
   def test_interface_name()
-    name1 = @config.interface_name(:v201109, :InfoService)
-    assert_equal('AdwordsApi::V201109::InfoService::InfoService', name1)
+    name1 = @config.interface_name(:v201206, :InfoService)
+    assert_equal('AdwordsApi::V201206::InfoService::InfoService', name1)
   end
 
   # Tests AdHoc report URL generator (prod).
   def test_adhoc_report_download_url_prod()
-    url = AdwordsApi::ApiConfig.adhoc_report_download_url(:PRODUCTION, :v201109)
+    url = AdwordsApi::ApiConfig.adhoc_report_download_url(:PRODUCTION, :v201206)
     expected_url =
-        'https://adwords.google.com/api/adwords/reportdownload/v201109'
+        'https://adwords.google.com/api/adwords/reportdownload/v201206'
     assert_equal(expected_url, url)
   end
 
   # Tests AdHoc report URL generator (sandbox).
   def test_adhoc_report_download_url_sandbox()
-    url = AdwordsApi::ApiConfig.adhoc_report_download_url(:SANDBOX, :v201109)
+    url = AdwordsApi::ApiConfig.adhoc_report_download_url(:SANDBOX, :v201206)
     expected_url =
-        'https://adwords-sandbox.google.com/api/adwords/reportdownload/v201109'
+        'https://adwords-sandbox.google.com/api/adwords/reportdownload/v201206'
     assert_equal(expected_url, url)
   end
 end

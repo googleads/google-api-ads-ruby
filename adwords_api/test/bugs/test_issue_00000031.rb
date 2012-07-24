@@ -25,12 +25,12 @@ require 'test/unit'
 
 require 'ads_common/parameters_validator'
 require 'adwords_api'
-require 'adwords_api/v201109/targeting_idea_service_registry'
+require 'adwords_api/v201206/targeting_idea_service_registry'
 
 class TestIssue31 < Test::Unit::TestCase
   def setup()
     @registry =
-        AdwordsApi::V201109::TargetingIdeaService::TargetingIdeaServiceRegistry
+        AdwordsApi::V201206::TargetingIdeaService::TargetingIdeaServiceRegistry
   end
 
   def run_test(selector)
@@ -42,34 +42,34 @@ class TestIssue31 < Test::Unit::TestCase
   def test_issue_31_single_xsi_type()
     selector = {
         :search_parameters => [
-            {:xsi_type => 'KeywordMatchTypeSearchParameter',
-             :keyword_match_types => ['BROAD']}
+            {:xsi_type => 'RelatedToQuerySearchParameter',
+             :queries => ['test']}
         ]
     }
     result_xml = run_test(selector)
-    r = /searchParameters xsi:type="KeywordMatchTypeSearchParameter"/ =~
+    r = /searchParameters xsi:type="RelatedToQuerySearchParameter"/ =~
         result_xml
     assert_not_nil(r, 'Unable to find item with xsi_type ' +
-        'KeywordMatchTypeSearchParameter')
+        'RelatedToQuerySearchParameter')
   end
 
   def test_issue_31_multiple_xsi_types()
     selector = {
         :search_parameters => [
-            {:xsi_type => 'AverageTargetedMonthlySearchesSearchParameter',
-             :operation => { :minimum => 10000, :maximum => 100000000}},
-            {:xsi_type => 'KeywordMatchTypeSearchParameter',
-             :keyword_match_types => ['BROAD']}
+            {:xsi_type => 'CategoryProductsAndServicesSearchParameter',
+             :category_id => 42},
+            {:xsi_type => 'RelatedToQuerySearchParameter',
+             :queries => ['test']}
         ]
     }
     result_xml = run_test(selector)
-    r1 = /searchParameters xsi:type="KeywordMatchTypeSearchParameter"/ =~
+    r1 = /searchParameters xsi:type="CategoryProductsAndServicesSearchParameter"/ =~
         result_xml
-    r2 = /searchParameters xsi:type="AverageTargetedMonthlySearchesSearchParameter"/ =~
+    r2 = /searchParameters xsi:type="RelatedToQuerySearchParameter"/ =~
         result_xml
     assert_not_nil(r1, 'Unable to find item with xsi_type ' +
-        'KeywordMatchTypeSearchParameter')
+        'CategoryProductsAndServicesSearchParameter')
     assert_not_nil(r2, 'Unable to find item with xsi_type ' +
-        'AverageTargetedMonthlySearchesSearchParameter')
+        'RelatedToQuerySearchParameter')
   end
 end
