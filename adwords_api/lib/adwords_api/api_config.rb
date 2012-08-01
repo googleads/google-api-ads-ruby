@@ -240,7 +240,6 @@ module AdwordsApi
       [:v201206, :MediaService] => 'cm/',
       [:v201206, :MutateJobService] => 'cm/',
       [:v201206, :ReportDefinitionService] => 'cm/',
-      [:v201206, :ServicedAccountService] => 'mcm/',
       [:v201206, :TargetingIdeaService] => 'o/',
       [:v201206, :TrafficEstimatorService] => 'o/',
       [:v201206, :UserListService] => 'cm/',
