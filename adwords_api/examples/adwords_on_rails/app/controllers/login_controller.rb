@@ -13,10 +13,9 @@ class LoginController < ApplicationController
       redirect_to home_index_path
     else
       begin
-        token = api.authorize({:oauth_callback => login_callback_url})
-      rescue AdsCommon::Errors::OAuthVerificationRequired => e
+        token = api.authorize({:oauth2_callback => login_callback_url})
+      rescue AdsCommon::Errors::OAuth2VerificationRequired => e
         @login_url = e.oauth_url
-        session[:request_token] = e.request_token
       end
     end
   end
@@ -24,21 +23,36 @@ class LoginController < ApplicationController
   def callback()
     api = get_adwords_api()
     begin
-      request_token = session[:request_token]
-      session[:token] = api.authorize(
-           {:oauth_request_token => request_token,
-            :oauth_verification_code => params[:oauth_verifier]})
-      session.delete(:request_token)
+      token = api.authorize(
+          {
+            :oauth2_callback => login_callback_url,
+            :oauth2_verification_code => params[:code]
+          }
+      )
+      session[:token] = hash_from_token(token)
       flash.notice = 'Authorized successfully'
       redirect_to home_index_path
-    rescue AdsCommon::Errors::OAuthVerificationRequired => e
+    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
       flash.alert = 'Authorization failed'
       redirect_to login_prompt_path
     end
   end
 
   def logout()
-    [:selected_account, :request_token, :token].each {|key| session.delete(key)}
+    [:selected_account, :token].each {|key| session.delete(key)}
     redirect_to GOOGLE_LOGOUT_URL
+  end
+
+  private
+
+  def hash_from_token(token)
+    return {
+      :access_token => token.token,
+      :refresh_token => token.refresh_token,
+      :expires_in => token.expires_in,
+      :expires_at => token.expires_at,
+      :params => token.params,
+      :options => token.options
+    }
   end
 end

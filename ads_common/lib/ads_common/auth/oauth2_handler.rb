@@ -173,8 +173,8 @@ module AdsCommon
         access_token = nil
         oauth2_token_hash = credentials[:oauth2_token]
         if !oauth2_token_hash.nil? && oauth2_token_hash.kind_of?(Hash)
-          access_token = OAuth2::AccessToken.new(
-              client, {:access_token => oauth2_token_hash})
+          token_data = oauth2_token_hash.dup()
+          access_token = OAuth2::AccessToken.from_hash(client, token_data)
         end
         return access_token
       end

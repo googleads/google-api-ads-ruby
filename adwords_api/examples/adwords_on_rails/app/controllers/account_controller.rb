@@ -23,8 +23,9 @@ class AccountController < ApplicationController
       result = adwords.use_mcc {service.get(selector)}
     rescue AdwordsApi::Errors::ApiException => e
       logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
-      flash.now[:alert] = 
+      flash.now[:alert] =
           'API request failed with an error, see logs for details'
     end
+    return result
   end
 end
