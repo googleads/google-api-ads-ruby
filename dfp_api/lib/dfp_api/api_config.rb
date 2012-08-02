@@ -98,6 +98,7 @@ module DfpApi
     @@environment_config = {
       :PRODUCTION => {
         :oauth_scope => 'https://www.google.com/apis/ads/publisher/',
+        :header_ns => 'https://www.google.com/apis/ads/publisher/',
         :v201108 => 'https://www.google.com/apis/ads/publisher/',
         :v201111 => 'https://www.google.com/apis/ads/publisher/',
         :v201201 => 'https://www.google.com/apis/ads/publisher/',
@@ -110,8 +111,6 @@ module DfpApi
     # Auth constants for ClientLogin method.
     @@client_login_config = {
       :AUTH_SERVER => 'https://www.google.com',
-      :HEADER_NAMESPACE_PREAMBLE =>
-          'https://www.google.com/apis/ads/publisher/',
       :LOGIN_SERVICE_NAME => 'gam'
     }
 

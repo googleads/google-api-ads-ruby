@@ -34,12 +34,15 @@ module AdsCommon
       # Args:
       #  - credential_handler: a header with credential data
       #  - auth_handler: a header with auth data
+      #  - header_ns: namespace to use for headers
       #  - namespace: default namespace to use
       #  - version: services version
       #
-      def initialize(credential_handler, auth_handler, namespace, version)
+      def initialize(credential_handler, auth_handler, header_ns, namespace,
+                     version)
         @credential_handler = credential_handler
         @auth_handler = auth_handler
+        @header_ns = header_ns
         @namespace = namespace
         @version = version
       end
@@ -63,6 +66,12 @@ module AdsCommon
         # Sets User-Agent in the HTTP header.
         request.headers['User-Agent'] =
             @credential_handler.generate_user_agent()
+        # Set headers namespace.
+        header_name = prepend_namespace(get_header_element_name())
+        soap.header[:attributes!] ||= {}
+        soap.header[:attributes!][header_name] ||= {}
+        soap.header[:attributes!][header_name]['xmlns'] = @header_ns
+        # Generate headers.
         generate_headers(request, soap)
       end
 
@@ -93,12 +102,7 @@ module AdsCommon
 
       # Generates SOAP default request header with all requested headers.
       def generate_request_header()
-        credentials = @credential_handler.credentials
-        extra_headers = credentials[:extra_headers]
-        return extra_headers.inject({}) do |result, (header, value)|
-          result[prepend_namespace(header)] = value
-          result
-        end
+        return @credential_handler.credentials[:extra_headers]
       end
     end
   end

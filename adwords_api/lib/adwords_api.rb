@@ -54,24 +54,20 @@ module AdwordsApi
     # - auth_handler: instance of an AdsCommon::Auth::BaseHandler subclass to
     #   handle authentication
     # - version: intended API version
-    # - namespace: namespace to use as default for body
+    # - header_ns: header namespace
+    # - default_ns: default namespace
     #
     # Returns:
-    # - a list of SOAP header handlers; one per provided header
+    # - SOAP header handler
     #
-    def soap_header_handler(auth_handler, version, namespace)
+    def soap_header_handler(auth_handler, version, header_ns, default_ns)
       auth_method = @config.read('authentication.method', :CLIENTLOGIN)
-      handler = case auth_method
-        when :CLIENTLOGIN
-          auth_ns = api_config.client_login_config(:AUTH_NAMESPACE_PREAMBLE) +
-              version.to_s
-          AdwordsApi::ClientLoginHeaderHandler.new(
-              @credential_handler, auth_handler, namespace, auth_ns, version)
-        when :OAUTH, :OAUTH2
-          AdsCommon::SavonHeaders::OAuthHeaderHandler.new(
-              @credential_handler, auth_handler, namespace, version)
+      handler_class = case auth_method
+        when :CLIENTLOGIN then AdwordsApi::ClientLoginHeaderHandler
+        when :OAUTH, :OAUTH2 then AdsCommon::SavonHeaders::OAuthHeaderHandler
       end
-      return handler
+      return handler_class.new(@credential_handler, auth_handler, header_ns,
+                                  default_ns, version)
     end
 
     # Helper method to provide a simple way of doing an MCC-level operation
