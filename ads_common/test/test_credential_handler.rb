@@ -21,7 +21,7 @@
 # Tests credential handler methods.
 
 require 'logger'
-require 'test/unit'
+require 'minitest/mock'
 
 require 'ads_common/config'
 require 'ads_common/credential_handler'
@@ -54,9 +54,49 @@ class TestCredentialHandler < Test::Unit::TestCase
   end
 
   def test_generate_user_agent_simple()
-    result1 = @handler.generate_http_user_agent()
+    result1 = @handler.generate_user_agent()
     assert_kind_of(String, result1)
-    result2 = @handler.generate_soap_user_agent()
-    assert_kind_of(String, result2)
+  end
+
+  def test_generate_user_agent_chained()
+    test_str = 'Tester/0.2.0'
+    result1 = @handler.generate_user_agent([test_str])
+    assert_kind_of(String, result1)
+    assert_match(/#{Regexp.escape(test_str)}/, result1)
+  end
+
+  def test_auth_handler_callback_once()
+    mock = MiniTest::Mock.new()
+    mock.expect(:property_changed,  nil, [:foo, 'bar'])
+    @handler.set_auth_handler(mock)
+    @handler.set_credential(:foo, 'bar')
+    assert(mock.verify)
+  end
+
+  def test_auth_handler_callback_compare()
+    credentials = @handler.credentials
+
+    credentials[:foo] = 'bar'
+    credentials[:baz] = 42
+    mock1 = MiniTest::Mock.new()
+    mock1.expect(:property_changed,  nil, [:foo, 'bar'])
+    mock1.expect(:property_changed,  nil, [:baz, 42])
+    @handler.set_auth_handler(mock1)
+    @handler.credentials = credentials
+    assert(mock1.verify)
+
+    credentials.delete(:baz)
+    mock2 = MiniTest::Mock.new()
+    mock2.expect(:property_changed,  nil, [:baz, nil])
+    @handler.set_auth_handler(mock2)
+    @handler.credentials = credentials
+    assert(mock2.verify)
+
+    credentials[:foo] = nil
+    mock3 = MiniTest::Mock.new()
+    mock3.expect(:property_changed,  nil, [:foo, nil])
+    @handler.set_auth_handler(mock3)
+    @handler.credentials = credentials
+    assert(mock3.verify)
   end
 end

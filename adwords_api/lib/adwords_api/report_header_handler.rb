@@ -51,7 +51,7 @@ module AdwordsApi
           'Content-Type' => 'application/x-www-form-urlencoded',
           'Authorization' =>
               @auth_handler.auth_string(credentials, HTTPI::Request.new(url)),
-          'User-Agent' => @credential_handler.generate_http_user_agent(),
+          'User-Agent' => @credential_handler.generate_user_agent(),
           'clientCustomerId' => credentials[:client_customer_id].to_s,
           'developerToken' => credentials[:developer_token]
       }

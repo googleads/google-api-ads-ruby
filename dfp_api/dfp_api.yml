@@ -46,7 +46,8 @@
   # optional if the user belongs to only one network.
   :network_code: INSERT_NETWORK_CODE_HERE
 :service:
-  :environment: SANDBOX
+  # Only production environment is now available.
+  :environment: PRODUCTION
 :connection:
   # Enable to request all responses to be compressed.
   :enable_gzip: false

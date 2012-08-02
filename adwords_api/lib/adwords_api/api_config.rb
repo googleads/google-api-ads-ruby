@@ -142,12 +142,14 @@ module AdwordsApi
     @@environment_config = {
       :PRODUCTION => {
         :oauth_scope => 'https://adwords.google.com/api/adwords/',
+        :header_ns => 'https://adwords.google.com/api/adwords/cm/',
         :v201109 => 'https://adwords.google.com/api/adwords/',
         :v201109_1 => 'https://adwords.google.com/api/adwords/',
         :v201206 => 'https://adwords.google.com/api/adwords/'
       },
       :SANDBOX => {
         :oauth_scope => 'https://adwords-sandbox.google.com/api/adwords/',
+        :header_ns => 'https://adwords.google.com/api/adwords/cm/',
         :v201109 => 'https://adwords-sandbox.google.com/api/adwords/',
         :v201109_1 => 'https://adwords-sandbox.google.com/api/adwords/',
         :v201206 => 'https://adwords-sandbox.google.com/api/adwords/'
@@ -240,7 +242,6 @@ module AdwordsApi
       [:v201206, :MediaService] => 'cm/',
       [:v201206, :MutateJobService] => 'cm/',
       [:v201206, :ReportDefinitionService] => 'cm/',
-      [:v201206, :ServicedAccountService] => 'mcm/',
       [:v201206, :TargetingIdeaService] => 'o/',
       [:v201206, :TrafficEstimatorService] => 'o/',
       [:v201206, :UserListService] => 'cm/',
@@ -251,8 +252,6 @@ module AdwordsApi
     # Auth constants for ClientLogin method.
     @@client_login_config = {
       :AUTH_SERVER => 'https://www.google.com',
-      :AUTH_NAMESPACE_PREAMBLE =>
-          'https://adwords.google.com/api/adwords/cm/',
       :LOGIN_SERVICE_NAME => 'adwords'
     }
 

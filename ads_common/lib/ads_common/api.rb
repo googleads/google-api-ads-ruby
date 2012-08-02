@@ -136,7 +136,10 @@ module AdsCommon
     # - auth handler
     #
     def get_auth_handler()
-      @auth_handler ||= create_auth_handler()
+      if @auth_handler.nil?
+        @auth_handler = create_auth_handler()
+        @credential_handler.set_auth_handler(@auth_handler)
+      end
       return @auth_handler
     end
 
@@ -167,12 +170,13 @@ module AdsCommon
     # - auth_handler: instance of an AdsCommon::Auth::BaseHandler subclass to
     #   handle authentication
     # - version: intended API version
-    # - wrapper: wrapper object for the service being handled
+    # - header_ns: header namespace
+    # - default_ns: default namespace
     #
     # Returns:
-    # - a list of SOAP header handlers; one per provided header
+    # - a SOAP header handler
     #
-    def soap_header_handler(auth_handler, version, wrapper)
+    def soap_header_handler(auth_handler, version, header_ns, default_ns)
       raise NotImplementedError, 'soap_header_handler not overridden.'
     end
 
@@ -228,8 +232,10 @@ module AdsCommon
 
       wrapper = class_for_path(interface_class_name).new(@config, endpoint)
       auth_handler = get_auth_handler()
-      soap_handler =
-          soap_header_handler(auth_handler, version, wrapper.namespace)
+      header_ns =
+          api_config.environment_config(environment, :header_ns) + version.to_s
+      soap_handler = soap_header_handler(auth_handler, version, header_ns,
+                                         wrapper.namespace)
       wrapper.header_handler = soap_handler
 
       return wrapper

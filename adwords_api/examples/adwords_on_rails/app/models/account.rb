@@ -15,7 +15,7 @@ class Account
 
   def self.get_accounts_map(graph)
     accounts = {}
-    if graph[:accounts]
+    if graph and graph[:accounts]
       accounts = graph[:accounts].inject({}) do |result, account|
         result[account[:customer_id]] = Account.new(account)
         result
