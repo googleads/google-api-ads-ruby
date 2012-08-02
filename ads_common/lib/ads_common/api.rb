@@ -136,7 +136,10 @@ module AdsCommon
     # - auth handler
     #
     def get_auth_handler()
-      @auth_handler ||= create_auth_handler()
+      if @auth_handler.nil?
+        @auth_handler = create_auth_handler()
+        @credential_handler.set_auth_handler(@auth_handler)
+      end
       return @auth_handler
     end
 

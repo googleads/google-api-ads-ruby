@@ -30,32 +30,20 @@ module DfpApi
       result = super(credentials_override)
       validate_headers_for_server(result)
       result[:extra_headers] = {
-          'applicationName' => generate_soap_user_agent(),
+          'applicationName' => generate_user_agent(),
           'networkCode' => result[:network_code]
       }
       return result
     end
 
-    # Generates string to user as user agent in HTTP headers.
-    def generate_http_user_agent(extra_ids = [])
-      extra_ids, agent_app = get_user_agent_data(extra_ids)
-      super(extra_ids, agent_app)
-    end
-
-    # Generates string to user as user agent in SOAP headers.
-    def generate_soap_user_agent(extra_ids = [])
-      extra_ids, agent_app = get_user_agent_data(extra_ids)
+    # Generates string to use as user agent in headers.
+    def generate_user_agent(extra_ids = [])
+      agent_app = @config.read('authentication.application_name')
+      extra_ids << ["DfpApi-Ruby/%s" % DfpApi::ApiConfig::CLIENT_LIB_VERSION]
       super(extra_ids, agent_app)
     end
 
     private
-
-    # Returns agent name and data for user-agent string generation.
-    def get_user_agent_data(extra_ids)
-      agent_app = @config.read('authentication.application_name')
-      extra_ids << ["DfpApi-Ruby/%s" % DfpApi::ApiConfig::CLIENT_LIB_VERSION]
-      return [extra_ids, agent_app]
-    end
 
     # Validates that the right credentials are being used for the chosen
     # environment.

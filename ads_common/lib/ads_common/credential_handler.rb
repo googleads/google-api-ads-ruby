@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Authors:: api.sgomes@gmail.com (Sérgio Gomes)
+# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
 #
@@ -27,6 +27,7 @@ module AdsCommon
     # Initializes CredentialHandler.
     def initialize(config)
       @config = config
+      @auth_handler = nil
       load_from_config(config)
     end
 
@@ -39,60 +40,51 @@ module AdsCommon
 
     # Set the credentials hash to a new one. Calculate difference, and call the
     # AuthHandler callback appropriately.
-    # TODO(dklimkin): re-write this with inject.
     def credentials=(new_credentials)
       # Find new and changed properties.
-      diff = new_credentials.select do |key, value|
-        value != @credentials[key]
+      diff = new_credentials.inject([]) do |result, (key, value)|
+        result << [key, value] if value != @credentials[key]
+        result
       end
 
       # Find removed properties.
-      removed = @credentials.select do |key, value|
-        new_credentials[key] == nil
-      end
-      if removed
-        removed = removed.map { |entry| [entry[0], nil] }
-        diff += removed
+      diff = @credentials.inject(diff) do |result, (key, value)|
+        result << [key, nil] unless new_credentials.include?(key)
+        result
       end
 
       # Set each property.
-      diff.each do |entry|
-        set_credential(entry[0], entry[1])
-      end
+      diff.each { |entry| set_credential(entry[0], entry[1]) }
+
+      return nil
     end
 
     # Set a single credential to a new value. Call the AuthHandler callback
     # appropriately.
     def set_credential(credential, value)
       @credentials[credential] = value
-      # TODO(dklimkin): @auth_handler is never defined.
       @auth_handler.property_changed(credential, value) if @auth_handler
     end
 
-    # Generates string for UserAgent to put into HTTP headers.
-    def generate_http_user_agent(extra_ids = [], agent_app = nil)
-      return generate_user_agent(extra_ids, agent_app)
+    # Generates string for UserAgent to put into headers.
+    def generate_user_agent(extra_ids = [], agent_app = nil)
+      agent_app ||= $0
+      agent_data = extra_ids
+      agent_data << 'Common-Ruby/%s' % AdsCommon::ApiConfig::CLIENT_LIB_VERSION
+      agent_data << 'Savon/%s' % Savon::VERSION
+      ruby_engine = defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'
+      agent_data << [ruby_engine, RUBY_VERSION].join('/')
+      agent_data << 'HTTPI/%s' % HTTPI::VERSION
+      agent_data << HTTPI::Adapter.use.to_s
+      return '%s (%s)' % [agent_app, agent_data.join(', ')]
     end
 
-    # Generates string for UserAgent to put into SOAP headers.
-    def generate_soap_user_agent(extra_ids = [], agent_app = nil)
-      return generate_user_agent(extra_ids, agent_app)
+    # Sets authorization handler to notify about credential changes.
+    def set_auth_handler(auth_handler)
+      @auth_handler = auth_handler
     end
 
     private
-
-    # Generates user-agent.
-    def generate_user_agent(extra_ids, agent_app)
-      agent_app ||= $0
-      agent_data = extra_ids
-      agent_data << "Common-Ruby/%s" % AdsCommon::ApiConfig::CLIENT_LIB_VERSION
-      agent_data << "Savon/%s" % Savon::VERSION
-      ruby_engine = defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'
-      agent_data << [ruby_engine, RUBY_VERSION].join('/')
-      agent_data << "HTTPI/%s" % HTTPI::VERSION
-      agent_data << HTTPI::Adapter.use.to_s
-      return "%s (%s)" % [agent_app, agent_data.join(', ')]
-    end
 
     # Loads the credentials from the config data.
     def load_from_config(config)

@@ -62,7 +62,7 @@ module AdsCommon
         soap.input[2] = {:xmlns => @namespace}
         # Sets User-Agent in the HTTP header.
         request.headers['User-Agent'] =
-            @credential_handler.generate_http_user_agent()
+            @credential_handler.generate_user_agent()
         generate_headers(request, soap)
       end
 
