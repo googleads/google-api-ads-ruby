@@ -20,6 +20,7 @@
 # Specific error handling for the AdWords API.
 
 require 'ads_common/errors'
+require 'ads_common/results_extractor'
 
 module AdwordsApi
   module Errors
@@ -29,9 +30,13 @@ module AdwordsApi
     class ApiException < AdsCommon::Errors::ApiException
       attr_reader :array_fields
 
-      def initialize(exception_fault)
+      def initialize(exception_fault, registry)
         @array_fields ||= []
-        exception_fault.each { |key, value| set_field(key, value) }
+        extractor = AdsCommon::ResultsExtractor.new(registry)
+        exception_type = exception_fault[:application_exception_type]
+        exception_data = (exception_type.nil?) ? exception_fault :
+            extractor.extract_exception_data(exception_fault, exception_type)
+        exception_data.each { |key, value| set_field(key, value) }
       end
 
       private

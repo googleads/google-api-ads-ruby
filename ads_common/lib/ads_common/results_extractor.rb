@@ -40,7 +40,6 @@ module AdsCommon
       result = result[action] if result.include?(action)
       result = normalize_output(result, method)
       return result[:rval] || result
-      return result
     end
 
     # Extracts misc data from response header.
@@ -50,6 +49,14 @@ module AdsCommon
       process_attributes(headers, false)
       headers = normalize_fields(headers, header_type[:fields])
       return headers
+    end
+
+    # Extracts misc data from SOAP fault.
+    def extract_exception_data(soap_fault, exception_name)
+      exception_type = get_full_type_signature(exception_name)
+      process_attributes(soap_fault, false)
+      soap_fault = normalize_fields(soap_fault, exception_type[:fields])
+      return soap_fault
     end
 
     private
