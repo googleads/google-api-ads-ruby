@@ -1,4 +1,6 @@
-0.6.4:
+0.7.0:
+  - MapEntry structures are returned as Hashes now (#26).
+  - Require google-ads-common 0.8.0 or later from now on.
 
 0.6.3:
   - Support and examples for v201206.

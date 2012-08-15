@@ -24,7 +24,6 @@
 # Tags: TargetingIdeaService.get
 
 require 'adwords_api'
-require 'adwords_api/utils'
 
 def get_placement_ideas(url)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
@@ -72,8 +71,7 @@ def get_placement_ideas(url)
 
   # Display results.
   results.each do |result|
-    data = AdwordsApi::Utils.map(result[:data])
-    placement = data['CRITERION'][:value]
+    placement = result[:data]['CRITERION'][:value]
     puts "Related placement found at URL [%s]" % placement[:url]
   end
   puts "Total URLs found with keywords related to keywords at [%s]: %d." %

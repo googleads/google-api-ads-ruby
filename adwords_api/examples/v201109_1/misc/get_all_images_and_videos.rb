@@ -25,7 +25,6 @@
 # Tags: MediaService.get
 
 require 'adwords_api'
-require 'adwords_api/utils'
 
 def get_all_images_and_videos()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
@@ -60,10 +59,10 @@ def get_all_images_and_videos()
     page = media_srv.get(selector)
     if page[:entries]
       page[:entries].each do |entry|
-        dimensions = AdwordsApi::Utils.map(entry[:dimensions])
+        full_dimensions = entry[:dimensions]['FULL']
         puts "Entry ID %d with dimensions %dx%d and MIME type is '%s'" %
-            [entry[:media_id], dimensions['FULL'][:height],
-             dimensions['FULL'][:width], entry[:mime_type]]
+            [entry[:media_id], full_dimensions[:height],
+             full_dimensions[:width], entry[:mime_type]]
       end
       # Increment values to request the next page.
       offset += PAGE_SIZE

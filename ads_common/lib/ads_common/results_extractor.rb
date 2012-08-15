@@ -101,7 +101,17 @@ module AdsCommon
 
     # Normalizes every item of an Array.
     def normalize_array_field(data, field_def)
-      return data.map {|item| normalize_output_field(item, field_def)}
+      result = data
+      # Convert a specific structure to a handy hash if detected.
+      if check_key_value_struct(result)
+        result = convert_key_value_to_hash(result).inject({}) do |result, (k,v)|
+          result[k] = normalize_output_field(v, field_def)
+          result
+        end
+      else
+        result = data.map {|item| normalize_output_field(item, field_def)}
+      end
+      return result
     end
 
     # Normalizes every item of a Hash.
@@ -118,6 +128,8 @@ module AdsCommon
             normalize_fields(field, field_def[:fields])
       end
 
+      result = field
+
       # Now checking for choice options from wsdl.
       choice_type_override = determine_choice_type_override(field, field_def)
       unless choice_type_override.nil?
@@ -129,13 +141,54 @@ module AdsCommon
         if !field_def.nil? and field_data.kind_of?(Hash)
           field_data = normalize_fields(field_data, field_def[:fields])
         end
-        return {field_key => field_data}
+        result = {field_key => field_data}
+      else
+        # Otherwise using the best we have.
+        unless field_def.nil?
+          result = normalize_fields(field, field_def[:fields])
+        end
       end
 
-      # Otherwise using the best we have.
-      field = normalize_fields(field, field_def[:fields]) unless field_def.nil?
+      # Convert a single key-value hash to a proper hash if detected.
+      if check_key_value_struct(result)
+        result = convert_key_value_to_hash(result)
+      end
 
-      return field
+      return result
+    end
+
+    # Checks if all elements of the array or hash passed are hashes and have
+    # ':key' and ':value' keys only.
+    def check_key_value_struct(data)
+      if data.kind_of?(Hash)
+        return check_key_value_hash(data)
+      end
+      if data.kind_of?(Array) && !data.empty?
+        data.each do |item|
+          return false if !check_key_value_hash(item)
+        end
+        return true
+      end
+      return false
+    end
+
+    # Checks if the argument is hash and has exactly ':key' and ':value' keys.
+    def check_key_value_hash(item)
+      return (item.kind_of?(Hash) && item.include?(:key) &&
+          item.include?(:value) && (item.keys.size == 2))
+    end
+
+    # Converts an array containing hashes or a hash with ':key' and ':value'
+    # keys only into a key -> value hash.
+    def convert_key_value_to_hash(data)
+      return case data
+        when Hash then {data[:key] => data[:value]}
+        when Array then
+          data.inject({}) do |result, item|
+            result[item[:key]] = item[:value]
+            result
+          end
+      end
     end
 
     # Determines an xsi:type override for for the field. Returns nil if no
@@ -190,9 +243,10 @@ module AdsCommon
     # even for a signle item.
     def check_array_collapse(data, field_def)
       result = data
-      if !field_def[:min_occurs].nil? and
+      if !field_def[:min_occurs].nil? &&
           (field_def[:max_occurs] == :unbounded ||
-              (!field_def[:max_occurs].nil? and field_def[:max_occurs] > 1))
+              (!field_def[:max_occurs].nil? && field_def[:max_occurs] > 1)) &&
+                  !(field_def[:type] =~ /MapEntry$/)
         result = arrayize(result)
       end
       return result

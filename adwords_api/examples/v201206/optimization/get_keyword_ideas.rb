@@ -23,7 +23,6 @@
 # Tags: TargetingIdeaService.get
 
 require 'adwords_api'
-require 'adwords_api/utils'
 
 def get_keyword_ideas(keyword_text)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
@@ -73,7 +72,7 @@ def get_keyword_ideas(keyword_text)
 
   # Display results.
   results.each do |result|
-    data = AdwordsApi::Utils.map(result[:data])
+    data = result[:data]
     keyword = data['KEYWORD_TEXT'][:value]
     puts "Found keyword with text '%s'" % keyword
     products_and_services = data['CATEGORY_PRODUCTS_AND_SERVICES'][:value]
