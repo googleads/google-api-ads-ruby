@@ -20,11 +20,13 @@ class Account
         result[account[:customer_id]] = Account.new(account)
         result
       end
-      graph[:links].each do |link|
-        parent_account = accounts[link[:manager_id][:id]]
-        child_account = accounts[link[:client_id][:id]]
-        child_account.parent = parent_account
-        parent_account.add_child(child_account)
+      if graph[:links]
+        graph[:links].each do |link|
+          parent_account = accounts[link[:manager_id][:id]]
+          child_account = accounts[link[:client_id][:id]]
+          child_account.parent = parent_account
+          parent_account.add_child(child_account) if parent_account
+        end
       end
       accounts.reject! {|id, account| !account.parent.nil?}
     end
