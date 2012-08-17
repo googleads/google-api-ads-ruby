@@ -35,21 +35,21 @@ def parallel_report_download()
   # adwords.logger = Logger.new('adwords_xml.log')
 
   # Determine list of customer IDs to retrieve report for. For this example we
-  # will use ServicedAccountService to get all IDs in hierarchy.
+  # will use ManagedCustomerService to get all IDs in hierarchy.
 
-  serviced_account_srv = adwords.service(:ServicedAccountService, API_VERSION)
+  managed_customer_srv = adwords.service(:ManagedCustomerService, API_VERSION)
 
   # Get the account hierarchy for this account.
-  selector = {:enable_paging => false}
+  selector = {:fields => ['CustomerId']}
 
   # Run the request at the MCC level.
-  graph = adwords.use_mcc() {serviced_account_srv.get(selector)}
+  graph = adwords.use_mcc() {managed_customer_srv.get(selector)}
 
   # Using queue to balance load between threads.
   queue = Queue.new()
 
-  if graph and graph[:accounts] and !graph[:accounts].empty?
-    graph[:accounts].each {|account| queue << account[:customer_id]}
+  if graph and graph[:entries] and !graph[:entries].empty?
+    graph[:entries].each {|account| queue << account[:customer_id]}
   else
     raise StandardError, 'Can not retrieve any customer ID'
   end
@@ -76,7 +76,7 @@ def parallel_report_download()
       :include_zero_impressions => false
   }
 
-  puts "Retrieving %d reports with %d threads:" % [queue.size, THREADS]
+  puts 'Retrieving %d reports with %d threads:' % [queue.size, THREADS]
 
   reports_succeeded = Queue.new()
   reports_failed = Queue.new()
@@ -92,7 +92,7 @@ def parallel_report_download()
         cid = queue_mutex.synchronize {(queue.empty?) ? nil : queue.pop(true)}
         if cid
           retry_count = 0
-          file_name = "adgroup_%010d.csv" % cid
+          file_name = 'adgroup_%010d.csv' % cid
           puts "[%2d/%d] Loading report for customer ID %s into '%s'..." %
               [thread_id, retry_count,
                AdwordsApi::Utils.format_id(cid), file_name]
@@ -105,8 +105,8 @@ def parallel_report_download()
               sleep(retry_count * BACKOFF_FACTOR)
               retry
             else
-              puts(("Report failed for customer ID %s with code %d after %d " +
-                  "retries.") % [cid, e.http_code, retry_count + 1])
+              puts(('Report failed for customer ID %s with code %d after %d ' +
+                  'retries.') % [cid, e.http_code, retry_count + 1])
               reports_failed <<
                 {:cid => cid, :http_code => e.http_code, :message => e.message}
             end
@@ -150,10 +150,10 @@ if __FILE__ == $0
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e
-    puts "HTTP Error: %s" % e
+    puts 'HTTP Error: %s' % e
 
   # API errors.
   rescue AdwordsApi::Errors::ReportError => e
-    puts "Reporting Error: %s" % e.message
+    puts 'Reporting Error: %s' % e.message
   end
 end
