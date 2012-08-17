@@ -1,13 +1,13 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.5'
+gem 'rails', '3.2.8'
 gem 'jquery-rails'
 
 # Using sqlite by default.
 gem 'sqlite3'
 
 # AdWords API gem.
-gem 'google-adwords-api', '~> 0.6.4'
+gem 'google-adwords-api', '~> 0.7.0'
 
 # Gem for OAuth authorization.
 gem 'oauth2'

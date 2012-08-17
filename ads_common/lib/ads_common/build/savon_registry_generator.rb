@@ -78,7 +78,7 @@ module AdsCommon
             <% array_fields.each do |field| %>
             @array_fields << '<%= field.to_s %>'
             <% end %>
-            super(exception_fault)
+            super(exception_fault, <%= @service_name %>Registry)
           end
           <% end %>
         end

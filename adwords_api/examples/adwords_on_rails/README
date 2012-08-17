@@ -40,7 +40,7 @@ How do I get started?
 
 3. Unpack the contents and change to the application root:
 
-  $ tar xvzf adwords_on_rails-0.1.0.tar.gz && cd adwords_on_rails
+  $ tar xvzf adwords_on_rails-<version>.tar.gz && cd adwords_on_rails
 
 4. Install the Ruby bundle:
 

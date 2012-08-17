@@ -22,22 +22,6 @@
 module AdwordsApi
   module Utils
 
-    # Gets a map from an array of map entries. A map entry is any object that
-    # has a key and value hash fields.
-    #
-    # Args:
-    # - entries: list of map entries
-    #
-    # Returns:
-    # - hash constructed from map entries
-    #
-    def self.map(entries)
-      return entries.inject({}) do |result, entry|
-        result[entry[:key]] = entry[:value]
-        result
-      end
-    end
-
     # Returns the source operation index for an error.
     #
     # Args:

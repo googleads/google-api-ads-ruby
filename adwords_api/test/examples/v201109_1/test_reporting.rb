@@ -25,7 +25,6 @@ require 'tempfile'
 
 require 'reporting/download_criteria_report'
 require 'reporting/get_campaign_stats'
-require 'reporting/get_defined_reports'
 require 'reporting/get_report_fields'
 require 'reporting/parallel_report_download'
 
@@ -54,10 +53,6 @@ class TestReportingV201109_1 < Test::Unit::TestCase
 
   def test_get_campaign_stats
     get_campaign_stats()
-  end
-
-  def test_get_defined_reports
-    get_defined_reports()
   end
 
   def test_get_report_fields

@@ -70,7 +70,8 @@ module AdsCommon
       # Overrides base get_token method to account for the token expiration.
       def get_token(credentials = nil)
         refresh_token! if !@token.nil? && @token.expired?
-        return super(credentials)
+        token = super(credentials)
+        return oauth_token_to_hash(token)
       end
 
       # Refreshes access token from refresh token.
@@ -92,7 +93,7 @@ module AdsCommon
       #
       def generate_oauth2_parameters_string(credentials)
         token = get_token(credentials)
-        return OAUTH2_HEADER % token.token
+        return OAUTH2_HEADER % token[:access_token]
       end
 
       # Auxiliary method to validate the credentials for token generation.
@@ -213,6 +214,19 @@ module AdsCommon
               'Authorization error occured: %s' % e
         end
         return token
+      end
+
+      # Converts OAuth token object into hash structure.
+      def oauth_token_to_hash(token)
+        return token.nil? ? nil :
+            {
+              :access_token => token.token,
+              :refresh_token => token.refresh_token,
+              :expires_in => token.expires_in,
+              :expires_at => token.expires_at,
+              :params => token.params,
+              :options => token.options
+            }
       end
     end
   end

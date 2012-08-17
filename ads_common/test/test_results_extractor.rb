@@ -29,6 +29,9 @@ module AdsCommon
 
     public :check_array_collapse
     public :normalize_item
+    public :check_key_value_struct
+    public :check_key_value_hash
+    public :convert_key_value_to_hash
   end
 end
 
@@ -174,6 +177,18 @@ class TestResultsExtractor < Test::Unit::TestCase
     assert_equal([{}], result7)
   end
 
+  def test_check_array_collapse_exception()
+    result1 = @extractor.check_array_collapse(
+        42.0, {:min_occurs => '0', :max_occurs => 2, :type => 'FloatMapEntry'})
+    assert_kind_of(Float, result1)
+    assert_equal(42.0, result1)
+
+    result2 = @extractor.check_array_collapse(
+        42.0, {:min_occurs => '0', :max_occurs => 2, :type => 'MapEntryTest'})
+    assert_kind_of(Array, result2)
+    assert_equal(42.0, result2[0])
+  end
+
   def test_extract_headers_empty()
     headers = {}
     response = StubResponse.new()
@@ -199,5 +214,45 @@ class TestResultsExtractor < Test::Unit::TestCase
     response.header = {:response_header => headers}
     result = @extractor.extract_header_data(response)
     assert_equal(expected, result)
+  end
+
+  def test_check_key_value_struct()
+    assert(!@extractor.check_key_value_struct([]))
+    assert(!@extractor.check_key_value_struct({}))
+
+    test1 = [{:key => 'foo', :value => 'bar'}]
+    assert(@extractor.check_key_value_struct(test1))
+    test2 = [{:key => 'foo'}]
+    assert(!@extractor.check_key_value_struct(test2))
+    test3 = [{:key => 'foo', :value => 'bar', :extra => 42}]
+    assert(!@extractor.check_key_value_struct(test3))
+    test4 = [{:key => 'foo', :value => 'bar'}, {:baz => 'bar'}]
+    assert(!@extractor.check_key_value_struct(test4))
+    test5 = [
+      {:key => 'foo', :value => 'bar'},
+      {:key => 'bar', :value => {:bar => 'baz'}}
+    ]
+    assert(@extractor.check_key_value_struct(test5))
+    test6 = {:key => 'foo', :value => 'bar'}
+    assert(@extractor.check_key_value_struct(test6))
+    test7 = {:key => 'foo'}
+    assert(!@extractor.check_key_value_struct(test7))
+    test8 = {:value => 'baz', :key => 'foo'}
+    assert(@extractor.check_key_value_struct(test8))
+  end
+
+  def test_convert_key_value_to_hash()
+    result1 = @extractor.convert_key_value_to_hash(
+        [{:key => 'foo', :value => 'bar'}, {:key => 42, :value => 88.2}])
+    assert_kind_of(Hash, result1)
+    assert(result1.include?('foo'))
+    assert(result1.include?(42))
+    assert_equal('bar', result1['foo'])
+    assert_equal(88.2, result1[42])
+    result2 = @extractor.convert_key_value_to_hash(
+        {:key => 'foo', :value => 'bar'})
+    assert_kind_of(Hash, result2)
+    assert_equal(['foo'], result2.keys)
+    assert_equal('bar', result2['foo'])
   end
 end

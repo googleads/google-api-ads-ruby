@@ -1,4 +1,6 @@
 0.4.3:
+  - Now require google-adwords-api-0.6.3 or later.
+  - Added examples for v201206.
 
 0.4.2:
   - Switched to google-adwords-api-0.6.x branch.

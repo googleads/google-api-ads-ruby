@@ -8,8 +8,7 @@ class LoginController < ApplicationController
 
   def prompt()
     api = get_adwords_api()
-    token = session[:token]
-    if token
+    if session[:token]
       redirect_to home_index_path
     else
       begin
@@ -23,13 +22,12 @@ class LoginController < ApplicationController
   def callback()
     api = get_adwords_api()
     begin
-      token = api.authorize(
+      session[:token] = api.authorize(
           {
             :oauth2_callback => login_callback_url,
             :oauth2_verification_code => params[:code]
           }
       )
-      session[:token] = hash_from_token(token)
       flash.notice = 'Authorized successfully'
       redirect_to home_index_path
     rescue AdsCommon::Errors::OAuth2VerificationRequired => e
@@ -41,18 +39,5 @@ class LoginController < ApplicationController
   def logout()
     [:selected_account, :token].each {|key| session.delete(key)}
     redirect_to GOOGLE_LOGOUT_URL
-  end
-
-  private
-
-  def hash_from_token(token)
-    return {
-      :access_token => token.token,
-      :refresh_token => token.refresh_token,
-      :expires_in => token.expires_in,
-      :expires_at => token.expires_at,
-      :params => token.params,
-      :options => token.options
-    }
   end
 end

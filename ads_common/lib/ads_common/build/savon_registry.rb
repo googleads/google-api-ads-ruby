@@ -69,14 +69,9 @@ module AdsCommon
           simple_types =  get_simple_types(schema)
           (complex_types + simple_types).each do |ctype|
             ctype_name = get_element_name(ctype)
+            @soap_types << extract_type(ctype, ns_index)
             if ctype_name.match('.+Exception$')
               @soap_exceptions << extract_exception(ctype)
-            elsif ctype_name.match('.+Error$')
-              # We don't use it at the moment.
-            elsif ctype_name.match('.+\.Reason$')
-              # We don't use it at the moment.
-            else
-              @soap_types << extract_type(ctype, ns_index)
             end
           end
         end

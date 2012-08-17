@@ -26,19 +26,6 @@ require 'adwords_api/utils'
 
 class TestUtils < Test::Unit::TestCase
 
-  def test_map()
-    param1 = [
-      {:key => 'foo', :value => 'bar'},
-      {:key => 'baz', :value => 'zar'},
-    ]
-    result1 = {'foo' => 'bar', 'baz' => 'zar'}
-    assert_equal(result1, AdwordsApi::Utils::map(param1))
-
-    param2 = []
-    result2 = {}
-    assert_equal(result2, AdwordsApi::Utils::map(param2))
-  end
-
   def test_operation_index_for_error()
     error1 = {:field_path => 'operations[0].operand.adGroupId'}
     assert_equal(0, AdwordsApi::Utils::operation_index_for_error(error1))

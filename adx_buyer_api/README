@@ -3,12 +3,9 @@
 Welcome to the next generation Google-developed Ruby client library for the
 AdWords and DoubleClick Ad Exchange Buyer API!
 
-Please note that this is an early PREVIEW of the client library, still under
-development.
-
-It contains full support for v201109 and v201109_1, with full stubs, and a
-simplified programming interface that lets you handle everything in native Ruby
-collections.
+It contains full support for v201109, v201109_1 and v201206, with full stubs,
+and a simplified programming interface that lets you handle everything in
+native Ruby collections.
 
 
 = Docs for Users
@@ -61,7 +58,7 @@ You can also pass API a manually constructed config hash like:
    })
 
 Then, just specify which service you're looking to use, and which version:
-   campaign_srv = adwords.service(:CampaignService, :v201109_1)
+   campaign_srv = adwords.service(:CampaignService, :v201206)
 
 and you should now be able to just use the API methods in the object you were
 returned:

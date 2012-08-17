@@ -16,8 +16,8 @@ class AccountController < ApplicationController
 
   def get_accounts_graph()
     adwords = get_adwords_api()
-    service = adwords.service(:ServicedAccountService, get_api_version())
-    selector = {:enable_paging => false}
+    service = adwords.service(:ManagedCustomerService, get_api_version())
+    selector = {:fields => ['Login', 'CustomerId', 'CompanyName']}
     result = nil
     begin
       result = adwords.use_mcc {service.get(selector)}
