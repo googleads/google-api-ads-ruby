@@ -245,7 +245,8 @@ class TestResultsExtractor < Test::Unit::TestCase
     result1 = @extractor.convert_key_value_to_hash(
         [{:key => 'foo', :value => 'bar'}, {:key => 42, :value => 88.2}])
     assert_kind_of(Hash, result1)
-    assert_equal(['foo', 42], result1.keys)
+    assert(result1.include?('foo'))
+    assert(result1.include?(42))
     assert_equal('bar', result1['foo'])
     assert_equal(88.2, result1[42])
     result2 = @extractor.convert_key_value_to_hash(

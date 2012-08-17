@@ -79,12 +79,17 @@ module AdsCommon
     # - <b>Errno::ENOENT</b> if the file does not exist.
     #
     def load(filename)
-      new_config = YAML::load_file(filename)
-      if new_config.kind_of?(Hash)
-        @config = new_config
-      else
+      begin
+        new_config = YAML::load_file(filename)
+        if new_config.kind_of?(Hash)
+          @config = new_config
+        else
+          raise AdsCommon::Errors::Error,
+              "Incorrect configuration file: %s" % filename
+        end
+      rescue TypeError => e
         raise AdsCommon::Errors::Error,
-            "Incorrect configuration file: %s" % filename
+            "Error parsing configuration file: %s" % filename
       end
       return nil
     end
