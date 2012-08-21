@@ -123,7 +123,7 @@ module AdsCommon
     #
     def endpoint(environment, version, service)
       base = get_wsdl_base(environment, version)
-      # TODO(dklimkin): Unflatten subdir constants. Cross-API refactor 0.8.0.
+      # TODO(dklimkin): Unflatten subdir constants. Cross-API refactor 0.9.0.
       if !subdir_config().nil?
         base = base.to_s + subdir_config()[[version, service]].to_s
       end
@@ -141,7 +141,7 @@ module AdsCommon
     #
     def subdir(version, service)
       return nil if subdir_config().nil?
-      # TODO(dklimkin): Unflatten subdir constants. Cross-API refactor 0.8.0.
+      # TODO(dklimkin): Unflatten subdir constants. Cross-API refactor 0.9.0.
       subdir_config()[[version, service]]
     end
 
