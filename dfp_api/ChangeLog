@@ -1,4 +1,6 @@
 0.3.4:
+  - Added support and examples for v201208.
+  - Require google-ads-common 0.8.0 or later from now on.
 
 0.3.3:
   - Added support and examples for v201206.
