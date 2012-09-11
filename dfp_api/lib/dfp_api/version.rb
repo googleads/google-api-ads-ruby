@@ -21,6 +21,6 @@
 
 module DfpApi
   module ApiConfig
-    CLIENT_LIB_VERSION = '0.3.4'
+    CLIENT_LIB_VERSION = '0.4.0'
   end
 end
