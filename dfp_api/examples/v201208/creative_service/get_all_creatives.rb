@@ -60,7 +60,7 @@ def get_all_creatives()
       page[:results].each_with_index do |creative, index|
         puts "%d) Creative ID: %d, name: %s, type: %s" %
             [index + start_index, creative[:id],
-             creative[:name], creative[:type]]
+             creative[:name], creative[:creative_type]]
       end
     end
   end while offset < page[:total_result_set_size]

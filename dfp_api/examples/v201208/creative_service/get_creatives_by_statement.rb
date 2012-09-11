@@ -55,7 +55,7 @@ def get_creatives_by_statement()
     # Print details about each creative in results.
     page[:results].each_with_index do |creative, index|
       puts "%d) Creative ID: %d, name: %s, type: %s" %
-          [index, creative[:id], creative[:name], creative[:type]]
+          [index, creative[:id], creative[:name], creative[:creative_type]]
     end
   end
 

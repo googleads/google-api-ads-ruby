@@ -46,7 +46,7 @@ def get_creative()
 
   if creative
     puts "Creative with ID: %d, name: %s and type: %s was found." %
-        [creative[:id], creative[:name], creative[:type]]
+        [creative[:id], creative[:name], creative[:creative_type]]
   end
 end
 
