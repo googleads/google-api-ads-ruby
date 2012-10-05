@@ -96,11 +96,16 @@ def add_campaigns()
         :amount => {:micro_amount => 150000000},
         :delivery_method => 'STANDARD'
       },
+      :settings => [
+        {
+          :xsi_type => 'KeywordMatchSetting',
+          :opt_in => true
+        }
+      ],
       :network_setting => {
         :target_google_search => false,
         :target_search_network => false,
-        :target_content_network => true,
-        :target_content_contextual => false
+        :target_content_network => true
       }
     }
   ]

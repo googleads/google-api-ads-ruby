@@ -35,9 +35,9 @@ module AdwordsApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201206
+    DEFAULT_VERSION = :v201209
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201206
+    LATEST_VERSION = :v201209
 
     # Set other constants
     API_NAME = 'AdwordsApi'
@@ -135,6 +135,35 @@ module AdwordsApi
           :TargetingIdeaService,
           :TrafficEstimatorService,
           :UserListService
+      ],
+      :v201209 => [
+          :AdExtensionOverrideService,
+          :AdGroupAdService,
+          :AdGroupCriterionService,
+          :AdGroupService,
+          :AdParamService,
+          :AlertService,
+          :BudgetOrderService,
+          :BudgetService,
+          :CampaignAdExtensionService,
+          :CampaignCriterionService,
+          :CampaignService,
+          :ConstantDataService,
+          :ConversionTrackerService,
+          :CustomerService,
+          :CustomerSyncService,
+          :DataService,
+          :ExperimentService,
+          :GeoLocationService,
+          :InfoService,
+          :LocationCriterionService,
+          :ManagedCustomerService,
+          :MediaService,
+          :MutateJobService,
+          :ReportDefinitionService,
+          :TargetingIdeaService,
+          :TrafficEstimatorService,
+          :UserListService
       ]
     }
 
@@ -145,14 +174,16 @@ module AdwordsApi
         :header_ns => 'https://adwords.google.com/api/adwords/cm/',
         :v201109 => 'https://adwords.google.com/api/adwords/',
         :v201109_1 => 'https://adwords.google.com/api/adwords/',
-        :v201206 => 'https://adwords.google.com/api/adwords/'
+        :v201206 => 'https://adwords.google.com/api/adwords/',
+        :v201209 => 'https://adwords.google.com/api/adwords/'
       },
       :SANDBOX => {
         :oauth_scope => 'https://adwords-sandbox.google.com/api/adwords/',
         :header_ns => 'https://adwords.google.com/api/adwords/cm/',
         :v201109 => 'https://adwords-sandbox.google.com/api/adwords/',
         :v201109_1 => 'https://adwords-sandbox.google.com/api/adwords/',
-        :v201206 => 'https://adwords-sandbox.google.com/api/adwords/'
+        :v201206 => 'https://adwords-sandbox.google.com/api/adwords/',
+        :v201209 => 'https://adwords-sandbox.google.com/api/adwords/'
       }
     }
 
@@ -246,7 +277,35 @@ module AdwordsApi
       [:v201206, :TrafficEstimatorService] => 'o/',
       [:v201206, :UserListService] => 'cm/',
       [:v201206, :ManagedCustomerService] => 'mcm/',
-      [:v201206, :CustomerService] => 'mcm/'
+      [:v201206, :CustomerService] => 'mcm/',
+      # v201209
+      [:v201209, :AdExtensionOverrideService] => 'cm/',
+      [:v201209, :AdGroupAdService] => 'cm/',
+      [:v201209, :AdGroupCriterionService] => 'cm/',
+      [:v201209, :AdGroupService] => 'cm/',
+      [:v201209, :AdParamService] => 'cm/',
+      [:v201209, :AlertService] => 'mcm/',
+      [:v201209, :BudgetOrderService] => 'billing/',
+      [:v201209, :CampaignAdExtensionService] => 'cm/',
+      [:v201209, :CampaignCriterionService] => 'cm/',
+      [:v201209, :CampaignService] => 'cm/',
+      [:v201209, :ConstantDataService] => 'cm/',
+      [:v201209, :ConversionTrackerService] => 'cm/',
+      [:v201209, :CustomerSyncService] => 'ch/',
+      [:v201209, :DataService] => 'cm/',
+      [:v201209, :ExperimentService] => 'cm/',
+      [:v201209, :GeoLocationService] => 'cm/',
+      [:v201209, :InfoService] => 'info/',
+      [:v201209, :LocationCriterionService] => 'cm/',
+      [:v201209, :MediaService] => 'cm/',
+      [:v201209, :MutateJobService] => 'cm/',
+      [:v201209, :ReportDefinitionService] => 'cm/',
+      [:v201209, :TargetingIdeaService] => 'o/',
+      [:v201209, :TrafficEstimatorService] => 'o/',
+      [:v201209, :UserListService] => 'cm/',
+      [:v201209, :ManagedCustomerService] => 'mcm/',
+      [:v201209, :CustomerService] => 'mcm/',
+      [:v201209, :BudgetService] => 'cm/'
     }
 
     # Auth constants for ClientLogin method.

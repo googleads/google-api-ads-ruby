@@ -78,5 +78,20 @@ module AdwordsApi
         @http_code = http_code
       end
     end
+
+    # Error for server-side report XML error.
+    class ReportXmlError < ReportError
+      attr_reader :type, :trigger, :field_path
+
+      def initialize(http_code, error_type, error_trigger, error_field_path)
+        message =
+            "HTTP code: %d, error type: '%s', trigger: '%s', field path: '%s'" %
+            [http_code, error_type, error_trigger, error_field_path]
+        super(http_code, message)
+        @type = error_type
+        @trigger = error_trigger
+        @field_path = error_field_path
+      end
+    end
   end
 end
