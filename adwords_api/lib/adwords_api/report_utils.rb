@@ -21,6 +21,7 @@
 
 require 'cgi'
 require 'gyoku'
+require 'nori'
 
 require 'ads_common/http'
 require 'adwords_api/errors'
@@ -195,24 +196,42 @@ module AdwordsApi
     def check_for_errors(response)
       # Check for error in body.
       report_body = response.body
-      if report_body and
+      if report_body and (@version <= :v201206) and
           ((RUBY_VERSION < '1.9.1') or report_body.valid_encoding?)
-        error_message_regex = '^!!!(-?\d+)\|\|\|(-?\d+)\|\|\|(.*)\?\?\?'
-        data = report_body.slice(0, 1024)
-        matches = data.match(error_message_regex)
-        if matches
-          message = (matches[3].nil?) ? data : matches[3]
-          raise AdwordsApi::Errors::ReportError.new(response.code,
-              'Report download error occured: %s' % message)
-        end
+        check_for_legacy_error(report_body, response.code)
       end
       # Check for error code.
       unless response.code == 200
+        check_for_xml_error(report_body, response.code)
+        # No XML error found nor raised, falling back to a default message.
         raise AdwordsApi::Errors::ReportError.new(response.code,
-            'Report download error occured, http code: %d, body: %s' %
-            [response.code, response.body])
+            'HTTP code: %d, body: %s' % [response.code, response.body])
       end
       return nil
+    end
+
+    # Checks for a legacy error in the response body and raises an exception if
+    # it was found.
+    def check_for_legacy_error(report_body, response_code)
+      error_message_regex = '^!!!(-?\d+)\|\|\|(-?\d+)\|\|\|(.*)\?\?\?'
+      data = report_body.slice(0, 1024)
+      matches = data.match(error_message_regex)
+      if matches
+        message = (matches[3].nil?) ? data : matches[3]
+        raise AdwordsApi::Errors::ReportError.new(response_code, message)
+      end
+    end
+
+    # Checks for an XML error in the response body and raises an exception if
+    # it was found.
+    def check_for_xml_error(report_body, response_code)
+      error_response = Nori.parse(report_body)
+      if error_response.include?(:report_download_error) and
+          error_response[:report_download_error].include?(:api_error)
+        api_error = error_response[:report_download_error][:api_error]
+        raise AdwordsApi::Errors::ReportXmlError.new(response_code,
+            api_error[:type], api_error[:trigger], api_error[:field_path])
+      end
     end
 
     # Renders a report definition hash into XML text.

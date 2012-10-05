@@ -20,7 +20,7 @@
 #
 # This example illustrates how to create campaigns.
 #
-# Tags: CampaignService.mutate
+# Tags: CampaignService.mutate, BudgetService.mutate
 
 require 'adwords_api'
 require 'date'
@@ -34,8 +34,23 @@ def add_campaigns()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
+  budget_srv = adwords.service(:BudgetService, API_VERSION)
   campaign_srv = adwords.service(:CampaignService, API_VERSION)
 
+  # Create a budget, which can be shared by multiple campaigns.
+  budget = {
+    :name => 'Interplanetary budget #%d' % (Time.new.to_f * 1000).to_i,
+    :amount => {:micro_amount => 50000000},
+    :delivery_method => 'STANDARD',
+    :period => 'DAILY'
+  }
+  budget_operation = {:operator => 'ADD', :operand => budget}
+
+  # Add budget.
+  return_budget = budget_srv.mutate([budget_operation])
+  budget_id = return_budget[:value].first[:budget_id]
+
+  # Create campaigns.
   campaigns = [
     {
       :name => "Interplanetary Cruise #%d" % (Time.new.to_f * 1000).to_i,
@@ -46,12 +61,9 @@ def add_campaigns()
         # type that the client library can't infer.
         :xsi_type => 'ManualCPC'
       },
-      :budget => {
-        :period => 'DAILY',
-        :amount => {:micro_amount => 50000000},
-        :delivery_method => 'STANDARD'
-      },
-      # Set the campaign network options to Search and Search Network.
+      # Budget (required) - note only the budget ID is required.
+      :budget => {:budget_id => budget_id},
+      # Set the campaign network options to Search, Content and Search Network.
       :network_setting => {
         :target_google_search => true,
         :target_search_network => true,
@@ -91,11 +103,7 @@ def add_campaigns()
       :bidding_strategy => {
         :xsi_type => 'ManualCPM'
       },
-      :budget => {
-        :period => 'DAILY',
-        :amount => {:micro_amount => 150000000},
-        :delivery_method => 'STANDARD'
-      },
+      :budget => {:budget_id => budget_id},
       :settings => [
         {
           :xsi_type => 'KeywordMatchSetting',
@@ -128,7 +136,7 @@ def add_campaigns()
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201206
+  API_VERSION = :v201209
 
   begin
     add_campaigns()

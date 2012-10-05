@@ -1,4 +1,5 @@
 0.7.1:
+  - Support and examples for v201209.
 
 0.7.0:
   - MapEntry structures are returned as Hashes now (#26).
