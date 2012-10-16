@@ -18,14 +18,15 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets all report definitions. Adding new definitions is
-# deprecated, please use AdHoc reporting.
+# This example retrieves URLs that have content keywords related to a given
+# website.
 #
-# Tags: ReportDefinitionService.get
+# Tags: TargetingIdeaService.get
 
 require 'adwords_api'
+require 'adwords_api/utils'
 
-def get_defined_reports()
+def get_placement_ideas(url)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -34,28 +35,58 @@ def get_defined_reports()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  report_def_srv = adwords.service(:ReportDefinitionService, API_VERSION)
+  targeting_idea_srv = adwords.service(:TargetingIdeaService, API_VERSION)
 
-  # Get all the report definitions.
-  selector = {}
-  response = report_def_srv.get(selector)
-  if response and response[:entries]
-    entries = response[:entries]
-    puts "#{entries.length} report definition(s) found."
-    entries.each do |entry|
-      puts "  Report definition id is #{entry[:id]} and name is " +
-          "\"#{entry[:report_name]}\"."
-    end
-  else
-    puts 'No report definitions found.'
+  # Construct selector.
+  selector = {
+    :idea_type => 'PLACEMENT',
+    :request_type => 'IDEAS',
+    :requested_attribute_types => ['CRITERION'],
+    :search_parameters => [{
+      # The 'xsi_type' field allows you to specify the xsi:type of the object
+      # being created. It's only necessary when you must provide an explicit
+      # type that the client library can't infer.
+      :xsi_type => 'RelatedToUrlSearchParameter',
+      :urls => [url],
+      :include_sub_urls => false
+    }],
+    :paging => {
+      :start_index => 0,
+      :number_results => PAGE_SIZE
+    }
+  }
+
+  # Define initial values.
+  offset = 0
+  results = []
+
+  begin
+    # Perform request.
+    page = targeting_idea_srv.get(selector)
+    results += page[:entries] if page and page[:entries]
+
+    # Prepare next page request.
+    offset += PAGE_SIZE
+    selector[:paging][:start_index] = offset
+  end while offset < page[:total_num_entries]
+
+  # Display results.
+  results.each do |result|
+    data = AdwordsApi::Utils.map(result[:data])
+    placement = data['CRITERION'][:value]
+    puts "Related placement found at URL [%s]" % placement[:url]
   end
+  puts "Total URLs found with keywords related to keywords at [%s]: %d." %
+      [url, results.length]
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201206
+  API_VERSION = :v201209
+  PAGE_SIZE = 100
 
   begin
-    get_defined_reports()
+    url = 'INSERT_PLACEMENT_URL_HERE'
+    get_placement_ideas(url)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e
