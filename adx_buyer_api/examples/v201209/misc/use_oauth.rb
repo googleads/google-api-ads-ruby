@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.sgomes@gmail.com (Sérgio Gomes)
+# Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
@@ -18,13 +18,13 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets and downloads a report from a report definition.
+# This example illustrates how to use OAuth authentication method.
 #
-# Note: defined reports are deprecated, please use AdHoc reporting.
+# Tags: CampaignService.get
 
 require 'adwords_api'
 
-def download_defined_report(report_definition_id, file_name)
+def use_oauth()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -33,21 +33,51 @@ def download_defined_report(report_definition_id, file_name)
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  report_def_srv = adwords.service(:ReportDefinitionService, API_VERSION)
+  campaign_srv = adwords.service(:CampaignService, API_VERSION)
 
-  # Download report, using "download_report_as_file" extension method.
-  report_def_srv.download_report_as_file(report_definition_id, file_name)
-  puts 'Report with definition id %d was downloaded to \'%s\'.' %
-      [report_definition_id, file_name]
+  # Get all the campaigns for this account; empty selector.
+  selector = {
+    :fields => ['Id', 'Name', 'Status'],
+    :ordering => [
+      {:field => 'Name', :sort_order => 'ASCENDING'}
+    ]
+  }
+
+  retry_count = 0
+
+  begin
+    response = campaign_srv.get(selector)
+  rescue AdsCommon::Errors::OAuthVerificationRequired => e
+    if retry_count < MAX_RETRIES
+      puts "Hit Auth error, please navigate to URL:\n\t%s" % e.oauth_url
+      print 'log in and type the verification code: '
+      verification_code = gets.chomp
+      adwords.credential_handler.set_credential(
+          :oauth_verification_code, verification_code)
+      retry_count += 1
+      retry
+    else
+      raise AdsCommon::Errors::AuthError, 'Failed to authenticate.'
+    end
+  end
+
+  if response and response[:entries]
+    campaigns = response[:entries]
+    campaigns.each do |campaign|
+      puts "Campaign ID %d, name '%s' and status '%s'" %
+          [campaign[:id], campaign[:name], campaign[:status]]
+    end
+  else
+    puts 'No campaigns were found.'
+  end
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201206
+  API_VERSION = :v201209
+  MAX_RETRIES = 3
 
   begin
-    report_definition_id = 'INSERT_REPORT_DEFINITION_ID'.to_i
-    file_name = 'INSERT_OUTPUT_FILE_NAME_HERE'
-    download_defined_report(report_definition_id, file_name)
+    use_oauth()
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e
