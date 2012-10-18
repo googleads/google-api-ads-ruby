@@ -196,7 +196,7 @@ module AdwordsApi
     def check_for_errors(response)
       # Check for error in body.
       report_body = response.body
-      if report_body and (@version <= :v201206) and
+      if report_body and is_legacy_reporting(@version) and
           ((RUBY_VERSION < '1.9.1') or report_body.valid_encoding?)
         check_for_legacy_error(report_body, response.code)
       end
@@ -208,6 +208,13 @@ module AdwordsApi
             'HTTP code: %d, body: %s' % [response.code, response.body])
       end
       return nil
+    end
+
+    # Returns true is the provided API version has legacy reporting.
+    def is_legacy_reporting(version)
+      return (version == :v201206 or
+              version == :v201109_1 or
+              version == :v201109)
     end
 
     # Checks for a legacy error in the response body and raises an exception if

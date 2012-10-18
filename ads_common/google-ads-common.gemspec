@@ -36,8 +36,8 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.files = Dir.glob('{lib,test}/**/*') + %w(COPYING README ChangeLog)
   s.test_files = Dir.glob('test/test_*.rb')
-  s.add_dependency('savon', '~> 1.0.0')
-  s.add_dependency('httpi', '~> 1.0.0')
+  s.add_dependency('savon', '~> 1.2.0')
+  s.add_dependency('httpi', '~> 1.1.0')
   s.add_dependency('oauth', '~> 0.4.5')
-  s.add_dependency('oauth2', '~> 0.7.1')
+  s.add_dependency('oauth2', '~> 0.8.0')
 end
