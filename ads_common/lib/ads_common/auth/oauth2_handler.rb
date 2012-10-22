@@ -69,8 +69,8 @@ module AdsCommon
 
       # Overrides base get_token method to account for the token expiration.
       def get_token(credentials = nil)
-        refresh_token! if !@token.nil? && @token.expired?
         token = super(credentials)
+        token = refresh_token! if !token.nil? && token.expired?
         return oauth_token_to_hash(token)
       end
 
@@ -122,6 +122,12 @@ module AdsCommon
         if credentials[:oauth2_client_secret].nil?
           raise AdsCommon::Errors::AuthError,
               'Client secret is not included in the credentials.'
+        end
+
+        if credentials[:oauth2_token] &&
+            !credentials[:oauth2_token].kind_of?(Hash)
+          raise AdsCommon::Errors::AuthError,
+              'OAuth2 token provided must be a Hash'
         end
       end
 
