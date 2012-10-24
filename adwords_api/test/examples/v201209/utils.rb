@@ -27,6 +27,11 @@ class UtilsV201209
     @adwords = adwords
   end
 
+  def get_budget
+    @budget ||= create_budget()
+    return @budget
+  end
+
   def get_campaign
     @campaign ||= create_campaign()
     return @campaign
@@ -60,29 +65,47 @@ class UtilsV201209
 
   private
 
-  def create_campaign
+  def create_campaign()
+    budget = get_budget()
+    budget_id = budget[:budget_id]
+
     campaign_srv = @adwords.service(:CampaignService, API_VERSION)
     campaign = {
       :name => "Example tests campaign #%d" % (Time.new.to_f * 1000).to_i,
       :status => 'PAUSED',
       :bidding_strategy => {:xsi_type => 'ManualCPC'},
-      :budget => {
-        :period => 'DAILY',
-        :amount => {:micro_amount => 50000000},
-        :delivery_method => 'STANDARD'
-      },
+      :budget => {:budget_id => budget_id},
       :network_setting => {
         :target_google_search => true,
         :target_search_network => true,
         :target_content_network => true
-      }
+      },
+      :settings => [
+        {
+          :xsi_type => 'KeywordMatchSetting',
+          :opt_in => true
+        }
+      ]
     }
     operation = {:operator => 'ADD', :operand => campaign}
     response = campaign_srv.mutate([operation])
     return response[:value].first
   end
 
-  def create_ad_group
+  def create_budget()
+    budget_srv = @adwords.service(:BudgetService, API_VERSION)
+    budget = {
+      :name => 'Example tests budget #%d' % (Time.new.to_f * 1000).to_i,
+      :amount => {:micro_amount => 50000000},
+      :delivery_method => 'STANDARD',
+      :period => 'DAILY'
+    }
+    operation = {:operator => 'ADD', :operand => budget}
+    response = budget_srv.mutate([operation])
+    return response[:value].first
+  end
+
+  def create_ad_group()
     campaign = get_campaign()
     ad_group_srv = @adwords.service(:AdGroupService, API_VERSION)
     ad_group = {

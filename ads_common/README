@@ -17,6 +17,7 @@ The following gem libraries are required:
  - savon
  - httpi
  - oauth
+ - oauth2
 
 = Docs for Developers
 
