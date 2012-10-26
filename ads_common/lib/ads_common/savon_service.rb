@@ -98,17 +98,12 @@ module AdsCommon
       original_action_name =
           get_service_registry.get_method_signature(action)[:original_name]
       original_action_name = action if original_action_name.nil?
-      response = @client.request(original_action_name) do |soap|
+      response = @client.request(original_action_name) do |soap, wsdl, http|
         soap.body = args
-        set_headers(soap, extra_namespaces)
+        header_handler.prepare_request(http, soap)
+        soap.namespaces.merge!(extra_namespaces) unless extra_namespaces.nil?
       end
       return response
-    end
-
-    # Executes each handler to generate SOAP headers.
-    def set_headers(soap, extra_namespaces)
-      header_handler.prepare_request(@client.http, soap)
-      soap.namespaces.merge!(extra_namespaces) unless extra_namespaces.nil?
     end
 
     # Checks for errors in response and raises appropriate exception.
