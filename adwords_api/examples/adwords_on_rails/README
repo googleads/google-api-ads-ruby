@@ -54,7 +54,11 @@ How do I get started?
 
   $ rake db:migrate
 
-7. Start the server:
+7. Configure AdWords API settings:
+
+  $ vi config/adwords_api.yml
+
+8. Start the server:
 
   $ script/rails server
 
