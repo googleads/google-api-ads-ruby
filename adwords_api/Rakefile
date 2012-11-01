@@ -56,7 +56,7 @@ end
 desc 'Package demo apps.'
 task :build_demo do
   ['adwords_on_rails'].each do |app|
-    system 'tar cz --mode 644 -C examples -f %s.tar.gz %s' % [app, app]
+    system 'tar cz --mode +r,u+X+w -C examples -f %s.tar.gz %s' % [app, app]
   end
 end
 
