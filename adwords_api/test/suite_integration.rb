@@ -1,6 +1,7 @@
+#!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
+# Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
@@ -17,10 +18,23 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Module to keep the current library version.
+# Test suite for integration tests.
 
-module AdwordsApi
-  module ApiConfig
-    CLIENT_LIB_VERSION = '0.8.0'
+$:.unshift File.expand_path('../../lib/', __FILE__)
+$:.unshift File.expand_path('../../', __FILE__)
+
+require 'test/test_utils'
+
+examples_dir_path =
+    File.expand_path(File.join('..', '..', 'examples'), __FILE__)
+
+examples_mask = File.join(examples_dir_path, 'v*/**/*.rb')
+
+Dir.glob(examples_mask).each do |file|
+  method_name = 'test_%s' % File.basename(file)
+  Class.new(Test::Unit::TestCase) do
+    define_method(method_name) do
+      ExampleRunner.new(file).engage(self)
+    end
   end
 end

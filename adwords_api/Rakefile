@@ -48,6 +48,17 @@ task :test_examples do
   end
 end
 
+desc 'Perform integration testing.'
+task :test_integrate do
+  Dir.glob('test/suite_integration.rb').each do |file|
+    puts 'Running test suite: %s' % file
+    system 'ruby %s' % file
+  end
+end
+
+desc 'Perform smoke testing.'
+task :test_smoke => [:test, :test_integrate]
+
 desc 'Run tests coverage tool.'
 task :coverage do
   system 'ruby test/coverage.rb'
@@ -56,7 +67,7 @@ end
 desc 'Package demo apps.'
 task :build_demo do
   ['adwords_on_rails'].each do |app|
-    system 'tar cz --mode 644 -C examples -f %s.tar.gz %s' % [app, app]
+    system 'tar cz --mode +r,u+X+w -C examples -f %s.tar.gz %s' % [app, app]
   end
 end
 

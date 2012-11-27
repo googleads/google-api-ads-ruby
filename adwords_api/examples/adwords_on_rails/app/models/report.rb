@@ -4,6 +4,9 @@ class Report
     'ACCOUNT_PERFORMANCE_REPORT' => {
         :name => 'Account Performance'
     },
+    'ACCOUNT_REACH_FREQUENCY_REPORT' => {
+        :name => 'Account Reach Frequency'
+    },
     'AD_PERFORMANCE_REPORT' => {
         :name => 'Ad Performance'
     },
@@ -12,6 +15,9 @@ class Report
     },
     'ADGROUP_PERFORMANCE_REPORT' => {
         :name => 'Ad Group Performance'
+    },
+    'ADGROUP_REACH_FREQUENCY_REPORT' => {
+        :name => 'Ad Group Reach Frequency'
     },
     'AUTOMATIC_PLACEMENTS_PERFORMANCE_REPORT' => {
         :name => 'Automatic Placements Performance'
@@ -25,14 +31,17 @@ class Report
     'CAMPAIGN_PERFORMANCE_REPORT' => {
         :name => 'Campaign Performance'
     },
+    'CAMPAIGN_REACH_FREQUENCY_REPORT' => {
+        :name => 'Campaign Reach Frequency'
+    },
+    'CLICK_PERFORMANCE_REPORT' => {
+        :name => 'Click Performance'
+    },
     'CREATIVE_CONVERSION_REPORT' => {
         :name => 'Creative Conversion'
     },
     'CRITERIA_PERFORMANCE_REPORT' => {
         :name => 'Criteria Performance'
-    },
-    'DEMOGRAPHIC_PERFORMANCE_REPORT' => {
-        :name => 'Demographic Performance'
     },
     'DESTINATION_URL_REPORT' => {
         :name => 'Destination URL'
