@@ -1,5 +1,6 @@
 0.8.0:
   - Removed deprecated API versions v201109, v201109_1.
+  - Removed support for deprecated Sandbox, see http://goo.gl/Plu3o
 
 0.7.2:
   - Fixed issue #87 specific to ruby1.8.

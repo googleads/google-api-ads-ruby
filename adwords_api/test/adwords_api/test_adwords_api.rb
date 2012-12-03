@@ -27,20 +27,18 @@ require 'ads_common/api_config'
 require 'adwords_api'
 
 class TestAdwordsApi < Test::Unit::TestCase
-  # Initializes tests.
-  def setup()
-    @config = AdsCommon::Config.new({})
-  end
+
+  API_VERSION = :v201209
 
   def test_initialize()
     assert_nothing_raised do
-      adwords_api = AdwordsApi::Api.new(@config)
+      adwords_api = AdwordsApi::Api.new({})
     end
   end
 
   def test_api_config()
     assert_nothing_raised do
-      adwords_api = AdwordsApi::Api.new(@config)
+      adwords_api = AdwordsApi::Api.new({})
       api_config = adwords_api.api_config()
       assert_not_nil(api_config)
       assert_kind_of(AdsCommon::ApiConfig, api_config)
@@ -48,7 +46,7 @@ class TestAdwordsApi < Test::Unit::TestCase
   end
 
   def test_use_mcc()
-    adwords_api = AdwordsApi::Api.new(@config)
+    adwords_api = AdwordsApi::Api.new({})
     adwords_api.use_mcc = false
     assert(!adwords_api.use_mcc)
     adwords_api.use_mcc do
@@ -57,7 +55,7 @@ class TestAdwordsApi < Test::Unit::TestCase
   end
 
   def test_validate_only()
-    adwords_api = AdwordsApi::Api.new(@config)
+    adwords_api = AdwordsApi::Api.new({})
     adwords_api.validate_only = false
     assert(!adwords_api.validate_only)
     adwords_api.validate_only do
@@ -66,11 +64,27 @@ class TestAdwordsApi < Test::Unit::TestCase
   end
 
   def test_partial_failure()
-    adwords_api = AdwordsApi::Api.new(@config)
+    adwords_api = AdwordsApi::Api.new({})
     adwords_api.partial_failure = false
     assert(!adwords_api.partial_failure)
     adwords_api.partial_failure do
       assert(adwords_api.partial_failure)
     end
+  end
+
+  def test_no_sandbox_env()
+    adwords_api = AdwordsApi::Api.new({
+      :service => {:environment => 'SANDBOX'}
+    })
+    assert_raise(AdsCommon::Errors::Error) do
+      service = adwords_api.service(:ManagedCustomerService, API_VERSION)
+    end
+  end
+
+  def test_prod_env()
+    adwords_api = AdwordsApi::Api.new({
+      :service => {:environment => 'PRODUCTION'}
+    })
+    service = adwords_api.service(:ManagedCustomerService, API_VERSION)
   end
 end

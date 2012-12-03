@@ -112,12 +112,6 @@ module AdwordsApi
         :header_ns => 'https://adwords.google.com/api/adwords/cm/',
         :v201206 => 'https://adwords.google.com/api/adwords/',
         :v201209 => 'https://adwords.google.com/api/adwords/'
-      },
-      :SANDBOX => {
-        :oauth_scope => 'https://adwords-sandbox.google.com/api/adwords/',
-        :header_ns => 'https://adwords.google.com/api/adwords/cm/',
-        :v201206 => 'https://adwords-sandbox.google.com/api/adwords/',
-        :v201209 => 'https://adwords-sandbox.google.com/api/adwords/'
       }
     }
 

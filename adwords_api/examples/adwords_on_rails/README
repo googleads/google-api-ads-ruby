@@ -100,11 +100,8 @@ README:
 Production accounts
 -------------------
 
-The AdWords environment (Sandbox vs Production) has to be specified in the
-configuration file.
-
-Note: This demo is capable of accessing production accounts. Be aware that the
-API unit costs of the requests made by the AdWords on Rails application will be
+This demo is capable of accessing production accounts. Be aware that the API
+unit costs of the requests made by the AdWords on Rails application will be
 recorded against the developer token specified in the credentials and may be
 significant.
 

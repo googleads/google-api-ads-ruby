@@ -20,6 +20,9 @@
 #
 # This example gets and downloads an Ad Hoc report from a XML report definition
 # for all accounts in hierarchy in multiple parallel threads.
+#
+# Note: This code example uses MCC-level calls and won't work with Test
+# Accounts, see: https://developers.google.com/adwords/api/docs/test-accounts
 
 require 'thread'
 

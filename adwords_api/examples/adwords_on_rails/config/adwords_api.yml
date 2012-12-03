@@ -24,7 +24,7 @@
   # :client_customer_id: INSERT_YOUR_CLIENT_CUSTOMER_ID_HERE
   :user_agent: demo-rails
 :service:
-  # Environment to access: SANDBOX or PRODUCTION.
+  # Only production environment is available now, see: http://goo.gl/Plu3o
   :environment: PRODUCTION
 :connection:
   # Enable to request all responses to be compressed.

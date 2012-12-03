@@ -70,8 +70,6 @@ module AdwordsApi
     # environment.
     #
     # Raises:
-    # - AdsCommon::Error::EnvironmentMismatchError if sandbox credentials are
-    # being used for production or vice-versa.
     # - AdwordsApi::Errors:BadCredentialsError if supplied credentials are not
     # valid.
     #
@@ -90,21 +88,9 @@ module AdwordsApi
       end
 
       token = credentials[:developer_token]
-      sandbox_token = (token =~ /.+@.+\+\+[a-zA-Z]{3}/)
-      environment = @config.read('service.environment')
-      case environment
-        when :PRODUCTION
-          if sandbox_token
-            raise AdsCommon::Errors::EnvironmentMismatchError,
-                'Attempting to connect to production with sandbox credentials.'
-          end
-        when :SANDBOX
-          if (!sandbox_token)
-            raise AdsCommon::Errors::EnvironmentMismatchError,
-                'Attempting to connect to the sandbox with malformatted ' +
-                'credentials. Please check http://code.google.com/apis/' +
-                'adwords/docs/sandbox.html#request-headers for details.'
-          end
+      if token.nil? || token.empty?
+        raise AdwordsApi::Errors::BadCredentialsError,
+            'Developer token is missing, check credentials.'
       end
       return nil
     end
