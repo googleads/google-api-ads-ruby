@@ -21,6 +21,9 @@
 # This example illustrates how to retrieve the account hierarchy under an
 # account.
 #
+# Note: This code example uses MCC-level calls and won't work with Test
+# Accounts, see: https://developers.google.com/adwords/api/docs/test-accounts
+#
 # Tags: ManagedCustomerService.get
 
 require 'adwords_api'

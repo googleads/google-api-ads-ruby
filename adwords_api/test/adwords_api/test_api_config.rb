@@ -55,12 +55,4 @@ class TestApiConfig < Test::Unit::TestCase
         'https://adwords.google.com/api/adwords/reportdownload/v201206'
     assert_equal(expected_url, url)
   end
-
-  # Tests AdHoc report URL generator (sandbox).
-  def test_adhoc_report_download_url_sandbox()
-    url = AdwordsApi::ApiConfig.adhoc_report_download_url(:SANDBOX, :v201206)
-    expected_url =
-        'https://adwords-sandbox.google.com/api/adwords/reportdownload/v201206'
-    assert_equal(expected_url, url)
-  end
 end

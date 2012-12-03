@@ -21,6 +21,9 @@
 # This example gets all alerts for all clients of an MCC account. The effective
 # user (clientCustomerId, or authToken) must be an MCC user to get results.
 #
+# Note: This code example uses MCC-level calls and won't work with Test
+# Accounts, see: https://developers.google.com/adwords/api/docs/test-accounts
+#
 # Tags: AlertService.get
 
 require 'adwords_api'

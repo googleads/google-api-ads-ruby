@@ -22,6 +22,9 @@
 # We recommend to use this script as a one off to convert your identifiers to
 # IDs and store them for future use.
 #
+# Note: This code example uses MCC-level calls and won't work with Test
+# Accounts, see: https://developers.google.com/adwords/api/docs/test-accounts
+#
 # Tags: InfoService.get
 
 require 'adwords_api'

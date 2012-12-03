@@ -24,8 +24,6 @@ require 'test/unit'
 
 require 'adwords_api'
 
-API_VERSION = :v201206
-
 # Overriding default access levels to public for tests.
 module AdwordsApi
   class ReportUtils
@@ -65,6 +63,9 @@ VALID_REPORT = '"Custom ADGROUP_PERFORMANCE_REPORT (Oct 20, 2011-Oct 26, 2011)"\
 GZIPPED_REPORT = "\x1F\x8B\b\x00\x00\x00\x00\x00\x00\x00Sr.-.\xC9\xCFUptq\x0F\xF2\x0F\r\x88\x0Fp\rr\xF3\x0F\xF2u\xF4sv\x8D\x0Fr\r\xF0\x0F\nQ\xD0pIMV0\xD2Q0204\xD4\x05\xB1- lM%.\xE7\xC4\xDC\x82\xC4\xCC\xF4<\x05O\x17\x1D\xC7\x14\x85\xF4\xA2\xFC\xD2\x02\x10\xDB3\xB7\xA0(\xB5\xB883?\xAFX\xC79'39\eH\xE5\x17\x97p\x85\xE4\x97$\xE6\xE8(\xE8\xEA\xEA\x18\x80\xA0\x9E\x81\x01\x17\x00\xBE\x1D\xBE\xAD\x81\x00\x00\x00"
 
 class TestReportUtils < Test::Unit::TestCase
+
+  API_VERSION = :v201209
+
   # Initialize tests.
   def setup()
     @api = AdwordsApi::Api.new

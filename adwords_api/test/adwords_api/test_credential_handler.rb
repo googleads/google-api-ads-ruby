@@ -38,8 +38,8 @@ end
 class TestCredentialHandler < Test::Unit::TestCase
 
   def setup()
-    logger = Logger.new(STDERR)
-    config = AdsCommon::Config.new({:library => {:logger => logger}})
+    @logger = Logger.new(STDERR)
+    config = AdsCommon::Config.new({:library => {:logger => @logger}})
     @handler = AdwordsApi::CredentialHandler.new(config)
   end
 
@@ -51,35 +51,71 @@ class TestCredentialHandler < Test::Unit::TestCase
   end
 
   def test_validate_headers_for_server_client_customer_id()
-    credentials = {:client_customer_id => '123-456-7890'}
+    credentials = {
+      :client_customer_id => '123-456-7890',
+      :developer_token => 'AbC'
+    }
     assert_nothing_raised {@handler.validate_headers_for_server(credentials)}
   end
 
   def test_validate_headers_for_server_valid_cid()
-    credentials1 = {:client_customer_id => '123-456-7890'}
+    credentials1 = {
+      :client_customer_id => '123-456-7890',
+      :developer_token => 'AbC'
+    }
     assert_nothing_raised {@handler.validate_headers_for_server(credentials1)}
 
-    credentials2 = {:client_customer_id => '1234567890'}
+    credentials2 = {
+      :client_customer_id => '1234567890',
+      :developer_token => 'AbC'
+    }
     assert_nothing_raised {@handler.validate_headers_for_server(credentials2)}
 
-    credentials3 = {:client_customer_id => 1234567890}
+    credentials3 = {
+      :client_customer_id => 1234567890,
+      :developer_token => 'AbC'
+    }
     assert_nothing_raised {@handler.validate_headers_for_server(credentials3)}
   end
 
   def test_validate_headers_for_server_invalid_cid()
-    credentials1 = {:client_customer_id => 'demo@example.com'}
+    credentials1 = {
+      :client_customer_id => 'demo@example.com',
+      :developer_token => 'AbC'
+    }
     assert_raise(AdwordsApi::Errors::BadCredentialsError) do
       @handler.validate_headers_for_server(credentials1)
     end
 
-    credentials2 = {:client_customer_id => 'demo@example.com 1234567890'}
+    credentials2 = {
+      :client_customer_id => 'demo@example.com 1234567890',
+      :developer_token => 'AbC'
+    }
     assert_raise(AdwordsApi::Errors::BadCredentialsError) do
       @handler.validate_headers_for_server(credentials2)
     end
 
-    credentials3 = {:client_customer_id => '123-456-7890-'}
+    credentials3 = {
+      :client_customer_id => '123-456-7890-',
+      :developer_token => 'AbC'
+    }
     assert_raise(AdwordsApi::Errors::BadCredentialsError) do
       @handler.validate_headers_for_server(credentials3)
+    end
+  end
+
+  def test_validate_headers_for_server_no_developer_token()
+    credentials1 = {:client_customer_id => '123-456-7890'}
+    assert_raise(AdwordsApi::Errors::BadCredentialsError) do
+      @handler.validate_headers_for_server(credentials1)
+    end
+
+    credentials2 = {
+      :client_customer_id => '123-456-7890',
+      :developer_token => ''
+    }
+    assert_raise(AdwordsApi::Errors::BadCredentialsError) do
+      @handler.validate_headers_for_server(credentials2)
     end
   end
 end
