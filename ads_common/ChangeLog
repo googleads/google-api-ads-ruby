@@ -1,6 +1,7 @@
 0.9.0:
   - Switched to Signet OAuth implementation.
   - Removed deprecated OAuth1.0a scheme, please use OAuth2.0 instead.
+  - Support for JWT authorization (OAuth2 service accounts).
 
 0.8.2:
   - Fixed issue #89.

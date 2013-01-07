@@ -1,6 +1,8 @@
 0.8.0:
   - Removed deprecated API versions v201109, v201109_1.
   - Removed support for deprecated Sandbox, see http://goo.gl/Plu3o
+  - Require google-ads-common 0.9.0 or later from now on.
+  - Added support for AOuth2.0 JWT, removed OAuth1.0a support.
 
 0.7.2:
   - Fixed issue #87 specific to ruby1.8.

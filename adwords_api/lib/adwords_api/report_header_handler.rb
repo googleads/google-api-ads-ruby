@@ -49,8 +49,7 @@ module AdwordsApi
       credentials = @credential_handler.credentials(override)
       headers = {
           'Content-Type' => 'application/x-www-form-urlencoded',
-          'Authorization' =>
-              @auth_handler.auth_string(credentials, HTTPI::Request.new(url)),
+          'Authorization' => @auth_handler.auth_string(credentials),
           'User-Agent' => @credential_handler.generate_user_agent(),
           'clientCustomerId' => credentials[:client_customer_id].to_s,
           'developerToken' => credentials[:developer_token]

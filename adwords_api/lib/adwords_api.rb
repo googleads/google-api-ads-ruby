@@ -63,9 +63,14 @@ module AdwordsApi
     def soap_header_handler(auth_handler, version, header_ns, default_ns)
       auth_method = @config.read('authentication.method', :CLIENTLOGIN)
       handler_class = case auth_method
-        when :CLIENTLOGIN then AdwordsApi::ClientLoginHeaderHandler
-        when :OAUTH, :OAUTH2 then AdsCommon::SavonHeaders::OAuthHeaderHandler
-      end
+        when :CLIENTLOGIN
+            AdwordsApi::ClientLoginHeaderHandler
+        when :OAUTH2, :OAUTH2_JWT
+            AdsCommon::SavonHeaders::OAuthHeaderHandler
+        else
+            raise AdsCommon::Errors::AuthError,
+                "Unknown auth method: %s" % auth_method
+        end
       return handler_class.new(@credential_handler, auth_handler, header_ns,
                                   default_ns, version)
     end
