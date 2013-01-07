@@ -25,8 +25,8 @@ require 'ads_common/config'
 require 'ads_common/errors'
 require 'ads_common/utils'
 require 'ads_common/auth/client_login_handler'
-require 'ads_common/auth/oauth_handler'
 require 'ads_common/auth/oauth2_handler'
+require 'ads_common/auth/oauth2_jwt_handler'
 
 module AdsCommon
   class Api
@@ -111,15 +111,12 @@ module AdsCommon
         begin
           credentials = @credential_handler.credentials
           token = @auth_handler.get_token(credentials)
-        rescue AdsCommon::Errors::OAuthVerificationRequired,
-            AdsCommon::Errors::OAuth2VerificationRequired => e
+        rescue AdsCommon::Errors::OAuth2VerificationRequired => e
           verification_code = (block_given?) ? yield(e.oauth_url) : nil
           # Retry with verification code if one provided.
           if verification_code
-            code_symbol =
-                e.kind_of?(AdsCommon::Errors::OAuthVerificationRequired) ?
-                :oauth_verification_code : :oauth2_verification_code
-            @credential_handler.set_credential(code_symbol, verification_code)
+            @credential_handler.set_credential(
+                :oauth2_verification_code, verification_code)
             retry
           else
             raise e
@@ -195,16 +192,19 @@ module AdsCommon
               api_config.client_login_config(:LOGIN_SERVICE_NAME)
           )
         when :OAUTH
-          environment = @config.read('service.environment',
-              api_config.default_environment())
-          AdsCommon::Auth::OAuthHandler.new(
-              @config,
-              api_config.environment_config(environment, :oauth_scope)
-          )
+          raise AdsCommon::Errors::Error,
+              'OAuth authorization method is deprecated, use OAuth2 instead.'
         when :OAUTH2
           environment = @config.read('service.environment',
               api_config.default_environment())
           AdsCommon::Auth::OAuth2Handler.new(
+              @config,
+              api_config.environment_config(environment, :oauth_scope)
+          )
+        when :OAUTH2_JWT
+          environment = @config.read('service.environment',
+              api_config.default_environment())
+          AdsCommon::Auth::OAuth2JwtHandler.new(
               @config,
               api_config.environment_config(environment, :oauth_scope)
           )

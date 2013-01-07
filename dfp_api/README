@@ -90,20 +90,20 @@ or add it to the bash configuration file:
    $ echo 'export RUBYOPT="rubygems"' >> ~/.bashrc
 
 
-== Using OAuth
+== Using OAuth2.0
 
-It is recommended to use OAuth authentication method instead of explicit
-email/password combination. OAuth support is almost transparent to the library
-user. In order to use OAuth you just need to:
+It is recommended to use OAuth2.0 authentication method instead of ClientLogin
+(explicit email/password combination). OAuth2.0 support is almost transparent to
+the library user. In order to use OAuth you just need to:
 
-  - set authentication method to 'OAuth' in configuration;
+  - set authentication method to 'OAuth2' in the configuration;
 
-  - include oauth_consumer_key and oauth_consumer_secret;
+  - include oauth2_client_id and oauth2_client_secret;
 
-  - handle OAuthVerificationRequired error and pass verification code to the
+  - handle OAuth2VerificationRequired error and pass verification code to the
     library.
 
-See 'dfp_api.yml' configuration file and 'common/oauth_handling.rb' example for
+See 'dfp_api.yml' configuration file and 'common/oauth2_handling.rb' example for
 more details.
 
 == Accessing services

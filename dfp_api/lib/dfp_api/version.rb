@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+# Encoding: utf-8
 #
 # Authors:: api.dklimkin@gmail.com (Danial Klimkin)
 #
@@ -21,6 +21,6 @@
 
 module DfpApi
   module ApiConfig
-    CLIENT_LIB_VERSION = '0.4.1'
+    CLIENT_LIB_VERSION = '0.6.0'
   end
 end

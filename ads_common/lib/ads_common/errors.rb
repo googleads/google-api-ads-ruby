@@ -39,15 +39,6 @@ module AdsCommon
       end
     end
 
-    # Raised when OAuth1.0a access token is required.
-    class OAuthVerificationRequired < AuthError
-      attr_reader :oauth_url, :request_token
-      def initialize(oauth_url, request_token)
-        super()
-        @oauth_url, @request_token = oauth_url, request_token
-      end
-    end
-
     # Raised when OAuth2.0 access token is required.
     class OAuth2VerificationRequired < AuthError
       attr_reader :oauth_url

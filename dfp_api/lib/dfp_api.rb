@@ -51,8 +51,10 @@ module DfpApi
     def soap_header_handler(auth_handler, version, header_ns, default_ns)
       auth_method = @config.read('authentication.method', :CLIENTLOGIN)
       handler_class  = case auth_method
-        when :CLIENTLOGIN then DfpApi::ClientLoginHeaderHandler
-        when :OAUTH, :OAUTH2 then AdsCommon::SavonHeaders::OAuthHeaderHandler
+        when :CLIENTLOGIN
+            DfpApi::ClientLoginHeaderHandler
+        when :OAUTH2, :OAUTH2_JWT
+            AdsCommon::SavonHeaders::OAuthHeaderHandler
         else
           raise AdsCommon::Errors::AuthError,
               "Unknown auth method: %s" % auth_method

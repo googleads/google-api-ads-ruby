@@ -16,8 +16,7 @@ Install it using the gem install command.
 The following gem libraries are required:
  - savon
  - httpi
- - oauth
- - oauth2
+ - signet
 
 = Docs for Developers
 

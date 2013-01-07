@@ -63,7 +63,7 @@ module AdsCommon
       end
 
       # Returns authorization string.
-      def auth_string(credentials, request)
+      def auth_string(credentials)
         return [AUTH_PREFIX, get_token(credentials)].join
       end
 

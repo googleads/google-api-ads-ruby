@@ -20,7 +20,6 @@
 # Handles SOAP headers and namespaces definition for OAuth type header.
 
 require 'ads_common/savon_headers/base_header_handler'
-require 'ads_common/savon_headers/httpi_request_proxy'
 
 module AdsCommon
   module SavonHeaders
@@ -43,7 +42,7 @@ module AdsCommon
         credentials = @credential_handler.credentials
         request.url = soap.endpoint
         request.headers['Authorization'] =
-            @auth_handler.auth_string(credentials, request)
+            @auth_handler.auth_string(credentials)
       end
     end
   end

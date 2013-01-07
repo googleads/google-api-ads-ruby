@@ -35,9 +35,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201208
+    DEFAULT_VERSION = :v201211
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201208
+    LATEST_VERSION = :v201211
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -45,27 +45,6 @@ module DfpApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v201108 => [:CompanyService, :CreativeService, :ForecastService,
-                   :InventoryService, :LineItemCreativeAssociationService,
-                   :LineItemService, :NetworkService, :OrderService,
-                   :PlacementService, :ReportService, :UserService,
-                   :CustomTargetingService, :PublisherQueryLanguageService,
-                   :LabelService, :ThirdPartySlotService],
-      :v201111 => [:CompanyService, :CreativeService, :ForecastService,
-                   :InventoryService, :LineItemCreativeAssociationService,
-                   :LineItemService, :NetworkService, :OrderService,
-                   :PlacementService, :ReportService, :UserService,
-                   :CustomTargetingService, :PublisherQueryLanguageService,
-                   :LabelService, :ThirdPartySlotService, :ContentService,
-                   :SuggestedAdUnitService, :CreativeTemplateService],
-      :v201201 => [:CompanyService, :CreativeService, :ForecastService,
-                   :InventoryService, :LineItemCreativeAssociationService,
-                   :LineItemService, :NetworkService, :OrderService,
-                   :PlacementService, :ReportService, :UserService,
-                   :CustomTargetingService, :PublisherQueryLanguageService,
-                   :LabelService, :ThirdPartySlotService, :ContentService,
-                   :SuggestedAdUnitService, :CreativeTemplateService,
-                   :TeamService],
       :v201203 => [:CompanyService, :CreativeService, :ForecastService,
                    :InventoryService, :LineItemCreativeAssociationService,
                    :LineItemService, :NetworkService, :OrderService,
@@ -100,7 +79,17 @@ module DfpApi
                    :LabelService, :ThirdPartySlotService, :ContentService,
                    :SuggestedAdUnitService, :CreativeTemplateService,
                    :TeamService, :AudienceSegmentService, :CustomFieldService,
-                   :UserTeamAssociationService, :CreativeSetService]
+                   :UserTeamAssociationService, :CreativeSetService],
+      :v201211 => [:CompanyService, :CreativeService, :ForecastService,
+                   :InventoryService, :LineItemCreativeAssociationService,
+                   :LineItemService, :NetworkService, :OrderService,
+                   :PlacementService, :ReportService, :UserService,
+                   :CustomTargetingService, :PublisherQueryLanguageService,
+                   :LabelService, :ThirdPartySlotService, :ContentService,
+                   :SuggestedAdUnitService, :CreativeTemplateService,
+                   :TeamService, :AudienceSegmentService, :CustomFieldService,
+                   :UserTeamAssociationService, :CreativeSetService,
+                   :CreativeWrapperService]
     }
 
     # Configure the different environments, with the base URL for each one
@@ -108,13 +97,11 @@ module DfpApi
       :PRODUCTION => {
         :oauth_scope => 'https://www.google.com/apis/ads/publisher/',
         :header_ns => 'https://www.google.com/apis/ads/publisher/',
-        :v201108 => 'https://www.google.com/apis/ads/publisher/',
-        :v201111 => 'https://www.google.com/apis/ads/publisher/',
-        :v201201 => 'https://www.google.com/apis/ads/publisher/',
         :v201203 => 'https://www.google.com/apis/ads/publisher/',
         :v201204 => 'https://www.google.com/apis/ads/publisher/',
         :v201206 => 'https://www.google.com/apis/ads/publisher/',
-        :v201208 => 'https://www.google.com/apis/ads/publisher/'
+        :v201208 => 'https://www.google.com/apis/ads/publisher/',
+        :v201211 => 'https://www.google.com/apis/ads/publisher/'
       }
     }
 
