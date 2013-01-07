@@ -31,6 +31,24 @@ module AdsCommon
         return result
       end
     end
+
+    # Converts all hash keys to strings.
+    def self.hash_keys_to_str(data)
+      return nil if data.nil?
+      return data.inject({}) do |result, (k, v)|
+        result[k.to_s] = v
+        result
+      end
+    end
+
+    # Converts all hash keys to symbols.
+    def self.hash_keys_to_sym(data)
+      return nil if data.nil?
+      return data.inject({}) do |result, (k, v)|
+        result[k.to_sym] = v
+        result
+      end
+    end
   end
 end
 

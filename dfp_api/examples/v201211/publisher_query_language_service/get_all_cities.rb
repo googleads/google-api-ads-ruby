@@ -30,6 +30,7 @@ require 'dfp_api'
 API_VERSION = :v201211
 # A string to separate columns in output. Use "," to get CSV.
 COLUMN_SEPARATOR = "\t"
+PAGE_SIZE = 500
 
 def get_all_cities()
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
@@ -42,29 +43,42 @@ def get_all_cities()
   # Get the PublisherQueryLanguageService.
   pql_service = dfp.service(:PublisherQueryLanguageService, API_VERSION)
 
-  # Create statement to select all targetable cities.
-  # For criteria that do not have a "targetable" property, the predicate may be
-  # left off.
-  statement = {:query => 'SELECT * FROM City WHERE targetable = true LIMIT 500'}
+  # Create a statement to select all targetable cities. For criteria that do not
+  # have a "targetable" property, the predicate may be left off.
+  statement_text =
+      'SELECT * FROM City WHERE targetable = true LIMIT %d' % PAGE_SIZE
 
-  # Get all cities.
-  result_set = pql_service.select(statement)
+  # Set initial values for paging.
+  offset, result_set, all_rows = 0, nil, 0
 
-  if result_set
-    # Print out columns header.
-    columns = result_set[:column_types].collect {|col| col[:label_name]}
-    puts columns.join(COLUMN_SEPARATOR)
+  # Get all cities with paging.
+  begin
+    # Create statement for a page.
+    statement = {
+        :query => statement_text + ' OFFSET %d' % offset
+    }
+    result_set = pql_service.select(statement)
 
-    # Print out every row.
-    result_set[:rows].each do |row_set|
-        row = row_set[:values].collect {|item| item[:value]}
-        puts row.join(COLUMN_SEPARATOR)
+    if result_set
+      # Print out columns header.
+      columns = result_set[:column_types].collect {|col| col[:label_name]}
+      puts columns.join(COLUMN_SEPARATOR)
+
+      # Print out every row.
+      result_set[:rows].each do |row_set|
+          row = row_set[:values].collect {|item| item[:value]}
+          puts row.join(COLUMN_SEPARATOR)
+      end
     end
-  end
+
+    # Update the counters.
+    offset += PAGE_SIZE
+    all_rows += result_set[:rows].size
+  end while result_set[:rows].size == PAGE_SIZE
 
   # Print a footer.
   if result_set[:rows]
-    puts "Total number of rows found: %d" % result_set[:rows].size
+    puts "Total number of rows found: %d" % all_rows
   end
 end
 

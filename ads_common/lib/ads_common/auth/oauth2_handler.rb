@@ -19,7 +19,8 @@
 #
 # This module manages OAuth2.0 authentication.
 
-require 'oauth2'
+require 'faraday'
+require 'signet/oauth_2/client'
 
 require 'ads_common/auth/base_handler'
 require 'ads_common/errors'
@@ -30,11 +31,11 @@ module AdsCommon
     # Credentials class to handle OAuth2.0 authentication.
     class OAuth2Handler < AdsCommon::Auth::BaseHandler
       OAUTH2_CONFIG = {
-          :site => 'https://accounts.google.com',
-          :authorize_url => '/o/oauth2/auth',
-          :token_url => '/o/oauth2/token'
+          :authorization_uri =>
+            'https://accounts.google.com/o/oauth2/auth',
+          :token_credential_uri =>
+            'https://accounts.google.com/o/oauth2/token'
       }
-      OAUTH2_HEADER = 'Bearer %s'
       DEFAULT_CALLBACK = 'urn:ietf:wg:oauth:2.0:oob'
 
       # Initializes the OAuthHandler2 with all the necessary details.
@@ -45,7 +46,7 @@ module AdsCommon
       #
       def initialize(config, scope)
         super(config)
-        @scope = scope
+        @scope, @client = scope, nil
       end
 
       # Invalidates the stored token if the required credential has changed.
@@ -62,27 +63,6 @@ module AdsCommon
         raise error
       end
 
-      # Returns authorization string.
-      def auth_string(credentials, request = nil)
-        return generate_oauth2_parameters_string(credentials)
-      end
-
-      # Overrides base get_token method to account for the token expiration.
-      def get_token(credentials = nil)
-        token = super(credentials)
-        token = refresh_token! if !token.nil? && token.expired?
-        return oauth_token_to_hash(token)
-      end
-
-      # Refreshes access token from refresh token.
-      def refresh_token!()
-        return nil if @token.nil? or @token.refresh_token.nil?
-        @token = @token.refresh!
-        return @token
-      end
-
-      private
-
       # Generates auth string for OAuth2.0 method of authentication.
       #
       # Args:
@@ -91,10 +71,28 @@ module AdsCommon
       # Returns:
       # - Authentication string
       #
-      def generate_oauth2_parameters_string(credentials)
+      def auth_string(credentials)
         token = get_token(credentials)
-        return OAUTH2_HEADER % token[:access_token]
+        return ::Signet::OAuth2.generate_bearer_authorization_header(
+            token[:access_token])
       end
+
+      # Overrides base get_token method to account for the token expiration.
+      def get_token(credentials = nil)
+        token = super(credentials)
+        token = refresh_token! if !@client.nil? && @client.expired?
+        return token
+      end
+
+      # Refreshes access token from refresh token.
+      def refresh_token!()
+        return nil if @token.nil? or @token[:refresh_token].nil?
+        @client.refresh!
+        @token = token_from_client(@client)
+        return @token
+      end
+
+      private
 
       # Auxiliary method to validate the credentials for token generation.
       #
@@ -154,15 +152,14 @@ module AdsCommon
       end
 
       def create_client(credentials)
-        oauth2_config = OAUTH2_CONFIG.dup()
-        proxy = @config.read('connection.proxy')
-        unless proxy.nil?
-          oauth2_config.merge!({:connection_opts => {:proxy => proxy}})
-        end
-        client = OAuth2::Client.new(credentials[:oauth2_client_id],
-                                    credentials[:oauth2_client_secret],
-                                    oauth2_config)
-        return client
+        oauth_options = OAUTH2_CONFIG.merge({
+            :client_id => credentials[:oauth2_client_id],
+            :client_secret => credentials[:oauth2_client_secret],
+            :scope => @scope,
+            :redirect_uri => credentials[:oauth2_callback] || DEFAULT_CALLBACK,
+            :state => credentials[:oauth2_state]
+        }).reject {|k, v| v.nil?}
+        return Signet::OAuth2::Client.new(oauth_options)
       end
 
       # Creates access token based on data from credentials.
@@ -177,13 +174,12 @@ module AdsCommon
       # - The auth token for the account (as an AccessToken)
       #
       def create_token_from_credentials(credentials, client)
-        access_token = nil
         oauth2_token_hash = credentials[:oauth2_token]
         if !oauth2_token_hash.nil? && oauth2_token_hash.kind_of?(Hash)
-          token_data = oauth2_token_hash.dup()
-          access_token = OAuth2::AccessToken.from_hash(client, token_data)
+          token_data = AdsCommon::Utils.hash_keys_to_str(oauth2_token_hash)
+          client.update_token!(token_data)
         end
-        return access_token
+        return token_from_client(client)
       end
 
       # Generates new request tokens and authorizes it to get access token.
@@ -194,45 +190,43 @@ module AdsCommon
       # - client: OAuth2 client for the current configuration
       #
       # Returns:
-      # - The auth token for the account (as an AccessToken)
+      # - The auth token for the account (as Hash)
       #
       def generate_access_token(credentials, client)
         token = nil
         begin
-          callback = credentials[:oauth2_callback] || DEFAULT_CALLBACK
           verification_code = credentials[:oauth2_verification_code]
           if verification_code.nil? || verification_code.empty?
-            auth_options = {
-                :redirect_uri => callback,
-                :scope => @scope,
-                :state => credentials[:oauth2_state],
-                :access_type => credentials[:oauth2_access_type],
-                :approval_prompt => credentials[:oauth2_approval_prompt]
+            uri_options = {
+              :access_type => credentials[:oauth2_access_type],
+              :approval_prompt => credentials[:oauth2_approval_prompt]
             }.reject {|k, v| v.nil?}
-            auth_url = client.auth_code.authorize_url(auth_options)
-            raise AdsCommon::Errors::OAuth2VerificationRequired.new(auth_url)
+            oauth_url = client.authorization_uri(uri_options)
+            raise AdsCommon::Errors::OAuth2VerificationRequired.new(oauth_url)
           else
-            token = @client.auth_code.get_token(verification_code,
-                                                {:redirect_uri => callback})
+            client.code = verification_code
+            proxy = @config.read('connection.proxy')
+            connection = (proxy.nil?) ? nil : Faraday.new(:proxy => proxy)
+            token = AdsCommon::Utils.hash_keys_to_sym(
+                client.fetch_access_token!(:connection => connection))
           end
-        rescue OAuth::Unauthorized => e
+        rescue Signet::AuthorizationError => e
           raise AdsCommon::Errors::AuthError,
               'Authorization error occured: %s' % e
         end
         return token
       end
 
-      # Converts OAuth token object into hash structure.
-      def oauth_token_to_hash(token)
-        return token.nil? ? nil :
-            {
-              :access_token => token.token,
-              :refresh_token => token.refresh_token,
-              :expires_in => token.expires_in,
-              :expires_at => token.expires_at,
-              :params => token.params,
-              :options => token.options
-            }
+      # Create a token Hash from a client.
+      def token_from_client(client)
+        return nil if client.refresh_token.nil? && client.access_token.nil?
+        return {
+          :access_token => client.access_token,
+          :refresh_token => client.refresh_token,
+          :issued_at => client.issued_at,
+          :expires_in => client.expires_in,
+          :id_token => client.id_token
+        }
       end
     end
   end

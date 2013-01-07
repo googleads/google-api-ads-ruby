@@ -54,4 +54,25 @@ class TestUtils < Test::Unit::TestCase
     assert_not_same(str, result)
     assert_equal('str_snake', str)
   end
+
+  def test_hash_keys_to_str()
+    data = {:a => 'aa', :b5 => 43, 'xyz' => :abc}
+    result = AdsCommon::Utils.hash_keys_to_str(data)
+    assert_equal('aa', result['a'])
+    assert_equal(43, result['b5'])
+    assert_equal(:abc, result['xyz'])
+    assert_equal(3, result.size)
+    assert_not_same(result, data)
+  end
+
+  def test_hash_keys_to_sym()
+    data = {:a => 'aa', :b5 => 43, 'xyz' => :abc, 'f5' => :xyz}
+    result = AdsCommon::Utils.hash_keys_to_sym(data)
+    assert_equal('aa', result[:a])
+    assert_equal(43, result[:b5])
+    assert_equal(:abc, result[:xyz])
+    assert_equal(:xyz, result[:f5])
+    assert_equal(4, result.size)
+    assert_not_same(result, data)
+  end
 end

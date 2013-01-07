@@ -52,7 +52,7 @@ module AdsCommon
       end
 
       # Returns authorization string. Needs to be overridden.
-      def auth_string(credentials, request)
+      def auth_string(credentials)
         raise NotImplementedError, 'auth_string not overridden.'
       end
 

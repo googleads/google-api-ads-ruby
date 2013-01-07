@@ -1,3 +1,6 @@
+0.5.1:
+  - Updated PQL example with paging.
+
 0.5.0:
   - Added support and examples for v201211.
   - Removed support for deprecated v201108, v201111, v201201.
