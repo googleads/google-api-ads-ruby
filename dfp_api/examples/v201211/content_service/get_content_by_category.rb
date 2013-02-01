@@ -70,47 +70,54 @@ def get_content_by_statement()
       statement)
 
   # Get the custom targeting value ID for the comedy category.
-  category_custom_targeting_value_id = page[:results].first()[:id]
+  if page[:results]
+    category_custom_targeting_value_id = page[:results].first()[:id]
 
-  # Get the ContentService.
-  content_service = dfp.service(:ContentService, API_VERSION)
+    # Get the ContentService.
+    content_service = dfp.service(:ContentService, API_VERSION)
 
-  # Define initial values.
-  offset = 0
-  page = {}
+    # Define initial values.
+    offset = 0
+    page = {}
 
-  statement_text = 'WHERE status = :status'
-  statement = {
-      :query => statement_text,
-      :values => [
-          {:key => 'status',
-           :value => {:value => 'ACTIVE', :xsi_type => 'TextValue'}}
-      ]
-  }
+    statement_text = 'WHERE status = :status'
+    statement = {
+        :query => statement_text,
+        :values => [
+            {:key => 'status',
+             :value => {:value => 'ACTIVE', :xsi_type => 'TextValue'}}
+        ]
+    }
 
-  begin
-    # Create a statement to get one page with current offset.
-    statement[:query] = statement_text +
-        " LIMIT %d OFFSET %d" % [PAGE_SIZE, offset]
+    begin
+      # Create a statement to get one page with current offset.
+      statement[:query] = statement_text +
+          " LIMIT %d OFFSET %d" % [PAGE_SIZE, offset]
 
-    # Get content by statement.
-    page = content_service.get_content_by_statement_and_custom_targeting_value(
-        statement, category_custom_targeting_value_id)
+      # Get content by statement.
+      page =
+          content_service.get_content_by_statement_and_custom_targeting_value(
+              statement, category_custom_targeting_value_id)
 
-    if page[:results]
-      # Increase query offset by page size.
-      offset += PAGE_SIZE
+      if page[:results]
+        # Increase query offset by page size.
+        offset += PAGE_SIZE
 
-      page[:results].each_with_index do |content, index|
-        puts "%d) Content ID: %d, name: %s, status: %s." % [index + start_index,
-             content[:id], content[:name], content[:status]]
+        page[:results].each_with_index do |content, index|
+          puts "%d) Content ID: %d, name: %s, status: %s." %
+              [index + start_index, content[:id], content[:name],
+               content[:status]]
+        end
       end
-    end
-  end while offset < page[:total_result_set_size]
+    end while offset < page[:total_result_set_size]
 
-  # Print a footer.
-  if page.include?(:total_result_set_size)
-    puts "Number of results found: %d" % page[:total_result_set_size]
+    # Print a footer.
+    if page.include?(:total_result_set_size)
+      puts "Number of results found: %d" % page[:total_result_set_size]
+    end
+  else
+    puts "Category was not found for targeting key ID %d." %
+        content_browse_custom_targeting_key_id
   end
 end
 

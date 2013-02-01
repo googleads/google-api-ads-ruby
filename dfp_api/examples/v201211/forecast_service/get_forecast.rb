@@ -60,7 +60,7 @@ def get_forecast()
     :creative_placeholders => [creative_placeholder],
     # Set the line item's time to be now until the projected end date time.
     :start_date_time_type => 'IMMEDIATELY',
-    :end_date_time => Time.utc(2012, 01, 01),
+    :end_date_time => Time.utc(2014, 01, 01),
     # Set the line item to use 50% of the impressions.
     :unit_type => 'IMPRESSIONS',
     :units_bought => 50,

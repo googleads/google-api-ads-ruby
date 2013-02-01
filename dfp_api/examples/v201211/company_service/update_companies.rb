@@ -55,7 +55,14 @@ def update_companies()
     companies = page[:results]
 
     # Update each local company object by appending ' LLC.' to its name.
-    companies.each {|company| company[:name] += ' LLC.'}
+    companies.each do |company|
+      company[:name] += ' LLC.'
+      # Workaround for issue #94.
+      [:address, :email, :fax_phone, :primary_phone,
+          :external_id, :comment].each do |item|
+        company[item] = "" if company[item].nil?
+      end
+    end
 
     # Update the companies on the server.
     return_companies = company_service.update_companies(companies)

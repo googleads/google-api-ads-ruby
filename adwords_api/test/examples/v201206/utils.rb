@@ -75,7 +75,13 @@ class UtilsV201206
         :target_google_search => true,
         :target_search_network => true,
         :target_content_network => true
-      }
+      },
+      :settings => [
+        {
+          :xsi_type => 'KeywordMatchSetting',
+          :opt_in => true
+        }
+      ]
     }
     operation = {:operator => 'ADD', :operand => campaign}
     response = campaign_srv.mutate([operation])

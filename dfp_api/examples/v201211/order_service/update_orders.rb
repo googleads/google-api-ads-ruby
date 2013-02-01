@@ -51,6 +51,8 @@ def update_orders()
       # Archived orders can not be updated.
       if !order[:is_archived]
         order[:notes] = 'Spoke to advertiser. All is well.'
+        # Workaround for issue #94.
+        order[:po_number] = "" if order[:po_number].nil?
         new_orders << order
       end
       new_orders

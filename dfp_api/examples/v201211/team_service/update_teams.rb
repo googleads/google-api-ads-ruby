@@ -58,6 +58,8 @@ def update_teams()
       unless team[:has_all_inventory]
         team[:ad_unit_ids] ||= []
         team[:ad_unit_ids] << ad_unit_id
+        # Workaround for issue #94.
+        team[:description] = "" if team[:description].nil?
         updated_teams << team
       end
       updated_teams

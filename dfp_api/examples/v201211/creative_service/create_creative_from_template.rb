@@ -60,7 +60,7 @@ def create_creative_from_template()
   # Prepare image data for asset value.
   image_url =
       'http://www.google.com/intl/en/adwords/select/images/samples/inline.jpg'
-  image_data = AdsCommon::Http.get(image_url)
+  image_data = AdsCommon::Http.get(image_url, dfp.config)
   image_data_base64 = Base64.encode64(image_data)
 
   # Create the asset variable value.

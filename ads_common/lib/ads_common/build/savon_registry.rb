@@ -128,7 +128,7 @@ module AdsCommon
             # This could be used to include documentation from wsdl.
             #:doc => get_element_doc(operation, 'wsdl')
         }
-        original_name = (name.snakecase.lower_camelcase == name)? nil : name
+        original_name = get_original_name_if_needed(name)
         method[:original_name] = original_name unless original_name.nil?
         return method
       end
@@ -207,13 +207,24 @@ module AdsCommon
       def get_element_fields(element)
         fields = []
         REXML::XPath.each(element, 'descendant::element') do |item|
-          field = {:name => get_element_name(item).snakecase.to_sym,
+          name = get_element_name(item)
+          original_name = get_original_name_if_needed(name)
+          field = {
+              :name => name.snakecase.to_sym,
+              :original_name => original_name,
               :type => item.attribute('type').to_s.gsub(/^.+:/, ''),
               :min_occurs => attribute_to_int(item.attribute('minOccurs')),
               :max_occurs => attribute_to_int(item.attribute('maxOccurs'))}
           fields << field.reject {|k, v| v.nil?}
         end
         return fields
+      end
+
+      # Returns original name if it can not be back-converted and required for
+      # XML serialization.
+      def get_original_name_if_needed(name)
+        return (name.nil? || (name.snakecase.lower_camelcase == name)) ?
+            nil : name
       end
 
       # Simple converter for int values.

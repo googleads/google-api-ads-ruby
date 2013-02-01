@@ -63,6 +63,11 @@ module AdsCommon
         item = args_hash[key]
         check_required_argument_present(item, field)
         if item
+          original_name = field[:original_name]
+          if original_name
+            key = handle_name_override(args_hash, key, original_name)
+          end
+
           item_type = get_full_type_signature(field[:type])
           item_ns = field[:ns] || type_ns
           key = handle_namespace_override(args_hash, key, item_ns) if item_ns
@@ -108,6 +113,13 @@ module AdsCommon
       end
     end
 
+    # Overrides non-standard name conversion.
+    def handle_name_override(args, key, original_name)
+      rename_hash_key(args, key, original_name)
+      replace_array_item(args[:order!], key, original_name)
+      return original_name
+    end
+
     # Overrides non-default namespace if requested.
     def handle_namespace_override(args, key, ns)
       add_extra_namespace(ns)
@@ -125,7 +137,8 @@ module AdsCommon
         when Hash
           validate_hash_arg(arg, parent, key, arg_type)
         when Time
-          validate_time_arg(arg, parent, key)
+          arg = validate_time_arg(arg, parent, key)
+          validate_hash_arg(arg, parent, key, arg_type)
         else
           arg
       end

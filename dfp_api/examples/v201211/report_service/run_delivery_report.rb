@@ -54,7 +54,7 @@ def run_delivery_report()
         'AD_SERVER_CPM_AND_CPC_REVENUE', 'AD_SERVER_AVERAGE_ECPM'],
     # Create statement object to filter for an order.
     :statement => {
-        :query => 'WHERE orderId = :order_id',
+        :query => 'WHERE ORDER_ID = :order_id',
         :values => [
             {:key => 'order_id',
              :value => {:value => order_id, :xsi_type => 'NumberValue'}}

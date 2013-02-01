@@ -24,7 +24,6 @@ require 'test/unit'
 
 require 'misc/get_all_images_and_videos'
 require 'misc/upload_image'
-require 'misc/use_oauth'
 
 class TestMiscV201206 < Test::Unit::TestCase
   def setup
@@ -36,10 +35,5 @@ class TestMiscV201206 < Test::Unit::TestCase
 
   def test_upload_image
     upload_image()
-  end
-
-  # This test is disabled as it requires user input.
-  def disabled_test_use_oauth
-    use_oauth()
   end
 end

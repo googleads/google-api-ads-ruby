@@ -54,7 +54,7 @@ def create_custom_targeting_keys_and_values()
 
   # Create the custom targeting keys on the server.
   return_keys = custom_targeting_service.create_custom_targeting_keys(
-      [gender_key, car_model_key, gender_key])
+      [gender_key, car_model_key, genre_key])
 
   if return_keys
     return_keys.each do |key|
