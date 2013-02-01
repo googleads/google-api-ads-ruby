@@ -125,7 +125,8 @@ module AdsCommon
         when Hash
           validate_hash_arg(arg, parent, key, arg_type)
         when Time
-          validate_time_arg(arg, parent, key)
+          arg = validate_time_arg(arg, parent, key)
+          validate_hash_arg(arg, parent, key, arg_type)
         else
           arg
       end
