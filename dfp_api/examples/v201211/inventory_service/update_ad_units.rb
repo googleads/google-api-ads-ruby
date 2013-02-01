@@ -52,6 +52,8 @@ def update_ad_units()
     ad_units.each do |ad_unit|
       ad_unit[:inherited_ad_sense_settings] =
           {:value => {:ad_sense_enabled => true}}
+      # Workaround for issue #94.
+      ad_unit[:description] = "" if ad_unit[:description].nil?
     end
 
     # Update the ad units on the server.

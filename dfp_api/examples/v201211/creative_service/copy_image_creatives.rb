@@ -72,7 +72,7 @@ def copy_image_creatives()
       new_creative[:name] += " (Copy of %d)" % old_id
       image_url = new_creative.delete(:image_url)
       new_creative[:image_byte_array] =
-          Base64.encode64(AdsCommon::Http.get(image_url))
+          Base64.encode64(AdsCommon::Http.get(image_url, dfp.config))
       new_creative
     end
 
