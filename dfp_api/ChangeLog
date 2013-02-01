@@ -1,4 +1,6 @@
 0.6.1:
+  - Require google-ads-common 0.9.1 or later from now on.
+  - Bug fixes from ads-common.
 
 0.6.0:
   - Updated PQL example with paging.
