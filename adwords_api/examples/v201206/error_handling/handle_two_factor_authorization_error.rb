@@ -29,7 +29,8 @@ def handle_two_factor_authorization_error()
           :method => 'ClientLogin',
           :email => '2steptester@gmail.com',
           :password => 'testaccount',
-          :user_agent => 'Ruby 2 Factor Sample'
+          :user_agent => 'Ruby 2 Factor Sample',
+          :developer_token => 'qwerty'
       },
       :service => {
           :environment => 'PRODUCTION'

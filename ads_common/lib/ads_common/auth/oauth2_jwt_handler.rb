@@ -138,7 +138,8 @@ module AdsCommon
         if credentials[:oauth2_keyfile] &&
             !File.file?(credentials[:oauth2_keyfile])
           raise AdsCommon::Errors::AuthError,
-              "Key file '%s' does not exist or not a file."
+              "Key file '%s' does not exist or not a file." %
+              credentials[:oauth2_keyfile]
         end
       end
 
@@ -170,6 +171,7 @@ module AdsCommon
         oauth_options = OAUTH2_CONFIG.merge({
             :issuer => credentials[:oauth2_issuer],
             :signing_key => credentials[:oauth2_key],
+            :person => credentials[:oauth2_prn],
             :scope => @scope,
         })
         return Signet::OAuth2::Client.new(oauth_options)
