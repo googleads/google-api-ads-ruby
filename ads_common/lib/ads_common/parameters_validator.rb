@@ -62,7 +62,7 @@ module AdsCommon
         key = field[:name]
         item = args_hash[key]
         check_required_argument_present(item, field)
-        if item
+        unless item.nil?
           original_name = field[:original_name]
           if original_name
             key = handle_name_override(args_hash, key, original_name)
