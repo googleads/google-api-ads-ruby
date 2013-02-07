@@ -87,7 +87,12 @@ module AdsCommon
       # Refreshes access token from refresh token.
       def refresh_token!()
         return nil if @token.nil? or @token[:refresh_token].nil?
-        @client.refresh!
+        begin
+          @client.refresh!
+        rescue Signet::AuthorizationError => e
+          raise AdsCommon::Errors::AuthError.new("OAuth2 token refresh failed",
+              e, (e.response.nil?) ? nil : e.response.body)
+        end
         @token = token_from_client(@client)
         return @token
       end
@@ -207,8 +212,8 @@ module AdsCommon
             client.code = verification_code
             proxy = @config.read('connection.proxy')
             connection = (proxy.nil?) ? nil : Faraday.new(:proxy => proxy)
-            token = AdsCommon::Utils.hash_keys_to_sym(
-                client.fetch_access_token!(:connection => connection))
+            client.fetch_access_token!(:connection => connection)
+            token = token_from_client(client)
           end
         rescue Signet::AuthorizationError => e
           raise AdsCommon::Errors::AuthError,
