@@ -1,5 +1,6 @@
 0.8.1:
   - Examples for enhanced campaigns.
+  - Require google-ads-common 0.9.2 or later from now on.
 
 0.8.0:
   - Removed deprecated API versions v201109, v201109_1.
