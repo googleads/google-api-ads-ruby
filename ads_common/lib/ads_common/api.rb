@@ -110,7 +110,7 @@ module AdsCommon
       if token.nil?
         begin
           credentials = @credential_handler.credentials
-          token = @auth_handler.get_token(credentials)
+          token = auth_handler.get_token(credentials)
         rescue AdsCommon::Errors::OAuth2VerificationRequired => e
           verification_code = (block_given?) ? yield(e.oauth_url) : nil
           # Retry with verification code if one provided.
