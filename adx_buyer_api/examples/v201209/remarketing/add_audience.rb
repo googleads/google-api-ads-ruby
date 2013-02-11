@@ -58,32 +58,36 @@ def add_audience()
 
   # Add user list.
   response = user_list_srv.mutate([operation])
-  user_list = response[:value].first
+  if response and response[:value]
+    user_list = response[:value].first
 
-  # Get conversion snippets.
-  if user_list and user_list[:conversion_types]
-    conversion_ids = user_list[:conversion_types].map {|type| type[:id]}
-    selector = {
-      # We're actually interested in the 'Snippet' field, which is returned
-      # automatically.
-      :fields => ['Id'],
-      :predicates => [
-        {:field => 'Id', :operator => 'IN', :values => conversion_ids}
-      ]
-    }
-    conv_tracker_response = conv_tracker_srv.get(selector)
-    if conv_tracker_response and conv_tracker_response[:entries]
-      conversions = conv_tracker_response[:entries]
+    # Get conversion snippets.
+    if user_list and user_list[:conversion_types]
+      conversion_ids = user_list[:conversion_types].map {|type| type[:id]}
+      selector = {
+        # We're actually interested in the 'Snippet' field, which is returned
+        # automatically.
+        :fields => ['Id'],
+        :predicates => [
+          {:field => 'Id', :operator => 'IN', :values => conversion_ids}
+        ]
+      }
+      conv_tracker_response = conv_tracker_srv.get(selector)
+      if conv_tracker_response and conv_tracker_response[:entries]
+        conversions = conv_tracker_response[:entries]
+      end
     end
-  end
-  puts "User list with name '%s' and ID %d was added." %
-      [user_list[:name], user_list[:id]]
-  # Display user list associated conversion code snippets.
-  if conversions
-    conversions.each do |conversion|
-      puts "Conversion type code snipped associated to the list:\n\t\t%s\n" %
-        conversion[:snippet]
+    puts "User list with name '%s' and ID %d was added." %
+        [user_list[:name], user_list[:id]]
+    # Display user list associated conversion code snippets.
+    if conversions
+      conversions.each do |conversion|
+        puts "Conversion type code snipped associated to the list:\n\t\t%s\n" %
+          conversion[:snippet]
+      end
     end
+  else
+    puts 'No user lists were added.'
   end
 end
 

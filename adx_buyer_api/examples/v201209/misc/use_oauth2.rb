@@ -3,7 +3,7 @@
 #
 # Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to use OAuth authentication method.
+# This example illustrates how to use OAuth2.0 authentication method.
 #
 # Tags: CampaignService.get
 
 require 'adwords_api'
 
-def use_oauth()
+def use_oauth2()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -33,6 +33,24 @@ def use_oauth()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
+  # You can call authorize explicitely to obtain the access token. Otherwise, it
+  # will be invoked automatically on the first API call.
+  # There are two ways to provide verification code, first one is via the block:
+  token = adwords.authorize() do |auth_url|
+    puts "Hit Auth error, please navigate to URL:\n\t%s" % auth_url
+    print 'log in and type the verification code: '
+    verification_code = gets.chomp
+    verification_code
+  end
+  # Alternatively, you can provide one within the parameters:
+  #token = adwords.authorize({:oauth2_verification_code => verification_code})
+
+  # Note, 'token' is a Hash. Its value is not used in this example. If you need
+  # to be able to access the API in offline mode, with no user present, you
+  # should persist it to be used in subsequent invocations like this:
+  #adwords.authorize({:oauth2_token => token})
+
+  # No exception thrown - we are good to make the request.
   campaign_srv = adwords.service(:CampaignService, API_VERSION)
 
   # Get all the campaigns for this account; empty selector.
@@ -43,24 +61,7 @@ def use_oauth()
     ]
   }
 
-  retry_count = 0
-
-  begin
-    response = campaign_srv.get(selector)
-  rescue AdsCommon::Errors::OAuthVerificationRequired => e
-    if retry_count < MAX_RETRIES
-      puts "Hit Auth error, please navigate to URL:\n\t%s" % e.oauth_url
-      print 'log in and type the verification code: '
-      verification_code = gets.chomp
-      adwords.credential_handler.set_credential(
-          :oauth_verification_code, verification_code)
-      retry_count += 1
-      retry
-    else
-      raise AdsCommon::Errors::AuthError, 'Failed to authenticate.'
-    end
-  end
-
+  response = campaign_srv.get(selector)
   if response and response[:entries]
     campaigns = response[:entries]
     campaigns.each do |campaign|
@@ -73,11 +74,10 @@ def use_oauth()
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201109
-  MAX_RETRIES = 3
+  API_VERSION = :v201209
 
   begin
-    use_oauth()
+    use_oauth2()
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

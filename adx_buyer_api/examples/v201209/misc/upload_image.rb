@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.sgomes@gmail.com (Sérgio Gomes)
+# Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
@@ -18,13 +18,11 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example uploads an image. To get images, run
-# get_all_images_and_videos.rb.
+# This example uploads an image. To get images, run get_all_images.rb.
 #
 # Tags: MediaService.upload
 
 require 'adwords_api'
-require 'adwords_api/utils'
 require 'base64'
 
 def upload_image()
@@ -56,11 +54,15 @@ def upload_image()
 
   # Upload image.
   response = media_srv.upload([image])
-  ret_image = response.first
-  dimensions = AdwordsApi::Utils.map(ret_image[:dimensions])
-  puts "Image with id #{ret_image[:media_id]}, dimensions " +
-      "#{dimensions['FULL'][:height]}x#{dimensions['FULL'][:width]} " +
-      "and MIME type \"#{ret_image[:mime_type]}\" uploaded successfully."
+  if response and !response.empty?
+    ret_image = response.first
+    full_dimensions = ret_image[:dimensions]['FULL']
+    puts ("Image with ID %d, dimensions %dx%d and MIME type '%s' uploaded " +
+        "successfully.") % [ret_image[:media_id], full_dimensions[:height],
+         full_dimensions[:width], ret_image[:mime_type]]
+  else
+    puts 'No images uploaded.'
+  end
 end
 
 if __FILE__ == $0
