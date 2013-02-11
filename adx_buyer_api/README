@@ -3,9 +3,9 @@
 Welcome to the next generation Google-developed Ruby client library for the
 AdWords and DoubleClick Ad Exchange Buyer API!
 
-It contains full support for v201109, v201109_1, v201206 and v201209, with full
-stubs, and a simplified programming interface that lets you handle everything in
-native Ruby collections.
+It contains full support for v201206 and v201209, with full stubs, and a
+simplified programming interface that lets you handle everything in native
+Ruby collections.
 
 
 = Docs for Users
@@ -105,13 +105,16 @@ Essentially, all you have to do is follow Ruby conventions, and the library will
 do the rest. All of the examples are written following this standard.
 
 
-=== 2.2 - Using the Sandbox:
+=== 2.2 - Using the Test Account:
 
-In order to use the sandbox, make sure that the 'environment' parameter under
-'service' in the configuration is set to Sandbox.
-   config[:service] = {
-     :environment => 'SANDBOX'
-   }
+For testing purposes, obtain a Test Account in the production environment. Any
+request against a Test Account inccurs no API units charge. See this guide for
+more details:
+
+  https://developers.google.com/adwords/api/docs/test-accounts
+
+To use the library against a Test Account, set client_customer_id property in
+the configuration file to its client customer ID.
 
 
 === 2.3 - Logging:

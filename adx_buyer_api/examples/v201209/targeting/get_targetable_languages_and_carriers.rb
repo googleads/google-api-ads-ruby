@@ -52,9 +52,13 @@ def get_targetable_languages_and_carriers()
   # Get all carriers from ConstantDataService.
   carriers = constant_data_srv.get_carrier_criterion()
 
-  carriers.each do |carrier|
-    puts "Carrier name is '%s', ID is %d and country code is '%s'." %
-        [carrier[:name], carrier[:id], carrier[:country_code]]
+  if carriers
+    carriers.each do |carrier|
+      puts "Carrier name is '%s', ID is %d and country code is '%s'." %
+          [carrier[:name], carrier[:id], carrier[:country_code]]
+    end
+  else
+    puts 'No carriers were retrieved.'
   end
 end
 

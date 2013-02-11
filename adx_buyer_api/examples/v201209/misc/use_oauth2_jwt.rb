@@ -3,7 +3,7 @@
 #
 # Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -18,15 +18,14 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to retrieve all languages and carriers available
-# for targeting.
+# This example illustrates how to use OAuth2.0 authentication method with
+# Service Account (JWT).
 #
-# Tags: ConstantDataService.getLanguageCriterion
-# Tags: ConstantDataService.getCarrierCriterion
+# Tags: CampaignService.get
 
 require 'adwords_api'
 
-def get_targetable_languages_and_carriers()
+def use_oauth2_jwt()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -35,34 +34,46 @@ def get_targetable_languages_and_carriers()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  constant_data_srv = adwords.service(:ConstantDataService, API_VERSION)
+  # Option 1: provide key filename as authentication -> oauth2_keyfile in the
+  #           configuration file. No additional code is necessary.
+  # To provide a file name at runtime, use authorize:
+  # adwords.authorize({:oauth2_keyfile => key_filename})
 
-  # Get all languages from ConstantDataService.
-  languages = constant_data_srv.get_language_criterion()
+  # Option 2: retrieve key manually and create OpenSSL::PKCS12 object.
+  # key_filename = 'INSERT_FILENAME_HERE'
+  # key_secret = 'INSERT_SECRET_HERE'
+  # key_file_data = File.read(key_filename)
+  # key = OpenSSL::PKCS12.new(key_file_data, key_secret).key
+  # adwords.authorize({:oauth2_key => key})
 
-  if languages
-    languages.each do |language|
-      puts "Language name is '%s', ID is %d and code is '%s'." %
-          [language[:name], language[:id], language[:code]]
+  # Now you can make API calls.
+  campaign_srv = adwords.service(:CampaignService, API_VERSION)
+
+  # Get all the campaigns for this account; empty selector.
+  selector = {
+    :fields => ['Id', 'Name', 'Status'],
+    :ordering => [
+      {:field => 'Name', :sort_order => 'ASCENDING'}
+    ]
+  }
+
+  response = campaign_srv.get(selector)
+  if response and response[:entries]
+    campaigns = response[:entries]
+    campaigns.each do |campaign|
+      puts "Campaign ID %d, name '%s' and status '%s'" %
+          [campaign[:id], campaign[:name], campaign[:status]]
     end
   else
-    puts 'No languages were found.'
-  end
-
-  # Get all carriers from ConstantDataService.
-  carriers = constant_data_srv.get_carrier_criterion()
-
-  carriers.each do |carrier|
-    puts "Carrier name is '%s', ID is %d and country code is '%s'." %
-        [carrier[:name], carrier[:id], carrier[:country_code]]
+    puts 'No campaigns were found.'
   end
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201109
+  API_VERSION = :v201209
 
   begin
-    get_targetable_languages_and_carriers()
+    use_oauth2_jwt()
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

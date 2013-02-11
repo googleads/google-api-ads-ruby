@@ -63,10 +63,14 @@ def add_conversion_tracker()
 
   # Add conversion.
   response = conv_tracker_srv.mutate([operation])
-  conversion = response[:value].first
-  puts ("Conversion with ID %d, name '%s', status '%s' and category '%s'" +
-      " was added.") % [conversion[:id], conversion[:name],
-                        conversion[:status], conversion[:category]]
+  if response and response[:value]
+    conversion = response[:value].first
+    puts ("Conversion with ID %d, name '%s', status '%s' and category '%s'" +
+        " was added.") % [conversion[:id], conversion[:name],
+        conversion[:status], conversion[:category]]
+  else
+    puts 'No conversions were added.'
+  end
 end
 
 if __FILE__ == $0
