@@ -119,7 +119,7 @@ def add_keywords_in_bulk()
       raise StandardError, 'Error retrieving job results; aborting.'
     end
   else
-    puts "Job failed to complete after %d retries." % RETRY_COUNT
+    puts "Job failed to complete after %d retries." % RETRIES_COUNT
   end
 end
 
