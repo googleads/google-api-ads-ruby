@@ -19,7 +19,7 @@
 
 Gem::Specification.new do |s|
   s.name = 'google-adx-buyer-api'
-  s.version = '0.4.5'
+  s.version = '0.4.6'
   s.summary = 'Ruby examples for DoubleClick Ad Exchange Buyer API'
   s.description = "AdWords API and DoubleClick Ad Exchange Buyer API client " +
       "library for Ruby"

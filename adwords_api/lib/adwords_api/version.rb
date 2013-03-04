@@ -21,6 +21,6 @@
 
 module AdwordsApi
   module ApiConfig
-    CLIENT_LIB_VERSION = '0.8.1'
+    CLIENT_LIB_VERSION = '0.8.2'
   end
 end
