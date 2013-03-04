@@ -31,7 +31,7 @@ module AdsCommon
       #
       # This is auto-generated code, changes will be overwritten.
       #
-      # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
+      # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
       # License:: Licensed under the Apache License, Version 2.0.
       #
       # <%= @generator_stamp %>
