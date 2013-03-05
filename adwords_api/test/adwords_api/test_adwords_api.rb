@@ -28,7 +28,7 @@ require 'adwords_api'
 
 class TestAdwordsApi < Test::Unit::TestCase
 
-  API_VERSION = :v201209
+  API_VERSION = :v201302
 
   def test_initialize()
     assert_nothing_raised do
