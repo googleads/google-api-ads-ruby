@@ -24,6 +24,8 @@ require 'test/unit'
 
 require 'advanced_operations/add_site_links'
 require 'advanced_operations/add_click_to_download_ad'
+require 'advanced_operations/create_and_attach_shared_keyword_set'
+require 'advanced_operations/find_and_remove_criteria_from_shared_set'
 
 PLACEHOLDER_SITELINKS = 1
 PLACEHOLDER_FIELD_SITELINK_LINK_TEXT = 1
@@ -50,5 +52,13 @@ class TestAdvancedOperationsV201302 < Test::Unit::TestCase
     assert_not_nil(ad_group)
     assert_not_nil(ad_group[:id])
     add_click_to_download_ad(ad_group[:id])
+  end
+
+  def test_add_and_remove_shared_criteria()
+    campaign = @utils.get_campaign()
+    assert_not_nil(campaign)
+    assert_not_nil(campaign[:id])
+    create_and_attach_shared_keyword_set(campaign[:id])
+    find_and_remove_criteria_from_shared_set(campaign[:id])
   end
 end
