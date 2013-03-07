@@ -134,6 +134,7 @@ module AdwordsApi
           :MutateJobService,
           :ReportDefinitionService,
           :SharedCriterionService,
+          :SharedSetService,
           :TargetingIdeaService,
           :TrafficEstimatorService,
           :UserListService
@@ -238,6 +239,7 @@ module AdwordsApi
       [:v201302, :MutateJobService] => 'cm/',
       [:v201302, :ReportDefinitionService] => 'cm/',
       [:v201302, :SharedCriterionService] => 'cm/',
+      [:v201302, :SharedSetService] => 'cm/',
       [:v201302, :TargetingIdeaService] => 'o/',
       [:v201302, :TrafficEstimatorService] => 'o/',
       [:v201302, :UserListService] => 'cm/',
