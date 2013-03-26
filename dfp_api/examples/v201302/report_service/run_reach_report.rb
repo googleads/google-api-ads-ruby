@@ -1,4 +1,4 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
 #
 # Author:: api.davidtorres@gmail.com (David Torres)
 #
