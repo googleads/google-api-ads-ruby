@@ -24,10 +24,13 @@
 # correctly.
 require 'ads_common/savon_service'
 require 'adwords_api'
+require 'rr'
 require 'webmock/test_unit'
 
 class ExampleRunner < Test::Unit::TestCase
   PAGE_SIZE = 5
+
+  include RR::Adapters::TestUnit
 
   def initialize(example_file)
     @version, template_file = extract_strings(example_file)
@@ -44,18 +47,19 @@ class ExampleRunner < Test::Unit::TestCase
 
   def engage(test)
     test.skip(@template_error) if @template_error
-    reset_state()
     setup_mocks()
     self.instance_eval('API_VERSION = :%s' % @version)
     self.instance_eval('PAGE_SIZE = %d' % PAGE_SIZE)
     self.send(get_example_method())
     run_asserts()
+    reset_state()
   end
 
   private
 
   def reset_state()
-    WebMock.reset!
+    RR.reset()
+    WebMock.reset!()
     $latest_result = nil
   end
 
