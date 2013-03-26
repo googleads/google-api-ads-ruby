@@ -1,4 +1,6 @@
 0.4.6:
+  - Now require google-adwords-api-0.8.2 or later.
+  - Added examples for v201302.
 
 0.4.5:
   - Now require google-adwords-api-0.8.1 or later.

@@ -31,5 +31,5 @@ Gem::Specification.new do |s|
   s.rubyforge_project = 'google-adx-buyer-api'
   s.require_path = 'lib'
   s.files = Dir.glob('examples/**/*') + %w(COPYING README ChangeLog)
-  s.add_dependency('google-adwords-api', '~> 0.8.1')
+  s.add_dependency('google-adwords-api', '~> 0.8.2')
 end
