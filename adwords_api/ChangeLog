@@ -1,6 +1,7 @@
-0.8.3:
+0.9.0:
   - Shared set support and examples (beta feature).
   - Updated feed services auto-generated code.
+  - Removed deprecated API version v201206.
 
 0.8.2:
   - Support and examples for v201302.

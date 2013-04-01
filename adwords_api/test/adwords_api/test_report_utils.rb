@@ -28,7 +28,6 @@ require 'adwords_api'
 module AdwordsApi
   class ReportUtils
     public :check_for_errors
-    public :check_for_legacy_error
     public :check_for_xml_error
     public :add_report_definition_hash_order
   end
@@ -43,14 +42,6 @@ class ResponseStub
     @code, @body = code, body
   end
 end
-
-# Typical reply types.
-REPLY_TYPES = [
-    {:reply => '!!!2|||-1|||Improperly formatted report request???',
-     :message => 'Improperly formatted report request'},
-    {:reply => "!!!2|||-1|||ReportDefinitionError.INVALID_FIELD_NAME_FOR_REPORT @ ; trigger:'bCampaignId'???",
-     :message => "ReportDefinitionError.INVALID_FIELD_NAME_FOR_REPORT @ ; trigger:'bCampaignId'"}
-]
 
 XML_REPLY = {
   :reply => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><reportDownloadError><ApiError><type>ReportDefinitionError.INVALID_FIELD_NAME_FOR_REPORT</type><trigger>foo</trigger><fieldPath>bar</fieldPath></ApiError></reportDownloadError>',
@@ -73,21 +64,6 @@ class TestReportUtils < Test::Unit::TestCase
   end
 
   # Testing HTTP code 400.
-  def test_check_for_errors_400_legacy()
-    report_utils = @api.report_utils(:v201206)
-    REPLY_TYPES.each do |reply_type|
-      begin
-        response = ResponseStub.new(400, reply_type[:reply])
-        report_utils.check_for_errors(response)
-        assert(false, 'No exception thrown for code 400')
-      rescue AdwordsApi::Errors::ReportError => e
-        assert_equal(400, e.http_code)
-        assert(e.message.include?(reply_type[:message]))
-      end
-    end
-  end
-
-  # Testing HTTP code 400.
   def test_check_for_errors_400()
     begin
       response = ResponseStub.new(400, XML_REPLY[:reply])
@@ -103,20 +79,6 @@ class TestReportUtils < Test::Unit::TestCase
   end
 
   # Testing HTTP code 500.
-  def test_check_for_errors_500_legacy()
-    report_utils = @api.report_utils(:v201206)
-    REPLY_TYPES.each do |reply_type|
-      begin
-        response = ResponseStub.new(500, nil)
-        report_utils.check_for_errors(response)
-        assert(false, 'No exception thrown for code 500')
-      rescue AdwordsApi::Errors::ReportError => e
-        assert_equal(500, e.http_code)
-      end
-    end
-  end
-
-  # Testing HTTP code 500.
   def test_check_for_errors_500()
     begin
       response = ResponseStub.new(500, nil)
@@ -127,49 +89,11 @@ class TestReportUtils < Test::Unit::TestCase
     end
   end
 
-  # Testing unexpected legacy error for new version.
-  def test_check_for_errors_unexpected_legacy()
-    REPLY_TYPES.each do |reply_type|
-      begin
-        response = ResponseStub.new(400, reply_type[:reply])
-        @report_utils.check_for_errors(response)
-        assert(false, 'No exception thrown for legact error in new handler')
-      rescue AdwordsApi::Errors::ReportError => e
-        assert_equal(400, e.http_code)
-        assert_not_nil(e.message)
-      end
-    end
-  end
-
-  # Testing HTTP code 200 with success.
-  def test_check_for_errors_200_success_legacy()
-    report_utils = @api.report_utils(:v201206)
-    response = ResponseStub.new(200, VALID_REPORT)
-    assert_nothing_raised do
-      report_utils.check_for_errors(response)
-    end
-  end
-
   # Testing HTTP code 200 with success.
   def test_check_for_errors_200_success()
     response = ResponseStub.new(200, VALID_REPORT)
     assert_nothing_raised do
       @report_utils.check_for_errors(response)
-    end
-  end
-
-  # Testing HTTP code 200 with failure.
-  def test_check_for_errors_200_success_legacy()
-    report_utils = @api.report_utils(:v201206)
-    REPLY_TYPES.each do |reply_type|
-      begin
-        response = ResponseStub.new(200, reply_type[:reply])
-        report_utils.check_for_errors(response)
-        assert(false, 'No exception thrown for code 200')
-      rescue AdwordsApi::Errors::ReportError => e
-        assert_equal(200, e.http_code)
-        assert(e.message.include?(reply_type[:message]))
-      end
     end
   end
 
@@ -246,19 +170,6 @@ class TestReportUtils < Test::Unit::TestCase
     assert_equal(expected2, node[:selector][:order!])
     assert_equal(expected3, node[:selector][:date_range][:order!])
     assert_equal(expected4, node[:selector][:predicates][:order!])
-  end
-
-  # Testing check_for_legacy_error.
-  def test_check_for_legacy_error()
-    REPLY_TYPES.each do |reply_type|
-      begin
-        @report_utils.check_for_legacy_error(reply_type[:reply], 42)
-        assert(false, 'No exception thrown for code 42')
-      rescue AdwordsApi::Errors::ReportError => e
-        assert_equal(42, e.http_code)
-        assert(e.message.include?(reply_type[:message]))
-      end
-    end
   end
 
   # Testing check_for_xml_error.
