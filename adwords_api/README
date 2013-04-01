@@ -3,8 +3,8 @@
 Welcome to the next generation Google-developed Ruby client library for the
 AdWords and DoubleClick Ad Exchange Buyer API!
 
-It contains full support for v201206, v201209 and v201302, with full stubs, and
-a simplified programming interface that lets you handle everything in native
+It contains full support for v201209 and v201302, with full stubs, and a
+simplified programming interface that lets you handle everything in native
 Ruby collections.
 
 

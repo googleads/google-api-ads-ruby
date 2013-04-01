@@ -45,35 +45,6 @@ module AdwordsApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v201206 => [
-          :AdExtensionOverrideService,
-          :AdGroupAdService,
-          :AdGroupCriterionService,
-          :AdGroupService,
-          :AdParamService,
-          :AlertService,
-          :BudgetOrderService,
-          :BulkMutateJobService,
-          :CampaignAdExtensionService,
-          :CampaignCriterionService,
-          :CampaignService,
-          :ConstantDataService,
-          :ConversionTrackerService,
-          :CustomerService,
-          :CustomerSyncService,
-          :DataService,
-          :ExperimentService,
-          :GeoLocationService,
-          :InfoService,
-          :LocationCriterionService,
-          :ManagedCustomerService,
-          :MediaService,
-          :MutateJobService,
-          :ReportDefinitionService,
-          :TargetingIdeaService,
-          :TrafficEstimatorService,
-          :UserListService
-      ],
       :v201209 => [
           :AdExtensionOverrideService,
           :AdGroupAdService,
@@ -146,7 +117,6 @@ module AdwordsApi
       :PRODUCTION => {
         :oauth_scope => 'https://adwords.google.com/api/adwords/',
         :header_ns => 'https://adwords.google.com/api/adwords/cm/',
-        :v201206 => 'https://adwords.google.com/api/adwords/',
         :v201209 => 'https://adwords.google.com/api/adwords/',
         :v201302 => 'https://adwords.google.com/api/adwords/'
       }
@@ -155,34 +125,6 @@ module AdwordsApi
     # Configure the subdirectories for each version / service pair.
     # A missing pair means that only the base URL is used.
     @@subdir_config = {
-      # v201206
-      [:v201206, :AdExtensionOverrideService] => 'cm/',
-      [:v201206, :AdGroupAdService] => 'cm/',
-      [:v201206, :AdGroupCriterionService] => 'cm/',
-      [:v201206, :AdGroupService] => 'cm/',
-      [:v201206, :AdParamService] => 'cm/',
-      [:v201206, :AlertService] => 'mcm/',
-      [:v201206, :BudgetOrderService] => 'billing/',
-      [:v201206, :BulkMutateJobService] => 'job/',
-      [:v201206, :CampaignAdExtensionService] => 'cm/',
-      [:v201206, :CampaignCriterionService] => 'cm/',
-      [:v201206, :CampaignService] => 'cm/',
-      [:v201206, :ConstantDataService] => 'cm/',
-      [:v201206, :ConversionTrackerService] => 'cm/',
-      [:v201206, :CustomerSyncService] => 'ch/',
-      [:v201206, :DataService] => 'cm/',
-      [:v201206, :ExperimentService] => 'cm/',
-      [:v201206, :GeoLocationService] => 'cm/',
-      [:v201206, :InfoService] => 'info/',
-      [:v201206, :LocationCriterionService] => 'cm/',
-      [:v201206, :MediaService] => 'cm/',
-      [:v201206, :MutateJobService] => 'cm/',
-      [:v201206, :ReportDefinitionService] => 'cm/',
-      [:v201206, :TargetingIdeaService] => 'o/',
-      [:v201206, :TrafficEstimatorService] => 'o/',
-      [:v201206, :UserListService] => 'cm/',
-      [:v201206, :ManagedCustomerService] => 'mcm/',
-      [:v201206, :CustomerService] => 'mcm/',
       # v201209
       [:v201209, :AdExtensionOverrideService] => 'cm/',
       [:v201209, :AdGroupAdService] => 'cm/',

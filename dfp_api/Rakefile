@@ -32,12 +32,14 @@ task :default => [:generate, :build]
 
 desc 'Package the DFP API library into a gem file.'
 task :build do
-  system 'gem build google-dfp-api.gemspec'
+  result = system('/usr/bin/env gem build google-dfp-api.gemspec')
+  raise 'Build failed.' unless result
 end
 
 desc 'Perform the unit testing.'
 task :test do
-  system 'ruby test/suite_*.rb'
+  result = system('/usr/bin/env ruby test/suite_unittests.rb')
+  raise 'Unit tests failed.' unless result
 end
 
 desc 'Generate API stubs only'

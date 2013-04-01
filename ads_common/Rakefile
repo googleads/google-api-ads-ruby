@@ -24,15 +24,18 @@ task :default => [:build]
 
 desc 'Package the Common library into a gem file.'
 task :build do
-  system 'gem build google-ads-common.gemspec'
+  result = system('/bin/env gem build google-ads-common.gemspec')
+  raise 'Build failed.' unless result
 end
 
 desc 'Perform the unit testing.'
 task :test do
-  system 'ruby test/suite_unittests.rb'
+  result = system('/bin/env ruby test/suite_unittests.rb')
+  raise 'Unit tests failed.' unless result
 end
 
 desc 'Run tests coverage tool.'
 task :coverage do
-  system 'ruby test/coverage.rb'
+  result = system('/bin/env ruby test/coverage.rb')
+  raise 'Coverage run failed.' unless result
 end

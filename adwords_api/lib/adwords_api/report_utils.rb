@@ -194,32 +194,16 @@ module AdwordsApi
     # Checks downloaded data for error signature. Raises ReportError if it
     # detects an error.
     def check_for_errors(response)
-      # Check for error in body.
-      report_body = response.body
-      if report_body and (@version == :v201206) and
-          ((RUBY_VERSION < '1.9.1') or report_body.valid_encoding?)
-        check_for_legacy_error(report_body, response.code)
-      end
       # Check for error code.
-      unless response.code == 200
+      if response.code != 200
+        # Check for error in body.
+        report_body = response.body
         check_for_xml_error(report_body, response.code)
         # No XML error found nor raised, falling back to a default message.
         raise AdwordsApi::Errors::ReportError.new(response.code,
             'HTTP code: %d, body: %s' % [response.code, response.body])
       end
       return nil
-    end
-
-    # Checks for a legacy error in the response body and raises an exception if
-    # it was found.
-    def check_for_legacy_error(report_body, response_code)
-      error_message_regex = '^!!!(-?\d+)\|\|\|(-?\d+)\|\|\|(.*)\?\?\?'
-      data = report_body.slice(0, 1024)
-      matches = data.match(error_message_regex)
-      if matches
-        message = (matches[3].nil?) ? data : matches[3]
-        raise AdwordsApi::Errors::ReportError.new(response_code, message)
-      end
     end
 
     # Checks for an XML error in the response body and raises an exception if
