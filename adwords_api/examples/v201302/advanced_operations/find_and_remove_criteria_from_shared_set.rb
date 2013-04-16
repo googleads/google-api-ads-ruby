@@ -23,7 +23,8 @@
 #
 # Note: Shared sets is a Beta feature.
 #
-# Tags: CampaignService.mutate
+# Tags: CampaignSharedSetService.get
+# Tags: SharedCriterionService.get, SharedCriterionService.mutate
 
 require 'adwords_api'
 
@@ -109,8 +110,7 @@ def find_and_remove_criteria_from_shared_set(campaign_id)
              shared_criterion[:criterion][:url]]
         else
           puts 'Shared criterion with ID %d was found.' %
-            [shared_criterion[:criterion][:id],
-             shared_criterion[:criterion][:url]]
+            [shared_criterion[:criterion][:id]]
         end
         criterion_ids << {
            :shared_set_id => shared_criterion[:shared_set_id],
