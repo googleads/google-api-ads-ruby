@@ -72,7 +72,14 @@ module AdwordsApi
           :ReportDefinitionService,
           :TargetingIdeaService,
           :TrafficEstimatorService,
-          :UserListService
+          :UserListService,
+          # AdWords for Video API Beta services.
+          :VideoAdService,
+          :VideoCampaignCriterionService,
+          :VideoCampaignService,
+          :VideoService,
+          :VideoTargetingGroupCriterionService,
+          :VideoTargetingGroupService
       ],
       :v201302 => [
           :AdExtensionOverrideService,
@@ -153,6 +160,13 @@ module AdwordsApi
       [:v201209, :ManagedCustomerService] => 'mcm/',
       [:v201209, :CustomerService] => 'mcm/',
       [:v201209, :BudgetService] => 'cm/',
+      # AdWords for Video API Beta services.
+      [:v201209, :VideoAdService] => 'video/',
+      [:v201209, :VideoCampaignCriterionService] => 'video/',
+      [:v201209, :VideoCampaignService] => 'video/',
+      [:v201209, :VideoService] => 'video/',
+      [:v201209, :VideoTargetingGroupCriterionService] => 'video/',
+      [:v201209, :VideoTargetingGroupService] => 'video/',
       # v201302
       [:v201302, :AdExtensionOverrideService] => 'cm/',
       [:v201302, :AdGroupAdService] => 'cm/',
