@@ -30,7 +30,6 @@ require 'campaign_management/get_all_disapproved_ads'
 require 'campaign_management/get_all_disapproved_ads_with_awql'
 require 'campaign_management/promote_experiment'
 require 'campaign_management/set_ad_parameters'
-require 'campaign_management/set_campaign_enhanced'
 require 'campaign_management/set_criterion_bid_modifier'
 require 'campaign_management/validate_text_ad'
 
@@ -115,13 +114,6 @@ class TestCampaignManagementV201302 < Test::Unit::TestCase
     assert_not_nil(criterion[:criterion])
     assert_not_nil(criterion[:criterion][:id])
     set_ad_parameters(ad_group[:id], criterion[:criterion][:id])
-  end
-
-  def test_set_campaign_enhanced()
-    campaign = @utils.get_campaign()
-    assert_not_nil(campaign)
-    assert_not_nil(campaign[:id])
-    set_campaign_enhanced(campaign[:id])
   end
 
   def test_set_criterion_bid_modifier()
