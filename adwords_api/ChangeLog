@@ -1,4 +1,5 @@
 0.9.1:
+  - Support and examples for AdGroupBidModifierService.
 
 0.9.0:
   - Shared set support and examples (beta feature).
