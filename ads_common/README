@@ -4,6 +4,7 @@ This gem is a dependency for the new generation of Ruby Google Ads client
 libraries. It contains common code shared among all of these libraries, such as
 authentication, SOAP stub generation, error handling, logging, etc.
 
+
 = Docs for Users
 
 == 1 - Installation:
@@ -18,6 +19,7 @@ The following gem libraries are required:
  - httpi
  - signet
 
+
 = Docs for Developers
 
 == 1 - Directory Structure
@@ -31,6 +33,7 @@ The following gem libraries are required:
     requests.
 - +test/+: Contains the unit tests for the library.
 
+
 == 2 - Commands
 
  $ gem build google-ads-common.gemspec
@@ -40,9 +43,20 @@ to build the gem
 to run unit tests on the library
 
 
+== 3 - Resources
+
+Ruby client libraries code page:
+
+  http://code.google.com/p/google-api-ads-ruby/
+
+Google Ads Developers Plus page:
+
+  https://plus.google.com/+GoogleAdsDevelopers
+
+
 = Copyright/License Info
 
-Copyright 2010-2012, Google Inc. All Rights Reserved.
+Copyright 2010-2013, Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
