@@ -4,6 +4,7 @@ AdwordsOnRails::Application.routes.draw do
   get "campaign/index"
 
   get "account/index"
+  get "account/input"
   get "account/select"
 
   get "login/prompt"

@@ -26,6 +26,8 @@ require 'advanced_operations/add_site_links'
 require 'advanced_operations/add_click_to_download_ad'
 require 'advanced_operations/create_and_attach_shared_keyword_set'
 require 'advanced_operations/find_and_remove_criteria_from_shared_set'
+require 'advanced_operations/add_ad_group_bid_modifier'
+require 'advanced_operations/get_ad_group_bid_modifiers'
 
 PLACEHOLDER_SITELINKS = 1
 PLACEHOLDER_FIELD_SITELINK_LINK_TEXT = 1
@@ -60,5 +62,20 @@ class TestAdvancedOperationsV201302 < Test::Unit::TestCase
     assert_not_nil(campaign[:id])
     create_and_attach_shared_keyword_set(campaign[:id])
     find_and_remove_criteria_from_shared_set(campaign[:id])
+  end
+
+  def test_get_ad_group_bid_modifiers()
+    campaign = @utils.get_campaign()
+    assert_not_nil(campaign)
+    assert_not_nil(campaign[:id])
+    get_ad_group_bid_modifiers(campaign[:id])
+  end
+
+  def test_add_ad_group_bid_modifier()
+    bid_modifier = 1.1
+    ad_group = @utils.get_ad_group()
+    assert_not_nil(ad_group)
+    assert_not_nil(ad_group[:id])
+    add_ad_group_bid_modifier(ad_group[:id], bid_modifier)
   end
 end

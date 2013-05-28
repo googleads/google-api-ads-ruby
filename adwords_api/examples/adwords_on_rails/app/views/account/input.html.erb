@@ -1,0 +1,21 @@
+<h1>Manually set account ID</h1>
+
+<p>You can use this method to select an account when your token is not yet approved and you can not use MCC services to retrieve accounts list. In this case type in your <a href="https://developers.google.com/adwords/api/docs/test-accounts">Test Account</a> CID manually into the field below.</p>
+
+<%= form_tag('/account/select', :method => 'get') do %>
+
+<div class="input-form-item">
+  Account clientCustomerID: <input name="account_id" value="XXX-XXX-XXXX" size="80">
+</div>
+
+<div class="input-form-item">
+  <input type="submit" value="Set account ID">
+</div>
+
+<% end %>
+
+<br/><br/>
+
+<div id="local-footer">
+  <span class="small-print"><%= link_to('Back to home', home_index_path) %></span>
+</div>

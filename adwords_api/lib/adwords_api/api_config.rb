@@ -48,6 +48,7 @@ module AdwordsApi
       :v201209 => [
           :AdExtensionOverrideService,
           :AdGroupAdService,
+          :AdGroupBidModifierService,
           :AdGroupCriterionService,
           :AdGroupService,
           :AdParamService,
@@ -72,11 +73,19 @@ module AdwordsApi
           :ReportDefinitionService,
           :TargetingIdeaService,
           :TrafficEstimatorService,
-          :UserListService
+          :UserListService,
+          # AdWords for Video API Beta services.
+          :VideoAdService,
+          :VideoCampaignCriterionService,
+          :VideoCampaignService,
+          :VideoService,
+          :VideoTargetingGroupCriterionService,
+          :VideoTargetingGroupService
       ],
       :v201302 => [
           :AdExtensionOverrideService,
           :AdGroupAdService,
+          :AdGroupBidModifierService,
           :AdGroupCriterionService,
           :AdGroupFeedService,
           :AdGroupService,
@@ -128,6 +137,7 @@ module AdwordsApi
       # v201209
       [:v201209, :AdExtensionOverrideService] => 'cm/',
       [:v201209, :AdGroupAdService] => 'cm/',
+      [:v201209, :AdGroupBidModifierService] => 'cm/',
       [:v201209, :AdGroupCriterionService] => 'cm/',
       [:v201209, :AdGroupService] => 'cm/',
       [:v201209, :AdParamService] => 'cm/',
@@ -153,9 +163,17 @@ module AdwordsApi
       [:v201209, :ManagedCustomerService] => 'mcm/',
       [:v201209, :CustomerService] => 'mcm/',
       [:v201209, :BudgetService] => 'cm/',
+      # AdWords for Video API Beta services.
+      [:v201209, :VideoAdService] => 'video/',
+      [:v201209, :VideoCampaignCriterionService] => 'video/',
+      [:v201209, :VideoCampaignService] => 'video/',
+      [:v201209, :VideoService] => 'video/',
+      [:v201209, :VideoTargetingGroupCriterionService] => 'video/',
+      [:v201209, :VideoTargetingGroupService] => 'video/',
       # v201302
       [:v201302, :AdExtensionOverrideService] => 'cm/',
       [:v201302, :AdGroupAdService] => 'cm/',
+      [:v201302, :AdGroupBidModifierService] => 'cm/',
       [:v201302, :AdGroupCriterionService] => 'cm/',
       [:v201302, :AdGroupFeedService] => 'cm/',
       [:v201302, :AdGroupService] => 'cm/',

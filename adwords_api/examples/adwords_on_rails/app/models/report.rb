@@ -19,17 +19,26 @@ class Report
     'ADGROUP_REACH_FREQUENCY_REPORT' => {
         :name => 'Ad Group Reach Frequency'
     },
+    'AUDIENCE_PERFORMANCE_REPORT' => {
+        :name => 'Audience Performance'
+    },
     'AUTOMATIC_PLACEMENTS_PERFORMANCE_REPORT' => {
         :name => 'Automatic Placements Performance'
+    },
+    'BUDGET_PERFORMANCE_REPORT' => {
+        :name => 'Budget Performance'
+    },
+    'CAMPAIGN_PERFORMANCE_REPORT' => {
+        :name => 'Campaign Performance'
     },
     'CAMPAIGN_NEGATIVE_KEYWORDS_PERFORMANCE_REPORT' => {
         :name => 'Campaign Negative Keywords Performance'
     },
+    'CAMPAIGN_NEGATIVE_LOCATIONS_REPORT' => {
+        :name => 'Campaign Negative Locations'
+    },
     'CAMPAIGN_NEGATIVE_PLACEMENTS_PERFORMANCE_REPORT' => {
         :name => 'Campaign Negative Placements Performance'
-    },
-    'CAMPAIGN_PERFORMANCE_REPORT' => {
-        :name => 'Campaign Performance'
     },
     'CAMPAIGN_REACH_FREQUENCY_REPORT' => {
         :name => 'Campaign Reach Frequency'
@@ -46,6 +55,9 @@ class Report
     'DESTINATION_URL_REPORT' => {
         :name => 'Destination URL'
     },
+    'DISPLAY_TOPICS_PERFORMANCE_REPORT' => {
+        :name => 'Display Topics Performance'
+    },
     'GEO_PERFORMANCE_REPORT' => {
         :name => 'Geo Performance'
     },
@@ -54,6 +66,12 @@ class Report
     },
     'MANAGED_PLACEMENTS_PERFORMANCE_REPORT' => {
         :name => 'Managed Placements Performance'
+    },
+    'PLACEHOLDER_FEED_ITEM_REPORT' => {
+        :name => 'Placeholder Feed Item'
+    },
+    'PLACEMENT_PERFORMANCE_REPORT' => {
+        :name => 'Placement Performance'
     },
     'SEARCH_QUERY_PERFORMANCE_REPORT' => {
         :name => 'Search Query Performance'

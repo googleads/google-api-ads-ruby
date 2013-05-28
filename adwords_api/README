@@ -91,14 +91,12 @@ In order to make things more Ruby-like for our Ruby developers, we've renamed
 API objects and methods to more closely match Ruby conventions. This means using
 snake_case for methods and parameters, and UpperCamelCase for class names.
 
-For example, the 'getReportFields' method of the ReportDefinitionService is
-named 'get_report_fields' in the client library. You invoke it by doing:
-   response = report_def_srv.get_report_fields(report_type)
+For example, the 'startDate' field of the Campaign object is named 'start_date'
+in the client library. The 'get' method, returns a CampaignPage object which has
+an 'entries' and a 'total_num_entries' field. So, to access the return
+values, you would do this:
 
-The 'get' method, on the other hand, returns a ReportDefinitionPage object which
-has an 'entries' and a 'total_num_entries' field. So, to access the return
-values, you would do:
-   response = report_def_srv.get(selector)
+   response = campaign_srv.get(selector)
    num_entries = response[:total_num_entries]
 
 Essentially, all you have to do is follow Ruby conventions, and the library will
@@ -142,20 +140,23 @@ Request details and units spend are logged at the INFO log level, while raw HTTP
 headers and XML dumps are logged at the DEBUG log level. For more details on
 using Logger refer to the Ruby Logger documentation.
 
-=== 2.4 - Calculating unit spend:
+=== 2.4 - Calculating operations usage
 
-Each AdWords API operation performed consumes a certain number of API units, as
-specified in the rate sheet:
-  http://code.google.com/apis/adwords/docs/ratesheet.html
+Each AdWords API operation performed consumes a certain number of operations as
+described in the rate sheet:
 
-The amount of units spent is returned in the header part of the SOAP response.
-This information can be obtained by passing a user block during method call:
-  response = report_def_srv.get(selector) do |header|
-    puts "Units spent: %d" % header[:units]
+  https://developers.google.com/adwords/api/docs/ratesheet
+
+The amount of operations consumed is returned in the header part of the SOAP
+response. This information can be obtained by passing a user block during the
+method call:
+
+  response = campaign_srv.get(selector) do |header|
+    puts "Operations consumed: %d" % header[:operations]
   end
 
 You can also retrieve the response body as the second block parameter:
-  report_def_srv.get(selector) {|header, body| ... }
+  campaign_srv.get(selector) {|header, body| ... }
 
 === 2.5 - GZip compression
 
@@ -194,6 +195,11 @@ Bug reports and feature requests can be posted on the library page:
 Questions can be asked on forum
 
   http://groups.google.com/group/adwords-api
+
+Make sure to subscribe to our Google Plus page for API change announcements and
+other news:
+
+  https://plus.google.com/+GoogleAdsDevelopers
 
 
 = Copyright/License Info

@@ -19,8 +19,10 @@
 #
 # Rakefile for the ads_common package.
 
+require 'rake/testtask'
+
 desc 'Default target - build.'
-task :default => [:build]
+task :default => [:build, :test]
 
 desc 'Package the Common library into a gem file.'
 task :build do
@@ -29,9 +31,9 @@ task :build do
 end
 
 desc 'Perform the unit testing.'
-task :test do
-  result = system('/bin/env ruby test/suite_unittests.rb')
-  raise 'Unit tests failed.' unless result
+Rake::TestTask.new do |t|
+  test_files_mask = File.join(File.dirname(__FILE__), 'test', 'test_*.rb')
+  t.test_files = FileList[Dir.glob(test_files_mask)]
 end
 
 desc 'Run tests coverage tool.'

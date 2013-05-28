@@ -112,7 +112,7 @@ Once the library object is created you can request services with a 'service'
 method:
   user_service = dfp.service(:UserService, <API_VERSION>)
 
-where <API_VERSION> is required version of DFP API as symbol, e.g. :v201206.
+where <API_VERSION> is required version of DFP API as symbol, e.g. :v201302.
 
 Then you should be able to execute service methods:
 
@@ -146,7 +146,7 @@ Examples can be run by executing by running:
 
 from the "examples/<version>/<service_name>" directory i.e.
 
-  $ cd examples/v201206/user_service
+  $ cd examples/v201302/user_service
   $ ruby get_all_users.rb
 
 Some examples require modification to be functional, like create_order example
@@ -222,12 +222,17 @@ Questions can be asked on forum
 
   http://groups.google.com/group/google-doubleclick-for-publishers-api/
 
+Make sure to subscribe to our Google Plus page for API change announcements and
+other news:
+
+  https://plus.google.com/+GoogleAdsDevelopers
+
 
 = Copyright/License Info
 
 == License
 
-Copyright 2011-2012, Google Inc. All Rights Reserved.
+Copyright 2011-2013, Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License.

@@ -1,6 +1,10 @@
+0.9.1:
+  - Support and examples for AdGroupBidModifierService.
+
 0.9.0:
   - Shared set support and examples (beta feature).
   - Updated feed services auto-generated code.
+  - AdWords for Video API support and examples (beta feature).
   - Removed deprecated API version v201206.
 
 0.8.2:
