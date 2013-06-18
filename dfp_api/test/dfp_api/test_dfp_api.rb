@@ -1,4 +1,5 @@
-#!/usr/bin/ruby
+#!/usr/bin/env ruby
+# Encoding: utf-8
 #
 # Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
@@ -20,7 +21,16 @@
 # Tests the general API features.
 
 require 'test/unit'
+
 require 'dfp_api'
+
+
+class LoggerStub
+  attr_reader :last_warning
+  def warn(message)
+    @last_warning = message
+  end
+end
 
 class TestDfpApi < Test::Unit::TestCase
   DEFAULT_CONFIG_HASH = {
@@ -36,15 +46,19 @@ class TestDfpApi < Test::Unit::TestCase
   DEFAULT_CONFIG_FILENAME = File.expand_path('../test_config.yml', __FILE__)
   DEFAULT_FAILURE_FILENAME = 'test_notexists.yml'
 
+  def setup()
+    @logger = LoggerStub.new
+  end
+
   # Test initializer with no arguments.
-  def test_initialize_nil
+  def test_initialize_nil()
     assert_nothing_raised do
       dfp_api = DfpApi::Api.new
     end
   end
 
   # Test initializer with hash argument.
-  def test_initialize_hash
+  def test_initialize_hash()
     assert_nothing_raised do
       dfp_api = DfpApi::Api.new(DEFAULT_CONFIG_HASH)
       check_config_data(dfp_api.config)
@@ -52,7 +66,7 @@ class TestDfpApi < Test::Unit::TestCase
   end
 
   # Test initializer with filename argument.
-  def test_initialize_filename
+  def test_initialize_filename()
     assert_nothing_raised do
       dfp_api = DfpApi::Api.new(DEFAULT_CONFIG_FILENAME)
       check_config_data(dfp_api.config)
@@ -60,10 +74,9 @@ class TestDfpApi < Test::Unit::TestCase
   end
 
   # Test initializer with bad filename argument.
-  def test_initialize_filename_not_exists
+  def test_initialize_filename_not_exists()
     assert_raises(Errno::ENOENT) do
       dfp_api = DfpApi::Api.new(DEFAULT_FAILURE_FILENAME)
-      check_config_data(dfp_api.config)
     end
   end
 
@@ -77,5 +90,16 @@ class TestDfpApi < Test::Unit::TestCase
     assert_equal(1234567, config.read('authentication.network_code'))
     assert_nil(config.read('item.not.exists'))
     assert_equal(:default, config.read('item.not.exists', :default))
+  end
+
+  # Warning is logged with ClientLogin is used.
+  def test_clientlogin_deprecation_warning()
+    dfp_api = DfpApi::Api.new({
+      :library => {:logger => @logger},
+      :authentication => {:method => 'ClientLogin'},
+      :service => {:environment => 'PRODUCTION'}
+    })
+    service = dfp_api.service(:UserService)
+    assert_not_nil(@logger.last_warning)
   end
 end

@@ -6,14 +6,14 @@
 :authentication:
   # Authentication method, methods currently supported: OAUTH2, OAUTH2_JWT,
   # ClientLogin.
-  :method: ClientLogin
+  :method: OAuth2
 
   # Auth parameters for OAUTH2 method.
   # Set the OAuth2 client id and secret. Register your application here to
   # obtain these values:
   #   https://code.google.com/apis/console#access
-  #:oauth2_client_id: INSERT_OAUTH2_CLIENT_ID_HERE
-  #:oauth2_client_secret: INSERT_OAUTH2_CLIENT_SECRET_HERE
+  :oauth2_client_id: INSERT_OAUTH2_CLIENT_ID_HERE
+  :oauth2_client_secret: INSERT_OAUTH2_CLIENT_SECRET_HERE
   # Optional, see: https://developers.google.com/accounts/docs/OAuth2WebServer
   #:oauth2_callback: INSERT_OAUTH2_CALLBACK_URL_HERE
   #:oauth2_state: INSERT_OAUTH2_STATE_HERE
@@ -31,8 +31,9 @@
   #:oauth2_prn: INSERT_OAUTH2_PRN_HERE
 
   # Auth parameters for ClientLogin method.
-  :password: INSERT_PASSWORD_HERE
-  :email: INSERT_EMAIL_HERE
+  # NOTE: ClientLogin method is deprecated, use OAuth2.0 instead.
+  #:password: INSERT_PASSWORD_HERE
+  #:email: INSERT_EMAIL_HERE
   # To manage your auth tokens manually, use the 'auth_token' property.
   #:auth_token: INSERT_AUTH_TOKEN_HERE
 

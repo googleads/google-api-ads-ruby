@@ -26,9 +26,21 @@ require 'ads_common/config'
 require 'ads_common/api_config'
 require 'adwords_api'
 
+
+class LoggerStub
+  attr_reader :last_warning
+  def warn(message)
+    @last_warning = message
+  end
+end
+
 class TestAdwordsApi < Test::Unit::TestCase
 
   API_VERSION = :v201302
+
+  def setup()
+    @logger = LoggerStub.new
+  end
 
   def test_initialize()
     assert_nothing_raised do
@@ -83,8 +95,19 @@ class TestAdwordsApi < Test::Unit::TestCase
 
   def test_prod_env()
     adwords_api = AdwordsApi::Api.new({
+      :library => {:logger => @logger},
       :service => {:environment => 'PRODUCTION'}
     })
     service = adwords_api.service(:ManagedCustomerService, API_VERSION)
+  end
+
+  def test_clientlogin_deprecation_warning()
+    adwords_api = AdwordsApi::Api.new({
+      :library => {:logger => @logger},
+      :authentication => {:method => 'ClientLogin'},
+      :service => {:environment => 'PRODUCTION'}
+    })
+    service = adwords_api.service(:CampaignService, API_VERSION)
+    assert_not_nil(@logger.last_warning)
   end
 end

@@ -45,19 +45,24 @@ There is an example configuration file shipped with these libraries.
 You can also pass API a manually constructed config hash like:
    adwords = AdwordsApi::Api.new({
      :authentication => {
-         :method => 'ClientLogin',
+         :method => 'OAuth2',
+         :oauth2_client_id: 'INSERT_OAUTH2_CLIENT_ID_HERE'
+         :oauth2_client_secret: 'INSERT_OAUTH2_CLIENT_SECRET_HERE'
          :developer_token => 'DEVELOPER_TOKEN',
-         :user_agent => 'Ruby Sample',
-         :password => 'PASSWORD',
-         :email => 'user@domain.com',
-         :client_customer_id => '012-345-6789'
+         :client_customer_id => '012-345-6789',
+         :user_agent => 'Ruby Sample'
      },
      :service => {
        :environment => 'PRODUCTION'
      }
    })
 
-Then, just specify which service you're looking to use, and which version:
+To obtain OAuth2 client credentials, follow instructions on the wiki:
+
+  http://code.google.com/p/google-api-ads-ruby/wiki/OAuth2
+
+Once the library instance is create, specify which service you're looking to
+use, and which version:
    campaign_srv = adwords.service(:CampaignService, :v201302)
 
 and you should now be able to just use the API methods in the object you were
