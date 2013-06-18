@@ -68,13 +68,17 @@ file. Alternatively, you can pass a configuration hash directly to the
 constructor:
   dfp = DfpApi::Api.new({
      :authentication => {
-         :method => 'ClientLogin',
+         :method => 'OAuth2',
+         :oauth2_client_id: 'INSERT_OAUTH2_CLIENT_ID_HERE',
+         :oauth2_client_secret: 'INSERT_OAUTH2_CLIENT_SECRET_HERE',
          :application_name => 'Ruby DFP Sample',
-         :email => 'user@domain.com',
-         :password => 'PASSWORD',
          :network_code => 123456
      }
    })
+
+To obtain OAuth2 client credentials, follow instructions on the wiki:
+
+  http://code.google.com/p/google-api-ads-ruby/wiki/OAuth2
 
 An example of configuration file is available as part of this library.
 

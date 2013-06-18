@@ -20,13 +20,13 @@
 #
 # Test suite for unit tests.
 
-lib = File.expand_path('../../lib/', __FILE__)
-$:.unshift lib unless $:.include?(lib)
-
-require 'test/unit'
+$:.unshift File.expand_path('../../lib/', __FILE__)
+$:.unshift File.expand_path('../../', __FILE__)
 
 # DFP API units tests.
-Dir.glob('./test/dfp_api/test_*.rb').each {|file| require file}
+dfp_mask = File.join(File.dirname(__FILE__), 'dfp_api', 'test_*.rb')
+Dir.glob(dfp_mask).each { |file| require file }
 
 # DFP API bug tests.
-Dir.glob('./test/bugs/test_*.rb').each {|file| require file}
+bugs_mask = File.join(File.dirname(__FILE__), 'bugs', 'test_*.rb')
+Dir.glob(bugs_mask).each { |file| require file }

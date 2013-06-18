@@ -183,9 +183,13 @@ module AdsCommon
     # - auth handler
     #
     def create_auth_handler()
-      auth_method = @config.read('authentication.method', :CLIENTLOGIN)
+      auth_method = @config.read('authentication.method', :OAUTH2)
       return case auth_method
         when :CLIENTLOGIN
+          @logger.warn("ClientLogin authentication method is now deprecated" +
+              " and will be removed in the future. Consider migration to" +
+              " OAuth2. See 'https://developers.google.com/accounts/docs/" +
+              "AuthForInstalledApps' for more details.")
           AdsCommon::Auth::ClientLoginHandler.new(
               @config,
               api_config.client_login_config(:AUTH_SERVER),

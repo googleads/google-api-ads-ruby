@@ -26,7 +26,7 @@ require 'test/unit'
 require 'ads_common/results_extractor'
 require 'dfp_api/v201206/line_item_service_registry'
 
-class TestDfpApi < Test::Unit::TestCase
+class TestDfpIssue16 < Test::Unit::TestCase
 
   def setup()
     @registry = DfpApi::V201206::LineItemService::LineItemServiceRegistry
