@@ -35,9 +35,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201302
+    DEFAULT_VERSION = :v201306
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201302
+    LATEST_VERSION = :v201306
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -101,7 +101,26 @@ module DfpApi
                    :UserTeamAssociationService, :CreativeSetService,
                    :CreativeWrapperService, :ActivityGroupService,
                    :ActivityService, :AdRuleService, :ContactService,
-                   :ContentBundleService]
+                   :ContentBundleService],
+      :v201306 => [:CompanyService, :CreativeService, :ForecastService,
+                   :InventoryService, :LineItemCreativeAssociationService,
+                   :LineItemService, :NetworkService, :OrderService,
+                   :PlacementService, :ReportService, :UserService,
+                   :CustomTargetingService, :PublisherQueryLanguageService,
+                   :LabelService, :ContentService, :SuggestedAdUnitService,
+                   :CreativeTemplateService, :TeamService,
+                   :AudienceSegmentService, :CustomFieldService,
+                   :UserTeamAssociationService, :CreativeSetService,
+                   :CreativeWrapperService, :ActivityGroupService,
+                   :ActivityService, :AdRuleService, :ContactService,
+                   :ContentBundleService, :BaseRateService, :ProductService,
+                   :ProductTemplateService, :ProposalService,
+                   :ProposalLineItemService, :RateCardService,
+                   :RateCardCustomizationService,
+                   :ReconciliationOrderReportService,
+                   :ReconciliationReportService,
+                   :ReconciliationReportRowService,
+                   :WorkflowActionService, :LineItemTemplateService]
     }
 
     # Configure the different environments, with the base URL for each one
@@ -114,7 +133,8 @@ module DfpApi
         :v201206 => 'https://www.google.com/apis/ads/publisher/',
         :v201208 => 'https://www.google.com/apis/ads/publisher/',
         :v201211 => 'https://www.google.com/apis/ads/publisher/',
-        :v201302 => 'https://www.google.com/apis/ads/publisher/'
+        :v201302 => 'https://www.google.com/apis/ads/publisher/',
+        :v201306 => 'https://www.google.com/apis/ads/publisher/'
       }
     }
 
