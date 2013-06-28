@@ -117,7 +117,14 @@ module AdwordsApi
           :SharedSetService,
           :TargetingIdeaService,
           :TrafficEstimatorService,
-          :UserListService
+          :UserListService,
+          # AdWords for Video API Beta services.
+          :VideoAdService,
+          :VideoCampaignCriterionService,
+          :VideoCampaignService,
+          :VideoService,
+          :VideoTargetingGroupCriterionService,
+          :VideoTargetingGroupService
       ]
     }
 
@@ -205,7 +212,14 @@ module AdwordsApi
       [:v201302, :UserListService] => 'cm/',
       [:v201302, :ManagedCustomerService] => 'mcm/',
       [:v201302, :CustomerService] => 'mcm/',
-      [:v201302, :BudgetService] => 'cm/'
+      [:v201302, :BudgetService] => 'cm/',
+      # AdWords for Video API Beta services.
+      [:v201302, :VideoAdService] => 'video/',
+      [:v201302, :VideoCampaignCriterionService] => 'video/',
+      [:v201302, :VideoCampaignService] => 'video/',
+      [:v201302, :VideoService] => 'video/',
+      [:v201302, :VideoTargetingGroupCriterionService] => 'video/',
+      [:v201302, :VideoTargetingGroupService] => 'video/'
     }
 
     # Auth constants for ClientLogin method.
