@@ -65,6 +65,14 @@ if __FILE__ == $0
     location_extension_id = 'INSERT_LOCATION_EXTENSION_ID_HERE'.to_i
     add_location_extension_override(ad_id, location_extension_id)
 
+  # Authorization error.
+  rescue AdsCommon::Errors::OAuth2VerificationRequired => e
+    puts "Authorization credentials are not valid. Edit adwords_api.yml for " +
+        "OAuth2 client ID and secret and run misc/setup_oauth2.rb example " +
+        "to retrieve and store OAuth2 tokens."
+    puts "See this wiki page for more details:\n\n  " +
+        'http://code.google.com/p/google-api-ads-ruby/wiki/OAuth2'
+
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e
     puts "HTTP Error: %s" % e

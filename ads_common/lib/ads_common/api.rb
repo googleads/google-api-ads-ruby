@@ -140,6 +140,13 @@ module AdsCommon
       return @auth_handler
     end
 
+    # Updates default configuration file to include OAuth2 token information.
+    def save_oauth2_token(token)
+      raise AdsCommon::Errors::Error, "Can't save nil token" if token.nil?
+      AdsCommon::Utils.save_oauth2_token(
+          File.join(ENV['HOME'], api_config.default_config_filename), token)
+    end
+
     private
 
     # Auxiliary method to test parameters correctness for the service request.

@@ -3,7 +3,7 @@
 #
 # Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -18,13 +18,13 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to use OAuth2.0 authentication method.
+# This example illustrates how to set up OAuth2.0 authentication credentials.
 #
 # Tags: CampaignService.get
 
 require 'adwords_api'
 
-def use_oauth2()
+def setup_oauth2()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -42,6 +42,17 @@ def use_oauth2()
     verification_code = gets.chomp
     verification_code
   end
+  if token
+    print "\nWould you like to update your adwords_api.yml to save " +
+        "OAuth2 crdentials? (y/N): "
+    response = gets.chomp
+    if ('y'.casecmp(response) == 0) or ('yes'.casecmp(response) == 0)
+      adwords.save_oauth2_token(token)
+      puts 'OAuth2 token is now saved to ~/adwords_api.yml and will be ' +
+          'automatically used by the library.'
+    end
+  end
+
   # Alternatively, you can provide one within the parameters:
   #token = adwords.authorize({:oauth2_verification_code => verification_code})
 
@@ -50,34 +61,14 @@ def use_oauth2()
   # should persist it to be used in subsequent invocations like this:
   #adwords.authorize({:oauth2_token => token})
 
-  # No exception thrown - we are good to make the request.
-  campaign_srv = adwords.service(:CampaignService, API_VERSION)
-
-  # Get all the campaigns for this account; empty selector.
-  selector = {
-    :fields => ['Id', 'Name', 'Status'],
-    :ordering => [
-      {:field => 'Name', :sort_order => 'ASCENDING'}
-    ]
-  }
-
-  response = campaign_srv.get(selector)
-  if response and response[:entries]
-    campaigns = response[:entries]
-    campaigns.each do |campaign|
-      puts "Campaign ID %d, name '%s' and status '%s'" %
-          [campaign[:id], campaign[:name], campaign[:status]]
-    end
-  else
-    puts 'No campaigns were found.'
-  end
+  # No exception thrown - we are good to make a request.
 end
 
 if __FILE__ == $0
   API_VERSION = :v201302
 
   begin
-    use_oauth2()
+    setup_oauth2()
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e
