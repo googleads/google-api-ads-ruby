@@ -18,7 +18,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Test suite for v201209 example tests.
+# Test suite for v201302 example tests.
 
 require 'test/unit'
 
