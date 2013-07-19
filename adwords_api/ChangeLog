@@ -1,3 +1,5 @@
+0.9.4:
+
 0.9.3:
   - Updated examples to use OAuth2 by default.
   - Require google-ads-common 0.9.3 or later from now on.
