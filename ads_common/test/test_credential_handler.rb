@@ -22,6 +22,7 @@
 
 require 'logger'
 require 'minitest/mock'
+require 'test/unit'
 
 require 'ads_common/config'
 require 'ads_common/credential_handler'
