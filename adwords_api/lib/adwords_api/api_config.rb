@@ -45,43 +45,6 @@ module AdwordsApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v201209 => [
-          :AdExtensionOverrideService,
-          :AdGroupAdService,
-          :AdGroupBidModifierService,
-          :AdGroupCriterionService,
-          :AdGroupService,
-          :AdParamService,
-          :AlertService,
-          :BudgetOrderService,
-          :BudgetService,
-          :CampaignAdExtensionService,
-          :CampaignCriterionService,
-          :CampaignService,
-          :ConstantDataService,
-          :ConversionTrackerService,
-          :CustomerService,
-          :CustomerSyncService,
-          :DataService,
-          :ExperimentService,
-          :GeoLocationService,
-          :InfoService,
-          :LocationCriterionService,
-          :ManagedCustomerService,
-          :MediaService,
-          :MutateJobService,
-          :ReportDefinitionService,
-          :TargetingIdeaService,
-          :TrafficEstimatorService,
-          :UserListService,
-          # AdWords for Video API Beta services.
-          :VideoAdService,
-          :VideoCampaignCriterionService,
-          :VideoCampaignService,
-          :VideoService,
-          :VideoTargetingGroupCriterionService,
-          :VideoTargetingGroupService
-      ],
       :v201302 => [
           :AdExtensionOverrideService,
           :AdGroupAdService,
@@ -171,7 +134,6 @@ module AdwordsApi
       :PRODUCTION => {
         :oauth_scope => 'https://adwords.google.com/api/adwords/',
         :header_ns => 'https://adwords.google.com/api/adwords/cm/',
-        :v201209 => 'https://adwords.google.com/api/adwords/',
         :v201302 => 'https://adwords.google.com/api/adwords/',
         :v201306 => 'https://adwords.google.com/api/adwords/'
       }
@@ -180,42 +142,6 @@ module AdwordsApi
     # Configure the subdirectories for each version / service pair.
     # A missing pair means that only the base URL is used.
     @@subdir_config = {
-      # v201209
-      [:v201209, :AdExtensionOverrideService] => 'cm/',
-      [:v201209, :AdGroupAdService] => 'cm/',
-      [:v201209, :AdGroupBidModifierService] => 'cm/',
-      [:v201209, :AdGroupCriterionService] => 'cm/',
-      [:v201209, :AdGroupService] => 'cm/',
-      [:v201209, :AdParamService] => 'cm/',
-      [:v201209, :AlertService] => 'mcm/',
-      [:v201209, :BudgetOrderService] => 'billing/',
-      [:v201209, :CampaignAdExtensionService] => 'cm/',
-      [:v201209, :CampaignCriterionService] => 'cm/',
-      [:v201209, :CampaignService] => 'cm/',
-      [:v201209, :ConstantDataService] => 'cm/',
-      [:v201209, :ConversionTrackerService] => 'cm/',
-      [:v201209, :CustomerSyncService] => 'ch/',
-      [:v201209, :DataService] => 'cm/',
-      [:v201209, :ExperimentService] => 'cm/',
-      [:v201209, :GeoLocationService] => 'cm/',
-      [:v201209, :InfoService] => 'info/',
-      [:v201209, :LocationCriterionService] => 'cm/',
-      [:v201209, :MediaService] => 'cm/',
-      [:v201209, :MutateJobService] => 'cm/',
-      [:v201209, :ReportDefinitionService] => 'cm/',
-      [:v201209, :TargetingIdeaService] => 'o/',
-      [:v201209, :TrafficEstimatorService] => 'o/',
-      [:v201209, :UserListService] => 'cm/',
-      [:v201209, :ManagedCustomerService] => 'mcm/',
-      [:v201209, :CustomerService] => 'mcm/',
-      [:v201209, :BudgetService] => 'cm/',
-      # AdWords for Video API Beta services.
-      [:v201209, :VideoAdService] => 'video/',
-      [:v201209, :VideoCampaignCriterionService] => 'video/',
-      [:v201209, :VideoCampaignService] => 'video/',
-      [:v201209, :VideoService] => 'video/',
-      [:v201209, :VideoTargetingGroupCriterionService] => 'video/',
-      [:v201209, :VideoTargetingGroupService] => 'video/',
       # v201302
       [:v201302, :AdExtensionOverrideService] => 'cm/',
       [:v201302, :AdGroupAdService] => 'cm/',

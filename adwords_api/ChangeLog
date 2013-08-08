@@ -1,4 +1,5 @@
-0.9.4:
+0.10.0:
+  - Removed deprecated API version v201209.
 
 0.9.3:
   - Updated examples to use OAuth2 by default.
