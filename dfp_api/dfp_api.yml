@@ -40,9 +40,7 @@
   # Other parameters.
   :application_name: dfp_ruby_examples
 
-  # Starting in v201203, network_code is required for all calls other than
-  # GetAllNetworks and MakeTestNetwork. In earlier versions, networkCode is
-  # optional if the user belongs to only one network.
+  # Required for all calls other than GetAllNetworks and MakeTestNetwork.
   :network_code: INSERT_NETWORK_CODE_HERE
 :service:
   # Only production environment is now available.

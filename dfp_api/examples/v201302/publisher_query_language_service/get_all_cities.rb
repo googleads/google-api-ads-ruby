@@ -21,7 +21,7 @@
 # This example gets first 500 cities available to target. A full list of
 # available tables can be found at:
 #
-# https://developers.google.com/doubleclick-publishers/docs/reference/v201204/PublisherQueryLanguageService
+# https://developers.google.com/doubleclick-publishers/docs/reference/latest/PublisherQueryLanguageService
 #
 # Tags: PublisherQueryLanguageService.select
 
