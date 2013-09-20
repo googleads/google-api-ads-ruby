@@ -1,4 +1,5 @@
 0.7.0:
+  - Added support and examples for v201308.
   - Removed support for deprecated v201203, v201204, v201206.
 
 0.6.3:
