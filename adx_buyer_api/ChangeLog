@@ -1,4 +1,7 @@
 0.4.7:
+  - Now require google-adwords-api-0.9.3 or later.
+  - Added examples for v201306.
+  - Removed examples for sunset API versions.
 
 0.4.6:
   - Now require google-adwords-api-0.8.2 or later.

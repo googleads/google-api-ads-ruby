@@ -24,12 +24,12 @@ require 'savon'
 require 'test/unit'
 
 require 'ads_common/results_extractor'
-require 'dfp_api/v201306/line_item_service_registry'
+require 'dfp_api/v201308/line_item_service_registry'
 
 class TestDfpIssue16 < Test::Unit::TestCase
 
   def setup()
-    @registry = DfpApi::V201306::LineItemService::LineItemServiceRegistry
+    @registry = DfpApi::V201308::LineItemService::LineItemServiceRegistry
   end
 
   def test_issue_16()

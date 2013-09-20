@@ -35,9 +35,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201306
+    DEFAULT_VERSION = :v201308
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201306
+    LATEST_VERSION = :v201308
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -45,32 +45,6 @@ module DfpApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v201203 => [:CompanyService, :CreativeService, :ForecastService,
-                   :InventoryService, :LineItemCreativeAssociationService,
-                   :LineItemService, :NetworkService, :OrderService,
-                   :PlacementService, :ReportService, :UserService,
-                   :CustomTargetingService, :PublisherQueryLanguageService,
-                   :LabelService, :ThirdPartySlotService, :ContentService,
-                   :SuggestedAdUnitService, :CreativeTemplateService,
-                   :TeamService, :AudienceSegmentService],
-      :v201204 => [:CompanyService, :CreativeService, :ForecastService,
-                   :InventoryService, :LineItemCreativeAssociationService,
-                   :LineItemService, :NetworkService, :OrderService,
-                   :PlacementService, :ReportService, :UserService,
-                   :CustomTargetingService, :PublisherQueryLanguageService,
-                   :LabelService, :ThirdPartySlotService, :ContentService,
-                   :SuggestedAdUnitService, :CreativeTemplateService,
-                   :TeamService, :AudienceSegmentService, :CustomFieldService,
-                   :UserTeamAssociationService],
-      :v201206 => [:CompanyService, :CreativeService, :ForecastService,
-                   :InventoryService, :LineItemCreativeAssociationService,
-                   :LineItemService, :NetworkService, :OrderService,
-                   :PlacementService, :ReportService, :UserService,
-                   :CustomTargetingService, :PublisherQueryLanguageService,
-                   :LabelService, :ThirdPartySlotService, :ContentService,
-                   :SuggestedAdUnitService, :CreativeTemplateService,
-                   :TeamService, :AudienceSegmentService, :CustomFieldService,
-                   :UserTeamAssociationService, :CreativeSetService],
       :v201208 => [:CompanyService, :CreativeService, :ForecastService,
                    :InventoryService, :LineItemCreativeAssociationService,
                    :LineItemService, :NetworkService, :OrderService,
@@ -120,6 +94,25 @@ module DfpApi
                    :ReconciliationOrderReportService,
                    :ReconciliationReportService,
                    :ReconciliationReportRowService,
+                   :WorkflowActionService, :LineItemTemplateService],
+      :v201308 => [:CompanyService, :CreativeService, :ForecastService,
+                   :InventoryService, :LineItemCreativeAssociationService,
+                   :LineItemService, :NetworkService, :OrderService,
+                   :PlacementService, :ReportService, :UserService,
+                   :CustomTargetingService, :PublisherQueryLanguageService,
+                   :LabelService, :ContentService, :SuggestedAdUnitService,
+                   :CreativeTemplateService, :TeamService,
+                   :AudienceSegmentService, :CustomFieldService,
+                   :UserTeamAssociationService, :CreativeSetService,
+                   :CreativeWrapperService, :ActivityGroupService,
+                   :ActivityService, :AdRuleService, :ContactService,
+                   :ContentBundleService, :BaseRateService, :ProductService,
+                   :ProductTemplateService, :ProposalService,
+                   :ProposalLineItemService, :RateCardService,
+                   :RateCardCustomizationService,
+                   :ReconciliationOrderReportService,
+                   :ReconciliationReportService,
+                   :ReconciliationReportRowService,
                    :WorkflowActionService, :LineItemTemplateService]
     }
 
@@ -128,13 +121,11 @@ module DfpApi
       :PRODUCTION => {
         :oauth_scope => 'https://www.google.com/apis/ads/publisher/',
         :header_ns => 'https://www.google.com/apis/ads/publisher/',
-        :v201203 => 'https://www.google.com/apis/ads/publisher/',
-        :v201204 => 'https://www.google.com/apis/ads/publisher/',
-        :v201206 => 'https://www.google.com/apis/ads/publisher/',
         :v201208 => 'https://www.google.com/apis/ads/publisher/',
         :v201211 => 'https://www.google.com/apis/ads/publisher/',
         :v201302 => 'https://www.google.com/apis/ads/publisher/',
-        :v201306 => 'https://www.google.com/apis/ads/publisher/'
+        :v201306 => 'https://www.google.com/apis/ads/publisher/',
+        :v201308 => 'https://www.google.com/apis/ads/publisher/'
       }
     }
 

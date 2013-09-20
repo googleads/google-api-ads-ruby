@@ -1,3 +1,6 @@
+0.10.0:
+  - Removed deprecated API version v201209.
+
 0.9.3:
   - Updated examples to use OAuth2 by default.
   - Require google-ads-common 0.9.3 or later from now on.
