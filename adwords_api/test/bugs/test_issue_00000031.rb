@@ -25,12 +25,12 @@ require 'test/unit'
 
 require 'ads_common/parameters_validator'
 require 'adwords_api'
-require 'adwords_api/v201306/targeting_idea_service_registry'
+require 'adwords_api/v201309/targeting_idea_service_registry'
 
 class TestIssue31 < Test::Unit::TestCase
   def setup()
     @registry =
-        AdwordsApi::V201306::TargetingIdeaService::TargetingIdeaServiceRegistry
+        AdwordsApi::V201309::TargetingIdeaService::TargetingIdeaServiceRegistry
   end
 
   def run_test(selector)
