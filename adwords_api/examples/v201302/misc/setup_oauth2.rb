@@ -33,7 +33,7 @@ def setup_oauth2()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  # You can call authorize explicitely to obtain the access token. Otherwise, it
+  # You can call authorize explicitly to obtain the access token. Otherwise, it
   # will be invoked automatically on the first API call.
   # There are two ways to provide verification code, first one is via the block:
   token = adwords.authorize() do |auth_url|
@@ -44,7 +44,7 @@ def setup_oauth2()
   end
   if token
     print "\nWould you like to update your adwords_api.yml to save " +
-        "OAuth2 crdentials? (y/N): "
+        "OAuth2 credentials? (y/N): "
     response = gets.chomp
     if ('y'.casecmp(response) == 0) or ('yes'.casecmp(response) == 0)
       adwords.save_oauth2_token(token)
@@ -54,12 +54,12 @@ def setup_oauth2()
   end
 
   # Alternatively, you can provide one within the parameters:
-  #token = adwords.authorize({:oauth2_verification_code => verification_code})
+  # token = adwords.authorize({:oauth2_verification_code => verification_code})
 
   # Note, 'token' is a Hash. Its value is not used in this example. If you need
   # to be able to access the API in offline mode, with no user present, you
   # should persist it to be used in subsequent invocations like this:
-  #adwords.authorize({:oauth2_token => token})
+  # adwords.authorize({:oauth2_token => token})
 
   # No exception thrown - we are good to make a request.
 end
