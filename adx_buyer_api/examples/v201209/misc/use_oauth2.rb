@@ -33,7 +33,7 @@ def use_oauth2()
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  # You can call authorize explicitely to obtain the access token. Otherwise, it
+  # You can call authorize explicitly to obtain the access token. Otherwise, it
   # will be invoked automatically on the first API call.
   # There are two ways to provide verification code, first one is via the block:
   token = adwords.authorize() do |auth_url|
