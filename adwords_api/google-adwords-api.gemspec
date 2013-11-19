@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.homepage = 'http://code.google.com/p/google-api-ads-ruby/'
   s.authors = ['Danial Klimkin']
   s.email = ['api.dklimkin@gmail.com']
+  s.license = 'Apache-2.0'
   s.platform = Gem::Platform::RUBY
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project = 'google-adwords-api'
