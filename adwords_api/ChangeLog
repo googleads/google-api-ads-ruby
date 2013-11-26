@@ -1,3 +1,6 @@
+0.11.0:
+  - Removed deprecated API version v201302.
+
 0.10.0:
   - Support and examples for v201309.
   - Removed deprecated API version v201209.

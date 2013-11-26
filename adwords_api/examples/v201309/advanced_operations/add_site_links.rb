@@ -46,7 +46,9 @@ def add_site_links(campaign_id)
     :name => 'Feed For Site Links',
     :attributes => [
       {:type => 'STRING', :name => 'Link Text'},
-      {:type => 'URL', :name => 'Link URL'}
+      {:type => 'URL', :name => 'Link URL'},
+      {:type => 'STRING', :name => 'Line 1 Description'},
+      {:type => 'STRING', :name => 'Line 2 Description'}
     ]
   }
 
@@ -59,25 +61,67 @@ def add_site_links(campaign_id)
     link_text_feed_attribute_id = feed[:attributes][0][:id]
     # Attribute of type URL.
     link_url_feed_attribute_id = feed[:attributes][1][:id]
+    # Attribute of type STRING.
+    line_1_feed_attribute_id = feed[:attributes][2][:id]
+    #Attribute of type STRING.
+    line_2_feed_attribute_id = feed[:attributes][3][:id]
     puts "Feed with name '%s' and ID %d was added with" %
         [feed[:name], feed[:id]]
-    puts "\tText attribute ID %d and URL attribute ID %d." %
-        [link_text_feed_attribute_id, link_url_feed_attribute_id]
+    puts "\tText attribute ID %d and URL attribute ID %d " +
+        "and Line 1 attribute ID %d and Line 2 attribute ID %d." % [
+          link_text_feed_attribute_id,
+          link_url_feed_attribute_id,
+          line_1_feed_attribute_id,
+          line_2_feed_attribute_id
+        ]
+
     sitelinks_data[:feed_id] = feed[:id]
     sitelinks_data[:link_text_feed_id] = link_text_feed_attribute_id
     sitelinks_data[:link_url_feed_id] = link_url_feed_attribute_id
+    sitelinks_data[:line_1_feed_id] = line_1_feed_attribute_id
+    sitelinks_data[:line_2_feed_id] = line_2_feed_attribute_id
   else
     raise new StandardError, 'No feeds were added.'
   end
 
   # Create site links feed items.
   items_data = [
-    {:text => 'Home', :url => 'http://www.example.com'},
-    {:text => 'Stores', :url => 'http://www.example.com/stores'},
-    {:text => 'On Sale', :url => 'http://www.example.com/sale'},
-    {:text => 'Support', :url => 'http://www.example.com/support'},
-    {:text => 'Products', :url => 'http://www.example.com/products'},
-    {:text => 'About', :url => 'http://www.example.com/about'}
+    {
+      :text => 'Home',
+      :url => 'http://www.example.com',
+      :line_1 => 'Home line 1',
+      :line_2 => 'Home line 2'
+    },
+    {
+      :text => 'Stores',
+      :url => 'http://www.example.com/stores',
+      :line_1 => 'Stores line 1',
+      :line_2 => 'Stores line 2'
+     },
+    {
+      :text => 'On Sale',
+      :url => 'http://www.example.com/sale',
+      :line_1 => 'On Sale line 1',
+      :line_2 => 'On Sale line 2'
+    },
+    {
+      :text => 'Support',
+      :url => 'http://www.example.com/support',
+      :line_1 => 'Support line 1',
+      :line_2 => 'Support line 2'
+    },
+    {
+      :text => 'Products',
+      :url => 'http://www.example.com/products',
+      :line_1 => 'Products line 1',
+      :line_2 => 'Products line 2'
+    },
+    {
+      :text => 'About',
+      :url => 'http://www.example.com/about',
+      :line_1 => 'About line 1',
+      :line_2 => 'About line 2'
+    }
   ]
 
   feed_items = items_data.map do |item|
@@ -91,6 +135,14 @@ def add_site_links(campaign_id)
         {
           :feed_attribute_id => sitelinks_data[:link_url_feed_id],
           :string_value => item[:url]
+        },
+        {
+          :feed_attribute_id => sitelinks_data[:line_1_feed_id],
+          :string_value => item[:line_1]
+        },
+        {
+          :feed_attribute_id => sitelinks_data[:line_2_feed_id],
+          :string_value => item[:line_2]
         }
       ]
     }
@@ -123,6 +175,14 @@ def add_site_links(campaign_id)
       {
         :feed_attribute_id => sitelinks_data[:link_url_feed_id],
         :field_id => PLACEHOLDER_FIELD_SITELINK_LINK_URL
+      },
+      {
+        :feed_attribute_id => sitelinks_data[:line_1_feed_id],
+        :field_id => PLACEHOLDER_FIELD_SITELINK_LINE_1_TEXT
+      },
+      {
+        :feed_attribute_id => sitelinks_data[:line_2_feed_id],
+        :field_id => PLACEHOLDER_FIELD_SITELINK_LINE_2_TEXT
       }
     ]
   }
@@ -212,6 +272,8 @@ if __FILE__ == $0
   PLACEHOLDER_SITELINKS = 1
   PLACEHOLDER_FIELD_SITELINK_LINK_TEXT = 1
   PLACEHOLDER_FIELD_SITELINK_LINK_URL = 2
+  PLACEHOLDER_FIELD_SITELINK_LINE_1_TEXT = 3
+  PLACEHOLDER_FIELD_SITELINK_LINE_2_TEXT = 4
 
   begin
     # Campaign ID to add site link to.

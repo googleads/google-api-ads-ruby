@@ -53,7 +53,7 @@ def get_keyword_ideas(keyword_text)
         # Language setting (optional).
         # The ID can be found in the documentation:
         #  https://developers.google.com/adwords/api/docs/appendix/languagecodes
-        # As of v201302 only one LanguageSearchParameter is allowed per request.
+        # Only one LanguageSearchParameter is allowed per request.
         :xsi_type => 'LanguageSearchParameter',
         :languages => [{:id => 1000}]
       }
