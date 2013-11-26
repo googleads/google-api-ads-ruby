@@ -68,7 +68,7 @@ module AdsCommon
 
     # Generates string for UserAgent to put into headers.
     def generate_user_agent(extra_ids = [], agent_app = nil)
-      agent_app ||= $0
+      agent_app ||= File.basename($0)
       agent_data = extra_ids
       agent_data << 'Common-Ruby/%s' % AdsCommon::ApiConfig::CLIENT_LIB_VERSION
       agent_data << 'Savon/%s' % Savon::VERSION
