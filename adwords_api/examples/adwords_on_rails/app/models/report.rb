@@ -2,82 +2,103 @@ class Report
 
   REPORT_LIST = {
     'ACCOUNT_PERFORMANCE_REPORT' => {
-        :name => 'Account Performance'
+      :name => 'Account Performance'
     },
     'ACCOUNT_REACH_FREQUENCY_REPORT' => {
-        :name => 'Account Reach Frequency'
-    },
-    'AD_PERFORMANCE_REPORT' => {
-        :name => 'Ad Performance'
-    },
-    'AD_EXTENSIONS_PERFORMANCE_REPORT' => {
-        :name => 'Ad Extensions Performance'
+      :name => 'Account Reach Frequency'
     },
     'ADGROUP_PERFORMANCE_REPORT' => {
-        :name => 'Ad Group Performance'
+      :name => 'Adgroup Performance'
     },
     'ADGROUP_REACH_FREQUENCY_REPORT' => {
-        :name => 'Ad Group Reach Frequency'
+      :name => 'Adgroup Reach Frequency'
+    },
+    'AD_EXTENSIONS_PERFORMANCE_REPORT' => {
+      :name => 'Ad Extensions Performance'
+    },
+    'AD_PERFORMANCE_REPORT' => {
+      :name => 'Ad Performance'
+    },
+    'AGE_RANGE_PERFORMANCE_REPORT' => {
+      :name => 'Age Range Performance'
     },
     'AUDIENCE_PERFORMANCE_REPORT' => {
-        :name => 'Audience Performance'
+      :name => 'Audience Performance'
     },
     'AUTOMATIC_PLACEMENTS_PERFORMANCE_REPORT' => {
-        :name => 'Automatic Placements Performance'
+      :name => 'Automatic Placements Performance'
     },
     'BUDGET_PERFORMANCE_REPORT' => {
-        :name => 'Budget Performance'
+      :name => 'Budget Performance'
     },
-    'CAMPAIGN_PERFORMANCE_REPORT' => {
-        :name => 'Campaign Performance'
+    'CAMPAIGN_AD_SCHEDULE_TARGET_REPORT' => {
+      :name => 'Campaign Ad Schedule Target'
+    },
+    'CAMPAIGN_LOCATION_TARGET_REPORT' => {
+      :name => 'Campaign Location Target'
     },
     'CAMPAIGN_NEGATIVE_KEYWORDS_PERFORMANCE_REPORT' => {
-        :name => 'Campaign Negative Keywords Performance'
+      :name => 'Campaign Negative Keywords Performance'
     },
     'CAMPAIGN_NEGATIVE_LOCATIONS_REPORT' => {
-        :name => 'Campaign Negative Locations'
+      :name => 'Campaign Negative Locations'
     },
     'CAMPAIGN_NEGATIVE_PLACEMENTS_PERFORMANCE_REPORT' => {
-        :name => 'Campaign Negative Placements Performance'
+      :name => 'Campaign Negative Placements Performance'
+    },
+    'CAMPAIGN_PERFORMANCE_REPORT' => {
+      :name => 'Campaign Performance'
+    },
+    'CAMPAIGN_PLATFORM_TARGET_REPORT' => {
+      :name => 'Campaign Platform Target'
     },
     'CAMPAIGN_REACH_FREQUENCY_REPORT' => {
-        :name => 'Campaign Reach Frequency'
+      :name => 'Campaign Reach Frequency'
     },
     'CLICK_PERFORMANCE_REPORT' => {
-        :name => 'Click Performance'
+      :name => 'Click Performance'
     },
     'CREATIVE_CONVERSION_REPORT' => {
-        :name => 'Creative Conversion'
+      :name => 'Creative Conversion'
     },
     'CRITERIA_PERFORMANCE_REPORT' => {
-        :name => 'Criteria Performance'
+      :name => 'Criteria Performance'
     },
     'DESTINATION_URL_REPORT' => {
-        :name => 'Destination URL'
+      :name => 'Destination URL'
+    },
+    'DISPLAY_KEYWORD_PERFORMANCE_REPORT' => {
+      :name => 'Display Keyword Performance'
     },
     'DISPLAY_TOPICS_PERFORMANCE_REPORT' => {
-        :name => 'Display Topics Performance'
+      :name => 'Display Topics Performance'
+    },
+    'GENDER_PERFORMANCE_REPORT' => {
+      :name => 'Gender Performance'
     },
     'GEO_PERFORMANCE_REPORT' => {
-        :name => 'Geo Performance'
+      :name => 'Geo Performance'
+    },
+    'KEYWORDLESS_CATEGORY_REPORT' => {
+      :name => 'Keywordless Category'
+    },
+    'KEYWORDLESS_QUERY_REPORT' => {
+      :name => 'Keywordless Query'
     },
     'KEYWORDS_PERFORMANCE_REPORT' => {
-        :name => 'Keywords Performance'
-    },
-    'MANAGED_PLACEMENTS_PERFORMANCE_REPORT' => {
-        :name => 'Managed Placements Performance'
+      :name => 'Keywords Performance'
     },
     'PLACEHOLDER_FEED_ITEM_REPORT' => {
-        :name => 'Placeholder Feed Item'
+      :name => 'Placeholder Feed Item'
     },
     'PLACEMENT_PERFORMANCE_REPORT' => {
-        :name => 'Placement Performance'
+      :name => 'Placement Performance'
     },
     'SEARCH_QUERY_PERFORMANCE_REPORT' => {
-        :name => 'Search Query Performance'
+      :name => 'Search Query Performance'
     },
     'URL_PERFORMANCE_REPORT' => {
-        :name => 'URL Performance'
+      :name => 'URL Performance'
     }
   }
 
