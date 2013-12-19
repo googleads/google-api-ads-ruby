@@ -46,8 +46,8 @@ You can also pass API a manually constructed config hash like:
    adwords = AdwordsApi::Api.new({
      :authentication => {
          :method => 'OAuth2',
-         :oauth2_client_id: 'INSERT_OAUTH2_CLIENT_ID_HERE'
-         :oauth2_client_secret: 'INSERT_OAUTH2_CLIENT_SECRET_HERE'
+         :oauth2_client_id => 'INSERT_OAUTH2_CLIENT_ID_HERE',
+         :oauth2_client_secret => 'INSERT_OAUTH2_CLIENT_SECRET_HERE',
          :developer_token => 'DEVELOPER_TOKEN',
          :client_customer_id => '012-345-6789',
          :user_agent => 'Ruby Sample'
