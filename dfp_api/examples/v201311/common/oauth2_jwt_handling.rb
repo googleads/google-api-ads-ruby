@@ -18,8 +18,12 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example shows how to use OAuth2.0 authorization method with JWT (Service
-# Account).
+# This example illustrates how to use OAuth2.0 authentication method with
+# Service Account (JWT). For this example to work, your Service Account must be
+# a Google Apps for Business Account.
+#
+# See https://developers.google.com/doubleclick-publishers/docs/service_accounts
+# for more information.
 #
 # Tags: UserService.getUsersByStatement
 
