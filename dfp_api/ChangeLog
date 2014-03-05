@@ -1,4 +1,7 @@
-0.7.2:
+0.8.0:
+  - Added support and examples for v201403.
+  - Removed support for all non-bulk method calls.
+  - Removed support for ClientLogin for versions > v201311.
 
 0.7.1:
   - Added support and examples for v201311.

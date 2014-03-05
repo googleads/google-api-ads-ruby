@@ -56,7 +56,7 @@ module AdwordsApi
       }
       money_in_micros = @config.read('library.return_money_in_micros')
       unless money_in_micros.nil?
-        headers['returnMoneyInMicros'] = money_in_micros
+        headers['returnMoneyInMicros'] = money_in_micros.to_s
       end
       return headers
     end

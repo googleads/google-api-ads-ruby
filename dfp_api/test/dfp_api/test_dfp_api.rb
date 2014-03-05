@@ -102,4 +102,15 @@ class TestDfpApi < Test::Unit::TestCase
     service = dfp_api.service(:UserService)
     assert_not_nil(@logger.last_warning)
   end
+
+  # Exception is thrown when ClientLogin is used in non-supported versions.
+  def test_clientlogin_removal_v201311()
+    dfp_api = DfpApi::Api.new({
+      :library => {:logger => @logger},
+      :authentication => {:method => 'ClientLogin'},
+      :service => {:environment => 'PRODUCTION'}
+    })
+    assert_nothing_raised(dfp_api.service(:UserService, 'v201311'))
+    assert_raise(dfp_api.service(:UserService, 'v201403'))
+  end
 end
