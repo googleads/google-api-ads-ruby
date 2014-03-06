@@ -3,7 +3,7 @@
 #
 # Author:: api.dklimkin@gmail.com (Danial Klimkin)
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -18,14 +18,16 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to create campaigns.
+# This example adds a Shared Bidding Strategy and uses it to construct a
+# campaign.
 #
-# Tags: CampaignService.mutate, BudgetService.mutate
+# Tags: BiddingStrategyService.mutate, CampaignService.mutate
+# Tags: BudgetService.mutate
 
 require 'adwords_api'
 require 'date'
 
-def add_campaigns()
+def use_shared_bidding_strategy()
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -35,6 +37,7 @@ def add_campaigns()
   # adwords.logger = Logger.new('adwords_xml.log')
 
   budget_srv = adwords.service(:BudgetService, API_VERSION)
+  bidding_srv = adwords.service(:BiddingStrategyService, API_VERSION)
   campaign_srv = adwords.service(:CampaignService, API_VERSION)
 
   # Create a budget, which can be shared by multiple campaigns.
@@ -42,13 +45,30 @@ def add_campaigns()
     :name => 'Interplanetary budget #%d' % (Time.new.to_f * 1000).to_i,
     :amount => {:micro_amount => 50000000},
     :delivery_method => 'STANDARD',
-    :period => 'DAILY'
+    :period => 'DAILY',
+    :is_explicitly_shared => true
   }
-  budget_operation = {:operator => 'ADD', :operand => budget}
-
-  # Add budget.
-  return_budget = budget_srv.mutate([budget_operation])
+  return_budget = budget_srv.mutate([
+    {:operator => 'ADD', :operand => budget}])
   budget_id = return_budget[:value].first[:budget_id]
+
+  # Create a shared bidding strategy.
+  shared_bidding_strategy = {
+    :name => 'Maximize Clicks #%d' % (Time.new.to_f * 1000).to_i,
+    :bidding_scheme => {
+      :xsi_type => 'TargetSpendBiddingScheme',
+      # Optionally set additional bidding scheme parameters.
+      :bid_ceiling => {:micro_amount => 20000000},
+      :spend_target => {:micro_amount => 40000000}
+    }
+  }
+  return_strategy = bidding_srv.mutate([
+    {:operator => 'ADD', :operand => shared_bidding_strategy}])
+
+  bidding_strategy = return_strategy[:value].first
+  puts ("Shared bidding strategy with name '%s' and ID %d of type '%s' was " +
+      'created') %
+      [bidding_strategy[:name], bidding_strategy[:id], bidding_strategy[:type]]
 
   # Create campaigns.
   campaigns = [
@@ -56,15 +76,11 @@ def add_campaigns()
       :name => "Interplanetary Cruise #%d" % (Time.new.to_f * 1000).to_i,
       :status => 'PAUSED',
       :bidding_strategy_configuration => {
-        :bidding_strategy_type => 'MANUAL_CPC'
+        :bidding_strategy_id => bidding_strategy[:id]
       },
       # Budget (required) - note only the budget ID is required.
       :budget => {:budget_id => budget_id},
-      :advertising_channel_type => 'SEARCH',
-      # Optional fields:
-      :start_date =>
-          DateTime.parse((Date.today + 1).to_s).strftime('%Y%m%d'),
-      :ad_serving_optimization_status => 'ROTATE',
+      # Set the campaign network options to Search, Content and Search Network.
       :network_setting => {
         :target_google_search => true,
         :target_search_network => true,
@@ -72,26 +88,16 @@ def add_campaigns()
       },
       :settings => [
         {
-          :xsi_type => 'GeoTargetTypeSetting',
-          :positive_geo_target_type => 'DONT_CARE',
-          :negative_geo_target_type => 'DONT_CARE'
-        },
-        {
           :xsi_type => 'KeywordMatchSetting',
           :opt_in => true
         }
-      ],
-      :frequency_cap => {
-        :impressions => '5',
-        :time_unit => 'DAY',
-        :level => 'ADGROUP'
-      }
+      ]
     },
     {
       :name => "Interplanetary Cruise banner #%d" % (Time.new.to_f * 1000).to_i,
       :status => 'PAUSED',
       :bidding_strategy_configuration => {
-        :bidding_strategy_type => 'MANUAL_CPC'
+        :bidding_strategy_id => bidding_strategy[:id]
       },
       :budget => {:budget_id => budget_id},
       :settings => [
@@ -100,7 +106,11 @@ def add_campaigns()
           :opt_in => true
         }
       ],
-      :advertising_channel_type => 'DISPLAY'
+      :network_setting => {
+        :target_google_search => false,
+        :target_search_network => false,
+        :target_content_network => true
+      }
     }
   ]
 
@@ -125,7 +135,7 @@ if __FILE__ == $0
   API_VERSION = :v201402
 
   begin
-    add_campaigns()
+    use_shared_bidding_strategy()
 
   # Authorization error.
   rescue AdsCommon::Errors::OAuth2VerificationRequired => e

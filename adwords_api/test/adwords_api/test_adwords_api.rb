@@ -36,7 +36,8 @@ end
 
 class TestAdwordsApi < Test::Unit::TestCase
 
-  API_VERSION = :v201309
+  API_VERSION = :v201402
+  LAST_CLIENT_LOGIN_API_VERSION = :v201309
 
   def setup()
     @logger = LoggerStub.new
@@ -107,7 +108,19 @@ class TestAdwordsApi < Test::Unit::TestCase
       :authentication => {:method => 'ClientLogin'},
       :service => {:environment => 'PRODUCTION'}
     })
-    service = adwords_api.service(:CampaignService, API_VERSION)
+    service = adwords_api.service(:CampaignService,
+        LAST_CLIENT_LOGIN_API_VERSION)
     assert_not_nil(@logger.last_warning)
+  end
+
+  def test_clientlogin_removal()
+      adwords_api = AdwordsApi::Api.new({
+        :library => {:logger => @logger},
+        :authentication => {:method => 'ClientLogin'},
+        :service => {:environment => 'PRODUCTION'}
+      })
+      assert_nothing_raised(adwords_api.service(:CampaignService,
+          LAST_CLIENT_LOGIN_API_VERSION))
+      assert_raise(adwords_api.service(:CampaignService, API_VERSION))
   end
 end
