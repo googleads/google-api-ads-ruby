@@ -2,7 +2,7 @@ require 'test_helper'
 
 class CampaignControllerTest < ActionController::TestCase
   test "should get list" do
-    get :list
+    get :index
     assert_response :success
   end
 
