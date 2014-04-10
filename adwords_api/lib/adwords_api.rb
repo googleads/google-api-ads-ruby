@@ -64,7 +64,7 @@ module AdwordsApi
       auth_method = @config.read('authentication.method', :OAUTH2)
       handler_class = case auth_method
         when :CLIENTLOGIN
-          if version[/\d+/].to_i > 201309
+          if version.to_s[/\d+/].to_i > 201309
             raise AdsCommon::Errors::AuthError,
               "ClientLogin is not supported for versions after v201309. " +
               "Please use OAuth2 instead. See here for details:\n\t\t" +
