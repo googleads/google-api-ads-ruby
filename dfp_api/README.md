@@ -230,6 +230,38 @@ list though:
   - Google Ads Common library (google-ads-common);
   - Savon 'the heavy metal Ruby SOAP client' (savon).
 
+# Docs for Developers
+
+## Rake targets
+
+To regenerate all the stubs for all versions if needed:
+
+    $ rake generate
+
+To target a specific version:
+
+    $ rake generate[version]
+
+For example:
+
+    $ rake generate[v201403]
+
+To target a specific service in a specific version:
+
+    $ rake generate[version,service]
+
+For example:
+
+    $ rake generate[v201403,CreativeService]
+
+To build the gem:
+
+    $ gem build google-dfp-api.gemspec
+
+To run unit tests on the library:
+
+    $ rake test
+
 
 # Where do I submit bug reports and feature requests?
 

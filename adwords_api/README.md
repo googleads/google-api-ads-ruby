@@ -195,18 +195,34 @@ respond in gzipped format. All requests are sent uncompressed regardless.
 
 ## Rake targets
 
+To regenerate all the stubs for all versions if needed:
+
     $ rake generate
 
-to regenerate the stubs if needed
+To target a specific version:
+
+    $ rake generate[version]
+
+For example:
+
+    $ rake generate[v201402]
+
+To target a specific service in a specific version:
+
+    $ rake generate[version,service]
+
+For example:
+
+    $ rake generate[v201402,CampaignService]
+
+To build the gems:
 
     $ gem build google-adwords-api.gemspec
     $ gem build google-adx-buyer-api.gemspec
 
-to build the gems
+To run unit tests on the library:
 
     $ rake test
-
-to run unit tests on the library
 
 
 ## Where do I submit bug reports and feature requests?
