@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project = 'google-ads-common'
   s.require_path = 'lib'
-  s.files = Dir.glob('{lib,test}/**/*') + %w(COPYING README ChangeLog)
+  s.files = Dir.glob('{lib,test}/**/*') + %w(COPYING README.md ChangeLog)
   s.test_files = Dir.glob('test/test_*.rb')
   s.add_dependency('savon', '~> 1.2.0')
   s.add_dependency('httpi', '~> 1.1.0')

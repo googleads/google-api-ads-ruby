@@ -119,8 +119,12 @@ class TestAdwordsApi < Test::Unit::TestCase
         :authentication => {:method => 'ClientLogin'},
         :service => {:environment => 'PRODUCTION'}
       })
-      assert_nothing_raised(adwords_api.service(:CampaignService,
-          LAST_CLIENT_LOGIN_API_VERSION))
-      assert_raise(adwords_api.service(:CampaignService, API_VERSION))
+      assert_nothing_raised do
+        service = adwords_api.service(:CampaignService,
+            LAST_CLIENT_LOGIN_API_VERSION)
+      end
+      assert_raise(AdsCommon::Errors::AuthError) do
+        service = adwords_api.service(:CampaignService, API_VERSION)
+      end
   end
 end
