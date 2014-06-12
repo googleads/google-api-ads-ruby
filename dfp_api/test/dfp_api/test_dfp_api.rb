@@ -99,7 +99,7 @@ class TestDfpApi < Test::Unit::TestCase
       :authentication => {:method => 'ClientLogin'},
       :service => {:environment => 'PRODUCTION'}
     })
-    service = dfp_api.service(:UserService)
+    service = dfp_api.service(:UserService, 'v201311')
     assert_not_nil(@logger.last_warning)
   end
 
@@ -110,7 +110,11 @@ class TestDfpApi < Test::Unit::TestCase
       :authentication => {:method => 'ClientLogin'},
       :service => {:environment => 'PRODUCTION'}
     })
-    assert_nothing_raised(dfp_api.service(:UserService, 'v201311'))
-    assert_raise(dfp_api.service(:UserService, 'v201403'))
+    assert_nothing_raised do
+      service = dfp_api.service(:UserService, 'v201311')
+    end
+    assert_raise(AdsCommon::Errors::AuthError) do
+      dfp_api.service(:UserService, 'v201403')
+    end
   end
 end

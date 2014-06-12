@@ -35,9 +35,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201403
+    DEFAULT_VERSION = :v201405
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201403
+    LATEST_VERSION = :v201405
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -153,6 +153,27 @@ module DfpApi
                    :ReconciliationReportRowService,
                    :ReconciliationReportService, :ReportService,
                    :SuggestedAdUnitService, :TeamService, :UserService,
+                   :UserTeamAssociationService, :WorkflowRequestService],
+      :v201405 => [:ActivityGroupService, :ActivityService, :AdRuleService,
+                   :AudienceSegmentService, :BaseRateService, :CompanyService,
+                   :ContactService, :ContentBundleService,
+                   :ContentMetadataKeyHierarchyService, :ContentService,
+                   :CreativeService, :CreativeSetService,
+                   :CreativeTemplateService, :CreativeWrapperService,
+                   :CustomFieldService, :CustomTargetingService,
+                   :ExchangeRateService, :ForecastService, :InventoryService,
+                   :LabelService, :LineItemCreativeAssociationService,
+                   :LineItemService, :LineItemTemplateService,
+                   :NetworkService, :LiveStreamEventService,
+                   :OrderService, :PlacementService, :ProductService,
+                   :ProductTemplateService, :ProposalLineItemService,
+                   :ProposalService, :PublisherQueryLanguageService,
+                   :RateCardCustomizationService,
+                   :RateCardCustomizationGroupService, :RateCardService,
+                   :ReconciliationOrderReportService,
+                   :ReconciliationReportRowService,
+                   :ReconciliationReportService, :ReportService,
+                   :SuggestedAdUnitService, :TeamService, :UserService,
                    :UserTeamAssociationService, :WorkflowRequestService]
     }
 
@@ -167,7 +188,8 @@ module DfpApi
         :v201306 => 'https://www.google.com/apis/ads/publisher/',
         :v201308 => 'https://www.google.com/apis/ads/publisher/',
         :v201311 => 'https://www.google.com/apis/ads/publisher/',
-        :v201403 => 'https://www.google.com/apis/ads/publisher/'
+        :v201403 => 'https://www.google.com/apis/ads/publisher/',
+        :v201405 => 'https://www.google.com/apis/ads/publisher/'
       }
     }
 
