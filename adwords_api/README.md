@@ -20,9 +20,9 @@ Install them using the gem install command:
     $ gem install --remote google-adwords-api
     $ gem install --remote google-adx-buyer-api
 
-Please note the google-adx-buyer-api gem contains only DoubleClick Ad Exchange
-Buyer client library examples. You need the AdWords library in order to use it
-which is installed automatically as a dependency.
+Please note the `google-adx-buyer-api` gem contains only DoubleClick Ad
+Exchange Buyer client library examples. The gem also depends on the
+AdWords library, which will be installed automatically.
 
 The following gem libraries are required:
 
@@ -32,21 +32,15 @@ The following gem libraries are required:
 
 ## 2 - Using the client library
 
-Include the library with 'require':
+Before starting to use the client library, you need to set up OAuth2. You can
+find our guide on how to obtain OAuth2 credentials
+[on the wiki](https://github.com/googleads/google-api-ads-ruby/wiki/OAuth2).
 
-    require 'adwords_api'
+By default, the API uses a config file in `ENV['HOME']/adwords_api.yml`. When
+generating your OAuth2 refresh token, you will be given the option for the
+sample to automatically store the refresh token in this file.
 
-Then create an API instance:
-
-    adwords = AdwordsApi::Api.new
-
-The created API object will grant you access to all the services for all of the
-currently supported vesions of the APIs. It uses a config file in
-`ENV['HOME']/adwords_api.yml` to read all of your configurations by default.
-
-There is an example configuration file shipped with these libraries.
-
-You can also pass API a manually constructed config hash like:
+You can also pass the API a manually constructed config hash like:
 
     adwords = AdwordsApi::Api.new({
       :authentication => {
@@ -62,21 +56,33 @@ You can also pass API a manually constructed config hash like:
       }
     })
 
-To obtain OAuth2 client credentials, follow the instructions
-[on the wiki](https://github.com/googleads/google-api-ads-ruby/wiki/OAuth2).
+Once you have all the requisite setup complete, you're ready to make an API
+call. The easiest way to do this is to look at one of our
+[examples](https://github.com/googleads/google-api-ads-ruby/tree/master/adwords_api/examples).
+The `adwords_on_rails` example will show how to use the web flow, and the other
+examples will use the installed application OAuth2 flow.
 
-Once the library instance is created, specify which service you're looking to
-use, and which version:
+The basics of making a request are:
 
-    campaign_srv = adwords.service(:CampaignService, :v201309)
+ 1. Include the library with `require`:
 
-You should now be able to just use the API methods in the object you were
-returned:
+        require 'adwords_api'
 
-    # Get 'Id', 'Name' and 'Status' fields of all campaigns.
-    campaigns = campaign_srv.get({:fields => ['Id', 'Name', 'Status']})
+ 2. Create an API instance:
 
-See the code in the examples directory for working examples you can build from.
+        adwords = AdwordsApi::Api.new
+
+ 3. Specify which service you're looking to use, and which version:
+
+        campaign_srv = adwords.service(:CampaignService, :v201402)
+
+ 4. You should now be able to just use the API methods in the returned object:
+
+        # Get 'Id', 'Name' and 'Status' fields of all campaigns.
+        campaigns = campaign_srv.get({:fields => ['Id', 'Name', 'Status']})
+
+See the code in the examples directory for more thorough working examples you
+can build from.
 
 *Note*: If your setup requires you to send connections through a proxy server,
 please set the appropriate options in the config file or config hash.
@@ -266,3 +272,4 @@ Authors:
 Maintainer:
 
  - api.mcloonan@gmail.com (Michael Cloonan)
+

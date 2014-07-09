@@ -35,9 +35,9 @@ module AdwordsApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201402
+    DEFAULT_VERSION = :v201406
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201402
+    LATEST_VERSION = :v201406
 
     # Set other constants
     API_NAME = 'AdwordsApi'
@@ -99,6 +99,7 @@ module AdwordsApi
           :CampaignCriterionService,
           :CampaignFeedService,
           :CampaignService,
+          :CampaignSharedSetService,
           :ConstantDataService,
           :ConversionTrackerService,
           :CustomerFeedService,
@@ -116,6 +117,48 @@ module AdwordsApi
           :MutateJobService,
           :OfflineConversionFeedService,
           :ReportDefinitionService,
+          :SharedCriterionService,
+          :SharedSetService,
+          :TargetingIdeaService,
+          :TrafficEstimatorService
+      ],
+      :v201406 => [
+          :AdGroupAdService,
+          :AdGroupBidModifierService,
+          :AdGroupCriterionService,
+          :AdGroupFeedService,
+          :AdGroupService,
+          :AdParamService,
+          :AdwordsUserListService,
+          :AlertService,
+          :BiddingStrategyService,
+          :BudgetOrderService,
+          :BudgetService,
+          :CampaignAdExtensionService,
+          :CampaignCriterionService,
+          :CampaignFeedService,
+          :CampaignService,
+          :CampaignSharedSetService,
+          :ConstantDataService,
+          :ConversionTrackerService,
+          :CustomerFeedService,
+          :CustomerService,
+          :CustomerSyncService,
+          :DataService,
+          :ExperimentService,
+          :FeedItemService,
+          :FeedMappingService,
+          :FeedService,
+          :GeoLocationService,
+          :LabelService,
+          :LocationCriterionService,
+          :ManagedCustomerService,
+          :MediaService,
+          :MutateJobService,
+          :OfflineConversionFeedService,
+          :ReportDefinitionService,
+          :SharedCriterionService,
+          :SharedSetService,
           :TargetingIdeaService,
           :TrafficEstimatorService
       ]
@@ -124,10 +167,11 @@ module AdwordsApi
     # Configure the different environments, with the base URL for each one
     @@environment_config = {
       :PRODUCTION => {
-        :oauth_scope => 'https://adwords.google.com/api/adwords/',
+        :oauth_scope => 'https://www.googleapis.com/auth/adwords',
         :header_ns => 'https://adwords.google.com/api/adwords/cm/',
         :v201309 => 'https://adwords.google.com/api/adwords/',
-        :v201402 => 'https://adwords.google.com/api/adwords/'
+        :v201402 => 'https://adwords.google.com/api/adwords/',
+        :v201406 => 'https://adwords.google.com/api/adwords/'
       }
     }
 
@@ -184,6 +228,7 @@ module AdwordsApi
       [:v201402, :CampaignCriterionService] => 'cm/',
       [:v201402, :CampaignFeedService] => 'cm/',
       [:v201402, :CampaignService] => 'cm/',
+      [:v201402, :CampaignSharedSetService] => 'cm/',
       [:v201402, :ConstantDataService] => 'cm/',
       [:v201402, :ConversionTrackerService] => 'cm/',
       [:v201402, :CustomerSyncService] => 'ch/',
@@ -198,6 +243,8 @@ module AdwordsApi
       [:v201402, :MutateJobService] => 'cm/',
       [:v201402, :OfflineConversionFeedService] => 'cm/',
       [:v201402, :ReportDefinitionService] => 'cm/',
+      [:v201402, :SharedCriterionService] => 'cm/',
+      [:v201402, :SharedSetService] => 'cm/',
       [:v201402, :TargetingIdeaService] => 'o/',
       [:v201402, :TrafficEstimatorService] => 'o/',
       [:v201402, :ManagedCustomerService] => 'mcm/',
@@ -205,7 +252,46 @@ module AdwordsApi
       [:v201402, :CustomerFeedService] => 'cm/',
       [:v201402, :BudgetService] => 'cm/',
       [:v201402, :BiddingStrategyService] => 'cm/',
-      [:v201402, :AdwordsUserListService] => 'rm/'
+      [:v201402, :AdwordsUserListService] => 'rm/',
+      # v201406
+      [:v201406, :AdGroupAdService] => 'cm/',
+      [:v201406, :AdGroupBidModifierService] => 'cm/',
+      [:v201406, :AdGroupCriterionService] => 'cm/',
+      [:v201406, :AdGroupFeedService] => 'cm/',
+      [:v201406, :AdGroupService] => 'cm/',
+      [:v201406, :AdParamService] => 'cm/',
+      [:v201406, :AlertService] => 'mcm/',
+      [:v201406, :BudgetOrderService] => 'billing/',
+      [:v201406, :CampaignAdExtensionService] => 'cm/',
+      [:v201406, :CampaignCriterionService] => 'cm/',
+      [:v201406, :CampaignFeedService] => 'cm/',
+      [:v201406, :CampaignService] => 'cm/',
+      [:v201406, :CampaignSharedSetService] => 'cm/',
+      [:v201406, :ConstantDataService] => 'cm/',
+      [:v201406, :ConversionTrackerService] => 'cm/',
+      [:v201406, :CustomerSyncService] => 'ch/',
+      [:v201406, :DataService] => 'cm/',
+      [:v201406, :ExperimentService] => 'cm/',
+      [:v201406, :FeedItemService] => 'cm/',
+      [:v201406, :FeedMappingService] => 'cm/',
+      [:v201406, :FeedService] => 'cm/',
+      [:v201406, :GeoLocationService] => 'cm/',
+      [:v201406, :LocationCriterionService] => 'cm/',
+      [:v201406, :MediaService] => 'cm/',
+      [:v201406, :MutateJobService] => 'cm/',
+      [:v201406, :OfflineConversionFeedService] => 'cm/',
+      [:v201406, :ReportDefinitionService] => 'cm/',
+      [:v201406, :SharedCriterionService] => 'cm/',
+      [:v201406, :SharedSetService] => 'cm/',
+      [:v201406, :TargetingIdeaService] => 'o/',
+      [:v201406, :TrafficEstimatorService] => 'o/',
+      [:v201406, :ManagedCustomerService] => 'mcm/',
+      [:v201406, :CustomerService] => 'mcm/',
+      [:v201406, :CustomerFeedService] => 'cm/',
+      [:v201406, :BudgetService] => 'cm/',
+      [:v201406, :BiddingStrategyService] => 'cm/',
+      [:v201406, :AdwordsUserListService] => 'rm/',
+      [:v201406, :LabelService] => 'cm/'
     }
 
     # Auth constants for ClientLogin method.
