@@ -36,32 +36,12 @@ def remove_campaign(campaign_id)
 
   campaign_srv = adwords.service(:CampaignService, API_VERSION)
 
-  # Retrieve the campaign to obtain its name. This is optional but recommended
-  # to keep removed objects searchable. In production the name is already known
-  # in most cases.
-  selector = {
-    :fields => ['Id', 'Name'],
-    :predicates => [
-      {:field => 'Id', :operator => 'EQUALS', :values => [campaign_id]}
-    ]
-  }
-  result = campaign_srv.get(selector)
-
-  if result.nil? or result[:entries].empty?
-    raise StandardError, "Campaign with ID %d was not found." % campaign_id
-  end
-
-  # We recommend renaming object on remove to avoid name conflicts later.
-  campaign_name = result[:entries].first[:name]
-  campaign_name += Time.now.strftime(" (removed on %Y-%m-%d %H:%M:%S)")
-
-  # Prepare for deleting campaign.
+   # Prepare for deleting campaign.
   operation = {
     :operator => 'SET',
     :operand => {
       :id => campaign_id,
-      :name => campaign_name,
-      :status => 'REMOVED',
+     :status => 'REMOVED'
     }
   }
 
@@ -70,8 +50,8 @@ def remove_campaign(campaign_id)
 
   if response and response[:value]
     campaign = response[:value].first
-    puts "Campaign ID %d was renamed to '%s' and removed." %
-        [campaign[:id], campaign[:name]]
+    puts "Campaign ID %d was removed." %
+        [campaign[:id]]
   else
     puts 'No campaign was updated.'
   end

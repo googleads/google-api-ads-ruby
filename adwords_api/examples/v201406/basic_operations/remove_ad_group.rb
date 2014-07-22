@@ -36,31 +36,11 @@ def remove_ad_group(ad_group_id)
 
   ad_group_srv = adwords.service(:AdGroupService, API_VERSION)
 
-  # Retrieve the ad group to obtain its name. This is optional but recommended
-  # to keep remove objects searchable. In production the name is already known
-  # in most cases.
-  selector = {
-    :fields => ['Id', 'Name'],
-    :predicates => [
-      {:field => 'Id', :operator => 'EQUALS', :values => [ad_group_id]}
-    ]
-  }
-  result = ad_group_srv.get(selector)
-
-  if result.nil? or result[:entries].empty?
-    raise StandardError, "Ad group with ID %d was not found." % ad_group_id
-  end
-
-  # We recommend renaming object on remove to avoid name conflicts later.
-  ad_group_name = result[:entries].first[:name]
-  ad_group_name += Time.now.strftime(" (removed on %Y-%m-%d %H:%M:%S)")
-
   # Prepare for deleting ad group.
   operation = {
     :operator => 'SET',
     :operand => {
       :id => ad_group_id,
-      :name => ad_group_name,
       :status => 'REMOVED'
     }
   }
@@ -69,8 +49,7 @@ def remove_ad_group(ad_group_id)
   response = ad_group_srv.mutate([operation])
   if response and response[:value]
     ad_group = response[:value].first
-    puts "Ad group ID %d was successfully removed and renamed to '%s'." %
-       [ad_group[:id], ad_group[:name]]
+    puts "Ad group ID %d was successfully removed." % [ad_group[:id]]
   else
     puts 'No ad group was updated.'
   end

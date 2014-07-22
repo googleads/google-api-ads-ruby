@@ -1,3 +1,6 @@
+0.13.0:
+  - Removed deprecated API version v201309.
+
 0.12.1:
   - Support and examples for v201406.
   - Changed default OAuth scope. See:

@@ -30,6 +30,7 @@ module AdwordsApi
     public :check_for_errors
     public :check_for_xml_error
     public :add_report_definition_hash_order
+    public :check_report_definition_hash
   end
 end
 
@@ -55,7 +56,7 @@ GZIPPED_REPORT = "\x1F\x8B\b\x00\x00\x00\x00\x00\x00\x00Sr.-.\xC9\xCFUptq\x0F\xF
 
 class TestReportUtils < Test::Unit::TestCase
 
-  API_VERSION = :v201309
+  API_VERSION = :v201406
 
   # Initialize tests.
   def setup()
@@ -183,6 +184,33 @@ class TestReportUtils < Test::Unit::TestCase
       assert_equal(XML_REPLY[:trigger], e.trigger)
       assert_equal(XML_REPLY[:field_path], e.field_path)
       assert_not_nil(e.message)
+    end
+  end
+
+  def test_return_money_in_micros_removal()
+    node = {
+      :report_name => 'report_name',
+      :report_type => 'CAMPAIGN_PERFORMANCE_REPORT',
+      :selector => {
+        :date_range => {:max=> '20120405', :min => '20120405'},
+        :predicates => {:operator => 'IN', :field => 'S', :values => ['A']},
+        :fields => ['CampaignId']
+      },
+      :download_format => 'CSV',
+      :date_range_type => 'LAST_7_DAYS'
+    }
+    assert_nothing_raised do
+      @report_utils.check_report_definition_hash(node)
+    end
+
+    node[:return_money_in_micros] = true
+    assert_raise AdwordsApi::Errors::InvalidReportDefinitionError do
+      @report_utils.check_report_definition_hash(node)
+    end
+
+    node[:return_money_in_micros] = false
+    assert_raise AdwordsApi::Errors::InvalidReportDefinitionError do
+      @report_utils.check_report_definition_hash(node)
     end
   end
 end
