@@ -45,14 +45,14 @@ class TestDfpIssue16 < Test::Unit::TestCase
 <?xml version="1.0"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
  <soap:Header>
-  <ResponseHeader xmlns="https://www.google.com/apis/ads/publisher/v201101">
+  <ResponseHeader xmlns="https://www.google.com/apis/ads/publisher/v201405">
    <requestId>dac42656454</requestId>
    <responseTime>9</responseTime>
   </ResponseHeader>
  </soap:Header>
  <soap:Body>
   <getLineItemsByStatementResponse
-      xmlns="https://www.google.com/apis/ads/publisher/v201101">
+      xmlns="https://www.google.com/apis/ads/publisher/v201405">
    <rval>
     <totalResultSetSize>1</totalResultSetSize>
     <startIndex>0</startIndex>

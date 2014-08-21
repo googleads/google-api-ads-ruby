@@ -45,12 +45,12 @@ def run_inventory_report()
   root_ad_unit_id =
       network_service.get_current_network()[:effective_root_ad_unit_id]
 
-  # Create statement to filter on an ancestor ad unit with the root ad unit ID
+  # Create statement to filter on a parent ad unit with the root ad unit ID
   # to include all ad units in the network.
   statement = {
-     :query => 'WHERE AD_UNIT_ANCESTOR_AD_UNIT_ID = :ancestor_ad_unit_id',
+     :query => 'WHERE PARENT_AD_UNIT_ID = :parent_ad_unit_id',
      :values => [
-         {:key => 'ancestor_ad_unit_id',
+         {:key => 'parent_ad_unit_id',
           :value => {:value => root_ad_unit_id, :xsi_type => 'NumberValue'}}
      ]
   }
