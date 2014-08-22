@@ -1,3 +1,7 @@
+0.13.1:
+  - Added example for Ad Customizers.
+  - Removed support for ClientLogin (no longer supported by the API).
+
 0.13.0:
   - Removed deprecated API version v201309.
 

@@ -23,7 +23,6 @@
 require 'ads_common/api'
 require 'ads_common/savon_headers/oauth_header_handler'
 require 'adwords_api/api_config'
-require 'adwords_api/client_login_header_handler'
 require 'adwords_api/credential_handler'
 require 'adwords_api/errors'
 require 'adwords_api/report_utils'
@@ -63,12 +62,6 @@ module AdwordsApi
     def soap_header_handler(auth_handler, version, header_ns, default_ns)
       auth_method = @config.read('authentication.method', :OAUTH2)
       handler_class = case auth_method
-        when :CLIENTLOGIN
-          raise AdsCommon::Errors::AuthError,
-            "ClientLogin is not supported. " +
-            "Please use OAuth2 instead. See here for details:\n\t\t" +
-            "https://developers.google.com/adwords/api/" +
-            "docs/guides/authentication"
         when :OAUTH2, :OAUTH2_JWT
           AdsCommon::SavonHeaders::OAuthHeaderHandler
         else

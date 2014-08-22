@@ -74,11 +74,6 @@ module AdwordsApi
     # valid.
     #
     def validate_headers_for_server(credentials)
-      if credentials[:client_email]
-        raise AdwordsApi::Errors::BadCredentialsError, 'Deprecated header ' +
-            'clientEmail is no longer supported, please use clientCustomerId'
-      end
-
       client_customer_id = credentials[:client_customer_id]
       if client_customer_id and
           !(client_customer_id.is_a?(Integer) or

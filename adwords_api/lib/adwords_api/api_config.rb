@@ -218,12 +218,6 @@ module AdwordsApi
       [:v201406, :LabelService] => 'cm/'
     }
 
-    # Auth constants for ClientLogin method.
-    @@client_login_config = {
-      :AUTH_SERVER => 'https://www.google.com',
-      :LOGIN_SERVICE_NAME => 'adwords'
-    }
-
     public
 
     # Getters for constants and module variables.
@@ -257,7 +251,11 @@ module AdwordsApi
     end
 
     def self.client_login_config(key)
-      return @@client_login_config[key]
+      raise AdsCommon::Errors::AuthError,
+            "ClientLogin is not supported. " +
+            "Please use OAuth2 instead. See here for details:\n\t\t" +
+            "https://developers.google.com/adwords/api/" +
+            "docs/guides/authentication"
     end
 
     def self.default_config_filename
