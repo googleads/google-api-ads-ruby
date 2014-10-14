@@ -74,7 +74,7 @@ The basics of making a request are:
 
  3. Specify which service you're looking to use, and which version:
 
-        campaign_srv = adwords.service(:CampaignService, :v201402)
+        campaign_srv = adwords.service(:CampaignService, :v201406)
 
  4. You should now be able to just use the API methods in the returned object:
 
@@ -211,7 +211,7 @@ To target a specific version:
 
 For example:
 
-    $ rake generate[v201402]
+    $ rake generate[v201406]
 
 To target a specific service in a specific version:
 
@@ -219,7 +219,7 @@ To target a specific service in a specific version:
 
 For example:
 
-    $ rake generate[v201402,CampaignService]
+    $ rake generate[v201406,CampaignService]
 
 To build the gems:
 
@@ -247,7 +247,7 @@ announcements and other news.
 
 ## Licence
 
-Copyright 2010-2013, Google Inc. All Rights Reserved.
+Copyright 2010-2014, Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -265,7 +265,7 @@ limitations under the License.
 
 Authors:
 
- - api.sgomes (Sérgio Gomes)
+ - api.sgomes@gmail.com (Sérgio Gomes)
  - api.dklimkin@gmail.com (Danial Klimkin)
  - api.mcloonan@gmail.com (Michael Cloonan)
 

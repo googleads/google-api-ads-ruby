@@ -130,6 +130,24 @@ module AdwordsApi
       @credential_handler.validate_only = value
     end
 
+    # Helper method to skip the report header when downloading reports.
+    #
+    # Args:
+    # - value: whether to skip the report header (boolean)
+    #
+    def skip_report_header=(value)
+      @config.set('library.skip_report_header', value)
+    end
+
+    # Helper method to skip the report summary when downloading reports.
+    #
+    # Args:
+    # - value: whether to skip the report summary (boolean)
+    #
+    def skip_report_summary=(value)
+      @config.set('library.skip_report_summary', value)
+    end
+
     # Helper method to provide a simple way of performing requests with support
     # for partial failures. Executes a block of code with partial failures
     # enabled and/or returns the current status of the property.

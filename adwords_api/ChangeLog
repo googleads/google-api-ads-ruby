@@ -1,3 +1,9 @@
+0.13.3:
+  - Fixing file permissions on gem.
+
+0.13.2:
+  - Support and examples for v201409.
+
 0.13.1:
   - Added example for Ad Customizers.
   - Removed support for ClientLogin (no longer supported by the API).

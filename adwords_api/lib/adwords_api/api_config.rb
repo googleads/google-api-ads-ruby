@@ -35,9 +35,9 @@ module AdwordsApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201406
+    DEFAULT_VERSION = :v201409
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201406
+    LATEST_VERSION = :v201409
 
     # Set other constants
     API_NAME = 'AdwordsApi'
@@ -123,6 +123,45 @@ module AdwordsApi
           :SharedSetService,
           :TargetingIdeaService,
           :TrafficEstimatorService
+      ],
+      :v201409 => [
+          :AdGroupAdService,
+          :AdGroupBidModifierService,
+          :AdGroupCriterionService,
+          :AdGroupFeedService,
+          :AdGroupService,
+          :AdParamService,
+          :AdwordsUserListService,
+          :BiddingStrategyService,
+          :BudgetOrderService,
+          :BudgetService,
+          :CampaignAdExtensionService,
+          :CampaignCriterionService,
+          :CampaignFeedService,
+          :CampaignService,
+          :CampaignSharedSetService,
+          :ConstantDataService,
+          :ConversionTrackerService,
+          :CustomerFeedService,
+          :CustomerService,
+          :CustomerSyncService,
+          :DataService,
+          :ExperimentService,
+          :FeedItemService,
+          :FeedMappingService,
+          :FeedService,
+          :GeoLocationService,
+          :LabelService,
+          :LocationCriterionService,
+          :ManagedCustomerService,
+          :MediaService,
+          :MutateJobService,
+          :OfflineConversionFeedService,
+          :ReportDefinitionService,
+          :SharedCriterionService,
+          :SharedSetService,
+          :TargetingIdeaService,
+          :TrafficEstimatorService
       ]
     }
 
@@ -132,7 +171,8 @@ module AdwordsApi
         :oauth_scope => 'https://www.googleapis.com/auth/adwords',
         :header_ns => 'https://adwords.google.com/api/adwords/cm/',
         :v201402 => 'https://adwords.google.com/api/adwords/',
-        :v201406 => 'https://adwords.google.com/api/adwords/'
+        :v201406 => 'https://adwords.google.com/api/adwords/',
+        :v201409 => 'https://adwords.google.com/api/adwords/'
       }
     }
 
@@ -215,7 +255,45 @@ module AdwordsApi
       [:v201406, :BudgetService] => 'cm/',
       [:v201406, :BiddingStrategyService] => 'cm/',
       [:v201406, :AdwordsUserListService] => 'rm/',
-      [:v201406, :LabelService] => 'cm/'
+      [:v201406, :LabelService] => 'cm/',
+      # v201409
+      [:v201409, :AdGroupAdService] => 'cm/',
+      [:v201409, :AdGroupBidModifierService] => 'cm/',
+      [:v201409, :AdGroupCriterionService] => 'cm/',
+      [:v201409, :AdGroupFeedService] => 'cm/',
+      [:v201409, :AdGroupService] => 'cm/',
+      [:v201409, :AdParamService] => 'cm/',
+      [:v201409, :BudgetOrderService] => 'billing/',
+      [:v201409, :CampaignAdExtensionService] => 'cm/',
+      [:v201409, :CampaignCriterionService] => 'cm/',
+      [:v201409, :CampaignFeedService] => 'cm/',
+      [:v201409, :CampaignService] => 'cm/',
+      [:v201409, :CampaignSharedSetService] => 'cm/',
+      [:v201409, :ConstantDataService] => 'cm/',
+      [:v201409, :ConversionTrackerService] => 'cm/',
+      [:v201409, :CustomerSyncService] => 'ch/',
+      [:v201409, :DataService] => 'cm/',
+      [:v201409, :ExperimentService] => 'cm/',
+      [:v201409, :FeedItemService] => 'cm/',
+      [:v201409, :FeedMappingService] => 'cm/',
+      [:v201409, :FeedService] => 'cm/',
+      [:v201409, :GeoLocationService] => 'cm/',
+      [:v201409, :LocationCriterionService] => 'cm/',
+      [:v201409, :MediaService] => 'cm/',
+      [:v201409, :MutateJobService] => 'cm/',
+      [:v201409, :OfflineConversionFeedService] => 'cm/',
+      [:v201409, :ReportDefinitionService] => 'cm/',
+      [:v201409, :SharedCriterionService] => 'cm/',
+      [:v201409, :SharedSetService] => 'cm/',
+      [:v201409, :TargetingIdeaService] => 'o/',
+      [:v201409, :TrafficEstimatorService] => 'o/',
+      [:v201409, :ManagedCustomerService] => 'mcm/',
+      [:v201409, :CustomerService] => 'mcm/',
+      [:v201409, :CustomerFeedService] => 'cm/',
+      [:v201409, :BudgetService] => 'cm/',
+      [:v201409, :BiddingStrategyService] => 'cm/',
+      [:v201409, :AdwordsUserListService] => 'rm/',
+      [:v201409, :LabelService] => 'cm/'
     }
 
     public

@@ -21,8 +21,7 @@
 # This example adds a feed that syncs feed items from a Google Places account
 # and associates the feed with a customer.
 #
-# Tags: CustomerFeedService.mutate, FeedItemService.mutate
-# Tags: FeedMappingService.mutate, FeedService.mutate
+# Tags: CustomerFeedService.mutate, FeedService.mutate
 
 require 'adwords_api'
 require 'date'

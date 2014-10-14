@@ -58,6 +58,14 @@ module AdwordsApi
       unless money_in_micros.nil?
         headers['returnMoneyInMicros'] = money_in_micros.to_s
       end
+      skip_report_header = @config.read('library.skip_report_header')
+      unless skip_report_header.nil?
+        headers['skipReportHeader'] = skip_report_header.to_s
+      end
+      skip_report_summary = @config.read('library.skip_report_summary')
+      unless skip_report_summary.nil?
+        headers['skipReportSummary'] = skip_report_summary.to_s
+      end
       return headers
     end
   end
