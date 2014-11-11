@@ -38,8 +38,8 @@ def get_users_by_statement()
   # Get the UserService.
   user_service = dfp.service(:UserService, API_VERSION)
 
-  # Create a statement to get all users sorted by name.
-  statement = {:query => 'ORDER BY name LIMIT 500'}
+  # Create a statement to get all users sorted by id.
+  statement = {:query => 'ORDER BY id ASC LIMIT 500'}
 
   # Get users by statement.
   page = user_service.get_users_by_statement(statement)

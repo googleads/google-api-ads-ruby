@@ -41,15 +41,15 @@ def get_labels_by_statement()
   label_service = dfp.service(:LabelService, API_VERSION)
 
   # Create a statement to select labels ordered by name.
-  statement = {:query => 'ORDER BY name LIMIT 500'}
+  statement = {:query => 'ORDER BY id ASC LIMIT 500'}
 
   # Get labels by statement.
   page = label_service.get_labels_by_statement(statement)
 
   if page and page[:results]
     page[:results].each_with_index do |label, index|
-      puts "%d) Label ID: %d, name: '%s', types: '%s'." % [index,
-          label[:id], label[:name], label[:types].join(', ')]
+      puts "%d) Label ID: %d, name: '%s'." % [index,
+          label[:id], label[:name]]
     end
   end
 

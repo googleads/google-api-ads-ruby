@@ -26,9 +26,9 @@ module DfpApiStatement
   # A statement object for PQL and get*ByStatement queries.
   class FilterStatement
     # Constructor for a Filter Statement.
-    def initialize(query_statement='', values=nil, limit=SUGGESTED_PAGE_LIMIT,
+    def initialize(query_statement='', values=[], limit=SUGGESTED_PAGE_LIMIT,
                    offset=0)
-      @query_statement = query_statement
+      @query_statement = query_statement.dup()
       @values = values
       @limit = limit
       @offset = offset
@@ -40,6 +40,10 @@ module DfpApiStatement
     def toStatement()
       statement = @query_statement + ' LIMIT %d OFFSET %d' % [@limit, @offset]
       return {:query => statement, :values => @values}
+    end
+
+    def toStatementForAction()
+      return {:query => @query_statement.dup(), :values => @values}
     end
   end
 end

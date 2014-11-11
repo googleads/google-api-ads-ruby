@@ -42,7 +42,7 @@ def get_companies_by_statement()
   # Create a statement to only select companies that are advertisers, sorted by
   # name.
   statement = {
-     :query => 'WHERE type = :type ORDER BY name LIMIT 500',
+     :query => 'WHERE type = :type ORDER BY id ASC LIMIT 500',
      :values => [
          {:key => 'type',
           :value => {:value => 'ADVERTISER', :xsi_type => 'TextValue'}}

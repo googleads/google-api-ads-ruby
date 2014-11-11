@@ -46,7 +46,7 @@ def get_geo_targets()
   # Create a statement to select all targetable cities.
   statement_text = "SELECT Id, Name, CanonicalParentId, ParentIds, " +
       "CountryCode, Type, Targetable FROM Geo_Target WHERE Type = 'City' " +
-      "AND Targetable = true LIMIT %d OFFSET %d"
+      "AND Targetable = true ORDER BY Id ASC LIMIT %d OFFSET %d"
 
   # Set initial values for paging.
   offset, result_set, all_rows = 0, nil, 0

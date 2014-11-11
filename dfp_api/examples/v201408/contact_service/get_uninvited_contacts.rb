@@ -42,7 +42,7 @@ def get_uninvited_contacts()
   # Define initial values.
   offset = 0
   page = {}
-  query_base = 'WHERE status = :status ORDER BY id LIMIT %d OFFSET %d'
+  query_base = 'WHERE status = :status ORDER BY id ASC LIMIT %d OFFSET %d'
 
   # Create statement.
   statement = {

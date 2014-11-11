@@ -47,7 +47,8 @@ def get_all_suggested_ad_units()
 
   begin
     # Create a statement to get one page with current offset.
-    statement = {:query => "LIMIT %d OFFSET %d" % [PAGE_SIZE, offset]}
+    statement = {:query => "ORDER BY id ASC LIMIT %d OFFSET %d" %
+        [PAGE_SIZE, offset]}
 
     # Get suggested ad units by statement.
     page =

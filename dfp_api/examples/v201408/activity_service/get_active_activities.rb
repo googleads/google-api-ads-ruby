@@ -46,7 +46,7 @@ def get_active_activities()
   begin
     # Create statement for one page with current offset.
     statement = {
-       :query => 'WHERE status = :status ORDER BY id LIMIT %d OFFSET %d' %
+       :query => 'WHERE status = :status ORDER BY id ASC LIMIT %d OFFSET %d' %
            [PAGE_SIZE, offset],
        :values => [
          {

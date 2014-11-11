@@ -46,7 +46,8 @@ def get_all_content()
 
   begin
     # Create statement for one page with current offset.
-    statement = {:query => "LIMIT %d OFFSET %d" % [PAGE_SIZE, offset]}
+    statement = {:query => "ORDER BY id ASC LIMIT %d OFFSET %d" %
+        [PAGE_SIZE, offset]}
 
     # Get content by statement.
     page = content_service.get_content_by_statement(statement)

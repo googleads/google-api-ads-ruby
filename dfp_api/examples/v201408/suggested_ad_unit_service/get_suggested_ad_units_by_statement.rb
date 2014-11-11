@@ -44,7 +44,7 @@ def get_suggested_ad_units_by_statement()
   # Create a statement to only select suggested ad units with more than 50
   # requests (with maximum limit of 500).
   statement = {
-     :query => 'WHERE numRequests > :num_requests LIMIT 500',
+     :query => 'WHERE numRequests > :num_requests ORDER BY id ASC LIMIT 500',
      :values => [
          {:key => 'num_requests',
           :value => {:value => NUMBER_OF_REQUESTS,

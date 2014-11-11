@@ -45,7 +45,7 @@ def get_licas_by_statement()
 
   # Create a statement to only select LICAs for the given line item ID.
   statement = {
-      :query => 'WHERE lineItemId = :line_item_id LIMIT 500',
+      :query => 'WHERE lineItemId = :line_item_id ORDER BY id ASC LIMIT 500',
       :values => [
           {:key => 'line_item_id',
            :value => {:value => line_item_id, :xsi_type => 'NumberValue'}}

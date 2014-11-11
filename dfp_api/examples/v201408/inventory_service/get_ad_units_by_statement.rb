@@ -49,7 +49,7 @@ def get_ad_units_by_statement()
 
   # Create a statement to select the children of the effective root ad unit.
   statement = {
-     :query => 'WHERE parentId = :id LIMIT 500',
+     :query => 'WHERE parentId = :id ORDER BY id ASC LIMIT 500',
      :values => [
          {:key => 'id',
           :value => {:value => effective_root_ad_unit_id,

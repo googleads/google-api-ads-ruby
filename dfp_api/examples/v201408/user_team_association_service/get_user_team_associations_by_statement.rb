@@ -49,7 +49,7 @@ def get_user_team_associations_by_statement()
 
   # Create filter text to select user team associations by the user ID.
   statement = {
-      :query => "WHERE userId = :user_id LIMIT %s" % PAGE_SIZE,
+      :query => "WHERE userId = :user_id ORDER BY id ASC LIMIT %s" % PAGE_SIZE,
       :values => [
           {:key => 'user_id',
            :value => {:value => user[:id], :xsi_type => 'NumberValue'}},

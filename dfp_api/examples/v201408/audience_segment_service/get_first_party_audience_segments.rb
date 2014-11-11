@@ -41,7 +41,8 @@ def get_first_party_audience_segments()
 
   # Statement parts to help build a statement to select all first party audience
   # segments.
-  statement_text = "WHERE type = 'FIRST_PARTY' ORDER BY id LIMIT %d OFFSET %d"
+  statement_text = ("WHERE type = 'FIRST_PARTY' ORDER BY id ASC " +
+      "LIMIT %d OFFSET %d")
 
   # Define initial values.
   offset = 0

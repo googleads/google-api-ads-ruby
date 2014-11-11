@@ -40,7 +40,7 @@ def get_creative_wrappers_by_statement()
 
   # Create filter text to select active creative wrappers.
   statement = {
-      :query => 'WHERE status = :status',
+      :query => 'WHERE status = :status ORDER BY id ASC',
       :values => [
         {
           :key => 'status',

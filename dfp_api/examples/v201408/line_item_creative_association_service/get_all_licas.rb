@@ -45,7 +45,8 @@ def get_all_licas()
 
   begin
     # Create statement for one page with current offset.
-    statement = {:query => 'LIMIT %d OFFSET %d' % [PAGE_SIZE, offset]}
+    statement = {:query => 'ORDER BY id ASC LIMIT %d OFFSET %d' %
+        [PAGE_SIZE, offset]}
 
     # Get LICAs by statement.
     page =

@@ -41,7 +41,7 @@ def get_all_ad_unit_sizes()
 
   # Create statement object to only select web ad unit sizes.
   statement = {
-     :query => 'WHERE targetPlatform = :target_platform',
+     :query => 'WHERE targetPlatform = :target_platform ORDER BY id ASC',
      :values => [
          {:key => 'target_platform',
           :value => {:value => target_platform,

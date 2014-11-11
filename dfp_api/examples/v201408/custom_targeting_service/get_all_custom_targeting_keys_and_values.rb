@@ -46,7 +46,8 @@ def get_all_custom_targeting_keys_and_values()
 
   begin
     # Create a statement to get one page with current offset.
-    statement = {:query => "LIMIT %d OFFSET %d" % [PAGE_SIZE, offset]}
+    statement = {:query => "ORDER BY id ASC LIMIT %d OFFSET %d" %
+        [PAGE_SIZE, offset]}
 
     # Get custom targeting keys by statement.
     page = custom_targeting_service.get_custom_targeting_keys_by_statement(

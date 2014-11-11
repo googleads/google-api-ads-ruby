@@ -48,7 +48,7 @@ def get_recently_updated_line_items()
   # have been modified in the last 3 days.
   statement = {
     :query => 'WHERE lastModifiedDateTime >= :date_time_string AND ' +
-        'orderId = :order_id LIMIT 500',
+        'orderId = :order_id ORDER BY id ASC LIMIT 500',
     :values => [
       {:key => 'order_id',
        :value => {:value => order_id, :xsi_type => 'NumberValue'}},

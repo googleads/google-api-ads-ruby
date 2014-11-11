@@ -41,7 +41,7 @@ def get_custom_targeting_keys_by_statement()
 
   # Create a statement to only select predefined custom targeting keys.
   statement = {
-      :query => 'WHERE type = :type LIMIT 500',
+      :query => 'WHERE type = :type ORDER BY id ASC LIMIT 500',
       :values => [
           {:key => 'type',
            :value => {:value => 'PREDEFINED', :xsi_type => 'TextValue'}}

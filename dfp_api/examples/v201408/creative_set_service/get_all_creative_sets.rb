@@ -45,7 +45,8 @@ def get_all_creative_sets()
 
   begin
     # Create statement for one page with current offset.
-    statement = {:query => 'LIMIT %d OFFSET %d' % [PAGE_SIZE, offset]}
+    statement = {:query => 'ORDER BY id ASC LIMIT %d OFFSET %d' %
+        [PAGE_SIZE, offset]}
 
     # Get creative sets by statement.
     page = creative_set_service.get_creative_sets_by_statement(statement)

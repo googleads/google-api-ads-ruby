@@ -80,7 +80,7 @@ def get_content_by_statement()
     offset = 0
     page = {}
 
-    statement_text = 'WHERE status = :status'
+    statement_text = 'WHERE status = :status ORDER BY id ASC'
     statement = {
         :query => statement_text,
         :values => [

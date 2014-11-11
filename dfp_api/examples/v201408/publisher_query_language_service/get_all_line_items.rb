@@ -44,7 +44,8 @@ def get_all_line_items()
   pql_service = dfp.service(:PublisherQueryLanguageService, API_VERSION)
 
   # Statement parts to help build a statement to select all line items.
-  statement_text = 'SELECT Id, Name, Status FROM Line_Item LIMIT %d OFFSET %d'
+  statement_text = 'SELECT Id, Name, Status FROM Line_Item ORDER BY Id ASC' +
+      'LIMIT %d OFFSET %d'
 
   # Set initial values for paging.
   offset, result_set, all_rows = 0, nil, 0

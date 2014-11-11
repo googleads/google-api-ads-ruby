@@ -44,7 +44,8 @@ def get_all_orders()
 
   begin
     # Create statement for one page with current offset.
-    statement = {:query => "LIMIT %d OFFSET %d" % [PAGE_SIZE, offset]}
+    statement = {:query => "ORDER BY id ASC LIMIT %d OFFSET %d" %
+        [PAGE_SIZE, offset]}
 
     # Get orders by statement.
     page = order_service.get_orders_by_statement(statement)

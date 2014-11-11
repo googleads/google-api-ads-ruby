@@ -35,9 +35,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201408
+    DEFAULT_VERSION = :v201411
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201408
+    LATEST_VERSION = :v201411
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -163,6 +163,28 @@ module DfpApi
                    :ReconciliationReportRowService,
                    :ReconciliationReportService, :ReportService,
                    :SuggestedAdUnitService, :TeamService, :UserService,
+                   :UserTeamAssociationService, :WorkflowRequestService],
+      :v201411 => [:ActivityGroupService, :ActivityService,
+                   :AdExclusionRuleService, :AdRuleService,
+                   :AudienceSegmentService, :BaseRateService, :CompanyService,
+                   :ContactService, :ContentBundleService,
+                   :ContentMetadataKeyHierarchyService, :ContentService,
+                   :CreativeService, :CreativeSetService,
+                   :CreativeTemplateService, :CreativeWrapperService,
+                   :CustomFieldService, :CustomTargetingService,
+                   :ExchangeRateService, :ForecastService, :InventoryService,
+                   :LabelService, :LineItemCreativeAssociationService,
+                   :LineItemService, :LineItemTemplateService,
+                   :NetworkService, :LiveStreamEventService,
+                   :OrderService, :PlacementService,
+                   :PremiumRateService, :ProductService,
+                   :ProductTemplateService, :ProposalLineItemService,
+                   :ProposalService, :PublisherQueryLanguageService,
+                   :RateCardService, :ReconciliationOrderReportService,
+                   :ReconciliationReportRowService,
+                   :ReconciliationReportService, :ReportService,
+                   :SharedAdUnitService, :SuggestedAdUnitService,
+                   :TeamService, :UserService,
                    :UserTeamAssociationService, :WorkflowRequestService]
     }
 
@@ -176,7 +198,8 @@ module DfpApi
         :v201311 => 'https://ads.google.com/apis/ads/publisher/',
         :v201403 => 'https://ads.google.com/apis/ads/publisher/',
         :v201405 => 'https://ads.google.com/apis/ads/publisher/',
-        :v201408 => 'https://ads.google.com/apis/ads/publisher/'
+        :v201408 => 'https://ads.google.com/apis/ads/publisher/',
+        :v201411 => 'https://ads.google.com/apis/ads/publisher/'
       }
     }
 

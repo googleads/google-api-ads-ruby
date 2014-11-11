@@ -45,7 +45,8 @@ def get_all_placements()
 
   begin
     # Create statement for one page with current offset.
-    statement = {:query => "LIMIT %d OFFSET %d" % [PAGE_SIZE, offset]}
+    statement = {:query => "ORDER BY id ASC LIMIT %d OFFSET %d" %
+        [PAGE_SIZE, offset]}
 
     # Get placements by statement.
     page = placement_service.get_placements_by_statement(statement)

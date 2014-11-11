@@ -46,7 +46,8 @@ def get_custom_targeting_values_by_statement()
 
   # Create a statement to only select custom targeting values for a given key.
   statement = {
-      :query => 'WHERE customTargetingKeyId = :key_id LIMIT 500',
+      :query => 'WHERE customTargetingKeyId = :key_id ORDER BY id ' +
+          'ASC LIMIT 500',
       :values => [
           {:key => 'key_id',
            :value => {:value => custom_targeting_key_id,

@@ -45,7 +45,8 @@ def get_all_custom_fields()
 
   begin
     # Create a statement to get one page with current offset.
-    statement = {:query => "LIMIT %d OFFSET %d" % [PAGE_SIZE, offset]}
+    statement = {:query => "ORDER BY id ASC LIMIT %d OFFSET %d" %
+        [PAGE_SIZE, offset]}
 
     # Get custom fields by statement.
     page = custom_field_service.get_custom_fields_by_statement(statement)
