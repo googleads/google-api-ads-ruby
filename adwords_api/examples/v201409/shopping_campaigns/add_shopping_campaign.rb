@@ -49,10 +49,6 @@ def add_shopping_campaign(budget_id, merchant_id)
     },
     :settings => [
       {
-        :xsi_type => 'KeywordMatchSetting',
-        :opt_in => false
-      },
-      {
         :xsi_type => 'ShoppingSetting',
         :sales_country => 'US',
         :campaign_priority => 0,

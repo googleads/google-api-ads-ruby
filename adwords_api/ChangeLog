@@ -1,3 +1,12 @@
+0.14.0:
+  - Removed deprecated API version v201402.
+  - Removed support for returnMoneyInMicros header.
+  - Reworked Places examples to reference Google My Business.
+
+0.13.4:
+  - Added rule-based remarketing example.
+  - Require google-ads-common 0.9.6 or later from now on.
+
 0.13.3:
   - Fixing file permissions on gem.
 

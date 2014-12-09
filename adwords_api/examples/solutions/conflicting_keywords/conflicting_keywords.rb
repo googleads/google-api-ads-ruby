@@ -251,27 +251,34 @@ def compare_keywords(negatives, positive)
           negative_tokens[1..-1].each_with_index do |token, index|
             if token != positive_tokens[positive_index + index + 1]
               candidate_match = false
+              break
             end
           end
 
-          match = true if candidate_match == true
+          match = candidate_match
         end
       end
     end
 
-    # Broad matching with negative keywords triggers when any of the words are
-    # exactly the same (there are no near matches with negative keywords).
-    # E.g. a negative "cool shoe" will match "black shoe" and "cool sock", but
-    # not "black shoes".
+    # Broad matching with negative keywords triggers when all of the words are
+    # present and exactly the same (there are no near matches with negative
+    # keywords).
+    # E.g. a negative "cool shoe" will match "black cool shoe" and
+    # "cool black shoe", but not "cool shoes" or "black shoe".
     if match_type == 'broad'
       negative_tokens = negative_text.split(' ')
       positive_tokens = positive_text.split(' ')
 
+      candidate_match = true
+
       negative_tokens.each do |token|
-        if positive_tokens.include?(token)
-          match = true
+        if !positive_tokens.include?(token)
+          candidate_match = false
+          break
         end
       end
+
+      match = candidate_match
     end
 
     negative.add_blocked(positive) if match

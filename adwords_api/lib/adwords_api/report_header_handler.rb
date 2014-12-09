@@ -54,10 +54,6 @@ module AdwordsApi
           'clientCustomerId' => credentials[:client_customer_id].to_s,
           'developerToken' => credentials[:developer_token]
       }
-      money_in_micros = @config.read('library.return_money_in_micros')
-      unless money_in_micros.nil?
-        headers['returnMoneyInMicros'] = money_in_micros.to_s
-      end
       skip_report_header = @config.read('library.skip_report_header')
       unless skip_report_header.nil?
         headers['skipReportHeader'] = skip_report_header.to_s

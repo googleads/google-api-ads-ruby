@@ -18,15 +18,15 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example adds a feed that syncs feed items from a Google Places account
-# and associates the feed with a customer.
+# This example adds a feed that syncs feed items from a Google My Business (GMB)
+# account and associates the feed with a customer.
 #
 # Tags: CustomerFeedService.mutate, FeedService.mutate
 
 require 'adwords_api'
 require 'date'
 
-def add_places_location_extensions(places_email_address, places_access_token)
+def add_gmb_location_extensions(gmb_email_address, gmb_access_token)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -38,30 +38,33 @@ def add_places_location_extensions(places_email_address, places_access_token)
   feed_srv = adwords.service(:FeedService, API_VERSION)
   customer_feed_srv = adwords.service(:CustomerFeedService, API_VERSION)
 
-  places_feed = {
-    :name => "Places feed #%d" % (Time.new.to_f * 1000).to_i,
+  # Create a feed that will sync to the Google My Business account specified
+  # by gmb_email_address. Do not add FeedAttributes to this object, as AdWords
+  # will add them automatically because this will be a system generated feed.
+  gmb_feed = {
+    :name => "GMB feed #%d" % (Time.new.to_f * 1000).to_i,
     :system_feed_generation_data => {
       :xsi_type => 'PlacesLocationFeedData',
       :o_auth_info => {
         :http_method => 'GET',
-        :http_request_url => 'https://www.google.com/local/add',
-        :http_authorization_header => "Bearer %s" % places_access_token
+        :http_request_url => 'https://www.googleapis.com/auth/adwords',
+        :http_authorization_header => "Bearer %s" % gmb_access_token
       },
-      :email_address => places_email_address
+      :email_address => gmb_email_address
     },
     # Since this feed's feed items will be managed by AdWords, you must set
     # its origin to ADWORDS.
     :origin => 'ADWORDS'
   }
 
-  places_operation = {
+  gmb_operation = {
     :operator => 'ADD',
-    :operand => places_feed
+    :operand => gmb_feed
   }
 
-  result = feed_srv.mutate([places_operation])
+  result = feed_srv.mutate([gmb_operation])
   added_feed = result[:value].first
-  puts "Added places feed with ID %d" % added_feed[:id]
+  puts "Added GMB feed with ID %d" % added_feed[:id]
 
   # Add a CustomerFeed that associates the feed with this customer for the
   # LOCATION placeholder type.
@@ -122,15 +125,21 @@ def add_places_location_extensions(places_email_address, places_access_token)
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201409
+  API_VERSION = :v201406
   PLACEHOLDER_TYPE_LOCATION = 7
   MAX_CUSTOMER_FEED_ADD_ATTEMPTS = 10
 
   begin
-    places_email_address = 'INSERT_PLACES_EMAIL_ADDRESS_HERE'
-    places_access_token = 'INSERT_PLACES_ACCESS_TOKEN_HERE'
+    # The email address of the owner of the GMB account.
+    gmb_email_address = 'INSERT_GMB_EMAIL_ADDRESS_HERE'
 
-    add_places_location_extensions(places_email_address, places_access_token)
+    # To obtain an access token for your GMB account, generate a refresh token
+    # as you did for AdWords, but make sure you are logged in as the same user
+    # as gmb_email_address above when you follow the link, then capture
+    # the generated access token.
+    gmb_access_token = 'INSERT_GMB_ACCESS_TOKEN_HERE'
+
+    add_gmb_location_extensions(gmb_email_address, gmb_access_token)
 
   # Authorization error.
   rescue AdsCommon::Errors::OAuth2VerificationRequired => e
