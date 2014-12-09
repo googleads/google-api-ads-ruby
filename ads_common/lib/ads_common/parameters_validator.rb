@@ -19,6 +19,8 @@
 #
 # This class validates input parameters before passing them to Savon.
 
+require 'ads_common/utils'
+
 module AdsCommon
   class ParametersValidator
     # Savon special keys.
@@ -71,10 +73,47 @@ module AdsCommon
           item_type = get_full_type_signature(field[:type])
           item_ns = field[:ns] || type_ns
           key = handle_namespace_override(args_hash, key, item_ns) if item_ns
-          validate_arg(item, args_hash, key, item_type)
+
+          # Separate validation for choice types as we need to inject nodes into
+          # the tree. Validate as usual if not a choice type.
+          unless validate_choice_argument(item, args_hash, key, item_type)
+            validate_arg(item, args_hash, key, item_type)
+          end
         end
       end
       return args_hash
+    end
+
+    # Special handling for choice types. Goes over each item, checks xsi_type
+    # is set and correct and injects new node for it into the tree. After that,
+    # recurces with the correct item type.
+    def validate_choice_argument(item, parent, key, item_type)
+      result = false
+      if item_type.kind_of?(Hash) && item_type.include?(:choices)
+        new_root = {}
+        choice_items = arrayize(item)
+        choice_items.each do |choice_item|
+          choice_type = choice_item.delete(:xsi_type)
+          choice_item_type =
+              find_choice_by_xsi_type(choice_type, item_type[:choices])
+          if choice_type.nil? || choice_item_type.nil?
+            raise AdsCommon::Errors::TypeMismatchError.new(
+              'choice subtype', choice_type, choice_item.to_s())
+          end
+          new_root[choice_type] ||= []
+          new_root[choice_type] << choice_item
+          type_signature = get_full_type_signature(choice_type)
+          validate_arg(choice_item, new_root, choice_type, type_signature)
+        end
+        parent[key] = new_root
+        result = true
+      end
+      return result
+    end
+
+    def find_choice_by_xsi_type(xsi_type, item_def)
+      index = item_def.index {|item| xsi_type.eql?(item[:original_name])}
+      return index.nil? ? nil : item_def[index]
     end
 
     # Checks if no extra fields provided outside of known ones.

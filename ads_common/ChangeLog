@@ -1,4 +1,5 @@
 0.9.6:
+  - Support for 'choice' types in API requests.
 
 0.9.5:
   - Updated user-agent generation for default string.
