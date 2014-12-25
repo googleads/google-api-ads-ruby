@@ -80,7 +80,7 @@ module AdsCommon
       # Overrides base get_token method to account for the token expiration.
       def get_token(credentials = nil)
         token = super(credentials)
-        token = refresh_token! if !@client.nil? && @client.expired?
+        token = refresh_token! if use_refresh_token?(credentials)
         return token
       end
 
@@ -95,6 +95,17 @@ module AdsCommon
         end
         @token = token_from_client(@client)
         return @token
+      end
+
+      def use_refresh_token?(credentials)
+        oauth2_token_hash = credentials[:oauth2_token]
+        return false if @client.nil?
+        if oauth2_token_hash[:use_refresh_token] && 
+          oauth2_token_hash[:refresh_token].nil?
+          raise AdsCommon::Errors::AuthError, 'Refresh token is not specified.'
+        end
+
+        @client.expired? || oauth2_token_hash[:use_refresh_token]
       end
 
       private
