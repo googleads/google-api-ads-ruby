@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
+# Author:: api.mcloonan@gmail.com (Michael Cloonan)
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2015, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -18,14 +18,13 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to add text ads to a given ad group. To create an
-# ad group, run add_ad_group.rb.
+# This code example upgrades an ad to use upgraded URLs.
 #
-# Tags: AdGroupAdService.mutate
+# Tags: AdGroupAdService.get, AdGroupAdService.upgradeUrl
 
 require 'adwords_api'
 
-def add_text_ads(ad_group_id)
+def upgrade_ad_url(ad_group_id, ad_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -36,46 +35,31 @@ def add_text_ads(ad_group_id)
 
   ad_group_ad_srv = adwords.service(:AdGroupAdService, API_VERSION)
 
-  # Create text ads.
-  # The 'xsi_type' field allows you to specify the xsi:type of the object
-  # being created. It's only necessary when you must provide an explicit
-  # type that the client library can't infer.
-  text_ads = [
-    {
-      :xsi_type => 'TextAd',
-      :headline => 'Luxury Cruise to Mars',
-      :description1 => 'Visit the Red Planet in style.',
-      :description2 => 'Low-gravity fun for everyone!',
-      :final_urls => ['http://www.example.com'],
-      :display_url => 'www.example.com'
-    },
-    {
-      :xsi_type => 'TextAd',
-      :headline => 'Luxury Cruise to Mars',
-      :description1 => 'Enjoy your stay at Red Planet.',
-      :description2 => 'Buy your tickets now!',
-      :final_urls => ['http://www.example.com'],
-      :display_url => 'www.example.com'
-    }
-  ]
+  selector = {
+    :fields => ['Id', 'Url'],
+    :predicates => [
+      {:field => 'AdGroupId', :operator => 'EQUALS', :values => [ad_group_id]},
+      {:field => 'Id', :operator => 'EQUALS', :values => [ad_id]}
+    ]
+  }
 
-  # Create ad 'ADD' operations.
-  text_ad_operations = text_ads.map do |text_ad|
-    {:operator => 'ADD',
-     :operand => {:ad_group_id => ad_group_id, :ad => text_ad}}
-  end
+  page = ad_group_ad_srv.get(selector)
+  ad_group_ad = page[:entries][0] if page[:entries]
 
-  # Add ads.
-  response = ad_group_ad_srv.mutate(text_ad_operations)
-  if response and response[:value]
-    ads = response[:value]
-    puts "Added %d ad(s) to ad group ID %d:" % [ads.length, ad_group_id]
-    ads.each do |ad|
-      puts "\tAd ID %d, type '%s' and status '%s'" %
-          [ad[:ad][:id], ad[:ad][:ad_type], ad[:status]]
-    end
+  raise StandardError, "Ad not found." if ad_group_ad.nil?
+
+  ad_url_upgrade = {
+    :ad_id => ad_group_ad[:ad][:id],
+    :final_url => ad_group_ad[:ad][:url]
+  }
+
+  response = ad_group_ad_srv.upgrade_url([ad_url_upgrade])
+  if response
+    ad_group_ad = response.first
+    puts "Ad with ID %d and destination url '%s' was upgraded." %
+        [ad_group_ad[:id], ad_group_ad[:final_urls].first]
   else
-    raise StandardError, 'No ads were added.'
+    raise StandardError, 'failed to upgrade ads.'
   end
 end
 
@@ -83,9 +67,9 @@ if __FILE__ == $0
   API_VERSION = :v201409
 
   begin
-    # Ad group ID to add text ads to.
     ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
-    add_text_ads(ad_group_id)
+    ad_id = 'INSERT_AD_ID_HERE'.to_i
+    upgrade_ad_url(ad_group_id, ad_id)
 
   # Authorization error.
   rescue AdsCommon::Errors::OAuth2VerificationRequired => e

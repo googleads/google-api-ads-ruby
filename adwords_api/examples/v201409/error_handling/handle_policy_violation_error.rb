@@ -50,7 +50,7 @@ def handle_policy_violation_error(ad_group_id)
         :headline => 'Mars Cruise!!!',
         :description1 => 'Visit the Red Planet in style.',
         :description2 => 'Low-gravity fun for everyone!',
-        :url => 'http://www.example.com',
+        :final_urls => ['http://www.example.com'],
         :display_url => 'www.example.com',
       }
     }

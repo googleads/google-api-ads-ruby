@@ -60,24 +60,24 @@ def add_site_links(campaign_id)
     # Attribute of type STRING.
     link_text_feed_attribute_id = feed[:attributes][0][:id]
     # Attribute of type URL.
-    link_url_feed_attribute_id = feed[:attributes][1][:id]
+    final_url_feed_attribute_id = feed[:attributes][1][:id]
     # Attribute of type STRING.
     line_1_feed_attribute_id = feed[:attributes][2][:id]
     #Attribute of type STRING.
     line_2_feed_attribute_id = feed[:attributes][3][:id]
     puts "Feed with name '%s' and ID %d was added with" %
         [feed[:name], feed[:id]]
-    puts "\tText attribute ID %d and URL attribute ID %d " +
+    puts "\tText attribute ID %d and Final URL attribute ID %d " +
         "and Line 1 attribute ID %d and Line 2 attribute ID %d." % [
           link_text_feed_attribute_id,
-          link_url_feed_attribute_id,
+          final_url_feed_attribute_id,
           line_1_feed_attribute_id,
           line_2_feed_attribute_id
         ]
 
     sitelinks_data[:feed_id] = feed[:id]
     sitelinks_data[:link_text_feed_id] = link_text_feed_attribute_id
-    sitelinks_data[:link_url_feed_id] = link_url_feed_attribute_id
+    sitelinks_data[:final_url_feed_id] = final_url_feed_attribute_id
     sitelinks_data[:line_1_feed_id] = line_1_feed_attribute_id
     sitelinks_data[:line_2_feed_id] = line_2_feed_attribute_id
   else
@@ -133,7 +133,7 @@ def add_site_links(campaign_id)
           :string_value => item[:text]
         },
         {
-          :feed_attribute_id => sitelinks_data[:link_url_feed_id],
+          :feed_attribute_id => sitelinks_data[:final_url_feed_id],
           :string_value => item[:url]
         },
         {
@@ -173,8 +173,8 @@ def add_site_links(campaign_id)
         :field_id => PLACEHOLDER_FIELD_SITELINK_LINK_TEXT
       },
       {
-        :feed_attribute_id => sitelinks_data[:link_url_feed_id],
-        :field_id => PLACEHOLDER_FIELD_SITELINK_LINK_URL
+        :feed_attribute_id => sitelinks_data[:final_url_feed_id],
+        :field_id => PLACEHOLDER_FIELD_SITELINK_FINAL_URL
       },
       {
         :feed_attribute_id => sitelinks_data[:line_1_feed_id],
@@ -271,7 +271,7 @@ if __FILE__ == $0
   #     https://developers.google.com/adwords/api/docs/appendix/placeholders
   PLACEHOLDER_SITELINKS = 1
   PLACEHOLDER_FIELD_SITELINK_LINK_TEXT = 1
-  PLACEHOLDER_FIELD_SITELINK_LINK_URL = 2
+  PLACEHOLDER_FIELD_SITELINK_FINAL_URL = 5
   PLACEHOLDER_FIELD_SITELINK_LINE_1_TEXT = 3
   PLACEHOLDER_FIELD_SITELINK_LINE_2_TEXT = 4
 

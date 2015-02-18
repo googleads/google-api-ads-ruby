@@ -49,7 +49,7 @@ def validate_text_ad(ad_group_id)
         :headline => 'Luxury Cruise to Mars',
         :description1 => 'Visit the Red Planet in style.',
         :description2 => 'Low-gravity fun for everyone!',
-        :url => 'http://www.example.com',
+        :final_urls => ['http://www.example.com'],
         :display_url => 'www.example.com'
       }
     }

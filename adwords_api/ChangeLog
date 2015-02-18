@@ -1,3 +1,9 @@
+0.14.1:
+  - Corrected the comments and settings regarding target_all in add_ad_groups
+    examples.
+  - Added new example for migrating to Upgraded URLs.
+  - Updated examples to reference final URLs.
+
 0.14.0:
   - Removed deprecated API version v201402.
   - Removed support for returnMoneyInMicros header.

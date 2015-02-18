@@ -62,7 +62,7 @@ def add_text_ad_with_upgraded_urls(ad_group_id)
     # Specify a tracking URL for 3rd party tracking provider. You may specify
     # one at customer, campaign, ad group, ad, criterion, or feed item levels.
     :tracking_url_template => 'http://tracker.example.com/' +
-        '?cid={_season}&promocode={_promocode}&u={lpurl}',
+        '?season={_season}&promocode={_promocode}&u={lpurl}',
     :url_custom_parameters => tracking_url_parameters,
     # Specify a list of final URLs. This field cannot be set if :url field
     # is set. This may be specified at ad, criterion, and feed item levels.

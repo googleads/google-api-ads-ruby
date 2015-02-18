@@ -50,7 +50,7 @@ def set_ad_parameters(ad_group_id, criterion_id)
         :headline => 'Luxury Mars Cruises',
         :description1 => 'Low-gravity fun for {param1:cheap}.',
         :description2 => 'Only {param2:a few} seats left!',
-        :url => 'http://www.example.com',
+        :final_urls => ['http://www.example.com'],
         :display_url => 'www.example.com'
       }
     }

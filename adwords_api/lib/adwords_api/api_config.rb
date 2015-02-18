@@ -250,14 +250,6 @@ module AdwordsApi
       @@subdir_config
     end
 
-    def self.client_login_config(key)
-      raise AdsCommon::Errors::AuthError,
-            "ClientLogin is not supported. " +
-            "Please use OAuth2 instead. See here for details:\n\t\t" +
-            "https://developers.google.com/adwords/api/" +
-            "docs/guides/authentication"
-    end
-
     def self.default_config_filename
       DEFAULT_CONFIG_FILENAME
     end

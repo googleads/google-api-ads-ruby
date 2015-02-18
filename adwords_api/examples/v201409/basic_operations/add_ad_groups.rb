@@ -53,22 +53,24 @@ def add_ad_groups(campaign_id)
         ]
       },
       :settings => [
-        # Targetting restriction settings - these setting only affect serving
+        # Targeting restriction settings - these settings only affect serving
         # for the Display Network.
         {
           :xsi_type => 'TargetingSetting',
           :details => [
             # Restricting to serve ads that match your ad group placements.
+            # This is equivalent to choosing "Target and bid" in the UI.
             {
               :xsi_type => 'TargetingSettingDetail',
               :criterion_type_group => 'PLACEMENT',
-              :target_all => true
+              :target_all => false
             },
-            # Using your ad group verticals only for bidding.
+            # Using your ad group verticals only for bidding. This is equivalent
+            # to choosing "Bid only" in the UI.
             {
               :xsi_type => 'TargetingSettingDetail',
               :criterion_type_group => 'VERTICAL',
-              :target_all => false
+              :target_all => true
             }
           ]
         }
