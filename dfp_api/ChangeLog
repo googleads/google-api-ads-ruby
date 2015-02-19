@@ -1,3 +1,10 @@
+0.9.4:
+  - Added support for v201502.
+  - Removed support for v201311, v201308, and v201306.
+  - Removed examples for v201403.
+  - Updated ForecastService examples.
+  - Added PackageService, ProductPackageService, and ProductPackageItemService.
+
 0.9.3:
   - Added support and examples for v201411.
   - Added AdExclusionRuleService and SharedAdUnitService.
