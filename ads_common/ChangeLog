@@ -1,0 +1,127 @@
+0.9.7:
+  - Removed deprecated ClientLogin support.
+
+0.9.6:
+  - Support for 'choice' types in API requests.
+
+0.9.5:
+  - Updated user-agent generation for default string.
+
+0.9.4:
+  - Updated to Signet ~> 0.5.0.
+
+0.9.3:
+  - Added support for persisting OAuth2 token.
+
+0.9.2:
+  - Fixed issue with boolean value not prefixed in a mixed namespaces case.
+
+0.9.1:
+  - Fixed issues #93, #96, #97.
+
+0.9.0:
+  - Switched to Signet OAuth implementation.
+  - Removed deprecated OAuth1.0a scheme, please use OAuth2.0 instead.
+  - Support for JWT authorization (OAuth2 service accounts).
+
+0.8.2:
+  - Fixed issue #89.
+
+0.8.1:
+  - Updated dependencies for Savon, OAuth2, HTTPI.
+
+0.8.0:
+  - Fixed issues #20, #78.
+
+0.7.3:
+  - Compatibility with Savon -> 1.0.0 (not backward-compatible).
+  - Now require HTTPI ~> 1.0.0.
+  - HttpClient is no longer explicitely required.
+  - Support for OAuth2.0 authorization method.
+
+0.7.2:
+  - Compatibility with savon-0.9.10 (not backward-compatible).
+
+0.7.1:
+  - Fixed issues #63, #73, #74.
+
+0.7.0:
+  - Cleaned up unused features.
+  - Now require HTTPI 0.9.7 (fixes issue #61).
+
+0.6.4:
+  - Fixed issue #66 (extra fields in OAuth header).
+  - Fixed issue #69 (string names converted to Date).
+  - Now require Savon 0.9.9.
+
+0.6.3:
+  - Support for CAPTCHA challenge handling.
+  - Added .gemspec and updated packaging process.
+  - Removed explicit require for RubyGems.
+  - Added configuration directive to choose HTTPI adapter (connection.adapter)
+    and read / open timeouts (connection.read_timeout, connection.open_timeout).
+
+0.6.2:
+  - Requiring Savon as "~>" now.
+  - Updates to file headers.
+  - Marked all sources as utf-8.
+
+0.6.1:
+  - Support for GZip compression.
+  - Added logging of the response HTTP headers.
+  - Updated minimal requirement for httpclient (~>2.2.3) and httpi (~>0.9.3).
+
+0.6.0:
+  - Better namespace handling in complex cases.
+  - Large refactoring on parameter processing code.
+  - Support for SimpleTypes in wsdl.
+
+0.5.5:
+  - Now support Savon 0.9.7.
+
+0.5.4:
+  - Improved support for OAuth.
+  - Cleanups and better wsdl compatibility.
+
+0.5.3:
+  - Ruby 1.9 compatibility hotfix.
+
+0.5.2:
+  - Additional information such as headers are now available via user-specified
+    block. See API-specific README for more details.
+  - Fixed xsi:types were not returned in responses (issue #10).
+
+0.5.1:
+  - Now passing response header information as :header field in response.
+  - Major performance improvements.
+  - Support for proxies.
+
+0.5.0:
+  - Now support Savon 0.9.6.
+  - No longer depend on Soap4r.
+  - Support for OAuth authentication method.
+
+0.4.0:
+  - Extracted soap4r specific code from main path.
+  - APIs with Savon backend are now ruby1.9 - compatible.
+  - Fixed possible statement corruption after call.
+
+0.3.0:
+  - Fixes towards Ruby1.9 compatibility.
+  - Support for method names with CAPSed words (Savon).
+  - New single-Logger logging system.
+
+0.2.1:
+  - Support for Savon 0.9.1 and later which is now a dependency.
+  - Upgraded to httpi/0.9.2, httpclient/2.1.6.
+  - use_ruby_names now defaults to true.
+
+0.2.0:
+  - Now using httpi instead of net/http.
+
+0.1.0:
+  - Full soap4r code generation for client libraries.
+  - Experimental savon code generation for client libraries (in development).
+  - Full ClientLogin authentication support.
+  - Minimal documentation generation support.
+  - The very beginnings of a testing framework.
