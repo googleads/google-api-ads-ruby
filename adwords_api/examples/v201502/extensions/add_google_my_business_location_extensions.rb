@@ -81,7 +81,7 @@ def add_gmb_location_extensions(gmb_email_address, gmb_access_token,
     :matching_function => {
       :operator => 'IDENTITY',
       :lhsOperand => {
-        :xsi_type => 'FunctionArgumentOperand',
+        :xsi_type => 'ConstantOperand',
         :type => 'BOOLEAN',
         :boolean_value => true
       }
@@ -132,7 +132,7 @@ def add_gmb_location_extensions(gmb_email_address, gmb_access_token,
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201409
+  API_VERSION = :v201502
   PLACEHOLDER_TYPE_LOCATION = 7
   MAX_CUSTOMER_FEED_ADD_ATTEMPTS = 10
 

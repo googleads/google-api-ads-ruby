@@ -84,25 +84,43 @@ def estimate_keyword_traffic()
       keyword = keyword_requests[index][:keyword]
 
       # Find the mean of the min and max values.
-      mean_avg_cpc = (estimate[:min][:average_cpc][:micro_amount] +
-                      estimate[:max][:average_cpc][:micro_amount]) / 2
-      mean_avg_position = (estimate[:min][:average_position] +
-                           estimate[:max][:average_position]) / 2
-      mean_clicks = (estimate[:min][:clicks_per_day] +
-                     estimate[:max][:clicks_per_day]) / 2
-      mean_total_cost = (estimate[:min][:total_cost][:micro_amount] +
-                         estimate[:max][:total_cost][:micro_amount]) / 2
+      mean_avg_cpc = calculate_mean(
+          estimate[:min][:average_cpc][:micro_amount],
+          estimate[:max][:average_cpc][:micro_amount]
+      )
+      mean_avg_position = calculate_mean(
+          estimate[:min][:average_position],
+          estimate[:max][:average_position])
+      )
+      mean_clicks = calculate_mean(
+          estimate[:min][:clicks_per_day],
+          estimate[:max][:clicks_per_day]
+      )
+      mean_total_cost = calculate_mean(
+          estimate[:min][:total_cost][:micro_amount],
+          estimate[:max][:total_cost][:micro_amount]
+      )
 
       puts "Results for the keyword with text '%s' and match type %s:" %
           [keyword[:text], keyword[:match_type]]
-      puts "\tEstimated average CPC: %d" % mean_avg_cpc
-      puts "\tEstimated ad position: %.2f" % mean_avg_position
-      puts "\tEstimated daily clicks: %d" % mean_clicks
-      puts "\tEstimated daily cost: %d" % mean_total_cost
+      puts "\tEstimated average CPC: %s" % format_mean(mean_avg_cpc)
+      puts "\tEstimated ad position: %s" % format_mean(mean_avg_position)
+      puts "\tEstimated daily clicks: %s" % format_mean(mean_clicks)
+      puts "\tEstimated daily cost: %s" % format_mean(mean_total_cost)
     end
   else
     puts 'No traffic estimates were returned.'
   end
+end
+
+def format_mean(mean)
+  return "nil" if mean.nil?
+  return "%.2f" % mean
+end
+
+def calculate_mean(min_money, max_money)
+  return nil if min_money.nil? || max_money.nil?
+  return (min_money.to_f + max_money.to_f) / 2.0
 end
 
 if __FILE__ == $0

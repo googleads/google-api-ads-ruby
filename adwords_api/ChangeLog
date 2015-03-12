@@ -1,3 +1,6 @@
+0.14.2:
+  - Support and examples for v201502.
+
 0.14.1:
   - Corrected the comments and settings regarding target_all in add_ad_groups
     examples.
