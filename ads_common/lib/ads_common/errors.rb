@@ -109,9 +109,8 @@ module AdsCommon
     # Superclass for API exceptions. Each client library should implement its
     # own subclass with extra fields.
     class ApiException < Error
-      attr_reader :message
       def initialize(message = nil)
-        @message = message
+        super(message)
       end
     end
   end
