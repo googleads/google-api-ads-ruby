@@ -1,3 +1,6 @@
+0.15.0:
+  - Removed deprecated API version v201406.
+
 0.14.2:
   - Support and examples for v201502.
 
