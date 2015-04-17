@@ -104,6 +104,23 @@ class TestCredentialHandler < Test::Unit::TestCase
     end
   end
 
+  def test_validate_headers_for_server_no_client_customer_id()
+    credentials1 = {
+      :developer_token => 'AbC'
+    }
+    assert_raise(AdwordsApi::Errors::BadCredentialsError) do
+      @handler.validate_headers_for_server(credentials1)
+    end
+
+    credentials2 = {
+      :client_customer_id => nil,
+      :developer_token => 'AbC'
+    }
+    assert_raise(AdwordsApi::Errors::BadCredentialsError) do
+      @handler.validate_headers_for_server(credentials2)
+    end
+  end
+
   def test_validate_headers_for_server_no_developer_token()
     credentials1 = {:client_customer_id => '123-456-7890'}
     assert_raise(AdwordsApi::Errors::BadCredentialsError) do

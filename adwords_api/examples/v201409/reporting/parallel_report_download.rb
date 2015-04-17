@@ -47,7 +47,7 @@ def parallel_report_download()
   selector = {:fields => ['CustomerId']}
 
   # Run the request at the MCC level.
-  graph = adwords.use_mcc() {managed_customer_srv.get(selector)}
+  graph = managed_customer_srv.get(selector)
 
   # Using queue to balance load between threads.
   queue = Queue.new()

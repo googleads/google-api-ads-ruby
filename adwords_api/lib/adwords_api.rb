@@ -72,35 +72,6 @@ module AdwordsApi
                                   default_ns, version)
     end
 
-    # Helper method to provide a simple way of doing an MCC-level operation
-    # without the need to change credentials. Executes a block of code as an
-    # MCC-level operation and/or returns the current status of the property.
-    #
-    # Args:
-    # - accepts a block, which it will execute as an MCC-level operation
-    #
-    # Returns:
-    # - block execution result, if block given
-    # - boolean indicating whether MCC-level operations are currently
-    #   enabled or disabled, if no block provided
-    #
-    def use_mcc(&block)
-      return (block_given?) ?
-        run_with_temporary_flag(:@use_mcc, true, block) :
-        @credential_handler.use_mcc
-    end
-
-    # Helper method to provide a simple way of doing an MCC-level operation
-    # without the need to change credentials. Sets the value of the property
-    # that controls whether MCC-level operations are enabled or disabled.
-    #
-    # Args:
-    # - value: the new value for the property (boolean)
-    #
-    def use_mcc=(value)
-      @credential_handler.use_mcc = value
-    end
-
     # Helper method to provide a simple way of doing a validate-only operation
     # without the need to change credentials. Executes a block of code as an
     # validate-only operation and/or returns the current status of the property.

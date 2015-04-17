@@ -45,8 +45,8 @@ def get_account_hierarchy()
     :fields => ['CustomerId',  'Name']
   }
 
-  # Run the request at the MCC level.
-  graph = adwords.use_mcc() {managed_customer_srv.get(selector)}
+  # Run the request. Make sure the configured clientCustomerId is an MCC.
+  graph = managed_customer_srv.get(selector)
 
   if graph and graph[:entries]
     puts 'Accounts under this hierarchy: %d' % graph[:total_num_entries]

@@ -57,15 +57,6 @@ class TestAdwordsApi < Test::Unit::TestCase
     end
   end
 
-  def test_use_mcc()
-    adwords_api = AdwordsApi::Api.new({})
-    adwords_api.use_mcc = false
-    assert(!adwords_api.use_mcc)
-    adwords_api.use_mcc do
-      assert(adwords_api.use_mcc)
-    end
-  end
-
   def test_validate_only()
     adwords_api = AdwordsApi::Api.new({})
     adwords_api.validate_only = false

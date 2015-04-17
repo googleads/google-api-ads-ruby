@@ -24,8 +24,6 @@ require 'adwords_api/api_config'
 
 module AdwordsApi
   class CredentialHandler < AdsCommon::CredentialHandler
-    # Whether we're making MCC-level requests.
-    attr_accessor :use_mcc
     # Whether we're making validate-only requests.
     attr_accessor :validate_only
     # Whether we're making partial failure requests.
@@ -33,7 +31,6 @@ module AdwordsApi
 
     def initialize(config)
       super(config)
-      @use_mcc = false
       @validate_only = false
       @partial_failure = false
     end
@@ -48,9 +45,7 @@ module AdwordsApi
         'userAgent' => generate_user_agent(),
         'developerToken' => result[:developer_token]
       }
-      if !@use_mcc and result[:client_customer_id]
-        extra_headers['clientCustomerId'] = result[:client_customer_id]
-      end
+      extra_headers['clientCustomerId'] = result[:client_customer_id]
       extra_headers['validateOnly'] = 'true' if @validate_only
       extra_headers['partialFailure'] = 'true' if @partial_failure
       result[:extra_headers] = extra_headers
@@ -75,9 +70,13 @@ module AdwordsApi
     #
     def validate_headers_for_server(credentials)
       client_customer_id = credentials[:client_customer_id]
-      if client_customer_id and
-          !(client_customer_id.is_a?(Integer) or
-            (client_customer_id =~ /^\d+(-\d+-\d+)?$/))
+      unless client_customer_id
+        raise AdwordsApi::Errors::BadCredentialsError,
+            'Missing client customer ID for the request.'
+      end
+
+      if !(client_customer_id.is_a?(Integer) or
+          (client_customer_id =~ /^\d+(-\d+-\d+)?$/))
         raise AdwordsApi::Errors::BadCredentialsError,
             'Invalid client customer ID: %s' % client_customer_id.to_s
       end
