@@ -46,7 +46,7 @@ def add_site_links(campaign_id)
     :name => 'Feed For Site Links',
     :attributes => [
       {:type => 'STRING', :name => 'Link Text'},
-      {:type => 'URL', :name => 'Link URL'},
+      {:type => 'URL_LIST', :name => 'Final URLs'},
       {:type => 'STRING', :name => 'Line 1 Description'},
       {:type => 'STRING', :name => 'Line 2 Description'}
     ]
@@ -59,7 +59,7 @@ def add_site_links(campaign_id)
     feed = response[:value].first
     # Attribute of type STRING.
     link_text_feed_attribute_id = feed[:attributes][0][:id]
-    # Attribute of type URL.
+    # Attribute of type URL_LIST.
     final_url_feed_attribute_id = feed[:attributes][1][:id]
     # Attribute of type STRING.
     line_1_feed_attribute_id = feed[:attributes][2][:id]
@@ -67,7 +67,7 @@ def add_site_links(campaign_id)
     line_2_feed_attribute_id = feed[:attributes][3][:id]
     puts "Feed with name '%s' and ID %d was added with" %
         [feed[:name], feed[:id]]
-    puts "\tText attribute ID %d and Final URL attribute ID %d " +
+    puts "\tText attribute ID %d and Final URLs attribute ID %d " +
         "and Line 1 attribute ID %d and Line 2 attribute ID %d." % [
           link_text_feed_attribute_id,
           final_url_feed_attribute_id,
@@ -88,37 +88,37 @@ def add_site_links(campaign_id)
   items_data = [
     {
       :text => 'Home',
-      :url => 'http://www.example.com',
+      :final_urls => ['http://www.example.com'],
       :line_1 => 'Home line 1',
       :line_2 => 'Home line 2'
     },
     {
       :text => 'Stores',
-      :url => 'http://www.example.com/stores',
+      :final_urls => ['http://www.example.com/stores'],
       :line_1 => 'Stores line 1',
       :line_2 => 'Stores line 2'
      },
     {
       :text => 'On Sale',
-      :url => 'http://www.example.com/sale',
+      :final_urls => ['http://www.example.com/sale'],
       :line_1 => 'On Sale line 1',
       :line_2 => 'On Sale line 2'
     },
     {
       :text => 'Support',
-      :url => 'http://www.example.com/support',
+      :final_urls => ['http://www.example.com/support'],
       :line_1 => 'Support line 1',
       :line_2 => 'Support line 2'
     },
     {
       :text => 'Products',
-      :url => 'http://www.example.com/products',
+      :final_urls => ['http://www.example.com/products'],
       :line_1 => 'Products line 1',
       :line_2 => 'Products line 2'
     },
     {
       :text => 'About',
-      :url => 'http://www.example.com/about',
+      :final_urls => ['http://www.example.com/about'],
       :line_1 => 'About line 1',
       :line_2 => 'About line 2'
     }
@@ -134,7 +134,7 @@ def add_site_links(campaign_id)
         },
         {
           :feed_attribute_id => sitelinks_data[:final_url_feed_id],
-          :string_value => item[:url]
+          :string_values => item[:final_urls]
         },
         {
           :feed_attribute_id => sitelinks_data[:line_1_feed_id],
@@ -174,7 +174,7 @@ def add_site_links(campaign_id)
       },
       {
         :feed_attribute_id => sitelinks_data[:final_url_feed_id],
-        :field_id => PLACEHOLDER_FIELD_SITELINK_FINAL_URL
+        :field_id => PLACEHOLDER_FIELD_SITELINK_FINAL_URLS
       },
       {
         :feed_attribute_id => sitelinks_data[:line_1_feed_id],
@@ -271,7 +271,7 @@ if __FILE__ == $0
   #     https://developers.google.com/adwords/api/docs/appendix/placeholders
   PLACEHOLDER_SITELINKS = 1
   PLACEHOLDER_FIELD_SITELINK_LINK_TEXT = 1
-  PLACEHOLDER_FIELD_SITELINK_FINAL_URL = 5
+  PLACEHOLDER_FIELD_SITELINK_FINAL_URLS = 5
   PLACEHOLDER_FIELD_SITELINK_LINE_1_TEXT = 3
   PLACEHOLDER_FIELD_SITELINK_LINE_2_TEXT = 4
 

@@ -287,7 +287,7 @@ end
 
 
 if __FILE__ == $0
-  API_VERSION = :v201406
+  API_VERSION = :v201502
 
   begin
     options = {}

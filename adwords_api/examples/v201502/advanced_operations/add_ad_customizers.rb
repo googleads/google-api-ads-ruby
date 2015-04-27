@@ -3,7 +3,7 @@
 #
 # Author:: api.mcloonan@gmail.com (Michael Cloonan)
 #
-# Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2015, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -18,16 +18,16 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example adds an ad customizer feed and associates it with the customer.
-# Then it adds an ad that uses the feed to populate dynamic data.
+# This example adds an ad customizer feed using Extension Services. Then it adds
+# an ad that uses the feed to populate dynamic data.
 #
-# Tags: CustomerFeedService.mutate, FeedItemService.mutate
-# Tags: FeedMappingService.mutate, FeedService.mutate
+# Tags: AdCustomizerFeedService.mutate, FeedItemService.mutate
 # Tags: AdGroupAdService.mutate
 
 require 'adwords_api'
+require 'date'
 
-def add_ad_customizer(ad_group_ids)
+def add_ad_customizers(feed_name, ad_group_ids)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -36,95 +36,26 @@ def add_ad_customizer(ad_group_ids)
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  feed_srv = adwords.service(:FeedService, API_VERSION)
   feed_item_srv = adwords.service(:FeedItemService, API_VERSION)
-  feed_mapping_srv = adwords.service(:FeedMappingService, API_VERSION)
-  customer_feed_srv = adwords.service(:CustomerFeedService, API_VERSION)
   ad_group_ad_srv = adwords.service(:AdGroupAdService, API_VERSION)
 
-  # First, create a customizer feed. One feed per account can be used for
-  # all ads.
-  customizer_feed = {
-    :name => 'CustomizerFeed',
-    :attributes => [
-      {:type => 'STRING', :name => 'Name'},
-      {:type => 'STRING', :name => 'Price'},
-      {:type => 'DATE_TIME', :name => 'Date'}
-    ]
-  }
-
-  response = feed_srv.mutate([
-      {:operator => 'ADD', :operand => customizer_feed}
-  ])
-
-  feed_data = {}
-  if response and response[:value]
-    feed = response[:value].first
-    feed_data = {
-        :feed_id => feed[:id],
-        :name_id => feed[:attributes][0][:id],
-        :price_id => feed[:attributes][1][:id],
-        :date_id => feed[:attributes][2][:id]
-    }
-    puts "Feed with name '%s' and ID %d was added with:" %
-        [feed[:name], feed[:id]]
-    puts ("\tName attribute ID %d and price attribute ID %d " +
-        "and date attribute ID %d.") % [
-          feed_data[:name_id],
-          feed_data[:price_id],
-          feed_data[:date_id]
-        ]
-  else
-    raise new StandardError, 'No feeds were added.'
-  end
-
-  # Creating feed mapping to map the fields with customizer IDs.
-  feed_mapping = {
-    :placeholder_type => PLACEHOLDER_AD_CUSTOMIZER,
-    :feed_id => feed_data[:feed_id],
-    :attribute_field_mappings => [
-      {
-        :feed_attribute_id => feed_data[:name_id],
-        :field_id => PLACEHOLDER_FIELD_STRING
-      },
-      {
-        :feed_attribute_id => feed_data[:price_id],
-        :field_id => PLACEHOLDER_FIELD_PRICE
-      },
-      {
-        :feed_attribute_id => feed_data[:date_id],
-        :field_id => PLACEHOLDER_FIELD_DATE
-      }
-    ]
-  }
-
-  response = feed_mapping_srv.mutate([
-      {:operator => 'ADD', :operand => feed_mapping}
-  ])
-  if response and response[:value]
-    feed_mapping = response[:value].first
-    puts ('Feed mapping with ID %d and placeholder type %d was saved for feed' +
-        ' with ID %d.') % [
-          feed_mapping[:feed_mapping_id],
-          feed_mapping[:placeholder_type],
-          feed_mapping[:feed_id]
-        ]
-  else
-    raise new StandardError, 'No feed mappings were added.'
-  end
+  # Create a customizer feed. One feed per account can be used for all ads.
+  feed_data = create_customizer_feed(adwords, feed_name)
 
   # Now adding feed items -- the values we'd like to place.
+  now_date = Date.today()
+
   items_data = [
     {
       :name => 'Mars',
       :price => '$1234.56',
-      :date => '20140601 000000',
+      :date => now_date.strftime('%Y%m01 000000'),
       :ad_group_id => ad_group_ids[0]
     },
     {
       :name => 'Venus',
       :price => '$1450.00',
-      :date => '20140615 120000',
+      :date => now_date.strftime('%Y%m15 000000'),
       :ad_group_id => ad_group_ids[1]
      }
   ]
@@ -165,38 +96,6 @@ def add_ad_customizer(ad_group_ids)
     raise new StandardError, 'No feed items were added.'
   end
 
-  # Finally, creating a customer (account-level) feed with a matching function
-  # that determines when to use this feed. For this case we use the "IDENTITY"
-  # matching function that is always 'true' just to associate this feed with
-  # the customer. The targeting is done within the feed items using the
-  # :campaign_targeting, :ad_group_targeting, or :keyword_targeting attributes.
-  matching_function = {
-    :operator => 'IDENTITY',
-    :lhs_operand => [
-      {
-        :xsi_type => 'ConstantOperand',
-        :type => 'BOOLEAN',
-        :boolean_value => true
-      }
-    ]
-  }
-
-  customer_feed = {
-    :feed_id => feed_data[:feed_id],
-    :matching_function => matching_function,
-    :placeholder_types => [PLACEHOLDER_AD_CUSTOMIZER]
-  }
-
-  response = customer_feed_srv.mutate([
-      {:operator => 'ADD', :operand => customer_feed}
-  ])
-  if response and response[:value]
-    feed = response[:value].first
-    puts 'Customer feed with ID %d was added.' % [feed[:feed_id]]
-  else
-    raise new StandardError, 'No customer feeds were added.'
-  end
-
   # All set! We can now create ads with customizations.
   text_ad = {
     :xsi_type => 'TextAd',
@@ -214,7 +113,7 @@ def add_ad_customizer(ad_group_ids)
       :operator => 'ADD',
       :operand => {
         :ad_group_id => ad_group_id,
-        :ad => text_ad
+        :ad => text_ad.dup()
       }
     }
   end
@@ -231,25 +130,38 @@ def add_ad_customizer(ad_group_ids)
   end
 end
 
-if __FILE__ == $0
-  API_VERSION = :v201409
+def create_customizer_feed(adwords, feed_name)
+  ad_customizer_srv = adwords.service(:AdCustomizerFeedService, API_VERSION)
+  feed = {
+    :feed_name => feed_name,
+    :feed_attributes => [
+      {:name => 'Name', :type => 'STRING'},
+      {:name => 'Price', :type => 'PRICE'},
+      {:name => 'Date', :type => 'DATE_TIME'}
+    ]
+  }
+  operation = {:operand => feed, :operator => 'ADD'}
+  added_feed = ad_customizer_srv.mutate([operation])[:value].first()
+  puts "Created ad customizer feed with ID = %d and name = '%s'." %
+      [added_feed[:feed_id], added_feed[:feed_name]]
+  return {
+    :feed_id => added_feed[:feed_id],
+    :name_id => added_feed[:feed_attributes][0][:id],
+    :price_id => added_feed[:feed_attributes][1][:id],
+    :date_id => added_feed[:feed_attributes][2][:id]
+  }
+end
 
-  # See the Placeholder reference page for a list of all the placeholder types
-  # and fields:
-  #     https://developers.google.com/adwords/api/docs/appendix/placeholders
-  PLACEHOLDER_AD_CUSTOMIZER = 10
-  PLACEHOLDER_FIELD_INTEGER = 1
-  PLACEHOLDER_FIELD_FLOAT = 2
-  PLACEHOLDER_FIELD_PRICE = 3
-  PLACEHOLDER_FIELD_DATE = 4
-  PLACEHOLDER_FIELD_STRING = 5
+if __FILE__ == $0
+  API_VERSION = :v201502
 
   begin
+    feed_name = 'INSERT_FEED_NAME_HERE'.to_s
     ad_group_ids = [
         'INSERT_AD_GROUP_ID_HERE'.to_i,
         'INSERT_AD_GROUP_ID_HERE'.to_i
     ]
-    add_ad_customizer(ad_group_ids)
+    add_ad_customizers(feed_name, ad_group_ids)
 
   # Authorization error.
   rescue AdsCommon::Errors::OAuth2VerificationRequired => e

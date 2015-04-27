@@ -46,7 +46,7 @@ def add_site_links(campaign_id)
     :name => 'Feed For Site Links',
     :attributes => [
       {:type => 'STRING', :name => 'Link Text'},
-      {:type => 'URL', :name => 'Link URL'},
+      {:type => 'URL_LIST', :name => 'Final URLs'},
       {:type => 'STRING', :name => 'Line 1 Description'},
       {:type => 'STRING', :name => 'Line 2 Description'}
     ]
@@ -59,7 +59,7 @@ def add_site_links(campaign_id)
     feed = response[:value].first
     # Attribute of type STRING.
     link_text_feed_attribute_id = feed[:attributes][0][:id]
-    # Attribute of type URL.
+    # Attribute of type URL_LIST.
     final_url_feed_attribute_id = feed[:attributes][1][:id]
     # Attribute of type STRING.
     line_1_feed_attribute_id = feed[:attributes][2][:id]
@@ -67,7 +67,7 @@ def add_site_links(campaign_id)
     line_2_feed_attribute_id = feed[:attributes][3][:id]
     puts "Feed with name '%s' and ID %d was added with" %
         [feed[:name], feed[:id]]
-    puts "\tText attribute ID %d and Final URL attribute ID %d " +
+    puts "\tText attribute ID %d and Final URLs attribute ID %d " +
         "and Line 1 attribute ID %d and Line 2 attribute ID %d." % [
           link_text_feed_attribute_id,
           final_url_feed_attribute_id,
@@ -88,37 +88,37 @@ def add_site_links(campaign_id)
   items_data = [
     {
       :text => 'Home',
-      :url => 'http://www.example.com',
+      :final_urls => ['http://www.example.com'],
       :line_1 => 'Home line 1',
       :line_2 => 'Home line 2'
     },
     {
       :text => 'Stores',
-      :url => 'http://www.example.com/stores',
+      :final_urls => ['http://www.example.com/stores'],
       :line_1 => 'Stores line 1',
       :line_2 => 'Stores line 2'
      },
     {
       :text => 'On Sale',
-      :url => 'http://www.example.com/sale',
+      :final_urls => ['http://www.example.com/sale'],
       :line_1 => 'On Sale line 1',
       :line_2 => 'On Sale line 2'
     },
     {
       :text => 'Support',
-      :url => 'http://www.example.com/support',
+      :final_urls => ['http://www.example.com/support'],
       :line_1 => 'Support line 1',
       :line_2 => 'Support line 2'
     },
     {
       :text => 'Products',
-      :url => 'http://www.example.com/products',
+      :final_urls => ['http://www.example.com/products'],
       :line_1 => 'Products line 1',
       :line_2 => 'Products line 2'
     },
     {
       :text => 'About',
-      :url => 'http://www.example.com/about',
+      :final_urls => ['http://www.example.com/about'],
       :line_1 => 'About line 1',
       :line_2 => 'About line 2'
     }
@@ -134,7 +134,7 @@ def add_site_links(campaign_id)
         },
         {
           :feed_attribute_id => sitelinks_data[:final_url_feed_id],
-          :string_value => item[:url]
+          :string_values => item[:final_urls]
         },
         {
           :feed_attribute_id => sitelinks_data[:line_1_feed_id],
@@ -174,7 +174,7 @@ def add_site_links(campaign_id)
       },
       {
         :feed_attribute_id => sitelinks_data[:final_url_feed_id],
-        :field_id => PLACEHOLDER_FIELD_SITELINK_FINAL_URL
+        :field_id => PLACEHOLDER_FIELD_SITELINK_FINAL_URLS
       },
       {
         :feed_attribute_id => sitelinks_data[:line_1_feed_id],
@@ -202,50 +202,20 @@ def add_site_links(campaign_id)
     raise new StandardError, 'No feed mappings were added.'
   end
 
+  # Construct a matching function that associates the sitelink feeditems to the
+  # campaign, and set the device preference to Mobile. See the matching function
+  # guide at:
+  # https://developers.google.com/adwords/api/docs/guides/feed-matching-functions
+  # for more details.
+  matching_function_string =
+      "AND(IN(FEED_ITEM_ID, {%s}), EQUALS(CONTEXT.DEVICE, 'Mobile'))" %
+      sitelinks_data[:feed_item_ids].join(',')
+
   # Create site links campaign feed.
-  operands = sitelinks_data[:feed_item_ids].map do |feed_item_id|
-    {
-      :xsi_type => 'ConstantOperand',
-      :type => 'LONG',
-      :long_value => feed_item_id
-    }
-  end
-
-  feed_item_function = {
-    :operator => 'IN',
-    :lhs_operand => [
-      {:xsi_type => 'RequestContextOperand', :context_type => 'FEED_ITEM_ID'}
-    ],
-    :rhs_operand => operands
-  }
-
-  # Optional: to target to a platform, define a function and 'AND' it with the
-  #           feed item ID link:
-  platform_function = {
-    :operator => 'EQUALS',
-    :lhs_operand => [
-      {:xsi_type => 'RequestContextOperand', :context_type => 'DEVICE_PLATFORM'}
-    ],
-    :rhs_operand => [
-      {
-        :xsi_type => 'ConstantOperand',
-        :type => 'STRING',
-        :string_value => 'Mobile'
-      }
-    ]
-  }
-  combined_function = {
-    :operator => 'AND',
-    :lhs_operand => [
-      {:xsi_type => 'FunctionOperand', :value => feed_item_function},
-      {:xsi_type => 'FunctionOperand', :value => platform_function}
-    ]
-  }
-
   campaign_feed = {
     :feed_id => sitelinks_data[:feed_id],
     :campaign_id => campaign_id,
-    :matching_function => combined_function,
+    :matching_function => {:function_string => matching_function_string},
     # Specifying placeholder types on the CampaignFeed allows the same feed
     # to be used for different placeholders in different Campaigns.
     :placeholder_types => [PLACEHOLDER_SITELINKS]
@@ -271,7 +241,7 @@ if __FILE__ == $0
   #     https://developers.google.com/adwords/api/docs/appendix/placeholders
   PLACEHOLDER_SITELINKS = 1
   PLACEHOLDER_FIELD_SITELINK_LINK_TEXT = 1
-  PLACEHOLDER_FIELD_SITELINK_FINAL_URL = 5
+  PLACEHOLDER_FIELD_SITELINK_FINAL_URLS = 5
   PLACEHOLDER_FIELD_SITELINK_LINE_1_TEXT = 3
   PLACEHOLDER_FIELD_SITELINK_LINE_2_TEXT = 4
 

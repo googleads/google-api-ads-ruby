@@ -3,7 +3,7 @@
 #
 # Author:: api.mcloonan@gmail.com (Michael Cloonan)
 #
-# Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2015, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@
 
 require 'adwords_api'
 
-def add_ad_customizer(ad_group_ids)
+def add_ad_customizers(ad_group_ids)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -214,7 +214,7 @@ def add_ad_customizer(ad_group_ids)
       :operator => 'ADD',
       :operand => {
         :ad_group_id => ad_group_id,
-        :ad => text_ad
+        :ad => text_ad.dup()
       }
     }
   end
@@ -232,7 +232,7 @@ def add_ad_customizer(ad_group_ids)
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201502
+  API_VERSION = :v201409
 
   # See the Placeholder reference page for a list of all the placeholder types
   # and fields:
@@ -249,7 +249,7 @@ if __FILE__ == $0
         'INSERT_AD_GROUP_ID_HERE'.to_i,
         'INSERT_AD_GROUP_ID_HERE'.to_i
     ]
-    add_ad_customizer(ad_group_ids)
+    add_ad_customizers(ad_group_ids)
 
   # Authorization error.
   rescue AdsCommon::Errors::OAuth2VerificationRequired => e

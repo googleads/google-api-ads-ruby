@@ -64,13 +64,15 @@ def migrate_to_extension_settings()
         next
       end
 
+      platform_restrictions = get_platform_restrictions(campaign_feed)
+
       # Delete the campaign feed that associates the sitelinks from the
       # feed to the campaign.
       delete_campaign_feed(adwords, campaign_feed)
 
       # Create extension settings instead of sitelinks.
       create_extension_setting(adwords, feed_items, campaign_feed,
-          feed_item_ids)
+          feed_item_ids, platform_restrictions)
 
       # Mark the sitelinks from the feed for deletion.
       feed_item_ids
@@ -201,6 +203,26 @@ def get_feed_items(adwords, feed)
   return feed_items
 end
 
+def get_platform_restrictions(campaign_feed)
+  platform_restrictions = nil
+
+  if campaign_feed[:matching_function][:operator] == 'AND'
+    campaign_feed[:matching_function][:lhs_operand].each do |argument|
+      # Check if matchingFunction is EQUALS(CONTEXT.DEVICE, 'Mobile')
+      if argument[:value][:operator] == 'EQUALS'
+        request_context_operand = argument[:value][:lhs_operand].first()
+        if request_context_operand &&
+            request_context_operand == 'DEVICE_PLATFORM'
+          platform_restrictions =
+              argument[:value][:rhs_operand].first().upcase()
+          break
+        end
+      end
+    end
+  end
+  return platform_restrictions
+end
+
 def delete_old_feed_items(adwords, feed_item_ids, feed)
   return if feed_item_ids.empty?
 
@@ -219,7 +241,8 @@ def delete_old_feed_items(adwords, feed_item_ids, feed)
   feed_item_srv.mutate(operations)
 end
 
-def create_extension_setting(adwords, feed_items, campaign_feed, feed_item_ids)
+def create_extension_setting(
+    adwords, feed_items, campaign_feed, feed_item_ids, platform_restrictions)
   campaign_extension_setting_srv = adwords.service(
       :CampaignExtensionSettingService, API_VERSION)
 
@@ -253,6 +276,10 @@ def create_extension_setting(adwords, feed_items, campaign_feed, feed_item_ids)
   extension_setting = {
     :extensions => extension_feed_items
   }
+
+  unless platform_restrictions.nil?
+    extension_setting[:platform_restrictions] = platform_restrictions
+  end
 
   campaign_extension_setting = {
     :campaign_id => campaign_feed[:campaign_id],

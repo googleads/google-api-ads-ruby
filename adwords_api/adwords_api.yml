@@ -41,4 +41,9 @@
   # the URL, e.g.: http://user:password@proxy_hostname:8080
   # :proxy: INSERT_PROXY_HERE
 :library:
+  # Optional: set the log level.
   :log_level: INFO
+  # Optional: uncomment to skip header / summary rows in reporting.
+  #:skip_report_header: true
+  #:skip_report_summary: true
+  #:skip_column_header: true
