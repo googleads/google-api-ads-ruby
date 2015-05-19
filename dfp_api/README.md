@@ -105,9 +105,7 @@ or add it to the bash configuration file:
 
 ## Using OAuth2.0
 
-It is recommended to use OAuth2.0 authentication method instead of ClientLogin
-(explicit email/password combination). OAuth2.0 support is almost transparent to
-the library user. In order to use OAuth you just need to:
+In order to use OAuth you just need to:
 
   - set authentication method to 'OAuth2' in the configuration;
 

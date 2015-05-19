@@ -35,9 +35,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201502
+    DEFAULT_VERSION = :v201505
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201502
+    LATEST_VERSION = :v201505
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -151,6 +151,29 @@ module DfpApi
                    :ReconciliationReportService, :ReportService,
                    :SharedAdUnitService, :SuggestedAdUnitService,
                    :TeamService, :UserService,
+                   :UserTeamAssociationService, :WorkflowRequestService],
+      :v201505 => [:ActivityGroupService, :ActivityService,
+                   :AdExclusionRuleService, :AdRuleService,
+                   :AudienceSegmentService, :BaseRateService, :CompanyService,
+                   :ContactService, :ContentBundleService,
+                   :ContentMetadataKeyHierarchyService, :ContentService,
+                   :CreativeService, :CreativeSetService,
+                   :CreativeTemplateService, :CreativeWrapperService,
+                   :CustomFieldService, :CustomTargetingService,
+                   :ExchangeRateService, :ForecastService, :InventoryService,
+                   :LabelService, :LineItemCreativeAssociationService,
+                   :LineItemService, :LineItemTemplateService,
+                   :NetworkService, :LiveStreamEventService,
+                   :OrderService, :PackageService, :ProductPackageService,
+                   :ProductPackageItemService, :PlacementService,
+                   :PremiumRateService, :ProductService,
+                   :ProductTemplateService, :ProposalLineItemService,
+                   :ProposalService, :PublisherQueryLanguageService,
+                   :RateCardService, :ReconciliationOrderReportService,
+                   :ReconciliationReportRowService,
+                   :ReconciliationReportService, :ReportService,
+                   :SharedAdUnitService, :SuggestedAdUnitService,
+                   :TeamService, :UserService,
                    :UserTeamAssociationService, :WorkflowRequestService]
     }
 
@@ -163,8 +186,8 @@ module DfpApi
         :v201405 => 'https://ads.google.com/apis/ads/publisher/',
         :v201408 => 'https://ads.google.com/apis/ads/publisher/',
         :v201411 => 'https://ads.google.com/apis/ads/publisher/',
-        :v201502 => 'https://ads.google.com/apis/ads/publisher/'
-
+        :v201502 => 'https://ads.google.com/apis/ads/publisher/',
+        :v201505 => 'https://ads.google.com/apis/ads/publisher/'
       }
     }
 

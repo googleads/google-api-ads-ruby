@@ -29,7 +29,7 @@ require 'dfp_api/v201405/line_item_service_registry'
 class TestDfpIssue16 < Test::Unit::TestCase
 
   def setup()
-    @registry = DfpApi::v201405::LineItemService::LineItemServiceRegistry
+    @registry = DfpApi::V201405::LineItemService::LineItemServiceRegistry
   end
 
   def test_issue_16()

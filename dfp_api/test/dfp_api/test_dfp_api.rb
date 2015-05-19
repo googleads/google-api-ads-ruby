@@ -21,6 +21,7 @@
 # Tests the general API features.
 
 require 'test/unit'
+require 'tempfile'
 
 require 'dfp_api'
 
@@ -32,12 +33,25 @@ class LoggerStub
   end
 end
 
+module DfpApi
+  module ApiConfig
+    def self.default_config_filename=(value)
+      @default_config_filename = value
+    end
+
+    def self.default_config_filename
+      @default_config_filename
+    end
+  end
+end
+
 class TestDfpApi < Test::Unit::TestCase
   DEFAULT_CONFIG_HASH = {
       :authentication => {
-          :method => 'ClientLogin',
-          :email => 'root@example.com',
-          :password => 'mySecretPassword',
+          :method => 'OAuth2',
+          :oauth2_client_id => 'myClientId',
+          :oauth2_client_secret => 'This is MY secret!',
+          :oauth2_token => 'my access token',
           :application_name => 'ruby_test_suit',
           :network_code => 1234567
       }
@@ -52,9 +66,19 @@ class TestDfpApi < Test::Unit::TestCase
 
   # Test initializer with no arguments.
   def test_initialize_nil()
+    # Set up a tempfile in ENV['HOME']
+    temp_file = Tempfile.new(['dfp_api', 'yml'], ENV['HOME'])
+    real_file = File.open(DEFAULT_CONFIG_FILENAME, 'r')
+    temp_file.write(real_file.read)
+    temp_file.flush()
+    real_file.close()
+    DfpApi::ApiConfig.default_config_filename = File.basename(temp_file.path)
+
     assert_nothing_raised do
       dfp_api = DfpApi::Api.new
     end
+
+    temp_file.unlink()
   end
 
   # Test initializer with hash argument.
@@ -82,39 +106,15 @@ class TestDfpApi < Test::Unit::TestCase
 
   # Utility method to check the actual data.
   def check_config_data(config)
-    assert_equal(:CLIENTLOGIN, config.read('authentication.method'))
+    assert_equal(:OAUTH2, config.read('authentication.method'))
     assert_equal('ruby_test_suit',
         config.read('authentication.application_name'))
-    assert_equal('mySecretPassword', config.read('authentication.password'))
-    assert_equal('root@example.com', config.read('authentication.email'))
+    assert_equal('myClientId', config.read('authentication.oauth2_client_id'))
+    assert_equal('This is MY secret!', config.read(
+        'authentication.oauth2_client_secret'))
+    assert_equal('my access token', config.read('authentication.oauth2_token'))
     assert_equal(1234567, config.read('authentication.network_code'))
     assert_nil(config.read('item.not.exists'))
     assert_equal(:default, config.read('item.not.exists', :default))
-  end
-
-  # Warning is logged with ClientLogin is used.
-  def test_clientlogin_deprecation_warning()
-    dfp_api = DfpApi::Api.new({
-      :library => {:logger => @logger},
-      :authentication => {:method => 'ClientLogin'},
-      :service => {:environment => 'PRODUCTION'}
-    })
-    service = dfp_api.service(:UserService, 'v201311')
-    assert_not_nil(@logger.last_warning)
-  end
-
-  # Exception is thrown when ClientLogin is used in non-supported versions.
-  def test_clientlogin_removal_v201311()
-    dfp_api = DfpApi::Api.new({
-      :library => {:logger => @logger},
-      :authentication => {:method => 'ClientLogin'},
-      :service => {:environment => 'PRODUCTION'}
-    })
-    assert_nothing_raised do
-      service = dfp_api.service(:UserService, 'v201311')
-    end
-    assert_raise(AdsCommon::Errors::AuthError) do
-      dfp_api.service(:UserService, 'v201403')
-    end
   end
 end

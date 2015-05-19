@@ -1,3 +1,7 @@
+0.9.5:
+  - Added support for v201505.
+  - Removed examples for v201405.
+
 0.9.4:
   - Added support for v201502.
   - Removed support for v201311, v201308, and v201306.
