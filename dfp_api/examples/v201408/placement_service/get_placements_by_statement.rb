@@ -41,7 +41,7 @@ def get_placements_by_statement()
 
   # Create a statement to only select active placements.
   statement = {
-      :query => 'WHERE status = :status LIMIT 500',
+      :query => 'WHERE status = :status ORDER BY id ASC LIMIT 500',
       :values => [
           {:key => 'status',
            :value => {:value => 'ACTIVE', :xsi_type => 'TextValue'}}

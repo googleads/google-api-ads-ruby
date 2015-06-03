@@ -45,7 +45,8 @@ def get_all_user_team_associations()
 
   begin
     # Create statement for one page with current offset.
-    statement = {:query => "LIMIT %d OFFSET %d" % [PAGE_SIZE, offset]}
+    statement = {:query => "ORDER BY id ASC LIMIT %d OFFSET %d" %
+        [PAGE_SIZE, offset]}
 
     # Get the user team associations by statement.
     page = uta_service.get_user_team_associations_by_statement(statement)

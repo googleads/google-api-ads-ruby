@@ -75,10 +75,6 @@ def add_campaigns()
           :xsi_type => 'GeoTargetTypeSetting',
           :positive_geo_target_type => 'DONT_CARE',
           :negative_geo_target_type => 'DONT_CARE'
-        },
-        {
-          :xsi_type => 'KeywordMatchSetting',
-          :opt_in => true
         }
       ],
       :frequency_cap => {
@@ -94,12 +90,6 @@ def add_campaigns()
         :bidding_strategy_type => 'MANUAL_CPC'
       },
       :budget => {:budget_id => budget_id},
-      :settings => [
-        {
-          :xsi_type => 'KeywordMatchSetting',
-          :opt_in => true
-        }
-      ],
       :advertising_channel_type => 'DISPLAY'
     }
   ]

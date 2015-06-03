@@ -44,7 +44,8 @@ def get_all_companies()
 
   begin
     # Create a statement to get one page with current offset.
-    statement = {:query => "LIMIT %d OFFSET %d" % [PAGE_SIZE, offset]}
+    statement = {:query => "ORDER BY id ASC LIMIT %d OFFSET %d" %
+        [PAGE_SIZE, offset]}
 
     # Get companies by statement.
     page = company_service.get_companies_by_statement(statement)

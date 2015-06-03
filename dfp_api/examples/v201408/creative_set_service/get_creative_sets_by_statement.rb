@@ -43,7 +43,7 @@ def get_creative_sets_by_statement()
   # Create a statement to get all creative sets that have the given master
   # creative.
   statement = {
-      :query => 'WHERE masterCreativeId = :master_creative_id',
+      :query => 'WHERE masterCreativeId = :master_creative_id ORDER BY id ASC',
       :values => [
           {:key => 'master_creative_id',
            :value => {:value => master_creative_id, :xsi_type => 'NumberValue'}}

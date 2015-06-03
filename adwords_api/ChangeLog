@@ -1,3 +1,21 @@
+0.14.2:
+  - Support and examples for v201502.
+
+0.14.1:
+  - Corrected the comments and settings regarding target_all in add_ad_groups
+    examples.
+  - Added new example for migrating to Upgraded URLs.
+  - Updated examples to reference final URLs.
+
+0.14.0:
+  - Removed deprecated API version v201402.
+  - Removed support for returnMoneyInMicros header.
+  - Reworked Places examples to reference Google My Business.
+
+0.13.4:
+  - Added rule-based remarketing example.
+  - Require google-ads-common 0.9.6 or later from now on.
+
 0.13.3:
   - Fixing file permissions on gem.
 

@@ -44,7 +44,8 @@ def get_all_contacts()
 
   begin
     # Create statement for one page with current offset.
-    statement = {:query => "LIMIT %d OFFSET %d" % [PAGE_SIZE, offset]}
+    statement = {:query => "ORDER BY id ASC LIMIT %d OFFSET %d" %
+        [PAGE_SIZE, offset]}
 
     # Get contacts by statement.
     page = contact_service.get_contacts_by_statement(statement)

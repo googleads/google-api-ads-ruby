@@ -46,7 +46,7 @@ def get_all_activities()
   begin
     # Update statement for one page with current offset.
     statement = {
-        :query => 'ORDER BY id LIMIT %d OFFSET %d' % [PAGE_SIZE, offset]
+        :query => 'ORDER BY id ASC LIMIT %d OFFSET %d' % [PAGE_SIZE, offset]
     }
 
     # Get activities by statement.

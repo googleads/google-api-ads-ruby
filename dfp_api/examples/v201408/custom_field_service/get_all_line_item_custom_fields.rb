@@ -40,7 +40,7 @@ def get_all_line_item_custom_fields()
 
   # Create statement to select only custom fields that apply to line items.
   statement = {
-     :query => 'WHERE entityType = :entity_type',
+     :query => 'WHERE entityType = :entity_type ORDER BY id ASC',
      :values => [
          {:key => 'entity_type',
           :value => {:value => 'LINE_ITEM', :xsi_type => 'TextValue'}}

@@ -36,7 +36,7 @@ end
 
 class TestAdwordsApi < Test::Unit::TestCase
 
-  API_VERSION = :v201406
+  API_VERSION = :v201409
 
   def setup()
     @logger = LoggerStub.new
@@ -99,16 +99,5 @@ class TestAdwordsApi < Test::Unit::TestCase
       :service => {:environment => 'PRODUCTION'}
     })
     service = adwords_api.service(:ManagedCustomerService, API_VERSION)
-  end
-
-  def test_clientlogin_error()
-    adwords_api = AdwordsApi::Api.new({
-      :library => {:logger => @logger},
-      :authentication => {:method => 'ClientLogin'},
-      :service => {:environment => 'PRODUCTION'}
-    })
-    assert_raise AdsCommon::Errors::AuthError do
-      service = adwords_api.service(:CampaignService, API_VERSION)
-    end
   end
 end

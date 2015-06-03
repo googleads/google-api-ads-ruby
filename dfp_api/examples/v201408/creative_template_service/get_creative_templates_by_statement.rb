@@ -38,7 +38,7 @@ def get_creative_templates_by_statement()
   creative_template_service = dfp.service(:CreativeTemplateService, API_VERSION)
 
   # Create a statement to only select image creative_templates.
-  statement = {:query => 'LIMIT 500'}
+  statement = {:query => 'ORDER BY id ASC LIMIT 500'}
 
   # Get creative templates by statement.
   page =

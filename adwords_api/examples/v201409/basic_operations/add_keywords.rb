@@ -51,7 +51,9 @@ def add_keywords(ad_group_id)
      },
      # Optional fields:
      :user_status => 'PAUSED',
-     :destination_url => 'http://example.com/mars'
+     :final_urls => {
+       :urls => ['http://example.com/mars']
+     }
     },
     {:xsi_type => 'BiddableAdGroupCriterion',
      :ad_group_id => ad_group_id,

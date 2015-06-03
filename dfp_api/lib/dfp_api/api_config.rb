@@ -35,9 +35,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201408
+    DEFAULT_VERSION = :v201502
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201408
+    LATEST_VERSION = :v201502
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -45,63 +45,6 @@ module DfpApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v201306 => [:CompanyService, :CreativeService, :ForecastService,
-                   :InventoryService, :LineItemCreativeAssociationService,
-                   :LineItemService, :NetworkService, :OrderService,
-                   :PlacementService, :ReportService, :UserService,
-                   :CustomTargetingService, :PublisherQueryLanguageService,
-                   :LabelService, :ContentService, :SuggestedAdUnitService,
-                   :CreativeTemplateService, :TeamService,
-                   :AudienceSegmentService, :CustomFieldService,
-                   :UserTeamAssociationService, :CreativeSetService,
-                   :CreativeWrapperService, :ActivityGroupService,
-                   :ActivityService, :AdRuleService, :ContactService,
-                   :ContentBundleService, :BaseRateService, :ProductService,
-                   :ProductTemplateService, :ProposalService,
-                   :ProposalLineItemService, :RateCardService,
-                   :RateCardCustomizationService,
-                   :ReconciliationOrderReportService,
-                   :ReconciliationReportService,
-                   :ReconciliationReportRowService,
-                   :WorkflowActionService, :LineItemTemplateService],
-      :v201308 => [:CompanyService, :CreativeService, :ForecastService,
-                   :InventoryService, :LineItemCreativeAssociationService,
-                   :LineItemService, :NetworkService, :OrderService,
-                   :PlacementService, :ReportService, :UserService,
-                   :CustomTargetingService, :PublisherQueryLanguageService,
-                   :LabelService, :ContentService, :SuggestedAdUnitService,
-                   :CreativeTemplateService, :TeamService,
-                   :AudienceSegmentService, :CustomFieldService,
-                   :UserTeamAssociationService, :CreativeSetService,
-                   :CreativeWrapperService, :ActivityGroupService,
-                   :ActivityService, :AdRuleService, :ContactService,
-                   :ContentBundleService, :BaseRateService, :ProductService,
-                   :ProductTemplateService, :ProposalService,
-                   :ProposalLineItemService, :RateCardService,
-                   :RateCardCustomizationService,
-                   :ReconciliationOrderReportService,
-                   :ReconciliationReportService,
-                   :ReconciliationReportRowService,
-                   :WorkflowActionService, :LineItemTemplateService],
-      :v201311 => [:ActivityGroupService, :ActivityService, :AdRuleService,
-                   :AudienceSegmentService, :BaseRateService, :CompanyService,
-                   :ContactService, :ContentBundleService,
-                   :ContentMetadataKeyHierarchyService, :ContentService,
-                   :CreativeService, :CreativeSetService,
-                   :CreativeTemplateService, :CreativeWrapperService,
-                   :CustomFieldService, :CustomTargetingService,
-                   :ExchangeRateService, :ForecastService, :InventoryService,
-                   :LabelService, :LineItemCreativeAssociationService,
-                   :LineItemService, :LineItemTemplateService, :NetworkService,
-                   :OrderService, :PlacementService, :ProductService,
-                   :ProductTemplateService, :ProposalLineItemService,
-                   :ProposalService, :PublisherQueryLanguageService,
-                   :RateCardCustomizationService, :RateCardService,
-                   :ReconciliationOrderReportService,
-                   :ReconciliationReportRowService,
-                   :ReconciliationReportService, :ReportService,
-                   :SuggestedAdUnitService, :TeamService, :UserService,
-                   :UserTeamAssociationService, :WorkflowRequestService],
       :v201403 => [:ActivityGroupService, :ActivityService, :AdRuleService,
                    :AudienceSegmentService, :BaseRateService, :CompanyService,
                    :ContactService, :ContentBundleService,
@@ -163,6 +106,51 @@ module DfpApi
                    :ReconciliationReportRowService,
                    :ReconciliationReportService, :ReportService,
                    :SuggestedAdUnitService, :TeamService, :UserService,
+                   :UserTeamAssociationService, :WorkflowRequestService],
+      :v201411 => [:ActivityGroupService, :ActivityService,
+                   :AdExclusionRuleService, :AdRuleService,
+                   :AudienceSegmentService, :BaseRateService, :CompanyService,
+                   :ContactService, :ContentBundleService,
+                   :ContentMetadataKeyHierarchyService, :ContentService,
+                   :CreativeService, :CreativeSetService,
+                   :CreativeTemplateService, :CreativeWrapperService,
+                   :CustomFieldService, :CustomTargetingService,
+                   :ExchangeRateService, :ForecastService, :InventoryService,
+                   :LabelService, :LineItemCreativeAssociationService,
+                   :LineItemService, :LineItemTemplateService,
+                   :NetworkService, :LiveStreamEventService,
+                   :OrderService, :PlacementService,
+                   :PremiumRateService, :ProductService,
+                   :ProductTemplateService, :ProposalLineItemService,
+                   :ProposalService, :PublisherQueryLanguageService,
+                   :RateCardService, :ReconciliationOrderReportService,
+                   :ReconciliationReportRowService,
+                   :ReconciliationReportService, :ReportService,
+                   :SharedAdUnitService, :SuggestedAdUnitService,
+                   :TeamService, :UserService,
+                   :UserTeamAssociationService, :WorkflowRequestService],
+      :v201502 => [:ActivityGroupService, :ActivityService,
+                   :AdExclusionRuleService, :AdRuleService,
+                   :AudienceSegmentService, :BaseRateService, :CompanyService,
+                   :ContactService, :ContentBundleService,
+                   :ContentMetadataKeyHierarchyService, :ContentService,
+                   :CreativeService, :CreativeSetService,
+                   :CreativeTemplateService, :CreativeWrapperService,
+                   :CustomFieldService, :CustomTargetingService,
+                   :ExchangeRateService, :ForecastService, :InventoryService,
+                   :LabelService, :LineItemCreativeAssociationService,
+                   :LineItemService, :LineItemTemplateService,
+                   :NetworkService, :LiveStreamEventService,
+                   :OrderService, :PackageService, :ProductPackageService,
+                   :ProductPackageItemService, :PlacementService,
+                   :PremiumRateService, :ProductService,
+                   :ProductTemplateService, :ProposalLineItemService,
+                   :ProposalService, :PublisherQueryLanguageService,
+                   :RateCardService, :ReconciliationOrderReportService,
+                   :ReconciliationReportRowService,
+                   :ReconciliationReportService, :ReportService,
+                   :SharedAdUnitService, :SuggestedAdUnitService,
+                   :TeamService, :UserService,
                    :UserTeamAssociationService, :WorkflowRequestService]
     }
 
@@ -171,19 +159,13 @@ module DfpApi
       :PRODUCTION => {
         :oauth_scope => 'https://www.googleapis.com/auth/dfp',
         :header_ns => 'https://www.google.com/apis/ads/publisher/',
-        :v201306 => 'https://ads.google.com/apis/ads/publisher/',
-        :v201308 => 'https://ads.google.com/apis/ads/publisher/',
-        :v201311 => 'https://ads.google.com/apis/ads/publisher/',
         :v201403 => 'https://ads.google.com/apis/ads/publisher/',
         :v201405 => 'https://ads.google.com/apis/ads/publisher/',
-        :v201408 => 'https://ads.google.com/apis/ads/publisher/'
-      }
-    }
+        :v201408 => 'https://ads.google.com/apis/ads/publisher/',
+        :v201411 => 'https://ads.google.com/apis/ads/publisher/',
+        :v201502 => 'https://ads.google.com/apis/ads/publisher/'
 
-    # Auth constants for ClientLogin method.
-    @@client_login_config = {
-      :AUTH_SERVER => 'https://www.google.com',
-      :LOGIN_SERVICE_NAME => 'gam'
+      }
     }
 
     public
@@ -216,10 +198,6 @@ module DfpApi
 
     def self.subdir_config
       nil
-    end
-
-    def self.client_login_config(key)
-      return @@client_login_config[key]
     end
 
     def self.default_config_filename

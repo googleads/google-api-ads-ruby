@@ -38,8 +38,8 @@ def get_teams_by_statement()
   # Get the TeamService.
   team_service = dfp.service(:TeamService, API_VERSION)
 
-  # Create a statement to order teams by name.
-  statement = {:query => "ORDER BY name LIMIT 500"}
+  # Create a statement to order teams by id.
+  statement = {:query => "ORDER BY id ASC LIMIT 500"}
 
   # Get teams by statement.
   page = team_service.get_teams_by_statement(statement)

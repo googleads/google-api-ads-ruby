@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.nicholaschen@gmail.com (Nicholas Chen)
+# Author:: Nicholas Chen
 #
 # Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
 #

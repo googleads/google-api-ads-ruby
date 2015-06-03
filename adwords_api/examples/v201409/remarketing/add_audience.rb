@@ -48,7 +48,6 @@ def add_audience()
       :xsi_type => 'BasicUserList',
       :name => name,
       :description => 'A list of mars cruise customers in the last year',
-      :status => 'OPEN',
       :membership_life_span => 365,
       :conversion_types => [{:name => name}],
       # Optional field.

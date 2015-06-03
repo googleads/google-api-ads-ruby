@@ -45,7 +45,7 @@ def get_orders_by_statement()
 
   # Create a statement to only select orders for a given advertiser.
   statement = {
-      :query => 'WHERE advertiserId = :advertiser_id LIMIT 500',
+      :query => 'WHERE advertiserId = :advertiser_id ORDER BY id ASC LIMIT 500',
       :values => [
           {:key => 'advertiser_id',
            :value => {:value => advertiser_id, :xsi_type => 'NumberValue'}}

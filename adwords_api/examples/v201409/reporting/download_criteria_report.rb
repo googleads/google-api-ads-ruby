@@ -38,7 +38,7 @@ def download_criteria_report(file_name)
   report_definition = {
     :selector => {
       :fields => ['CampaignId', 'AdGroupId', 'Id', 'Criteria', 'CriteriaType',
-          'Impressions', 'Clicks', 'Cost'],
+          'FinalUrls', 'Impressions', 'Clicks', 'Cost'],
       # Predicates are optional.
       :predicates => {
         :field => 'Status',

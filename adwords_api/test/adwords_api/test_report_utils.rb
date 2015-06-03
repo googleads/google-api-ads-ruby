@@ -204,31 +204,4 @@ class TestReportUtils < Test::Unit::TestCase
 
     assert_match /#{expected_msg}/, e.to_s
   end
-
-  def test_return_money_in_micros_removal()
-    node = {
-      :report_name => 'report_name',
-      :report_type => 'CAMPAIGN_PERFORMANCE_REPORT',
-      :selector => {
-        :date_range => {:max=> '20120405', :min => '20120405'},
-        :predicates => {:operator => 'IN', :field => 'S', :values => ['A']},
-        :fields => ['CampaignId']
-      },
-      :download_format => 'CSV',
-      :date_range_type => 'LAST_7_DAYS'
-    }
-    assert_nothing_raised do
-      @report_utils.check_report_definition_hash(node)
-    end
-
-    node[:return_money_in_micros] = true
-    assert_raise AdwordsApi::Errors::InvalidReportDefinitionError do
-      @report_utils.check_report_definition_hash(node)
-    end
-
-    node[:return_money_in_micros] = false
-    assert_raise AdwordsApi::Errors::InvalidReportDefinitionError do
-      @report_utils.check_report_definition_hash(node)
-    end
-  end
 end

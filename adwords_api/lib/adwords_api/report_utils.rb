@@ -249,15 +249,6 @@ module AdwordsApi
         raise AdwordsApi::Errors::InvalidReportDefinitionError,
             'At least one field needs to be requested'
       end
-      # returnMoneyInMicros option is no longer supported as of v201406
-      if report_definition.include?(:return_money_in_micros) &&
-          @version != :v201402
-        raise AdwordsApi::Errors::InvalidReportDefinitionError,
-            'returnMoneyInMicros was sunset as of v201406. ' +
-            'See the migration guide for info:' +
-            'https://developers.google.com/adwords/api/docs/' +
-            'guides/migration/v201406'
-      end
     end
 
     # Adds fields order hint to generator based on specification.

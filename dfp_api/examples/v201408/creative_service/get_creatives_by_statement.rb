@@ -41,7 +41,7 @@ def get_creatives_by_statement()
 
   # Create a statement to only select image creatives.
   statement = {
-     :query => 'WHERE creativeType = :creative_type LIMIT 500',
+     :query => 'WHERE creativeType = :creative_type ORDER BY id ASC LIMIT 500',
      :values => [
          {:key => 'creative_type',
           :value => {:value => 'ImageCreative', :xsi_type => 'TextValue'}}

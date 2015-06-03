@@ -24,7 +24,6 @@ require 'logger'
 require 'ads_common/config'
 require 'ads_common/errors'
 require 'ads_common/utils'
-require 'ads_common/auth/client_login_handler'
 require 'ads_common/auth/oauth2_handler'
 require 'ads_common/auth/oauth2_jwt_handler'
 
@@ -192,16 +191,6 @@ module AdsCommon
     def create_auth_handler()
       auth_method = @config.read('authentication.method', :OAUTH2)
       return case auth_method
-        when :CLIENTLOGIN
-          @logger.warn("ClientLogin authentication method is now deprecated" +
-              " and will be removed in the future. Consider migration to" +
-              " OAuth2. See 'https://developers.google.com/accounts/docs/" +
-              "AuthForInstalledApps' for more details.")
-          AdsCommon::Auth::ClientLoginHandler.new(
-              @config,
-              api_config.client_login_config(:AUTH_SERVER),
-              api_config.client_login_config(:LOGIN_SERVICE_NAME)
-          )
         when :OAUTH
           raise AdsCommon::Errors::Error,
               'OAuth authorization method is deprecated, use OAuth2 instead.'

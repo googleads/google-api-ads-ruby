@@ -203,7 +203,7 @@ def add_ad_customizer(ad_group_ids)
     :headline => 'Luxury Cruise to {=CustomizerFeed.Name}',
     :description1 => 'Only {=CustomizerFeed.Price}',
     :description2 => 'Offer ends in {=countdown(CustomizerFeed.Date)}!',
-    :url => 'http://www.example.com',
+    :final_urls => ['http://www.example.com'],
     :display_url => 'www.example.com'
   }
 

@@ -1,4 +1,11 @@
+0.9.8:
+  - Updating signet dependency to 0.6.0.
+
+0.9.7:
+  - Removed deprecated ClientLogin support.
+
 0.9.6:
+  - Support for 'choice' types in API requests.
 
 0.9.5:
   - Updated user-agent generation for default string.

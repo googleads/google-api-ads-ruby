@@ -85,13 +85,7 @@ def use_shared_bidding_strategy()
         :target_google_search => true,
         :target_search_network => true,
         :target_content_network => true
-      },
-      :settings => [
-        {
-          :xsi_type => 'KeywordMatchSetting',
-          :opt_in => true
-        }
-      ]
+      }
     },
     {
       :name => "Interplanetary Cruise banner #%d" % (Time.new.to_f * 1000).to_i,
@@ -101,12 +95,6 @@ def use_shared_bidding_strategy()
       },
       :budget => {:budget_id => budget_id},
       :advertising_channel_type => 'DISPLAY',
-      :settings => [
-        {
-          :xsi_type => 'KeywordMatchSetting',
-          :opt_in => true
-        }
-      ],
       :network_setting => {
         :target_google_search => false,
         :target_search_network => false,
