@@ -60,7 +60,19 @@ class TestReportUtils < Test::Unit::TestCase
 
   # Initialize tests.
   def setup()
-    @api = AdwordsApi::Api.new
+    @api = AdwordsApi::Api.new({
+      :authentication => {
+          :method => 'OAuth2',
+          :oauth2_client_id => 'client_id123',
+          :oauth2_client_secret => 'client_secret123',
+          :developer_token => 'developer_token123',
+          :client_customer_id => '012-345-6789',
+          :user_agent => 'TestReportUtils'
+      },
+      :service => {
+        :environment => 'PRODUCTION'
+      }
+    })
     @report_utils = @api.report_utils(API_VERSION)
   end
 

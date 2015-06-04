@@ -90,7 +90,7 @@ def estimate_keyword_traffic()
       )
       mean_avg_position = calculate_mean(
           estimate[:min][:average_position],
-          estimate[:max][:average_position])
+          estimate[:max][:average_position]
       )
       mean_clicks = calculate_mean(
           estimate[:min][:clicks_per_day],
@@ -107,6 +107,7 @@ def estimate_keyword_traffic()
       puts "\tEstimated ad position: %s" % format_mean(mean_avg_position)
       puts "\tEstimated daily clicks: %s" % format_mean(mean_clicks)
       puts "\tEstimated daily cost: %s" % format_mean(mean_total_cost)
+    end
   else
     puts 'No traffic estimates were returned.'
   end

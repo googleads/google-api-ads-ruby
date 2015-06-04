@@ -84,13 +84,9 @@ def estimate_keyword_traffic()
       keyword = keyword_requests[index][:keyword]
 
       # Find the mean of the min and max values.
-      mean_avg_cpc = calculate_mean(
-          estimate[:min][:average_cpc][:micro_amount],
-          estimate[:max][:average_cpc][:micro_amount]
-      )
       mean_avg_position = calculate_mean(
           estimate[:min][:average_position],
-          estimate[:max][:average_position])
+          estimate[:max][:average_position]
       )
       mean_clicks = calculate_mean(
           estimate[:min][:clicks_per_day],
@@ -103,7 +99,6 @@ def estimate_keyword_traffic()
 
       puts "Results for the keyword with text '%s' and match type %s:" %
           [keyword[:text], keyword[:match_type]]
-      puts "\tEstimated average CPC: %s" % format_mean(mean_avg_cpc)
       puts "\tEstimated ad position: %s" % format_mean(mean_avg_position)
       puts "\tEstimated daily clicks: %s" % format_mean(mean_clicks)
       puts "\tEstimated daily cost: %s" % format_mean(mean_total_cost)

@@ -99,9 +99,9 @@ def add_ad_customizers(feed_name, ad_group_ids)
   # All set! We can now create ads with customizations.
   text_ad = {
     :xsi_type => 'TextAd',
-    :headline => 'Luxury Cruise to {=CustomizerFeed.Name}',
-    :description1 => 'Only {=CustomizerFeed.Price}',
-    :description2 => 'Offer ends in {=countdown(CustomizerFeed.Date)}!',
+    :headline => 'Luxury Cruise to {=%s.Name}' % feed_name,
+    :description1 => 'Only {=%s.Price}' % feed_name,
+    :description2 => 'Offer ends in {=countdown(%s.Date)}!' % feed_name,
     :final_urls => ['http://www.example.com'],
     :display_url => 'www.example.com'
   }

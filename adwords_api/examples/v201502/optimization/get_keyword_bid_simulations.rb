@@ -39,7 +39,7 @@ def get_criterion_bid_landscapes(ad_group_id, keyword_id)
   # Get keyword bid landscape.
   selector = {
     :fields => ['AdGroupId', 'CriterionId', 'StartDate', 'EndDate', 'Bid',
-        'LocalClicks', 'LocalCost', 'MarginalCpc', 'LocalImpressions'],
+        'LocalClicks', 'LocalCost', 'LocalImpressions'],
     :predicates => [
       {:field => 'AdGroupId', :operator => 'IN', :values => [ad_group_id]},
       {:field => 'CriterionId', :operator => 'IN', :values => [keyword_id]},

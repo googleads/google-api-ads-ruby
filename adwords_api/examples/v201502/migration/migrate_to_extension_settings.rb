@@ -57,10 +57,10 @@ def migrate_to_extension_settings()
       feed_item_ids = get_feed_item_ids_for_campaign(campaign_feed)
 
       if feed_item_ids.empty?
-        puts("Migration skipped for campaign feed with campaign ID %d " +
+        puts(("Migration skipped for campaign feed with campaign ID %d " +
             "and feed ID %d because no mapped feed item IDs were found in " +
             "the campaign feed's matching function.") %
-            [campaign_feed[:campaign_id], campaign_feed[:feed_id]]
+            [campaign_feed[:campaign_id], campaign_feed[:feed_id]])
         next
       end
 
@@ -76,7 +76,7 @@ def migrate_to_extension_settings()
 
       # Mark the sitelinks from the feed for deletion.
       feed_item_ids
-    end.flatten.to_set
+    end.flatten.to_set.reject {|id| id.nil?}
 
     # Delete all the sitelinks from the feed.
     delete_old_feed_items(adwords, all_feed_items_to_delete, feed)

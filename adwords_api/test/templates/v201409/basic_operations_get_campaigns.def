@@ -2,18 +2,21 @@ def setup_mocks()
   $api_config = {
     :service => {:environment => 'PRODUCTION'},
     :authentication => {
-      :method => 'ClientLogin',
-      :email => 'noreply@google.com',
-      :password => 'noreply_password',
+      :method => 'OAuth2',
+      :oauth2_client_id => 'client_id123',
+      :oauth2_client_secret => 'client_secret123',
       :developer_token => 'dev_token123',
       :client_customer_id => '123-456-7890',
-      :user_agent => 'ruby-tests'
+      :user_agent => 'ruby-tests',
+      :oauth2_token => {
+        :refresh_token => 'refresh_token123'
+      }
     }
   }
 
-  stub_request(:post, "https://www.google.com/accounts/ClientLogin").
-    with(:body => {"Email"=>"noreply@google.com", "Passwd"=>"noreply_password", "accountType"=>"GOOGLE", "service"=>"adwords"}).
-    to_return(:status => 200, :body => "SID=abcSIDbcd\nLSID=abcLSIDbcd\nAuth=abcAuthbcd\n", :headers => {})
+  stub_request(:post, "https://accounts.google.com/o/oauth2/auth").
+    with(:body => {"client_id"=>"client_id123", "client_secret"=>"client_secret123", "refresh_token"=>"refresh_token123", "grant_type"=>"refresh_token"}).
+    to_return(:status => 200, :body => '{"access_token":"access_token123","token_type":"Bearer","expires_in":"3600"}\n', :headers => {})
 
   stub_request(:post, "https://adwords.google.com/api/adwords/cm/v201409/CampaignService").
     with(
@@ -25,7 +28,6 @@ def setup_mocks()
               {"userAgent"=>"ruby-tests (AwApi-Ruby/0.15.0, Common-Ruby/0.9.8, Savon/1.2.0, ruby/1.9.3, HTTPI/1.1.1, net_http)",
                "developerToken"=>"dev_token123",
                "clientCustomerId"=>"123-456-7890",
-               "authToken"=>"abcAuthbcd",
                "xmlns"=>"https://adwords.google.com/api/adwords/cm/v201409"}},
            "env:Body"=>
             {"get"=>

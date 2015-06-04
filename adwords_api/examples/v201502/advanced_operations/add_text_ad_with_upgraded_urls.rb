@@ -94,9 +94,10 @@ def add_text_ad_with_upgraded_urls(ad_group_id)
       puts "\tFinal URLs: %s" % [text_ad[:final_urls].join(', ')]
       puts "\tFinal Mobile URLs: %s" % [text_ad[:final_mobile_urls].join(', ')]
       puts "\tTracking URL template: %s" % [text_ad[:tracking_url_template]]
-      custom_parameters = text_ad[:custom_parameters].map do |custom_parameter|
-        "%s=%s" % [custom_parameter[:key], custom_parameter[:value]]
-      end
+      custom_parameters =
+          text_ad[:url_custom_parameters][:parameters].map do |custom_parameter|
+            "%s=%s" % [custom_parameter[:key], custom_parameter[:value]]
+          end
       puts "\tCustom parameters: %s" % [custom_parameters.join(', ')]
     end
   else

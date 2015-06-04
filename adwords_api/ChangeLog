@@ -1,3 +1,6 @@
+0.15.1:
+  - Allowing requests without CID specified for use with CustomerService.
+
 0.15.0:
   - Removed deprecated API version v201406.
   - Updated Feeds migration example to account for platform restrictions.

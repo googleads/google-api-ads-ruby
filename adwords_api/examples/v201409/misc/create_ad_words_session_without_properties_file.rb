@@ -34,7 +34,7 @@ def create_ad_words_session(client_id, client_secret, refresh_token,
       :oauth2_client_id => client_id,
       :oauth2_client_secret => client_secret,
       :developer_token => developer_token,
-      :client_customer_id => client_customer_id
+      :client_customer_id => client_customer_id,
       :user_agent => user_agent,
       :oauth2_token => {
         :refresh_token => refresh_token

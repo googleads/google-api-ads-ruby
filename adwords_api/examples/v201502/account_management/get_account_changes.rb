@@ -82,10 +82,10 @@ def get_account_changes()
             campaign[:added_ad_extensions].pretty_inspect.chomp
         puts "\tAdded campaign criteria: '%s'" %
             campaign[:added_campaign_criteria].pretty_inspect.chomp
-        puts "\tDeleted ad extensions: '%s'" %
-            campaign[:deleted_ad_extensions].pretty_inspect.chomp
-        puts "\tDeleted campaign criteria: '%s'" %
-            campaign[:deleted_campaign_criteria].pretty_inspect.chomp
+        puts "\tRemoved ad extensions: '%s'" %
+            campaign[:removed_ad_extensions].pretty_inspect.chomp
+        puts "\tRemoved campaign criteria: '%s'" %
+            campaign[:removed_campaign_criteria].pretty_inspect.chomp
 
         if campaign[:changed_ad_groups]
           campaign[:changed_ad_groups].each do |ad_group|
@@ -98,8 +98,8 @@ def get_account_changes()
                   ad_group[:changed_ads].pretty_inspect.chomp
               puts "\t\tCriteria changed: '%s'" %
                   ad_group[:changed_criteria].pretty_inspect.chomp
-              puts "\t\tCriteria deleted: '%s'" %
-                  ad_group[:deleted_criteria].pretty_inspect.chomp
+              puts "\t\tCriteria removed: '%s'" %
+                  ad_group[:removed_criteria].pretty_inspect.chomp
             end
           end
         end

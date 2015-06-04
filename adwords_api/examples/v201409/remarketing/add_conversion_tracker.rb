@@ -57,7 +57,7 @@ def add_conversion_tracker()
       :conversion_page_language => 'en',
       :background_color => '#0000FF',
       :default_revenue_value => 23.41,
-      :always_use_default_revenue_value = true
+      :always_use_default_revenue_value => true
     }
   }
 
