@@ -37,6 +37,7 @@ module AdwordsApi
         exception_data = (exception_type.nil?) ? exception_fault :
             extractor.extract_exception_data(exception_fault, exception_type)
         exception_data.each { |key, value| set_field(key, value) }
+        super(exception_data[:message])
       end
 
       private
