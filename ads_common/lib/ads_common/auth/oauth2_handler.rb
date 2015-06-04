@@ -19,6 +19,8 @@
 #
 # This module manages OAuth2.0 authentication.
 
+require 'time'
+
 require 'faraday'
 require 'signet/oauth_2/client'
 
@@ -88,6 +90,9 @@ module AdsCommon
       def refresh_token!()
         return nil if @token.nil? or @token[:refresh_token].nil?
         begin
+          if @client.issued_at.is_a?(String)
+            @client.issued_at = Time.parse(@client.issued_at)
+          end
           @client.refresh!
         rescue Signet::AuthorizationError => e
           raise AdsCommon::Errors::AuthError.new("OAuth2 token refresh failed",

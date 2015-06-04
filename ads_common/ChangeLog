@@ -1,3 +1,6 @@
+0.9.9:
+  - Fixing minor issue where signet doesn't handle String-based times.
+
 0.9.8:
   - Updating signet dependency to 0.6.0.
 
