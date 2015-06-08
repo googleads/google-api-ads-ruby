@@ -77,10 +77,10 @@ def add_gmb_location_extensions(gmb_email_address, gmb_access_token,
   # LOCATION placeholder type.
   customer_feed = {
     :feed_id => added_feed[:id],
-    :placeholder_types => PLACEHOLDER_TYPE_LOCATION,
+    :placeholder_types => [PLACEHOLDER_TYPE_LOCATION],
     :matching_function => {
       :operator => 'IDENTITY',
-      :lhsOperand => {
+      :lhs_operand => {
         :xsi_type => 'ConstantOperand',
         :type => 'BOOLEAN',
         :boolean_value => true
