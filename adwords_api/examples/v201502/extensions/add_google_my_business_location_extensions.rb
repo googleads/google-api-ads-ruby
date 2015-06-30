@@ -146,7 +146,7 @@ if __FILE__ == $0
     # the generated access token
     gmb_access_token = 'INSERT_GMB_OAUTH_ACCESS_TOKEN_HERE'
 
-    # If the gmb_email_address above is for a GMB manager instead of 
+    # If the gmb_email_address above is for a GMB manager instead of
     # the GMB account owner, then set business_account_identifier to the
     # +Page ID of a location for which the manager has access. See the
     # location extensions guide at

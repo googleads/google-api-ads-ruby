@@ -128,6 +128,15 @@ module AdwordsApi
       @config.set('library.skip_column_header', value)
     end
 
+    # Helper method to include zero impressions when downloading reports.
+    #
+    # Args:
+    # - value: whether to include zero impressions (boolean)
+    #
+    def include_zero_impressions=(value)
+      @config.set('library.include_zero_impressions_header', value)
+    end
+
     # Helper method to provide a simple way of performing requests with support
     # for partial failures. Executes a block of code with partial failures
     # enabled and/or returns the current status of the property.

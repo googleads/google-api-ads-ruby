@@ -36,7 +36,7 @@ end
 
 class TestAdwordsApi < Test::Unit::TestCase
 
-  API_VERSION = :v201409
+  API_VERSION = :v201506
 
   def setup()
     @logger = LoggerStub.new

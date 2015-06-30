@@ -66,6 +66,11 @@ module AdwordsApi
       unless skip_column_header.nil?
         headers['skipColumnHeader'] = skip_column_header
       end
+      include_zero_impressions_header =
+          @config.read('library.include_zero_impressions_header')
+      unless include_zero_impressions_header.nil?
+        headers['includeZeroImpressoins'] = include_zero_impressions_header
+      end
       return headers
     end
   end
