@@ -39,7 +39,7 @@ def get_keywords(ad_group_id)
 
   # Get all keywords for this ad group.
   selector = {
-    :fields => ['Id', 'CriteriaType', 'KeywordText'],
+    :fields => ['Id', 'CriteriaType', 'KeywordMatchType', 'KeywordText'],
     :ordering => [
       {:field => 'Id', :sort_order => 'ASCENDING'}
     ],
@@ -60,10 +60,11 @@ def get_keywords(ad_group_id)
     page = ad_group_criterion_srv.get(selector)
     if page[:entries]
       page[:entries].each do |keyword|
-        puts "Keyword ID %d, type '%s' and text '%s'" %
+        puts "Keyword ID %d, type '%s', text '%s', and match type '%s'" %
             [keyword[:criterion][:id],
              keyword[:criterion][:type],
-             keyword[:criterion][:text]]
+             keyword[:criterion][:text],
+             keyword[:criterion][:match_type]]
       end
       # Increment values to request the next page.
       offset += PAGE_SIZE

@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
+# Author:: api.mcloonan@gmail.com (Michael Cloonan)
 #
-# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -18,54 +18,55 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to retrieve all the disapproved ads in a given
-# ad group with AWQL. To add ads, run add_text_ads.rb.
-#
-# Tags: AdGroupAdService.query
+# This example demonstrates how to make AdWords queries without using the
+# adwords_api.yml file.
 
 require 'adwords_api'
+require 'date'
 
-def get_all_disapproved_ads_with_awql(ad_group_id)
+def use_runtime_config(client_id, client_secret, refresh_token,
+        developer_token, client_customer_id, user_agent)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
-  adwords = AdwordsApi::Api.new
+  adwords = AdwordsApi::Api.new({
+    :authentication => {
+      :method => 'OAuth2',
+      :oauth2_client_id => client_id,
+      :oauth2_client_secret => client_secret,
+      :developer_token => developer_token,
+      :client_customer_id => client_customer_id,
+      :user_agent => user_agent,
+      :oauth2_token => {
+        :refresh_token => refresh_token
+      }
+    },
+    :service => {
+      :environment => 'PRODUCTION'
+    }
+  })
 
   # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
+  # the hash above or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  ad_group_ad_srv = adwords.service(:AdGroupAdService, API_VERSION)
-
-  # Get all the disapproved ads for this campaign.
-  query = ('SELECT Id, AdGroupAdDisapprovalReasons ' +
-      'WHERE AdGroupId = %d AND AdGroupCreativeApprovalStatus = DISAPPROVED ' +
-      'ORDER BY Id') % ad_group_id
-
-  response = ad_group_ad_srv.query(query)
-  if response and response[:entries]
-    puts 'Ad group ID %d has %d disapproved ad(s).' %
-        [ad_group_id, response[:total_num_entries]]
-    response[:entries].each do |ad_group_ad|
-      puts ("\tAd with ID %d and type '%s' was disapproved for the following " +
-          'reasons:') % [ad_group_ad[:ad][:id], ad_group_ad[:ad][:xsi_type]]
-      if ad_group_ad.include?(:disapproval_reasons)
-        ad_group_ad[:disapproval_reasons].each {|reason| puts "\t\t%s" % reason}
-      else
-        puts "\t\tReason not provided."
-      end
-    end
-  else
-    puts 'No disapproved ads found for ad group ID %d.' % ad_group_id
-  end
+  customer_srv = adwords.service(:CustomerService, API_VERSION)
+  customer = customer_srv.get()
+  puts "You are logged in as customer: %d" % customer[:id]
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201409
+  API_VERSION = :v201506
 
   begin
-    # ID of an ad group to get disapproved ads for.
-    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
-    get_all_disapproved_ads_with_awql(ad_group_id)
+    client_id = 'INSERT_CLIENT_ID_HERE'
+    client_secret = 'INSERT_CLIENT_SECRET_HERE'
+    refresh_token = 'INSERT_REFRESH_TOKEN_HERE'
+    developer_token = 'INSERT_DEVELOPER_TOKEN_HERE'
+    client_customer_id = 'INSERT_CLIENT_CUSTOMER_ID_HERE'
+    user_agent = 'INSERT_USER_AGENT_HERE'
+
+    use_runtime_config(client_id, client_secret, refresh_token,
+        developer_token, client_customer_id, user_agent)
 
   # Authorization error.
   rescue AdsCommon::Errors::OAuth2VerificationRequired => e
@@ -77,11 +78,11 @@ if __FILE__ == $0
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e
-    puts 'HTTP Error: %s' % e
+    puts "HTTP Error: %s" % e
 
   # API errors.
   rescue AdwordsApi::Errors::ApiException => e
-    puts 'Message: %s' % e.message
+    puts "Message: %s" % e.message
     puts 'Errors:'
     e.errors.each_with_index do |error, index|
       puts "\tError [%d]:" % (index + 1)

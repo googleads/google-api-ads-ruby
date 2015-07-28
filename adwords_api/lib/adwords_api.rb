@@ -62,7 +62,7 @@ module AdwordsApi
     def soap_header_handler(auth_handler, version, header_ns, default_ns)
       auth_method = @config.read('authentication.method', :OAUTH2)
       handler_class = case auth_method
-        when :OAUTH2, :OAUTH2_JWT
+        when :OAUTH2, :OAUTH2_SERVICE_ACCOUNT
           AdsCommon::SavonHeaders::OAuthHeaderHandler
         else
           raise AdsCommon::Errors::AuthError,

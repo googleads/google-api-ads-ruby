@@ -56,20 +56,20 @@ module AdwordsApi
       }
       skip_report_header = @config.read('library.skip_report_header')
       unless skip_report_header.nil?
-        headers['skipReportHeader'] = skip_report_header
+        headers['skipReportHeader'] = skip_report_header.to_s
       end
       skip_report_summary = @config.read('library.skip_report_summary')
       unless skip_report_summary.nil?
-        headers['skipReportSummary'] = skip_report_summary
+        headers['skipReportSummary'] = skip_report_summary.to_s
       end
       skip_column_header = @config.read('library.skip_column_header')
       unless skip_column_header.nil?
-        headers['skipColumnHeader'] = skip_column_header
+        headers['skipColumnHeader'] = skip_column_header.to_s
       end
       include_zero_impressions_header =
           @config.read('library.include_zero_impressions_header')
       unless include_zero_impressions_header.nil?
-        headers['includeZeroImpressoins'] = include_zero_impressions_header
+        headers['includeZeroImpressoins'] = include_zero_impressions_header.to_s
       end
       return headers
     end

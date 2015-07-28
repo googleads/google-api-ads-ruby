@@ -1,3 +1,10 @@
+0.16.0:
+  - Removed deprecated API version v201409.
+  - Changed OAUTH2 JWT references to OAUTH2 Service Account.
+  - Require google-ads-common 0.10.0 or later from now on.
+  - Allowing report headers to be defined as booleans (this restores previous
+    behavior).
+
 0.15.2:
   - Support and examples for v201502.
   - Added support for including zero impression rows in reports via HTTP header.
