@@ -1,3 +1,6 @@
+0.10.0:
+  - Renamed all references of OAUTH2 JWT to OAUTH2 Service Account.
+
 0.9.9:
   - Fixing minor issue where signet doesn't handle String-based times.
 

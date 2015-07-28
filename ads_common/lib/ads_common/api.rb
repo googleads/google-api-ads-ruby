@@ -25,7 +25,7 @@ require 'ads_common/config'
 require 'ads_common/errors'
 require 'ads_common/utils'
 require 'ads_common/auth/oauth2_handler'
-require 'ads_common/auth/oauth2_jwt_handler'
+require 'ads_common/auth/oauth2_service_account_handler'
 
 module AdsCommon
   class Api
@@ -201,10 +201,10 @@ module AdsCommon
               @config,
               api_config.environment_config(environment, :oauth_scope)
           )
-        when :OAUTH2_JWT
+        when :OAUTH2_SERVICE_ACCOUNT_
           environment = @config.read('service.environment',
               api_config.default_environment())
-          AdsCommon::Auth::OAuth2JwtHandler.new(
+          AdsCommon::Auth::OAuth2ServiceAccountHandler.new(
               @config,
               api_config.environment_config(environment, :oauth_scope)
           )

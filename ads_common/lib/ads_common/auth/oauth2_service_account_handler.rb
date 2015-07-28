@@ -17,7 +17,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This module manages OAuth2.0 JWT authentication.
+# This module manages OAuth2.0 service account authentication.
 
 require 'faraday'
 require 'signet/oauth_2/client'
@@ -29,7 +29,7 @@ module AdsCommon
   module Auth
 
     # Credentials class to handle OAuth2.0 authentication.
-    class OAuth2JwtHandler < AdsCommon::Auth::BaseHandler
+    class OAuth2ServiceAccountHandler < AdsCommon::Auth::BaseHandler
 
       OAUTH2_CONFIG = {
         :token_credential_uri => 'https://accounts.google.com/o/oauth2/token',
@@ -60,7 +60,8 @@ module AdsCommon
         raise error
       end
 
-      # Generates auth string for OAuth2.0 JWT method of authentication.
+      # Generates auth string for OAuth2.0 service account method of
+      # authentication.
       #
       # Args:
       # - credentials: credentials set for authorization
@@ -91,7 +92,8 @@ module AdsCommon
 
       private
 
-      # Auxiliary method to validate the credentials for JWT authentication.
+      # Auxiliary method to validate the credentials for service account
+      # authentication.
       #
       # Args:
       # - credentials: a hash with the credentials for the account being
@@ -121,18 +123,18 @@ module AdsCommon
 
         if credentials[:oauth2_key].nil? && credentials[:oauth2_keyfile].nil?
           raise AdsCommon::Errors::AuthError,
-              'Either key or key file must be provided for OAuth2 JWT.'
+              'Either key or key file must be provided for OAuth2 service account.'
         end
 
         if credentials[:oauth2_key] && credentials[:oauth2_keyfile]
           raise AdsCommon::Errors::AuthError,
-              'Both JWT key and key file provided, only one can be used.'
+              'Both service account key and key file provided, only one can be used.'
         end
 
         if credentials[:oauth2_key] &&
             !credentials[:oauth2_key].kind_of?(OpenSSL::PKey::RSA)
           raise AdsCommon::Errors::AuthError,
-              'OAuth2 JWT key provided must be of type OpenSSL::PKey::RSA.'
+              'OAuth2 service account key provided must be of type OpenSSL::PKey::RSA.'
         end
 
         if credentials[:oauth2_keyfile] &&
@@ -167,7 +169,7 @@ module AdsCommon
 
       # Creates a Signet client based on credentials.
       def create_client(credentials)
-        credentials = load_oauth2_jwt_credentials(credentials)
+        credentials = load_oauth2_service_account_credentials(credentials)
         oauth_options = OAUTH2_CONFIG.merge({
             :issuer => credentials[:oauth2_issuer],
             :signing_key => credentials[:oauth2_key],
@@ -177,8 +179,8 @@ module AdsCommon
         return Signet::OAuth2::Client.new(oauth_options)
       end
 
-      # Loads JWT key if configured with a filename.
-      def load_oauth2_jwt_credentials(credentials)
+      # Loads service account key if configured with a filename.
+      def load_oauth2_service_account_credentials(credentials)
         return credentials unless credentials.include?(:oauth2_keyfile)
         key_file = File.read(credentials[:oauth2_keyfile])
         key_secret = credentials[:oauth2_secret]
