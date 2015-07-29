@@ -198,6 +198,7 @@ module AdwordsApi
       if response.code != 200
         # Check for error in body.
         report_body = response.body
+        check_for_rate_exceeded_error(report_body, response.code)
         check_for_xml_error(report_body, response.code)
         # No XML error found nor raised, falling back to a default message.
         raise AdwordsApi::Errors::ReportError.new(response.code,
@@ -215,6 +216,17 @@ module AdwordsApi
         api_error = error_response[:report_download_error][:api_error]
         raise AdwordsApi::Errors::ReportXmlError.new(response_code,
             api_error[:type], api_error[:trigger], api_error[:field_path])
+      end
+    end
+
+    def check_for_rate_exceeded_error(report_body, response_code)
+      error_response = Nori.parse(report_body)
+      if error_response.include?(:report_download_error) and
+          error_response[:report_download_error].include?(:api_error) and
+          error_response[:report_download_error][:api_error][:type] == 'RateExceededError.RATE_EXCEEDED'
+        rate_error = error_response[:report_download_error][:api_error]
+        raise AdwordsApi::Errors::RateExceededError.new(response_code, rate_error[:type], rate_error[:trigger], rate_error[:field_path],
+            rate_error[:reason], rate_error[:rate_scope], rate_error[:rate_name], rate_error[:retry_after_seconds])
       end
     end
 
