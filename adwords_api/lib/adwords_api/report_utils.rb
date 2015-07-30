@@ -219,10 +219,12 @@ module AdwordsApi
       end
     end
 
+    # Checks for a rate exceeded error in the response body and raises an exception
+    # if it was found
     def check_for_rate_exceeded_error(report_body, response_code)
       error_response = Nori.parse(report_body)
-      if error_response.include?(:report_download_error) and
-          error_response[:report_download_error].include?(:api_error) and
+      if error_response.include?(:report_download_error) &&
+          error_response[:report_download_error].include?(:api_error) &&
           error_response[:report_download_error][:api_error][:type] == 'RateExceededError.RATE_EXCEEDED'
         rate_error = error_response[:report_download_error][:api_error]
         raise AdwordsApi::Errors::RateExceededError.new(response_code, rate_error[:type], rate_error[:trigger], rate_error[:field_path],
