@@ -18,7 +18,7 @@ New to the library? Check out the [Getting Started video screencast on YouTube](
  - Support for logging incoming and outgoing SOAP messages;
  - Support for logging request information;
  - Fully based on new Savon backend.
- - Ruby 1.9, 2.0, and 2.1 compatible.
+ - Ruby 1.9, 2.0, 2.1, and 2.2 compatible.
  - ClientLogin, OAuth2.0 and OAuth2.0 JWT built-in authentication;
  - Support for API calls to different environments (Production, Sandbox);
  - Local validation for parameter number and type on API calls;
