@@ -30,6 +30,10 @@ New to the library? Check out the [Getting Started video screencast on YouTube](
 
 --Google Ads API Team
 
+## Logging
+
+ To enable logging, see the library-specific README files for [AdWords](https://github.com/googleads/google-api-ads-ruby/blob/master/adwords_api/README.md#23---logging) and [DFP](https://github.com/googleads/google-api-ads-ruby/blob/master/dfp_api/README.md#how-do-i-enable-logging).
+
 ## Updates
 
  - [AdsCommon ChangeLog](https://github.com/googleads/google-api-ads-ruby/blob/master/ads_common/ChangeLog)
