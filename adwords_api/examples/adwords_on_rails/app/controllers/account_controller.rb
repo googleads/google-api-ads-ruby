@@ -16,11 +16,20 @@ class AccountController < ApplicationController
 
   def get_accounts_graph()
     adwords = get_adwords_api()
-    service = adwords.service(:ManagedCustomerService, get_api_version())
-    selector = {:fields => ['Login', 'CustomerId', 'CompanyName']}
+
+    # First get the MCC ID.
+    customer_srv = adwords.service(:CustomerService, get_api_version())
+    customer = customer_srv.get()
+    adwords.credential_handler.set_credential(
+        :client_customer_id, customer[:customer_id])
+
+    # Then find all child accounts using that ID.
+    managed_customer_srv = adwords.service(
+        :ManagedCustomerService, get_api_version())
+    selector = {:fields => ['CustomerId', 'CompanyName']}
     result = nil
     begin
-      result = adwords.use_mcc {service.get(selector)}
+      result = managed_customer_srv.get(selector)
     rescue AdwordsApi::Errors::ApiException => e
       logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
       flash.now[:alert] =

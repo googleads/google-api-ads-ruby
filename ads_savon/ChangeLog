@@ -1,0 +1,3 @@
+1.0.0:
+  - Initial release of Google Ads Savon. This is a fork of Savon version 1,
+    which can be found here: https://github.com/savonrb/savon/tree/version1

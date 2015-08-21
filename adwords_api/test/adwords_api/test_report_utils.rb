@@ -56,11 +56,23 @@ GZIPPED_REPORT = "\x1F\x8B\b\x00\x00\x00\x00\x00\x00\x00Sr.-.\xC9\xCFUptq\x0F\xF
 
 class TestReportUtils < Test::Unit::TestCase
 
-  API_VERSION = :v201406
+  API_VERSION = :v201506
 
   # Initialize tests.
   def setup()
-    @api = AdwordsApi::Api.new
+    @api = AdwordsApi::Api.new({
+      :authentication => {
+          :method => 'OAuth2',
+          :oauth2_client_id => 'client_id123',
+          :oauth2_client_secret => 'client_secret123',
+          :developer_token => 'developer_token123',
+          :client_customer_id => '012-345-6789',
+          :user_agent => 'TestReportUtils'
+      },
+      :service => {
+        :environment => 'PRODUCTION'
+      }
+    })
     @report_utils = @api.report_utils(API_VERSION)
   end
 

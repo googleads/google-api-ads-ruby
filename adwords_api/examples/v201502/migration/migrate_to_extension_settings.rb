@@ -57,12 +57,14 @@ def migrate_to_extension_settings()
       feed_item_ids = get_feed_item_ids_for_campaign(campaign_feed)
 
       if feed_item_ids.empty?
-        puts("Migration skipped for campaign feed with campaign ID %d " +
+        puts(("Migration skipped for campaign feed with campaign ID %d " +
             "and feed ID %d because no mapped feed item IDs were found in " +
             "the campaign feed's matching function.") %
-            [campaign_feed[:campaign_id], campaign_feed[:feed_id]]
+            [campaign_feed[:campaign_id], campaign_feed[:feed_id]])
         next
       end
+
+      platform_restrictions = get_platform_restrictions(campaign_feed)
 
       # Delete the campaign feed that associates the sitelinks from the
       # feed to the campaign.
@@ -70,11 +72,11 @@ def migrate_to_extension_settings()
 
       # Create extension settings instead of sitelinks.
       create_extension_setting(adwords, feed_items, campaign_feed,
-          feed_item_ids)
+          feed_item_ids, platform_restrictions)
 
       # Mark the sitelinks from the feed for deletion.
       feed_item_ids
-    end.flatten.to_set
+    end.flatten.to_set.reject {|id| id.nil?}
 
     # Delete all the sitelinks from the feed.
     delete_old_feed_items(adwords, all_feed_items_to_delete, feed)
@@ -201,6 +203,26 @@ def get_feed_items(adwords, feed)
   return feed_items
 end
 
+def get_platform_restrictions(campaign_feed)
+  platform_restrictions = nil
+
+  if campaign_feed[:matching_function][:operator] == 'AND'
+    campaign_feed[:matching_function][:lhs_operand].each do |argument|
+      # Check if matchingFunction is EQUALS(CONTEXT.DEVICE, 'Mobile')
+      if argument[:value][:operator] == 'EQUALS'
+        request_context_operand = argument[:value][:lhs_operand].first()
+        if request_context_operand &&
+            request_context_operand == 'DEVICE_PLATFORM'
+          platform_restrictions =
+              argument[:value][:rhs_operand].first().upcase()
+          break
+        end
+      end
+    end
+  end
+  return platform_restrictions
+end
+
 def delete_old_feed_items(adwords, feed_item_ids, feed)
   return if feed_item_ids.empty?
 
@@ -219,7 +241,8 @@ def delete_old_feed_items(adwords, feed_item_ids, feed)
   feed_item_srv.mutate(operations)
 end
 
-def create_extension_setting(adwords, feed_items, campaign_feed, feed_item_ids)
+def create_extension_setting(
+    adwords, feed_items, campaign_feed, feed_item_ids, platform_restrictions)
   campaign_extension_setting_srv = adwords.service(
       :CampaignExtensionSettingService, API_VERSION)
 
@@ -253,6 +276,10 @@ def create_extension_setting(adwords, feed_items, campaign_feed, feed_item_ids)
   extension_setting = {
     :extensions => extension_feed_items
   }
+
+  unless platform_restrictions.nil?
+    extension_setting[:platform_restrictions] = platform_restrictions
+  end
 
   campaign_extension_setting = {
     :campaign_id => campaign_feed[:campaign_id],

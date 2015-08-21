@@ -35,9 +35,9 @@ module AdwordsApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201502
+    DEFAULT_VERSION = :v201506
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201502
+    LATEST_VERSION = :v201506
 
     # Set other constants
     API_NAME = 'AdwordsApi'
@@ -45,47 +45,8 @@ module AdwordsApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v201406 => [
-          :AdGroupAdService,
-          :AdGroupBidModifierService,
-          :AdGroupCriterionService,
-          :AdGroupFeedService,
-          :AdGroupService,
-          :AdParamService,
-          :AdwordsUserListService,
-          :AlertService,
-          :BiddingStrategyService,
-          :BudgetOrderService,
-          :BudgetService,
-          :CampaignAdExtensionService,
-          :CampaignCriterionService,
-          :CampaignFeedService,
-          :CampaignService,
-          :CampaignSharedSetService,
-          :ConstantDataService,
-          :ConversionTrackerService,
-          :CustomerFeedService,
-          :CustomerService,
-          :CustomerSyncService,
-          :DataService,
-          :ExperimentService,
-          :FeedItemService,
-          :FeedMappingService,
-          :FeedService,
-          :GeoLocationService,
-          :LabelService,
-          :LocationCriterionService,
-          :ManagedCustomerService,
-          :MediaService,
-          :MutateJobService,
-          :OfflineConversionFeedService,
-          :ReportDefinitionService,
-          :SharedCriterionService,
-          :SharedSetService,
-          :TargetingIdeaService,
-          :TrafficEstimatorService
-      ],
-      :v201409 => [
+      :v201502 => [
+          :AccountLabelService,
           :AdCustomizerFeedService,
           :AdGroupAdService,
           :AdGroupBidModifierService,
@@ -98,7 +59,6 @@ module AdwordsApi
           :BiddingStrategyService,
           :BudgetOrderService,
           :BudgetService,
-          :CampaignAdExtensionService,
           :CampaignCriterionService,
           :CampaignExtensionSettingService,
           :CampaignFeedService,
@@ -128,7 +88,7 @@ module AdwordsApi
           :TargetingIdeaService,
           :TrafficEstimatorService
       ],
-      :v201502 => [
+      :v201506 => [
           :AccountLabelService,
           :AdCustomizerFeedService,
           :AdGroupAdService,
@@ -178,96 +138,14 @@ module AdwordsApi
       :PRODUCTION => {
         :oauth_scope => 'https://www.googleapis.com/auth/adwords',
         :header_ns => 'https://adwords.google.com/api/adwords/cm/',
-        :v201406 => 'https://adwords.google.com/api/adwords/',
-        :v201409 => 'https://adwords.google.com/api/adwords/',
-        :v201502 => 'https://adwords.google.com/api/adwords/'
+        :v201502 => 'https://adwords.google.com/api/adwords/',
+        :v201506 => 'https://adwords.google.com/api/adwords/'
       }
     }
 
     # Configure the subdirectories for each version / service pair.
     # A missing pair means that only the base URL is used.
     @@subdir_config = {
-      # v201406
-      [:v201406, :AdGroupAdService] => 'cm/',
-      [:v201406, :AdGroupBidModifierService] => 'cm/',
-      [:v201406, :AdGroupCriterionService] => 'cm/',
-      [:v201406, :AdGroupFeedService] => 'cm/',
-      [:v201406, :AdGroupService] => 'cm/',
-      [:v201406, :AdParamService] => 'cm/',
-      [:v201406, :AlertService] => 'mcm/',
-      [:v201406, :BudgetOrderService] => 'billing/',
-      [:v201406, :CampaignAdExtensionService] => 'cm/',
-      [:v201406, :CampaignCriterionService] => 'cm/',
-      [:v201406, :CampaignFeedService] => 'cm/',
-      [:v201406, :CampaignService] => 'cm/',
-      [:v201406, :CampaignSharedSetService] => 'cm/',
-      [:v201406, :ConstantDataService] => 'cm/',
-      [:v201406, :ConversionTrackerService] => 'cm/',
-      [:v201406, :CustomerSyncService] => 'ch/',
-      [:v201406, :DataService] => 'cm/',
-      [:v201406, :ExperimentService] => 'cm/',
-      [:v201406, :FeedItemService] => 'cm/',
-      [:v201406, :FeedMappingService] => 'cm/',
-      [:v201406, :FeedService] => 'cm/',
-      [:v201406, :GeoLocationService] => 'cm/',
-      [:v201406, :LocationCriterionService] => 'cm/',
-      [:v201406, :MediaService] => 'cm/',
-      [:v201406, :MutateJobService] => 'cm/',
-      [:v201406, :OfflineConversionFeedService] => 'cm/',
-      [:v201406, :ReportDefinitionService] => 'cm/',
-      [:v201406, :SharedCriterionService] => 'cm/',
-      [:v201406, :SharedSetService] => 'cm/',
-      [:v201406, :TargetingIdeaService] => 'o/',
-      [:v201406, :TrafficEstimatorService] => 'o/',
-      [:v201406, :ManagedCustomerService] => 'mcm/',
-      [:v201406, :CustomerService] => 'mcm/',
-      [:v201406, :CustomerFeedService] => 'cm/',
-      [:v201406, :BudgetService] => 'cm/',
-      [:v201406, :BiddingStrategyService] => 'cm/',
-      [:v201406, :AdwordsUserListService] => 'rm/',
-      [:v201406, :LabelService] => 'cm/',
-      # v201409
-      [:v201409, :AdCustomizerFeedService] => 'cm/',
-      [:v201409, :AdGroupAdService] => 'cm/',
-      [:v201409, :AdGroupBidModifierService] => 'cm/',
-      [:v201409, :AdGroupCriterionService] => 'cm/',
-      [:v201409, :AdGroupExtensionSettingService] => 'cm/',
-      [:v201409, :AdGroupFeedService] => 'cm/',
-      [:v201409, :AdGroupService] => 'cm/',
-      [:v201409, :AdParamService] => 'cm/',
-      [:v201409, :BudgetOrderService] => 'billing/',
-      [:v201409, :CampaignAdExtensionService] => 'cm/',
-      [:v201409, :CampaignCriterionService] => 'cm/',
-      [:v201409, :CampaignExtensionSettingService] => 'cm/',
-      [:v201409, :CampaignFeedService] => 'cm/',
-      [:v201409, :CampaignService] => 'cm/',
-      [:v201409, :CampaignSharedSetService] => 'cm/',
-      [:v201409, :ConstantDataService] => 'cm/',
-      [:v201409, :ConversionTrackerService] => 'cm/',
-      [:v201409, :CustomerExtensionSettingService] => 'cm/',
-      [:v201409, :CustomerSyncService] => 'ch/',
-      [:v201409, :DataService] => 'cm/',
-      [:v201409, :ExperimentService] => 'cm/',
-      [:v201409, :FeedItemService] => 'cm/',
-      [:v201409, :FeedMappingService] => 'cm/',
-      [:v201409, :FeedService] => 'cm/',
-      [:v201409, :GeoLocationService] => 'cm/',
-      [:v201409, :LocationCriterionService] => 'cm/',
-      [:v201409, :MediaService] => 'cm/',
-      [:v201409, :MutateJobService] => 'cm/',
-      [:v201409, :OfflineConversionFeedService] => 'cm/',
-      [:v201409, :ReportDefinitionService] => 'cm/',
-      [:v201409, :SharedCriterionService] => 'cm/',
-      [:v201409, :SharedSetService] => 'cm/',
-      [:v201409, :TargetingIdeaService] => 'o/',
-      [:v201409, :TrafficEstimatorService] => 'o/',
-      [:v201409, :ManagedCustomerService] => 'mcm/',
-      [:v201409, :CustomerService] => 'mcm/',
-      [:v201409, :CustomerFeedService] => 'cm/',
-      [:v201409, :BudgetService] => 'cm/',
-      [:v201409, :BiddingStrategyService] => 'cm/',
-      [:v201409, :AdwordsUserListService] => 'rm/',
-      [:v201409, :LabelService] => 'cm/',
       # v201502
       [:v201502, :AccountLabelService] => 'mcm/',
       [:v201502, :AdCustomizerFeedService] => 'cm/',
@@ -309,7 +187,49 @@ module AdwordsApi
       [:v201502, :BudgetService] => 'cm/',
       [:v201502, :BiddingStrategyService] => 'cm/',
       [:v201502, :AdwordsUserListService] => 'rm/',
-      [:v201502, :LabelService] => 'cm/'
+      [:v201502, :LabelService] => 'cm/',
+      # v201506
+      [:v201506, :AccountLabelService] => 'mcm/',
+      [:v201506, :AdCustomizerFeedService] => 'cm/',
+      [:v201506, :AdGroupAdService] => 'cm/',
+      [:v201506, :AdGroupBidModifierService] => 'cm/',
+      [:v201506, :AdGroupCriterionService] => 'cm/',
+      [:v201506, :AdGroupExtensionSettingService] => 'cm/',
+      [:v201506, :AdGroupFeedService] => 'cm/',
+      [:v201506, :AdGroupService] => 'cm/',
+      [:v201506, :AdParamService] => 'cm/',
+      [:v201506, :BudgetOrderService] => 'billing/',
+      [:v201506, :CampaignCriterionService] => 'cm/',
+      [:v201506, :CampaignExtensionSettingService] => 'cm/',
+      [:v201506, :CampaignFeedService] => 'cm/',
+      [:v201506, :CampaignService] => 'cm/',
+      [:v201506, :CampaignSharedSetService] => 'cm/',
+      [:v201506, :ConstantDataService] => 'cm/',
+      [:v201506, :ConversionTrackerService] => 'cm/',
+      [:v201506, :CustomerExtensionSettingService] => 'cm/',
+      [:v201506, :CustomerSyncService] => 'ch/',
+      [:v201506, :DataService] => 'cm/',
+      [:v201506, :ExperimentService] => 'cm/',
+      [:v201506, :FeedItemService] => 'cm/',
+      [:v201506, :FeedMappingService] => 'cm/',
+      [:v201506, :FeedService] => 'cm/',
+      [:v201506, :GeoLocationService] => 'cm/',
+      [:v201506, :LocationCriterionService] => 'cm/',
+      [:v201506, :MediaService] => 'cm/',
+      [:v201506, :MutateJobService] => 'cm/',
+      [:v201506, :OfflineConversionFeedService] => 'cm/',
+      [:v201506, :ReportDefinitionService] => 'cm/',
+      [:v201506, :SharedCriterionService] => 'cm/',
+      [:v201506, :SharedSetService] => 'cm/',
+      [:v201506, :TargetingIdeaService] => 'o/',
+      [:v201506, :TrafficEstimatorService] => 'o/',
+      [:v201506, :ManagedCustomerService] => 'mcm/',
+      [:v201506, :CustomerService] => 'mcm/',
+      [:v201506, :CustomerFeedService] => 'cm/',
+      [:v201506, :BudgetService] => 'cm/',
+      [:v201506, :BiddingStrategyService] => 'cm/',
+      [:v201506, :AdwordsUserListService] => 'rm/',
+      [:v201506, :LabelService] => 'cm/'
     }
 
     public

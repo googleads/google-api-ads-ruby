@@ -7,7 +7,7 @@ gem 'jquery-rails'
 gem 'sqlite3'
 
 # AdWords API gem.
-gem 'google-adwords-api', '~> 0.11.0'
+gem 'google-adwords-api', '~> 0.14.0'
 
 # Gem for OAuth authorization.
 gem 'oauth2'

@@ -77,14 +77,14 @@ def add_gmb_location_extensions(gmb_email_address, gmb_access_token,
   # LOCATION placeholder type.
   customer_feed = {
     :feed_id => added_feed[:id],
-    :placeholder_types => PLACEHOLDER_TYPE_LOCATION,
+    :placeholder_types => [PLACEHOLDER_TYPE_LOCATION],
     :matching_function => {
       :operator => 'IDENTITY',
-      :lhsOperand => {
+      :lhs_operand => [{
         :xsi_type => 'ConstantOperand',
         :type => 'BOOLEAN',
         :boolean_value => true
-      }
+      }]
     }
   }
 
@@ -146,7 +146,7 @@ if __FILE__ == $0
     # the generated access token
     gmb_access_token = 'INSERT_GMB_OAUTH_ACCESS_TOKEN_HERE'
 
-    # If the gmb_email_address above is for a GMB manager instead of 
+    # If the gmb_email_address above is for a GMB manager instead of
     # the GMB account owner, then set business_account_identifier to the
     # +Page ID of a location for which the manager has access. See the
     # location extensions guide at

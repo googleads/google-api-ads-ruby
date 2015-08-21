@@ -36,7 +36,7 @@ end
 
 class TestAdwordsApi < Test::Unit::TestCase
 
-  API_VERSION = :v201409
+  API_VERSION = :v201506
 
   def setup()
     @logger = LoggerStub.new
@@ -54,15 +54,6 @@ class TestAdwordsApi < Test::Unit::TestCase
       api_config = adwords_api.api_config()
       assert_not_nil(api_config)
       assert_kind_of(AdsCommon::ApiConfig, api_config)
-    end
-  end
-
-  def test_use_mcc()
-    adwords_api = AdwordsApi::Api.new({})
-    adwords_api.use_mcc = false
-    assert(!adwords_api.use_mcc)
-    adwords_api.use_mcc do
-      assert(adwords_api.use_mcc)
     end
   end
 

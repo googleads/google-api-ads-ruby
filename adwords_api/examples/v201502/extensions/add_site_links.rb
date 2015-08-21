@@ -125,9 +125,10 @@ def add_site_links(campaign_id)
   response = campaign_extension_setting_srv.mutate([operation])
   if response and response[:value]
     new_extension_setting = response[:value].first
-    puts "Extension setting wiht type = %s was added to campaign ID %d" %
-        [new_extension_setting[:extension_type][:value],
-        new_extension_setting[:campaign_id]]
+    puts "Extension setting wiht type = %s was added to campaign ID %d" % [
+      new_extension_setting[:extension_type],
+      new_extension_setting[:campaign_id]
+    ]
   elsif
     puts "No extension settings were created."
   end

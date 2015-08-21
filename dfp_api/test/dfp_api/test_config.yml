@@ -1,8 +1,9 @@
 ---
 # This is a test configuration file for DFP API library.
 :authentication:
-  :method: ClientLogin
-  :application_name: ruby_test_suit
-  :password: mySecretPassword
-  :email: root@example.com
-  :network_code: 1234567
+  :method : 'OAuth2'
+  :oauth2_client_id : 'myClientId'
+  :oauth2_client_secret : 'This is MY secret!'
+  :oauth2_token : 'my access token'
+  :application_name : 'ruby_test_suit'
+  :network_code : 1234567

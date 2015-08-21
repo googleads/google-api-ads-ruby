@@ -2,7 +2,8 @@
 # This is an example configuration file for the AdWords API client library.
 # Please fill in the required fields, and copy it over to your home directory.
 :authentication:
-  # Authentication method, methods currently supported: OAUTH2, OAUTH2_JWT.
+  # Authentication method, methods currently supported:
+  # OAUTH2, OAUTH2_SERVICE_ACCOUNT.
   :method: OAuth2
 
   # Auth parameters for OAUTH2 method.
@@ -17,7 +18,7 @@
   #:oauth2_access_type: INSERT_OAUTH2_ACCESS_TYPE_HERE
   #:oauth2_approval_prompt: INSERT_OAUTH2_APPROVAL_PROMPT_HERE
 
-  # Auth parameters for OAUTH2_JWT method. See:
+  # Auth parameters for OAUTH2_SERVICE_ACCOUNT method. See:
   #   https://developers.google.com/accounts/docs/OAuth2ServiceAccount
   #:oauth2_issuer: INSERT_OAUTH2_ISSUER_HERE
   #:oauth2_secret: INSERT_OAUTH2_SECRET_HERE
@@ -41,4 +42,9 @@
   # the URL, e.g.: http://user:password@proxy_hostname:8080
   # :proxy: INSERT_PROXY_HERE
 :library:
+  # Optional: set the log level.
   :log_level: INFO
+  # Optional: uncomment to skip header / summary rows in reporting.
+  #:skip_report_header: true
+  #:skip_report_summary: true
+  #:skip_column_header: true

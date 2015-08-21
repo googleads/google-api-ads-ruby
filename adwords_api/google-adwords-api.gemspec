@@ -38,6 +38,6 @@ Gem::Specification.new do |s|
   s.files = Dir.glob('{lib,test}/**/*') + Dir.glob('examples/v*/**/*') +
       %w(COPYING README.md ChangeLog adwords_api.yml)
   s.test_files = ['test/suite_unittests.rb']
-  s.add_dependency('google-ads-common', '~> 0.9.8')
+  s.add_dependency('google-ads-common', '~> 0.10.0')
   s.add_development_dependency('rake', '~> 10.3.2')
 end

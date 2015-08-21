@@ -51,13 +51,12 @@ def add_conversion_tracker()
       # Optional fields:
       :status => 'ENABLED',
       :viewthrough_lookback_window => 15,
-      :viewthrough_conversion_de_dup_search => true,
       :is_product_ads_chargeable => true,
       :product_ads_chargeable_conversion_window => 15,
       :conversion_page_language => 'en',
       :background_color => '#0000FF',
       :default_revenue_value => 23.41,
-      :always_use_default_revenue_value = true
+      :always_use_default_revenue_value => true
     }
   }
 

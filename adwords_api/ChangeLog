@@ -1,5 +1,26 @@
+0.16.0:
+  - Removed deprecated API version v201409.
+  - Changed OAUTH2 JWT references to OAUTH2 Service Account.
+  - Require google-ads-common 0.10.0 or later from now on.
+  - Allowing report headers to be defined as booleans (this restores previous
+    behavior).
+
+0.15.2:
+  - Support and examples for v201502.
+  - Added support for including zero impression rows in reports via HTTP header.
+
+0.15.1:
+  - Allowing requests without CID specified for use with CustomerService.
+
+0.15.0:
+  - Removed deprecated API version v201406.
+  - Updated Feeds migration example to account for platform restrictions.
+  - Added support for skipping column header option in reporting.
+  - Reworked add sitelinks example for final URLs and functionString.
+
 0.14.2:
   - Support and examples for v201502.
+  - Added support for skipping report header and summary options.
 
 0.14.1:
   - Corrected the comments and settings regarding target_all in add_ad_groups

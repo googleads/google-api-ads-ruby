@@ -62,13 +62,13 @@ def add_audience()
 
     # Get conversion snippets.
     if user_list and user_list[:conversion_types]
-      conversion_ids = user_list[:conversion_types].map {|type| type[:id]}
+      conversion_ids = user_list[:conversion_types][:id]
       selector = {
         # We're actually interested in the 'Snippet' field, which is returned
         # automatically.
         :fields => ['Id'],
         :predicates => [
-          {:field => 'Id', :operator => 'IN', :values => conversion_ids}
+          {:field => 'Id', :operator => 'IN', :values => [conversion_ids]}
         ]
       }
       conv_tracker_response = conv_tracker_srv.get(selector)

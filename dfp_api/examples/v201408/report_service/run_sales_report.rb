@@ -21,7 +21,7 @@
 # This example runs a report equal to the "Sales by salespersons report" on the
 # DFP website. To download the report see download_report.rb.
 #
-# Tags: ReportService.runReportJob, ReportService.getReportJob
+# Tags: ReportService.runReportJob, ReportService.getReportJobStatus
 
 require 'dfp_api'
 
@@ -59,9 +59,9 @@ def run_sales_report()
 
   MAX_RETRIES.times do |retry_count|
     # Get the report job status.
-    report_job = report_service.get_report_job(report_job[:id])
+    report_job_status = report_service.get_report_job_status(report_job[:id])
 
-    break unless report_job[:report_job_status] == 'IN_PROGRESS'
+    break unless report_job_status == 'IN_PROGRESS'
     puts "Report with ID: %d is still running." % report_job[:id]
     sleep(RETRY_INTERVAL)
   end
