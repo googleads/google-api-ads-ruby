@@ -198,4 +198,22 @@ class TestReportUtils < Test::Unit::TestCase
       assert_not_nil(e.message)
     end
   end
+
+  def test_check_for_xml_error_with_message()
+    xml_reply = {
+        :reply => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><reportDownloadError><ApiError><type>ReportDefinitionError.INVALID_DATE_RANGE_FOR_REPORT</type><trigger>Invalid reporting query: Click Performance Report can not be retrieved for more than 90 days back. (line 17)</trigger><fieldPath>bar</fieldPath></ApiError></reportDownloadError>',
+        :type => 'ReportDefinitionError.INVALID_DATE_RANGE_FOR_REPORT',
+        :trigger => 'Invalid reporting query: Click Performance Report can not be retrieved for more than 90 days back. (line 17)',
+        :field_path => nil
+    }
+
+    e = assert_raise AdwordsApi::Errors::ReportXmlError do
+         @report_utils.check_for_xml_error(xml_reply[:reply], 400)
+    end
+
+    expected_msg =  "HTTP code: %d, error type: '%s', trigger: '%s', field path:" %
+        [400, Regexp.escape(xml_reply[:type].to_s), Regexp.escape(xml_reply[:trigger].to_s)]
+
+    assert_match /#{expected_msg}/, e.to_s
+  end
 end
