@@ -30,7 +30,6 @@ module AdwordsApi; module V201506; module CustomerService
 
   # Base class for exceptions.
   class ApplicationException < AdwordsApi::Errors::ApiException
-    attr_reader :message  # string
     attr_reader :application_exception_type  # string
   end
 

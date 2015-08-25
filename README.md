@@ -1,3 +1,26 @@
+## Invoca disclaimer
+
+Some technical details about the adwords gem that is important to know expecially if we upgrade versions:
+
+### Reason we forked the gem
+
+* Tech-480 - Exception messages were not being passed in appropriately, this was making it difficult to troubleshoot in script/console.
+* Made some changes around the exceptions:
+ * ApiException class now calls super(message)  <https://github.com/Invoca/google-api-ads-ruby/commit/183d5fb14636ca4713ffa426f2a31a5cd267fa9c>
+  * Had to update `adwords_api/errors.rb to call super(exception_data[:message])` in the initializer
+  * Edit `adwords_api/lib/adwords_api/v201409/customer_service_registry.rb` to no longer have attr_reader message <https://github.com/Invoca/google-api-ads-ruby/commit/89053f5b9e6e7e064586b741c22301eb0cdaf949>
+     * This is the imporant change becuase there are many other registry files and other api versions that do not have this change, so if we observe exception messages not showing as expected, you will likely have to apply similar changes to the exception that is being thrown.
+     * Also, when a new AdWords version comes out, these changes will not carry over. We will want to re-apply them to the new version.
+          
+### How to run the test for the gem
+* Go into which folder you want to test
+* Be sure to set ruby 2.1.2, `rbenv local 2.1.2`
+* `rake test`
+* If you have dependencies with httpi or savon, try uninstalling those gems and trying again.
+
+  
+
+
 # Ads API Client Libraries for Ruby
 
 This project hosts the new Ads common framework for Ruby, as well as the Ruby client libraries for the various SOAP-based Ads APIs at Google.

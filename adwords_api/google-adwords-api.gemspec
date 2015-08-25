@@ -39,4 +39,5 @@ Gem::Specification.new do |s|
       %w(COPYING README.md ChangeLog adwords_api.yml)
   s.test_files = ['test/suite_unittests.rb']
   s.add_dependency('google-ads-common', '~> 0.10.0')
+  s.add_development_dependency('rake', '~> 10.3.2')
 end
