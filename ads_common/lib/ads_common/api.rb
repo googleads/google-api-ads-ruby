@@ -201,7 +201,7 @@ module AdsCommon
               @config,
               api_config.environment_config(environment, :oauth_scope)
           )
-        when :OAUTH2_SERVICE_ACCOUNT_
+        when :OAUTH2_SERVICE_ACCOUNT
           environment = @config.read('service.environment',
               api_config.default_environment())
           AdsCommon::Auth::OAuth2ServiceAccountHandler.new(
