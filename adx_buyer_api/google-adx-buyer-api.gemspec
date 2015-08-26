@@ -28,6 +28,6 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project = 'google-adx-buyer-api'
   s.require_path = 'lib'
-  s.files = Dir.glob('examples/**/*') + %w(COPYING README ChangeLog)
+  s.files = Dir.glob('examples/**/*') + %w(COPYING README.md ChangeLog Rakefile)
   s.add_dependency('google-adwords-api', '~> 0.16.0')
 end
