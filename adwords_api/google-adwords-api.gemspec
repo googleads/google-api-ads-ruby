@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.version = AdwordsApi::ApiConfig::CLIENT_LIB_VERSION
   s.summary = 'Ruby Client libraries for AdWords API'
   s.description = '%s is a AdWords API client library for Ruby' % s.name
-  s.homepage = 'http://code.google.com/p/google-api-ads-ruby/'
+  s.homepage = 'https://github.com/googleads/google-api-ads-ruby'
   s.authors = ['Danial Klimkin', 'Michael Cloonan']
   s.email = ['api.dklimkin@gmail.com', 'api.mcloonan@gmail.com']
   s.license = 'Apache-2.0'

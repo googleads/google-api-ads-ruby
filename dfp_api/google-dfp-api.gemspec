@@ -27,7 +27,7 @@ Gem::Specification.new do |s|
   s.version = DfpApi::ApiConfig::CLIENT_LIB_VERSION
   s.summary = 'Ruby Client libraries for DFP API'
   s.description = "%s is a DFP API client library for Ruby" % s.name
-  s.homepage = 'http://code.google.com/p/google-api-ads-ruby/'
+  s.homepage = 'https://github.com/googleads/google-api-ads-ruby'
   s.authors = ['Danial Klimkin']
   s.email = ['api.dklimkin@gmail.com']
   s.license = 'Apache-2.0'
