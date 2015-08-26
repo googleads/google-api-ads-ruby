@@ -1,6 +1,4 @@
-#!/usr/bin/ruby
-#
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
+# Encoding: utf-8
 #
 # Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
 #

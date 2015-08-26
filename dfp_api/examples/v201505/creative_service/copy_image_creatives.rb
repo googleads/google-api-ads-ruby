@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +19,6 @@
 # This example copies a given set of image creatives. This would typically be
 # done to reuse creatives in a small business network. To determine which
 # creatives exist, run get_all_creatives.rb.
-#
-# Tags: CreativeService.getCreativesByStatement, CreativeService.createCreatives
 
 require 'dfp_api'
 require 'dfp_api_statement'

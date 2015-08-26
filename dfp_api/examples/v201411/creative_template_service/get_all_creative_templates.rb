@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,8 +17,6 @@
 #           limitations under the License.
 #
 # This example gets all creative templates.
-#
-# Tags: CreativeTemplateService.getCreativeTemplatesByStatement
 
 require 'dfp_api'
 require 'dfp_api_statement'

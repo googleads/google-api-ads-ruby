@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,9 +20,6 @@
 # custom targeting keys and values exist, run
 # get_all_custom_targeting_keys_and_values.rb. To target these custom targeting
 # keys and values, run target_custom_criteria.rb.
-#
-# Tags: CustomTargetingService.createCustomTargetingKeys
-# Tags: CustomTargetingService.createCustomTargetingValues
 
 require 'dfp_api'
 

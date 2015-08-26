@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,9 +33,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201505
+    DEFAULT_VERSION = :v201508
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201505
+    LATEST_VERSION = :v201508
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -153,6 +151,30 @@ module DfpApi
                    :ReconciliationReportService, :ReportService,
                    :SharedAdUnitService, :SuggestedAdUnitService,
                    :TeamService, :UserService,
+                   :UserTeamAssociationService, :WorkflowRequestService],
+      :v201508 => [:ActivityGroupService, :ActivityService,
+                   :AdExclusionRuleService, :AdRuleService,
+                   :AudienceSegmentService, :BaseRateService, :CompanyService,
+                   :ContactService, :ContentBundleService,
+                   :ContentMetadataKeyHierarchyService, :ContentService,
+                   :CreativeService, :CreativeSetService,
+                   :CreativeTemplateService, :CreativeWrapperService,
+                   :CustomFieldService, :CustomTargetingService,
+                   :ExchangeRateService, :ForecastService, :InventoryService,
+                   :LabelService, :LineItemCreativeAssociationService,
+                   :LineItemService, :LineItemTemplateService,
+                   :NetworkService, :LiveStreamEventService,
+                   :OrderService, :PackageService, :ProductPackageService,
+                   :ProductPackageItemService, :PlacementService,
+                   :PremiumRateService, :ProductService,
+                   :ProductTemplateService, :ProposalLineItemService,
+                   :ProposalService, :PublisherQueryLanguageService,
+                   :RateCardService, :ReconciliationOrderReportService,
+                   :ReconciliationLineItemReportService,
+                   :ReconciliationReportRowService,
+                   :ReconciliationReportService, :ReportService,
+                   :SharedAdUnitService, :SuggestedAdUnitService,
+                   :TeamService, :UserService,
                    :UserTeamAssociationService, :WorkflowRequestService]
     }
 
@@ -165,7 +187,8 @@ module DfpApi
         :v201408 => 'https://ads.google.com/apis/ads/publisher/',
         :v201411 => 'https://ads.google.com/apis/ads/publisher/',
         :v201502 => 'https://ads.google.com/apis/ads/publisher/',
-        :v201505 => 'https://ads.google.com/apis/ads/publisher/'
+        :v201505 => 'https://ads.google.com/apis/ads/publisher/',
+        :v201508 => 'https://ads.google.com/apis/ads/publisher/'
       }
     }
 

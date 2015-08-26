@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +18,6 @@
 #
 # This example deletes custom targeting key by its name. To determine which
 # custom targeting keys exist, run get_all_custom_targeting_keys_and_values.rb.
-#
-# Tags: CustomTargetingService.getCustomTargetingKeysByStatement
-# Tags: CustomTargetingService.performCustomTargetingKeyAction
 
 require 'dfp_api'
 require 'dfp_api_statement'
@@ -68,7 +63,7 @@ def delete_custom_targeting_keys()
         custom_target_key_ids << key[:id]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT 
+    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

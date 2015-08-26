@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,9 +20,6 @@
 # custom fields exist, run get_all_custom_fields.rb. To determine which line
 # items exist, run get_all_line_items.rb. To create custom field options, run
 # create_custom_field_options.rb.
-#
-# Tags: CustomFieldService.getCustomFieldsByStatement,
-#       LineItemService.getLineItemsByStatement
 
 require 'dfp_api'
 require 'dfp_api_statement'

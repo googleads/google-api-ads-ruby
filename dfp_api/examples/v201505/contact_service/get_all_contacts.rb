@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.davidtorres@gmail.com (David Torres)
-#
 # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,8 +17,6 @@
 #           limitations under the License.
 #
 # This example gets all contacts. To create contacts, run create_contacts.rb.
-#
-# Tags: ContactService.getContactsByStatement.
 
 require 'dfp_api'
 require 'dfp_api_statement'

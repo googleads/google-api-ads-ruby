@@ -1,3 +1,9 @@
+0.10.1:
+  - Added support for v201508
+  - Added ReconciliationLineItemReportService.
+  - General file cleanup.
+  - Improved errors handling (based on GitHub pull request).
+
 0.10.0:
   - Changed OAUTH2 JWT references to OAUTH2 Service Account.
   - Require google-ads-common 0.10.0 or later from now on.

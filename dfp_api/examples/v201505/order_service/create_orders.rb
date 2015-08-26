@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +20,6 @@
 # get_all_orders.rb. To determine which companies are advertisers, run
 # get_companies_by_statement.rb. To get salespeople and traffickers, run
 # get_all_users.rb.
-#
-# Tags: OrderService.createOrders
 
 require 'dfp_api'
 

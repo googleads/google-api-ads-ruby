@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +20,6 @@
 # The Line_Item PQL table schema can be found here:
 #
 # https://developers.google.com/doubleclick-publishers/docs/reference/latest/PublisherQueryLanguageService
-#
-# Tags: PublisherQueryLanguageService.select
 
 require 'dfp_api'
 require 'dfp_api_statement'

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +18,6 @@
 #
 # This example gets all line item creative associations (LICA). To create LICAs,
 # run create_licas.rb or associate_creative_set_to_line_item.rb.
-#
-# Tags: LineItemCreativeAssociationService.getLineItemCreativeAssociationsByStatement
 
 require 'dfp_api'
 require 'dfp_api_statement'

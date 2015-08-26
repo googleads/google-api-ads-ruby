@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +19,6 @@
 # This code example creates a line item creative association for a creative
 # set. To create creative sets, run create_creative_set.rb. To create creatives,
 # run create_creatives.rb. To determine which LICAs exist, run get_all_licas.rb.
-#
-# Tags: LineItemCreativeAssociationService.createLineItemCreativeAssociations
 
 require 'dfp_api'
 

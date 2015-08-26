@@ -1,6 +1,4 @@
-# -*- encoding: utf-8 -*-
-#
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
+# Encoding: utf-8
 #
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
@@ -29,7 +27,6 @@ Gem::Specification.new do |s|
   s.description = "%s is a DFP API client library for Ruby" % s.name
   s.homepage = 'https://github.com/googleads/google-api-ads-ruby'
   s.authors = ['Danial Klimkin']
-  s.email = ['api.dklimkin@gmail.com']
   s.license = 'Apache-2.0'
   s.platform = Gem::Platform::RUBY
   s.required_rubygems_version = '>= 1.3.6'

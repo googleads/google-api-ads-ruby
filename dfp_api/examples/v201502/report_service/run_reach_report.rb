@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
-#
-# Author:: api.davidtorres@gmail.com (David Torres)
+# Encoding: utf-8
 #
 # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
@@ -19,8 +18,6 @@
 #
 # This example runs a reach report. To download the report see
 # download_report.rb.
-#
-# Tags: ReportService.runReportJob, ReportService.getReportJob
 
 require 'dfp_api'
 
