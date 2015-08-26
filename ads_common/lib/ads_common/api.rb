@@ -1,7 +1,5 @@
 # Encoding: utf-8
 #
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -201,7 +199,7 @@ module AdsCommon
               @config,
               api_config.environment_config(environment, :oauth_scope)
           )
-        when :OAUTH2_SERVICE_ACCOUNT_
+        when :OAUTH2_SERVICE_ACCOUNT
           environment = @config.read('service.environment',
               api_config.default_environment())
           AdsCommon::Auth::OAuth2ServiceAccountHandler.new(
