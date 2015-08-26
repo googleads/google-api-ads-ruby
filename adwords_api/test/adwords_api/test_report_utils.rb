@@ -78,28 +78,24 @@ class TestReportUtils < Test::Unit::TestCase
 
   # Testing HTTP code 400.
   def test_check_for_errors_400()
-    begin
+    e = assert_raise(AdwordsApi::Errors::ReportXmlError) do
       response = ResponseStub.new(400, XML_REPLY[:reply])
       @report_utils.check_for_errors(response)
-      assert(false, 'No exception thrown for code 400')
-    rescue AdwordsApi::Errors::ReportXmlError => e
-      assert_equal(400, e.http_code)
-      assert_equal(XML_REPLY[:type], e.type)
-      assert_equal(XML_REPLY[:trigger], e.trigger)
-      assert_equal(XML_REPLY[:field_path], e.field_path)
-      assert_not_nil(e.message)
     end
+    assert_equal(400, e.http_code)
+    assert_equal(XML_REPLY[:type], e.type)
+    assert_equal(XML_REPLY[:trigger], e.trigger)
+    assert_equal(XML_REPLY[:field_path], e.field_path)
+    assert_not_nil(e.message)
   end
 
   # Testing HTTP code 500.
   def test_check_for_errors_500()
-    begin
+    e = assert_raise(AdwordsApi::Errors::ReportError) do
       response = ResponseStub.new(500, nil)
       @report_utils.check_for_errors(response)
-      assert(false, 'No exception thrown for code 500')
-    rescue AdwordsApi::Errors::ReportError => e
-      assert_equal(500, e.http_code)
     end
+    assert_equal(500, e.http_code)
   end
 
   # Testing HTTP code 200 with success.
@@ -186,16 +182,30 @@ class TestReportUtils < Test::Unit::TestCase
   end
 
   # Testing check_for_xml_error.
-  def check_for_xml_error()
-    begin
+  def test_check_for_xml_error()
+    e = assert_raise(AdwordsApi::Errors::ReportXmlError) do
       @report_utils.check_for_xml_error(XML_REPLY[:reply], 42)
-      assert(false, 'No exception thrown for code 42')
-    rescue AdwordsApi::Errors::ReportXmlError => e
-      assert_equal(42, e.http_code)
-      assert_equal(XML_REPLY[:type], e.type)
-      assert_equal(XML_REPLY[:trigger], e.trigger)
-      assert_equal(XML_REPLY[:field_path], e.field_path)
-      assert_not_nil(e.message)
     end
+    assert_equal(42, e.http_code)
+    assert_equal(XML_REPLY[:type], e.type)
+    assert_equal(XML_REPLY[:trigger], e.trigger)
+    assert_equal(XML_REPLY[:field_path], e.field_path)
+    assert_not_nil(e.message)
+  end
+
+  def test_check_for_xml_error_with_message()
+    http_code = 442
+    e = assert_raise(AdwordsApi::Errors::ReportXmlError) do
+      @report_utils.check_for_xml_error(XML_REPLY[:reply], http_code)
+    end
+    error_str = e.to_s
+    assert(error_str.include?(http_code.to_s),
+        'HTTP code was not passed to the error message')
+    assert(error_str.include?(XML_REPLY[:type]),
+        'Error type was not passed to the error message')
+    assert(error_str.include?(XML_REPLY[:trigger]),
+        'Error trigger was not passed to the error message')
+    assert(error_str.include?(XML_REPLY[:field_path]),
+        'Field path was not passed to the error message')
   end
 end
