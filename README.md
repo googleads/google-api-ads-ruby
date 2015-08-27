@@ -28,7 +28,18 @@ New to the library? Check out the [Getting Started video screencast on YouTube](
  - (AdWords) Support for tracking API unit usage;
  - (AdWords) Full support for AdHoc reporting.
 
---Google Ads API Team
+## Submitting bug reports and/or feature requests
+
+If you have issues directly related to the client library, use the [issue tracker](https://github.com/googleads/google-api-ads-ruby/issues).
+
+If you have issues pertaining to a specific product, use the product support forums:
+
+* [AdWords](https://groups.google.com/forum/#!forum/adwords-api)
+* [DoubleClick Ad Exchange](https://groups.google.com/forum/#!forum/google-doubleclick-ad-exchange-buyer-api)
+* [DoubleClick for Publishers](https://groups.google.com/forum/#!forum/google-doubleclick-for-publishers-api)
+
+Make sure to subscribe to our [Google Plus page](https://plus.google.com/+GoogleAdsDevelopers)
+for API change announcements and other news.
 
 ## Logging
 
