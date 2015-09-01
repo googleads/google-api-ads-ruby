@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +18,6 @@
 #
 # This code example creates a click-to-download ad, also known as an app
 # promotion ad to a given ad group. To list ad groups, run get_ad_groups.rb.
-#
-# Tags: AdGroupAdService.mutate
 
 require 'adwords_api'
 

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.mcloonan@gmail.com (Michael Cloonan)
-#
 # Copyright:: Copyright 2015, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,10 +22,6 @@
 # To learn more about migrating Feed based extensions to extension settings,
 # see
 # https://developers.google.com/adwords/api/docs/guides/migrate-to-extension-settings.
-#
-# Tags: FeedService.query, FeedMappingService.query, FeedItemService.query
-# Tags: CampaignExtensionSettingService.mutate, CampaignFeedService.query
-# Tags: CampaignFeedService.mutate
 
 require 'adwords_api'
 require 'set'

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.sgomes@gmail.com (Sérgio Gomes)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,8 +21,6 @@
 # the experiment split (10%), then adds experimental bid changes for criteria
 # and ad groups. To get campaigns, run get_campaigns.rb. To get ad groups,
 # run get_ad_groups.rb. To get keywords, run get_keywords.rb.
-#
-# Tags: ExperimentService.mutate
 
 require 'adwords_api'
 require 'date'

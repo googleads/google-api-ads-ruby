@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.mcloonan@gmail.com (Michael Cloonan)
-#
 # Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,8 +17,6 @@
 #           limitations under the License.
 #
 # This example fetches the set of valid ProductBiddingCategories.
-#
-# Tags: ConstantDataService.getProductBiddingCategoryData
 
 require 'adwords_api'
 

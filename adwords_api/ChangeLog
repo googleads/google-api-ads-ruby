@@ -1,3 +1,7 @@
+0.16.1:
+  - General file cleanup.
+  - Improved errors handling (based on GitHub pull request).
+
 0.16.0:
   - Removed deprecated API version v201409.
   - Changed OAUTH2 JWT references to OAUTH2 Service Account.

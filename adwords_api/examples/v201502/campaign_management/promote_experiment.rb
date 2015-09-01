@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.sgomes@gmail.com (Sérgio Gomes)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +18,6 @@
 #
 # This example promotes an experiment, which permanently applies all the
 # experiment changes made to its related ad groups, criteria and ads.
-#
-# Tags: ExperimentService.mutate
 
 require 'adwords_api'
 

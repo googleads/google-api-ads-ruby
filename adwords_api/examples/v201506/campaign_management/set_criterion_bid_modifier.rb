@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +18,6 @@
 #
 # This example sets a bid modifier for the mobile platform on given campaign.
 # To get campaigns, run get_campaigns.rb.
-#
-# Tags: CampaignCriterionService.mutate
 
 require 'adwords_api'
 
