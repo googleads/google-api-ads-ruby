@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,8 +22,6 @@
 # get_all_placements.rb. To determine the IDs for locations, run
 # get_all_cities.rb, get_all_countries.rb, get_all_metros.rb and
 # get_all_regions.rb.
-#
-# Tags: LineItemService.createLineItems
 
 require 'dfp_api'
 

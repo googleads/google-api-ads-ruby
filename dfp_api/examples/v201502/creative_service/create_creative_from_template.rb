@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +20,6 @@
 # determine which companies are advertisers, run get_companies_by_statement.rb.
 # To determine which creatives already exist, run get_all_creatives.rb. To
 # determine which creative templates run get_all_creative_templates.rb.
-#
-# Tags: CreativeService.createCreative
 
 require 'base64'
 require 'dfp_api'
@@ -105,7 +101,7 @@ def create_creative_from_template()
       url_variable_value, target_window_variable_value]
 
   # Create the creatives on the server.
-  return_creative = creative_service.create_creative(creative)
+  return_creative = creative_service.create_creatives([creative])[0]
 
   if return_creative
     puts(("Template creative with ID: %d, name: %s and type '%s' was " +

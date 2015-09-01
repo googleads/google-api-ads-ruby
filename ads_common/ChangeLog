@@ -1,3 +1,7 @@
+0.10.1:
+  - General file cleanup.
+  - Fix the OAUTH2_SERVICE_ACCOUNT constant in ads_common.
+
 0.10.0:
   - Renamed all references of OAUTH2 JWT to OAUTH2 Service Account.
 

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +19,6 @@
 # This example adds a user to a team by creating an association between the two.
 # To determine which teams exist, run get_all_teams.rb. To determine which users
 # exist, run get_all_users.rb.
-#
-# Tags: UserTeamAssociationService.createUserTeamAssociations
 
 require 'dfp_api'
 

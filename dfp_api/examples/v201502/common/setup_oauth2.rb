@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +18,6 @@
 #
 # This example shows how to use OAuth2.0 authorization method. It is designed to
 # be run from console and requires user input.
-#
-# Tags: UserService.getUsersByStatement
 
 require 'dfp_api'
 

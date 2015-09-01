@@ -1,6 +1,4 @@
-# -*- encoding: utf-8 -*-
-#
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
+# Encoding: utf-8
 #
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
@@ -27,9 +25,8 @@ Gem::Specification.new do |s|
   s.version = AdsCommon::ApiConfig::CLIENT_LIB_VERSION
   s.summary = 'Common code for Google Ads APIs'
   s.description = 'Essential utilities shared by all Ads Ruby client libraries'
-  s.homepage = 'http://code.google.com/p/google-api-ads-ruby/'
-  s.authors = ['Sergio Gomes', 'Danial Klimkin']
-  s.email = ['api.dklimkin@gmail.com']
+  s.homepage = 'https://github.com/googleads/google-api-ads-ruby'
+  s.authors = ['Sergio Gomes', 'Danial Klimkin', 'Michael Cloonan']
   s.license = 'Apache-2.0'
   s.platform = Gem::Platform::RUBY
   s.required_rubygems_version = '>= 1.3.6'
@@ -37,7 +34,8 @@ Gem::Specification.new do |s|
   s.require_path = 'lib'
   s.files = Dir.glob('{lib,test}/**/*') + %w(COPYING README.md ChangeLog)
   s.test_files = Dir.glob('test/test_*.rb')
-  s.add_dependency('savon', '~> 1.2.0')
-  s.add_dependency('httpi', '~> 1.1.0')
-  s.add_dependency('signet', '~> 0.6.0')
+  s.add_runtime_dependency('savon', '~> 1.2.0')
+  s.add_runtime_dependency('httpi', '~> 1.1.0')
+  s.add_runtime_dependency('signet', '~> 0.6.0')
+  s.add_development_dependency('rake', '>= 10.4.2')
 end

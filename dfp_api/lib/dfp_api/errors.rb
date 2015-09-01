@@ -1,6 +1,4 @@
-#!/usr/bin/ruby
-#
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
+# Encoding: utf-8
 #
 # Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
 #
@@ -36,6 +34,7 @@ module DfpApi
         exception_data = (exception_type.nil?) ? exception_fault :
             extractor.extract_exception_data(exception_fault, exception_type)
         exception_data.each { |key, value| set_field(key, value) }
+        super(exception_data[:message])
       end
 
       private

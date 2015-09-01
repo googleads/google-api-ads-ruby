@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +18,6 @@
 #
 # This example gets all teams that the current user belongs to.
 # To create teams, run create_user_team_associations.rb.
-#
-# Tags: UserTeamAssociationService.getUserTeamAssociationsByStatement
-# Tags: UserService.getCurrentUser
 
 require 'dfp_api'
 require 'dfp_api_statement'

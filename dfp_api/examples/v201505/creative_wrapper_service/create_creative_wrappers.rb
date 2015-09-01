@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,8 +21,6 @@
 # Creative wrappers must be associated with a LabelType.CREATIVE_WRAPPER label
 # and applied to ad units by AdUnit.appliedLabels. To determine which creative
 # wrappers exist, run get_all_creative_wrappers.rb.
-#
-# Tags: CreativeWrapperService.createCreativeWrappers
 
 require 'dfp_api'
 

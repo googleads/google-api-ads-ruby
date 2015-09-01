@@ -46,18 +46,20 @@ def get_product_category_taxonomy()
   constant_data_srv = adwords.service(:ConstantDataService, API_VERSION)
 
   selector = {
-    :predicates => {:field => 'Country', :operator => 'IN', :values => ['US']}
+    :predicates => [
+        {:field => 'Country', :operator => 'IN', :values => ['US']}
+    ]
   }
 
-  results = constant_data_srv.get_product_bidding_category_data(selector)
+  result = constant_data_srv.get_product_bidding_category_data(selector)
 
   bidding_categories = {}
   root_categories = []
 
-  result[:value].each do |product_bidding_category|
+  result.each do |product_bidding_category|
     id = product_bidding_category[:dimension_value][:value]
     parent_id = nil
-    name = product_bidding_category[:display_value].first[:value]
+    name = product_bidding_category[:display_value].values.first()
 
     if product_bidding_category[:parent_dimension_value]
       parent_id = product_bidding_category[:parent_dimension_value][:value]
@@ -97,7 +99,7 @@ if __FILE__ == $0
         "OAuth2 client ID and secret and run misc/setup_oauth2.rb example " +
         "to retrieve and store OAuth2 tokens."
     puts "See this wiki page for more details:\n\n  " +
-        'http://code.google.com/p/google-api-ads-ruby/wiki/OAuth2'
+        'https://github.com/googleads/google-api-ads-ruby/wiki/OAuth2'
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

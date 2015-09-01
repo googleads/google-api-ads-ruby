@@ -277,7 +277,7 @@ announcements and other news.
 
 ## License
 
-Copyright 2011-2014, Google Inc. All Rights Reserved.
+Copyright 2011-2015, Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License.
@@ -294,7 +294,7 @@ specific language governing permissions and limitations under the License.
 ## Authors
 
 Author:
-    api.dklimkin@gmail.com (Danial Klimkin)
+    Danial Klimkin
 
 Maintainer:
-    api.nicholaschen@gmail.com (Nicholas Chen)
+    Nicholas Chen

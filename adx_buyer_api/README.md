@@ -3,7 +3,7 @@
 Welcome to the next generation Google-developed Ruby client library for the
 AdWords and DoubleClick Ad Exchange Buyer API!
 
-It contains full support for v201209, v201302 and v201306, with full stubs, and
+It contains full support for v201502 and v201506, with full stubs, and
 a simplified programming interface that lets you handle everything in native
 Ruby collections.
 
@@ -227,7 +227,7 @@ other news:
 
 ## Licence
 
-Copyright 2010-2014, Google Inc. All Rights Reserved.
+Copyright 2010-2015, Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -245,10 +245,10 @@ limitations under the License.
 
 Authors:
 
- - api.sgomes (Sérgio Gomes)
- - api.dklimkin@gmail.com (Danial Klimkin)
- - api.mcloonan@gmail.com (Michael Cloonan)
+ - Sérgio Gomes
+ - Danial Klimkin
+ - Michael Cloonan
 
 Maintainer:
 
- - api.mcloonan@gmail.com (Michael Cloonan)
+ - Michael Cloonan

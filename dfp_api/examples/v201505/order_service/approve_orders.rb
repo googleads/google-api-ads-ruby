@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +18,6 @@
 #
 # This example approves and overbooks all eligible draft or pending orders. To
 # determine which orders exist, run get_all_orders.rb.
-#
-# Tags: OrderService.getOrdersByStatement
-# Tags: OrderService.performOrderAction
 
 require 'date'
 require 'dfp_api'

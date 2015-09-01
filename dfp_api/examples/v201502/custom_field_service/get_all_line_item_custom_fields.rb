@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +18,6 @@
 #
 # This example gets all custom fields that apply to line items. To create custom
 # fields, run create_custom_fields.rb.
-#
-# Tags: CustomFieldService.getCustomFieldsByStatement
 
 require 'dfp_api'
 require 'dfp_api_statement'
@@ -52,7 +48,7 @@ def get_all_line_item_custom_fields()
     # Get custom fields by statement.
     page = custom_field_service.get_custom_fields_by_statement(
         statement.toStatement())
-  
+
     if page[:results]
       # Print details about each custom field in results.
       page[:results].each_with_index do |custom_field, index|

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,8 +22,6 @@
 # be used for more than one line item. For premium solution networks, the
 # creative ids can represent any creatvie. To copy creatives, run
 # copy_image_creatives.rb. To determine which LICAs exist, run get_all_licas.rb.
-#
-# Tags: LineItemCreativeAssociationService.createLineItemCreativeAssociations
 
 require 'dfp_api'
 

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,9 +19,6 @@
 # This example updates rule based first party audience segments. To determine
 # which first party audience segments exist, run
 # get_all_first_party_audience_segments.rb.
-#
-# Tags: AudienceSegmentService.getAudienceSegmentsByStatement
-# Tags: AudienceSegmentService.updateAudienceSegments
 
 require 'dfp_api'
 require 'dfp_api_statement'

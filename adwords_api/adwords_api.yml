@@ -9,7 +9,7 @@
   # Auth parameters for OAUTH2 method.
   # Set the OAuth2 client id and secret. Register your application here to
   # obtain these values:
-  #   https://code.google.com/apis/console#access
+  #   https://console.developers.google.com/
   :oauth2_client_id: INSERT_OAUTH2_CLIENT_ID_HERE
   :oauth2_client_secret: INSERT_OAUTH2_CLIENT_SECRET_HERE
   # Optional, see: https://developers.google.com/accounts/docs/OAuth2WebServer

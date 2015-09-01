@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,11 +16,9 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets suggested ad units that have more than 50 requests. 
+# This example gets suggested ad units that have more than 50 requests.
 #
 # This feature is only available to DFP premium solution networks.
-#
-# Tags: SuggestedAdUnitService.getSuggestedAdUnitsByStatement
 
 require 'dfp_api'
 require 'dfp_api_statement'

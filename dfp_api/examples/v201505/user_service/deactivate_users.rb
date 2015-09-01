@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +19,6 @@
 # This example deactivates a user. Deactivated users can no longer make requests
 # to the API. The user making the request cannot deactivate itself. To determine
 # which users exist, run get_all_users.rb.
-#
-# Tags: UserService.getUsersByStatement, UserService.performUserAction
 
 require 'dfp_api'
 

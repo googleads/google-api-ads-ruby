@@ -312,7 +312,7 @@ if __FILE__ == $0
         "example in the AdWords API samples to retrieve and store OAuth2 "+
         "tokens."
     puts "See this wiki page for more details:\n\n  " +
-        'http://code.google.com/p/google-api-ads-ruby/wiki/OAuth2'
+        'https://github.com/googleads/google-api-ads-ruby/wiki/OAuth2'
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

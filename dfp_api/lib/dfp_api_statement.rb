@@ -1,7 +1,5 @@
 # Encoding: utf-8
 #
-# Authors:: api.nicholaschen@gmail.com  (Nicholas Chen)
-#
 # Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");

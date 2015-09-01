@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +18,6 @@
 #
 # This example updates the destination URL of all LICAs belonging to a line item.
 # To determine which LICAs exist, run get_all_licas.rb.
-#
-# Tags: LineItemCreativeAssociationService.getLineItemCreativeAssociationsByStatement
-# Tags: LineItemCreativeAssociationService.updateLineItemCreativeAssociations
 
 require 'dfp_api'
 

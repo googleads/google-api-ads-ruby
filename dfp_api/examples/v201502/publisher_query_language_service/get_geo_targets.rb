@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +20,6 @@
 # available PQL tables can be found at:
 #
 # https://developers.google.com/doubleclick-publishers/docs/reference/latest/PublisherQueryLanguageService
-#
-# Tags: PublisherQueryLanguageService.select
 
 require 'dfp_api'
 require 'dfp_api_statement'

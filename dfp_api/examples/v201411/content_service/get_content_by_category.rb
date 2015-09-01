@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,10 +20,6 @@
 # network's content browse custom targeting key.
 #
 # This feature is only available to DFP video publishers.
-#
-# Tags: NetworkService.getCurrentNetwork
-# Tags: ContentService.getContentByStatementAndCustomTargetingValue
-# Tags: CustomTargetingService.getCustomTargetingValuesByStatement
 
 require 'dfp_api'
 require 'dfp_api_statement'
@@ -52,7 +46,7 @@ def get_content_by_statement()
   custom_targeting_service = dfp.service(:CustomTargetingService, API_VERSION)
 
   # Create a statement to select the categories matching the name comedy.
-  statement = DfpApiStatement::FilterStatement.new( 
+  statement = DfpApiStatement::FilterStatement.new(
       'WHERE customTargetingKeyId = :targeting_key_id' +
       ' and name = :category ORDER BY id ASC',
       [

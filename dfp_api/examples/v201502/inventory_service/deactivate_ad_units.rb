@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +18,6 @@
 #
 # This example deactivates all active ad units. To determine which ad units
 # exist, run get_all_ad_units.rb or get_inventory_tree.rb.
-#
-# Tags: InventoryService.getLineItemsByStatement
-# Tags: InventoryService.performAdUnitAction
 
 require 'dfp_api'
 require 'dfp_api_statement'

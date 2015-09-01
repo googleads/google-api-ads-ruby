@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.nicholaschen@gmail.com (Nicholas Chen)
-#
 # Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +19,6 @@
 # This example gets all line items for a given order. To create line
 # items, run create_line_items.rb. To determine which orders exist, run
 # get_all_orders.rb.
-#
-# Tags: LineItemService.getLineItemsByStatement
 
 require 'dfp_api'
 require 'dfp_api_statement'

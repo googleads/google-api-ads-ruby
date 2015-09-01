@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +19,6 @@
 # This example creates new ad units under a the effective root ad unit. To
 # determine which ad units exist, run get_inventory_tree.rb or
 # get_all_ad_units.rb.
-#
-# Tags: InventoryService.createAdUnits, NetworkService.getCurrentNetwork
 
 require 'dfp_api'
 

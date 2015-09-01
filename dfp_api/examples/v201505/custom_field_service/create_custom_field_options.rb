@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,8 +20,6 @@
 # created, custom field options can be found under the options fields of the
 # drop-down custom field and they cannot be deleted. To determine which custom
 # fields exist, run get_all_custom_fields.rb.
-#
-# Tags: CustomFieldService.createCustomFieldOptions
 
 require 'dfp_api'
 
