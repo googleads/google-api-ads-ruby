@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    google-adwords-api (0.16.0)
+    google-adwords-api (0.16.1)
       google-ads-common (~> 0.10.1)
 
 GEM
