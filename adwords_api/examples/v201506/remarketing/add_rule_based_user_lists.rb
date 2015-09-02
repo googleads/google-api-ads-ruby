@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.mcloonan@gmail.com (Michael Cloonan)
-#
 # Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +19,6 @@
 # This example adds two rule-based remarketing user lists: one with no site
 # visit data restrictions, and another that will only include users who visit
 # your site in the next six months.
-#
-# Tags: AdwordsUserListService.mutate
 
 require 'adwords_api'
 

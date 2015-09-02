@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.mcloonan@gmail.com (Michael Cloonan)
-#
 # Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +18,6 @@
 #
 # This example restricts the products that will be included in the campaign by
 # setting a ProductScope.
-#
-# Tags: CampaignCriterionService.mutate
 
 require 'adwords_api'
 

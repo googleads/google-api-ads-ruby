@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.sgomes@gmail.com (Sérgio Gomes)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +18,6 @@
 #
 # This example illustrates how to update an ad group, setting its status to
 # 'PAUSED'. To create an ad group, run add_ad_group.rb.
-#
-# Tags: AdGroupService.mutate
 
 require 'adwords_api'
 

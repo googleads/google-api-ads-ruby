@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2015, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,9 +18,6 @@
 #
 # This example demonstrates how to find shared sets, shared set criterions and
 # how to remove them.
-#
-# Tags: CampaignSharedSetService.get
-# Tags: SharedCriterionService.get, SharedCriterionService.mutate
 
 require 'adwords_api'
 

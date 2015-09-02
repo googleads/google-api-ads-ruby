@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.mcloonan@gmail.com (Michael Cloonan)
-#
 # Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +18,6 @@
 #
 # This example adds a feed that syncs feed items from a Google My Business (GMB)
 # account and associates the feed with a customer.
-#
-# Tags: CustomerFeedService.mutate, FeedService.mutate
 
 require 'adwords_api'
 require 'date'

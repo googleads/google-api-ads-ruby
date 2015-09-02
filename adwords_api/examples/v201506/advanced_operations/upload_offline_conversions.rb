@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +19,6 @@
 # This code example imports offline conversion values for specific clicks to
 # your account. To get Google Click ID for a click, run
 # CLICK_PERFORMANCE_REPORT.
-#
-# Tags: ConversionTrackerService.mutate, OfflineConversionFeedService.mutate
 
 require 'adwords_api'
 require 'date'

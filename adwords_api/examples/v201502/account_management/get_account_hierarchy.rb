@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,8 +18,6 @@
 #
 # This example illustrates how to retrieve the account hierarchy under an
 # account. This example needs to be run against an MCC account.
-#
-# Tags: ManagedCustomerService.get
 
 require 'adwords_api'
 require 'adwords_api/utils'

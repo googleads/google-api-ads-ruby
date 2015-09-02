@@ -239,7 +239,7 @@ Bug reports and feature requests can be posted
 Questions can be asked [on the forum](http://groups.google.com/group/adwords-api).
 
 Make sure to subscribe to our
-[Google Plus page](https://plus.google.com/+GoogleAdsDevelopers) for API change 
+[Google Plus page](https://plus.google.com/+GoogleAdsDevelopers) for API change
 announcements and other news.
 
 
@@ -247,7 +247,7 @@ announcements and other news.
 
 ## Licence
 
-Copyright 2010-2014, Google Inc. All Rights Reserved.
+Copyright 2010-2015, Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -265,11 +265,10 @@ limitations under the License.
 
 Authors:
 
- - api.sgomes@gmail.com (Sérgio Gomes)
- - api.dklimkin@gmail.com (Danial Klimkin)
- - api.mcloonan@gmail.com (Michael Cloonan)
+ - Sérgio Gomes
+ - Danial Klimkin
+ - Michael Cloonan
 
 Maintainer:
 
- - api.mcloonan@gmail.com (Michael Cloonan)
-
+ - Michael Cloonan

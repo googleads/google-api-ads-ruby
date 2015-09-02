@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,8 +19,6 @@
 # This example illustrates how to retrieve all images and videos. To upload an
 # image, run upload_image.rb. To upload video, see:
 #   http://adwords.google.com/support/aw/bin/answer.py?hl=en&answer=39454.
-#
-# Tags: MediaService.get
 
 require 'adwords_api'
 
