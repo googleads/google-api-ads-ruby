@@ -10,7 +10,7 @@
     behavior).
 
 0.15.2:
-  - Support and examples for v201502.
+  - Support and examples for v201506.
   - Added support for including zero impression rows in reports via HTTP header.
 
 0.15.1:
