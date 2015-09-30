@@ -57,6 +57,8 @@ class TestConfig < Test::Unit::TestCase
     assert_equal('sandbox', config.read('service.environment'))
     assert_equal('ClientLogin', config.read('authentication.method'))
     assert_equal('root@example.com', config.read('authentication.email'))
+    assert_not_equal('<%= \'something replaced\' =>', config.read('template.example'))
+    assert_equal('something replaced', config.read('template.example'))
     assert_nil(config.read('unexisting.entry'))
   end
 
