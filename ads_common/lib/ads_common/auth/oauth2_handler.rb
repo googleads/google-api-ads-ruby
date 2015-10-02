@@ -81,7 +81,7 @@ module AdsCommon
       def get_token(credentials = nil)
         token = super(credentials)
         unless @client.nil?
-          @client.issued_at = Time.parse(@client.issued_at) if @client.issued_at.class.name == 'String'
+          @client.issued_at = Time.parse(@client.issued_at) if @client.issued_at.is_a? String
           token = refresh_token! if @client.expired?
         end
         return token
