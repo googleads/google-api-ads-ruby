@@ -17,7 +17,7 @@
 #
 # Code template for registry generation for Savon backend
 
-require 'savon'
+require 'ads_savon'
 require 'ads_common/build/savon_abstract_generator'
 require 'pp'
 

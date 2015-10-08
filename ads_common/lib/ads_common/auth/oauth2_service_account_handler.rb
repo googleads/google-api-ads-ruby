@@ -82,7 +82,7 @@ module AdsCommon
 
       # Refreshes access token from refresh token.
       def refresh_token!()
-        return nil if @token.nil? or @token[:refresh_token].nil?
+        return nil if @token.nil?
         @client.refresh!
         @token = token_from_client(@client)
         return @token

@@ -62,6 +62,7 @@ module AdsCommon
     # Defaulting to stricter :peer validation.
     def self.prepare_request(url, config, headers = nil, data = nil)
       request = HTTPI::Request.new(url)
+      request.follow_redirect = true
       request.headers = headers if headers
       request.body = data if data
       configure_httpi(config, request)

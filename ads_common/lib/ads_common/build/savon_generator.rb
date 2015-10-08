@@ -18,7 +18,7 @@
 # Generates the wrappers for API services. Only used during the
 # 'rake generate' step of library setup.
 
-require 'savon'
+require 'ads_savon'
 
 require 'ads_common/build/savon_service_generator'
 require 'ads_common/build/savon_registry'
@@ -51,7 +51,7 @@ module AdsCommon
         }
         @logger = Logger.new(STDOUT)
         @logger.level = Logger::INFO
-        Savon.configure do |config|
+        GoogleAdsSavon.configure do |config|
           config.logger = @logger
           config.log_level = :debug
         end
@@ -68,7 +68,7 @@ module AdsCommon
       # Returns:
       # - none
       def process_wsdl()
-        client = Savon::Client.new(@wsdl_url)
+        client = GoogleAdsSavon::Client.new(@wsdl_url)
         begin
           @generator_args[:namespace] = client.wsdl.namespace
           do_process_wsdl_client(client)
