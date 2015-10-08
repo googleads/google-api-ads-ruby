@@ -207,12 +207,14 @@ module AdwordsApi
     # Checks for an XML error in the response body and raises an exception if
     # it was found.
     def check_for_xml_error(report_body, response_code)
-      error_response = Nori.parse(report_body)
-      if error_response.include?(:report_download_error) and
-          error_response[:report_download_error].include?(:api_error)
-        api_error = error_response[:report_download_error][:api_error]
-        raise AdwordsApi::Errors::ReportXmlError.new(response_code,
-            api_error[:type], api_error[:trigger], api_error[:field_path])
+      unless report_body.nil?
+        error_response = get_nori().parse(report_body)
+        if error_response.include?(:report_download_error) and
+            error_response[:report_download_error].include?(:api_error)
+          api_error = error_response[:report_download_error][:api_error]
+          raise AdwordsApi::Errors::ReportXmlError.new(response_code,
+              api_error[:type], api_error[:trigger], api_error[:field_path])
+        end
       end
     end
 
@@ -267,6 +269,20 @@ module AdwordsApi
       end
       node[:order!] = var_order
       return nil
+    end
+
+    def get_nori()
+      return @nori if @nori
+
+      nori_options = {
+        :strip_namespaces      => true,
+        :convert_tags_to       => lambda { |tag| tag.snakecase.to_sym },
+        :advanced_typecasting  => false
+      }
+
+      @nori = Nori.new(nori_options)
+
+      return @nori
     end
   end
 end

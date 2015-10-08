@@ -18,7 +18,7 @@
 #
 # This example gets and downloads an Ad Hoc report from a XML report definition
 # for all accounts in hierarchy in multiple parallel threads. This example
-# needs to be run against an MCC account.
+# needs to be run against an AdWords manager account.
 
 require 'thread'
 

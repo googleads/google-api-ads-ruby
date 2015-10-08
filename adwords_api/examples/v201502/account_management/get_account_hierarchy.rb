@@ -17,7 +17,7 @@
 #           limitations under the License.
 #
 # This example illustrates how to retrieve the account hierarchy under an
-# account. This example needs to be run against an MCC account.
+# account. This example needs to be run against an AdWords manager account.
 
 require 'adwords_api'
 require 'adwords_api/utils'

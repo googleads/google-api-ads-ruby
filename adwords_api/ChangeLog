@@ -1,3 +1,8 @@
+0.17.0:
+  - Support and examples for v201509.
+  - Require google-ads-common 0.11.0 or later from now on.
+  - Updating report_utils for new version of nori in ads_common.
+
 0.16.1:
   - General file cleanup.
   - Improved errors handling (based on GitHub pull request).

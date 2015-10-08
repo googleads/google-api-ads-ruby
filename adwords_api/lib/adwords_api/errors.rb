@@ -92,5 +92,8 @@ module AdwordsApi
         @field_path = error_field_path
       end
     end
+
+    class InvalidBatchJobOperationError < AdsCommon::Errors::ApiException
+    end
   end
 end

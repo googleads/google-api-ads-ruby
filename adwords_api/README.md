@@ -26,7 +26,7 @@ AdWords library, which will be installed automatically.
 
 The following gem libraries are required:
 
- - savon
+ - google-ads-savon
  - google-ads-common
 
 
