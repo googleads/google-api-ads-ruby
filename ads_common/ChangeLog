@@ -1,3 +1,8 @@
+0.11.1:
+  - Added streaming get and post options to AdsCommon::Http.
+  - Added ability to support put requests to AdsCommon::Http.
+  - Added support for additional scopes when generating OAuth2 tokens.
+
 0.11.0:
   - Updated to use 'ads_savon' library over 'savon'.
   - Add support for services to return SOAP XML without making a request. This

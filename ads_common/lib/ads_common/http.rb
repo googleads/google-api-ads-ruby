@@ -43,6 +43,15 @@ module AdsCommon
       return get_response(url, config, headers).body
     end
 
+    # Performs a get on a URL, using all of the connection options in the
+    # client library, sending the response piecemeal to the given block.
+    def self.get_stream(url, config, headers = nil, &block)
+      request = prepare_request(url, config, headers)
+      request.on_body(&block)
+      HTTPI.get(request)
+      return nil
+    end
+
     # Performs a post on a URL, using all of the connection options in the
     # client library, returning a HTTPI::Response.
     def self.post_response(url, data, config, headers = nil)
@@ -54,6 +63,28 @@ module AdsCommon
     # client library, returning the response body as a string.
     def self.post(url, data, config, headers = nil)
       return post_response(url, data, config, headers).body
+    end
+
+    # Performs a post on a URL, using all of the connection options in the
+    # client library, sending the response piecemeal to the given block.
+    def self.post_stream(url, data, config, headers = nil, &block)
+      request = prepare_request(url, config, headers, data)
+      request.on_body(&block)
+      HTTPI.post(request)
+      return nil
+    end
+
+    # Performs a put on a URL, using all of the connection options in the
+    # client library, returning a HTTPI::Response.
+    def self.put_response(url, data, config, headers = nil)
+      request = prepare_request(url, config, headers, data)
+      return HTTPI.put(request)
+    end
+
+    # Performs a put on a URL, using all of the connection options in the
+    # client library, returning the response body as a string.
+    def self.put(url, data, config, headers = nil)
+      return put_response(url, data, config, headers).body
     end
 
     private
