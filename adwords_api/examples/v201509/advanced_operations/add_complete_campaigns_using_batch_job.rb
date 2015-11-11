@@ -52,42 +52,36 @@ def add_complete_campaigns_using_batch_job()
   temp_id_generator = TempIdGenerator.new()
 
   # Create an array of hashed operations generated from the batch_job_utils.
-  hashed_operations = []
+  operations = []
 
   # Create an operation to create a new budget.
   budget_operation = build_budget_operation(temp_id_generator)
-  hashed_operations += batch_job_utils.generate_soap_operations(
-      [budget_operation])
+  operations << budget_operation
 
   # Create operations to create new campaigns.
   campaign_operations = build_campaign_operations(
       temp_id_generator, budget_operation)
-  hashed_operations += batch_job_utils.generate_soap_operations(
-      campaign_operations)
+  operations += campaign_operations
 
   # Create operations to create new negative keyword criteria for each
   # campaign.
-  hashed_operations += batch_job_utils.generate_soap_operations(
-      build_campaign_criterion_operations(campaign_operations))
+  operations += build_campaign_criterion_operations(campaign_operations)
 
   # Create operations to create new ad groups.
   ad_group_operations = build_ad_group_operations(
       temp_id_generator, campaign_operations)
-  hashed_operations += batch_job_utils.generate_soap_operations(
-      ad_group_operations)
+  operations += ad_group_operations
 
   # Create operations to create new ad group criteria (keywords).
-  hashed_operations += batch_job_utils.generate_soap_operations(
-      build_ad_group_criterion_operations(ad_group_operations))
+  operations += build_ad_group_criterion_operations(ad_group_operations)
 
   # Create operations to create new ad group ads (text ads).
-  hashed_operations += batch_job_utils.generate_soap_operations(
-      build_ad_group_ad_operations(ad_group_operations))
+  operations += build_ad_group_ad_operations(ad_group_operations)
 
   # Use the batch_job_utils to upload all operations.
-  batch_job_utils.post_soap_operations(hashed_operations, upload_url)
+  batch_job_utils.upload_operations(operations, upload_url)
   puts "Uploaded %d operations for batch job with ID %d." %
-      [hashed_operations.size, batch_job[:id]]
+      [operations.size, batch_job[:id]]
 
   # Poll for completion of the batch job using an exponential back off.
   poll_attempts = 0
@@ -104,7 +98,7 @@ def add_complete_campaigns_using_batch_job()
 
   begin
     sleep_seconds = 30 * (2 ** poll_attempts)
-    puts "Sleeping %d seconds" % sleep_seconds
+    puts "Sleeping for %d seconds" % sleep_seconds
     sleep(sleep_seconds)
 
     batch_job = batch_job_srv.get(selector)[:entries].first

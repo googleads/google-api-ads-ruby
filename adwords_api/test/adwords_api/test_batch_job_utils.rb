@@ -26,6 +26,7 @@ require 'adwords_api'
 module AdwordsApi
   class BatchJobUtils
     public :extract_soap_operations
+    public :add_padding
   end
 end
 
@@ -91,5 +92,19 @@ class TestBatchJobUtils < Test::Unit::TestCase
     extracted = @batch_job_utils.generate_soap_operations(
         [operation])
     assert_equal([EXPECTED_OPERATION], extracted)
+  end
+
+  # Testing padding to make sure that it pads to the right length.
+  def test_add_padding()
+    length_increment = 256 * 1024
+    assert_equal(
+        @batch_job_utils.add_padding('abcd').size,
+        length_increment)
+    assert_equal(
+        @batch_job_utils.add_padding(' ' * length_increment).size,
+        length_increment)
+    assert_equal(
+        @batch_job_utils.add_padding(' ' * (length_increment + 1)).size,
+        2 * length_increment)
   end
 end

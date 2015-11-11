@@ -23,6 +23,7 @@ require 'nori'
 require 'ads_common/http'
 require 'ads_common/savon_service'
 require 'adwords_api/errors'
+require 'adwords_api/incremental_upload_helper'
 
 module AdwordsApi
   class BatchJobUtils
@@ -36,61 +37,7 @@ module AdwordsApi
       @api, @version = api, version
     end
 
-    # Generates SOAP operations from a ruby hash. The hash uses the same format
-    # as a normal request.
-    #
-    # Args:
-    # - hash_operations: An array of ruby hash of operations to convert to SOAP
-    # - service_name: The name of the AdwordsApi service as a symbol that would
-    #   normally make this request
-    #
-    # Returns:
-    # - operations elements of SOAP body as an array of strings
-    #
-    def generate_soap_operations(hash_operations)
-      unless hash_operations.is_a?(Array)
-        raise AdwordsApi::Errors::InvalidBatchJobOperationError,
-            'Operations must be in an array.'
-      end
-      return hash_operations.map do |operation|
-        operation_type = operation[:xsi_type]
-        if operation_type.nil?
-          raise AdwordsApi::Errors::InvalidBatchJobOperationError,
-              ':xsi_type for operations must be defined ' +
-              'explicitly for batch jobs.'
-        end
-        service_name = SERVICES_BY_OPERATION_TYPE[operation_type]
-        if service_name.nil?
-          raise AdwordsApi::Errors::InvalidBatchJobOperationError,
-              'Unknown operation type: %s' % operation_type
-        end
-        method_name = METHODS_BY_OPERATION_TYPE[operation_type]
-        service = @api.service(service_name, @version)
-        full_soap_xml = service.send(method_name, [operation])
-        operation_xml = extract_soap_operations(full_soap_xml)
-        operation_xml
-      end
-    end
-
-    # Posts the provided SOAP operations to the provided URL.
-    #
-    # Args:
-    # - soap_operations: An array including SOAP operations provided by
-    #   generate_soap_operations
-    # - batch_job_url: The URL provided by BatchJobService to post the provided
-    #   operations to
-    #
-    def post_soap_operations(soap_operations, batch_job_url)
-      headers = DEFAULT_HEADERS
-      request_body = UPLOAD_XML_SKELETON % [@version, soap_operations.join]
-      log_request(batch_job_url, headers, request_body)
-      response = AdsCommon::Http.post_response(
-          batch_job_url, request_body, @api.config, headers)
-    end
-
-    # A convenience method that will generate SOAP operations and immediately
-    # execute them. This is useful if your operations all would be
-    # processed by a single service.
+    # Uploads the given operations for a batch job to the provided URL.
     #
     # Args:
     # - hash_operations: An array of ruby has operations to execute by
@@ -100,9 +47,89 @@ module AdwordsApi
     # - batch_job_url: The URL provided by BatchjobService to post the provided
     #   operations to
     #
-    def execute_hash_operations(hash_operations, batch_job_url)
-      soap_operations = generate_soap_operations(hash_operations)
+    # Raises:
+    # - InvalidBatchJobOperationError: If there is a problem converting the
+    # given operations to SOAP.
+    #
+    def upload_operations(operations, batch_job_url)
+      soap_operations = generate_soap_operations(operations)
       post_soap_operations(soap_operations, batch_job_url)
+    end
+
+    # Provides a helper to manage incremental uploads.
+    #
+    # Args:
+    # - batch_job_url: The URL provided by BatchJobService to put the provided
+    # operations to.
+    # - uploaded_bytes: The number of bytes already uploaded for this
+    # incremental batch job. Can be retrieved from the IncrementalUploadHelper
+    # using uploaded_bytes.
+    #
+    # Returns:
+    # - an IncrementalUploadHelper that will accept operations and put them,
+    # keeping track of uploaded bytes automatically.
+    #
+    def start_incremental_upload(batch_job_url, uploaded_bytes = 0)
+      return AdwordsApi::IncrementalUploadHelper.new(
+          self, uploaded_bytes, batch_job_url)
+    end
+
+    # Puts the provided operations to the provided URL, allowing
+    # for incremental followup puts.
+    #
+    # Args:
+    # - soap_operations: An array including SOAP operations provided by
+    #   generate_soap_operations
+    # - batch_job_url: The URL provided by BatchJobService to post the provided
+    #   operations to
+    # - total_content_length: The total number of bytes already uploaded
+    #   incrementally. Set this to 0 the first time you call the method.
+    # - is_last_request: Whether or not this set of uploads will conclude the
+    #   full request.
+    #
+    # Returns:
+    # - total content length, including what was just uploaded. Pass this back
+    #   into this method on subsequent calls.
+    def put_incremental_operations(
+        operations, batch_job_url, total_content_length = 0,
+        is_last_request = false)
+      headers = DEFAULT_HEADERS
+      soap_operations = generate_soap_operations(operations)
+      request_body = soap_operations.join
+      is_first_request = (total_content_length == 0)
+
+      if is_first_request
+        request_body = (UPLOAD_XML_PREFIX % [@version]) + request_body
+      end
+      if is_last_request
+        request_body += UPLOAD_XML_SUFFIX
+      end
+
+      request_body = add_padding(request_body)
+      content_length = request_body.size
+
+      headers['Content-Length'] = content_length.to_s
+
+      lower_bound = total_content_length
+      upper_bound = total_content_length + content_length - 1
+      total_bytes = is_last_request ? upper_bound + 1 : '*'
+      content_range = "bytes %d-%d/%s" %
+          [lower_bound, upper_bound, total_bytes]
+      headers['Content-Range'] = content_range
+
+      log_request(batch_job_url, headers, request_body)
+
+      # The HTTPI library fails to handle the response when uploading
+      # incremental requests. We're not interested in the response, so just
+      # ignore the error.
+      begin
+        AdsCommon::Http.put_response(
+            batch_job_url, request_body, @api.config, headers)
+      rescue ArgumentError
+      end
+
+      total_content_length += content_length
+      return total_content_length
     end
 
     # Downloads the results of a batch job from the specified URL.
@@ -126,9 +153,13 @@ module AdwordsApi
 
     private
 
-    UPLOAD_XML_SKELETON = '<?xml version="1.0" encoding="UTF-8"?><ns1:mutate ' +
-          'xmlns:ns1="https://adwords.google.com/api/adwords/cm/%s">%s' +
-          '</ns1:mutate>'
+    # For incremental uploads, the size (in bytes) of the body of the request
+    # must be in multiples of 256k.
+    REQUIRED_CONTENT_LENGTH_INCREMENT = 256 * 1024
+
+    UPLOAD_XML_PREFIX = '<?xml version="1.0" encoding="UTF-8"?><ns1:mutate ' +
+          'xmlns:ns1="https://adwords.google.com/api/adwords/cm/%s">'
+    UPLOAD_XML_SUFFIX = '</ns1:mutate>'
     DEFAULT_HEADERS = {"Content-Type" => "application/xml"}
 
     SERVICES_BY_OPERATION_TYPE = {
@@ -160,6 +191,40 @@ module AdwordsApi
       'CampaignLabelOperation' => 'mutate_label_to_xml',
       'FeedItemOperation' => 'mutate_to_xml'
     }
+
+    def generate_soap_operations(hash_operations)
+      unless hash_operations.is_a?(Array)
+        raise AdwordsApi::Errors::InvalidBatchJobOperationError,
+            'Operations must be in an array.'
+      end
+      return hash_operations.map do |operation|
+        operation_type = operation[:xsi_type]
+        if operation_type.nil?
+          raise AdwordsApi::Errors::InvalidBatchJobOperationError,
+              ':xsi_type for operations must be defined ' +
+              'explicitly for batch jobs.'
+        end
+        service_name = SERVICES_BY_OPERATION_TYPE[operation_type]
+        if service_name.nil?
+          raise AdwordsApi::Errors::InvalidBatchJobOperationError,
+              'Unknown operation type: %s' % operation_type
+        end
+        method_name = METHODS_BY_OPERATION_TYPE[operation_type]
+        service = @api.service(service_name, @version)
+        full_soap_xml = service.send(method_name, [operation])
+        operation_xml = extract_soap_operations(full_soap_xml)
+        operation_xml
+      end
+    end
+
+    def post_soap_operations(soap_operations, batch_job_url)
+      headers = DEFAULT_HEADERS
+      request_body = (UPLOAD_XML_PREFIX % [@version]) + soap_operations.join +
+          UPLOAD_XML_SUFFIX
+      log_request(batch_job_url, headers, request_body)
+      response = AdsCommon::Http.post_response(
+          batch_job_url, request_body, @api.config, headers)
+    end
 
     # Given a full SOAP xml string, extract just the operations element
     # from the SOAP body as a string.
@@ -215,6 +280,14 @@ module AdwordsApi
       end
 
       return results
+    end
+
+    def add_padding(xml)
+      remainder = xml.size % REQUIRED_CONTENT_LENGTH_INCREMENT
+      return xml if remainder == 0
+      bytes_to_add = REQUIRED_CONTENT_LENGTH_INCREMENT - remainder
+      padded_xml = xml + (' ' * bytes_to_add)
+      return padded_xml
     end
 
     def get_nori()

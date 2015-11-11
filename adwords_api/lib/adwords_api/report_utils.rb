@@ -24,6 +24,7 @@ require 'nori'
 require 'ads_common/http'
 require 'adwords_api/errors'
 require 'adwords_api/report_header_handler'
+require 'adwords_api/report_stream'
 
 module AdwordsApi
   class ReportUtils
@@ -76,6 +77,45 @@ module AdwordsApi
       return nil
     end
 
+    # Streams a report as a string to the given block. This method will not do
+    # error checking on returned values.
+    #
+    # Args:
+    # - report_definition: definition of the report in XML text or hash
+    # - path: path to save report to
+    # - cid: optional customer ID to run against
+    #
+    # Returns:
+    # - nil
+    #
+    # Raises:
+    # - AdwordsApi::Errors::InvalidReportDefinitionError if the report
+    #   definition is invalid
+    #
+    def download_report_as_stream(report_definition, cid = nil, &block)
+      return get_report_response(report_definition, cid, &block)
+    end
+
+    # Returns a helper object that can manage breaking the streamed report
+    # results into individual lines.
+    #
+    # Args:
+    # - report_definition: definition of the report in XML text or hash
+    # - path: path to save report to
+    # - cid: optional customer ID to run against
+    #
+    # Returns:
+    # - ReportStream object initialized to begin streaming.
+    #
+    # Raises:
+    # - AdwordsApi::Errors::InvalidReportDefinitionError if the report
+    #   definition is invalid
+    #
+    def get_stream_helper(report_definition, cid = nil, &block)
+      return AdwordsApi::ReportStream.set_up(
+          self, report_definition, cid, &block)
+    end
+
     # Downloads and returns a report with AWQL.
     #
     # Args:
@@ -113,6 +153,38 @@ module AdwordsApi
       return nil
     end
 
+    # Streams a report with AWQL as a string to the given block.  This method
+    # will not do error checking on returned values.
+    #
+    # Args:
+    # - report_query: query for the report as string
+    # - format: format for the report as string
+    # - cid: optional customer ID to run report against
+    #
+    # Returns:
+    # - nil
+    #
+    def download_report_as_stream_with_awql(
+        report_query, format, cid = nil, &block)
+      return get_report_response_with_awql(report_query, format, cid, &block)
+    end
+
+    # Returns a helper object that can manage breaking the streamed report
+    # results into individual lines.
+    #
+    # Args:
+    # - report_query: query for the report as string
+    # - format: format for the report as string
+    # - cid: optional customer ID to run report against
+    #
+    # Returns:
+    # - ReportStream object initialized to begin streaming.
+    #
+    def get_stream_helper_with_awql(report_query, format, cid = nil, &block)
+      return AdwordsApi::ReportStream.set_up_with_awql(
+          self, report_query, format, cid, &block)
+    end
+
     private
 
     # Minimal set of required fields for report definition.
@@ -131,28 +203,36 @@ module AdwordsApi
     }
 
     # Send POST request for a report and returns Response object.
-    def get_report_response(report_definition, cid)
+    def get_report_response(report_definition, cid, &block)
       definition_text = get_report_definition_text(report_definition)
       data = '__rdxml=%s' % CGI.escape(definition_text)
-      return make_adhoc_request(data, cid)
+      return make_adhoc_request(data, cid, &block)
     end
 
     # Send POST request for a report with AWQL and returns Response object.
-    def get_report_response_with_awql(report_query, format, cid)
+    def get_report_response_with_awql(report_query, format, cid, &block)
       data = '__rdquery=%s&__fmt=%s' %
           [CGI.escape(report_query), CGI.escape(format)]
-      return make_adhoc_request(data, cid)
+      return make_adhoc_request(data, cid, &block)
     end
 
     # Makes request and AdHoc service and returns response.
-    def make_adhoc_request(data, cid)
+    def make_adhoc_request(data, cid, &block)
       url = @api.api_config.adhoc_report_download_url(
           @api.config.read('service.environment'), @version)
       headers = get_report_request_headers(url, cid)
       log_request(url, headers, data)
-      response = AdsCommon::Http.post_response(url, data, @api.config, headers)
-      check_for_errors(response)
-      return response
+      # A given block indicates that we should make a stream request and yield
+      # the results, rather than return a full response.
+      if block_given?
+        AdsCommon::Http.post_stream(url, data, @api.config, headers, &block)
+        return nil
+      else
+        response = AdsCommon::Http.post_response(
+            url, data, @api.config, headers)
+        check_for_errors(response)
+        return response
+      end
     end
 
     # Converts passed object to XML text. Currently support String (no changes)
