@@ -22,6 +22,7 @@ require 'ads_common/savon_headers/oauth_header_handler'
 require 'dfp_api/api_config'
 require 'dfp_api/credential_handler'
 require 'dfp_api/errors'
+require 'dfp_api/dfp_api_statement'
 
 # Main namespace for all the client library's modules and classes.
 module DfpApi

@@ -21,6 +21,7 @@
 
 require 'dfp_api'
 
+
 API_VERSION = :v201502
 
 def update_licas()
@@ -38,7 +39,7 @@ def update_licas()
   line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
 
   # Create a statement to only select LICAs for the given line item ID.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE lineItemId = :line_item_id ORDER BY lineItemId, creativeId ASC',
       [
           {:key => 'line_item_id',

@@ -20,7 +20,7 @@
 # To create teams, run create_user_team_associations.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -42,7 +42,7 @@ def get_user_team_associations_by_statement()
   user = user_service.get_current_user()
 
   # Create filter text to select user team associations by the user ID.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE userId = :user_id ORDER BY id',
       [
           {:key => 'user_id',
@@ -62,7 +62,7 @@ def get_user_team_associations_by_statement()
              association[:user_id]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

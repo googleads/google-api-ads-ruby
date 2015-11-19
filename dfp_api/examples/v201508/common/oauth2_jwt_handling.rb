@@ -24,7 +24,7 @@
 # for more information.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -54,7 +54,7 @@ def oauth2_jwt_handling()
   user_service = dfp.service(:UserService, API_VERSION)
 
   # Create a statement to select all users.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
   # Define initial values.
 
   begin
@@ -68,7 +68,7 @@ def oauth2_jwt_handling()
             [index + statement.offset, user[:id], user[:name], user[:email]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

@@ -21,7 +21,7 @@
 # get_all_custom_targeting_keys_and_values.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -37,7 +37,7 @@ def update_custom_targeting_keys()
   custom_targeting_service = dfp.service(:CustomTargetingService, API_VERSION)
 
   # Create a statement to get all custom targeting keys.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   # Get custom targeting keys by statement.
   page = custom_targeting_service.get_custom_targeting_keys_by_statement(

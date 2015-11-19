@@ -222,11 +222,10 @@ respond in gzipped format. All requests are sent uncompressed regardless.
 
 # External dependencies:
 
-External dependencies should be pulled automatically on gem install. Here is the
-list though:
+The following gem libraries are required:
 
-  - Google Ads Common library (google-ads-common);
-  - Savon 'the heavy metal Ruby SOAP client' (savon).
+  - google-ads-savon
+  - google-ads-common
 
 # Docs for Developers
 

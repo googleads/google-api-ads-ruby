@@ -21,7 +21,7 @@
 # get_all_custom_targeting_keys_and_values.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -40,7 +40,7 @@ def update_custom_targeting_values()
   custom_targeting_key_id = 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'.to_i
 
   # Create a statement to get first 500 custom targeting keys.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       :query => 'WHERE customTargetingKeyId = :key_id',
       :values => [
           {:key => 'key_id',
@@ -79,7 +79,7 @@ def update_custom_targeting_values()
         end
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 end
 

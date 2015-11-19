@@ -20,7 +20,7 @@
 # creative sets, run create_creative_sets.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -39,7 +39,7 @@ def get_creative_sets_by_statement()
 
   # Create a statement to get all creative sets that have the given master
   # creative.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE masterCreativeId = :master_creative_id ORDER BY id ASC',
       [
           {:key => 'master_creative_id',
@@ -61,7 +61,7 @@ def get_creative_sets_by_statement()
              creative_set[:companion_creative_ids].join(', ')]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

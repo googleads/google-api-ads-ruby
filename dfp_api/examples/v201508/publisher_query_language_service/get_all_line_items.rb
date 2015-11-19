@@ -22,7 +22,7 @@
 # https://developers.google.com/doubleclick-publishers/docs/reference/latest/PublisherQueryLanguageService
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 # A string to separate columns in output. Use "," to get CSV.
@@ -40,7 +40,7 @@ def get_all_line_items()
   pql_service = dfp.service(:PublisherQueryLanguageService, API_VERSION)
 
   # Statement parts to help build a statement to select all line items.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'SELECT Id, Name, Status FROM Line_Item ORDER BY Id ASC')
 
   # Set initial values for paging.
@@ -63,9 +63,9 @@ def get_all_line_items()
     end
 
     # Update the counters.
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
     all_rows += result_set[:rows].size
-  end while result_set[:rows].size == DfpApiStatement::SUGGESTED_PAGE_LIMIT
+  end while result_set[:rows].size == DfpApi::SUGGESTED_PAGE_LIMIT
 
   # Print a footer.
   if result_set[:rows]

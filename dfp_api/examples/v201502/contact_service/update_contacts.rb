@@ -20,7 +20,7 @@
 # run get_all_contacts.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -38,7 +38,7 @@ def update_contacts()
   contact_id = 'INSERT_CONTACT_ID_HERE'.to_i
 
   # Create a statement to only select a single contact.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id',
       [
           {:key => 'id',

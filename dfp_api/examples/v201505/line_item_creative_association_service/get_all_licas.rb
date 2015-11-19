@@ -20,7 +20,7 @@
 # run create_licas.rb or associate_creative_set_to_line_item.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -37,7 +37,7 @@ def get_all_licas()
 
   begin
     # Create statement for one page with current offset.
-    statement = DfpApiStatement::FilterStatement.new('ORDER BY lineItemId ASC')
+    statement = DfpApi::FilterStatement.new('ORDER BY lineItemId ASC')
 
     # Get LICAs by statement.
     page = lica_service.get_line_item_creative_associations_by_statement(
@@ -54,7 +54,7 @@ def get_all_licas()
              lica[:status]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

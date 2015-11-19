@@ -67,7 +67,6 @@ def create_creative_from_template()
       :advertiser_id => advertiser_id,
       :creative_template_id => creative_template_id,
       :size => {:width => 1, :height => 1, :is_aspect_ratio => false},
-      :is_native_eligible => True,
       :destination_url => 'https://play.google.com/store/apps/details?id=' +
                           'com.google.fpl.pie_noon'
   }
@@ -139,16 +138,7 @@ def create_creative_from_template()
       :value => 'market://details?id=com.google.fpl.pie_noon'
   }
 
-  # Create the FallbackclickactionURL variable value.
-  fallbackurl_variable_value= {
-      :xsi_type => 'UrlCreativeTemplateVariableValue',
-      :unique_name => 'FallbackclickactionURL',
-      :value => 'https://play.google.com/store/apps/details?id=' +
-                'com.google.fpl.pie_noon'
-  }
-
   creative[:creative_template_variable_values] = [
-      fallbackurl_variable_value,
       deeplinkurl_variable_value,
       body_variable_value,
       headline_variable_value,

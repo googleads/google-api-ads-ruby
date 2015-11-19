@@ -19,7 +19,7 @@
 # This example gets system defined creative templates.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -35,7 +35,7 @@ def get_creative_templates_by_statement()
   creative_template_service = dfp.service(:CreativeTemplateService, API_VERSION)
 
   # Create a statement to only select system defined creative_templates.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE type = :type ORDER BY id ASC',
       [
           {:key => 'type',
@@ -56,7 +56,7 @@ def get_creative_templates_by_statement()
              template[:id], template[:name], template[:type]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

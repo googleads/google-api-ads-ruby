@@ -19,7 +19,7 @@
 # This example deactivates a creative wrapper belonging to a label.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -38,7 +38,7 @@ def deactivate_creative_wrappers()
   label_id = 'INSERT_CREATIVE_WRAPPER_LABEL_ID_HERE'.to_i
 
   # Create statement to select creative wrappers by label id and status.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE labelId = :label_id AND status = :status',
       [
         {

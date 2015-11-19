@@ -20,7 +20,7 @@
 # which custom fields exist, run get_all_custom_fields.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -36,7 +36,7 @@ def deactivate_all_line_item_custom_fields()
   custom_field_service = dfp.service(:CustomFieldService, API_VERSION)
 
   # Create statement text to select active ad units.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE entityType = :entity_type AND isActive = :is_active',
       [
           {:key => 'entity_type',
@@ -57,7 +57,7 @@ def deactivate_all_line_item_custom_fields()
             [index + statement.offset, custom_field[:id], custom_field[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Update statement for action.

@@ -22,7 +22,7 @@
 # create_custom_field_options.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -47,7 +47,7 @@ def set_line_item_custom_field_value()
   line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
 
   # Create a statement to only select a single custom field.
-  custom_field_statement = DfpApiStatement::FilterStatement.new(
+  custom_field_statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
           {:key => 'id',
@@ -57,7 +57,7 @@ def set_line_item_custom_field_value()
   )
 
   # Create a statement to only select a single drop down custom field.
-  drop_down_custom_field_statement = DfpApiStatement::FilterStatement.new(
+  drop_down_custom_field_statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
           {:key => 'id',
@@ -68,7 +68,7 @@ def set_line_item_custom_field_value()
   )
 
   # Create a statement to only select a single line item.
-  line_item_statement = DfpApiStatement::FilterStatement.new(
+  line_item_statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
           {:key => 'id',

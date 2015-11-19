@@ -20,7 +20,7 @@
 # determine which creative sets exist, run get_all_creative_sets.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -40,7 +40,7 @@ def update_creative_sets()
   creative_set_service = dfp.service(:CreativeSetService, API_VERSION)
 
   # Create a statement to only select a single creative set.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id'
       [
           {:key => 'id',

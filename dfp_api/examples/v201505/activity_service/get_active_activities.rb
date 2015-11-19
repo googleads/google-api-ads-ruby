@@ -20,7 +20,7 @@
 # run create_activities.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -36,7 +36,7 @@ def get_active_activities()
   activity_service = dfp.service(:ActivityService, API_VERSION)
 
   # Create a statement to only select active activities.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'status = :status ORDER BY id ASC',
       [
           {:key => 'status',
@@ -56,7 +56,7 @@ def get_active_activities()
                 activity[:type]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

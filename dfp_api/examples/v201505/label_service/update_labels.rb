@@ -22,7 +22,7 @@
 # This feature is only available to DFP premium solution networks.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -38,7 +38,7 @@ def update_labels()
   label_service = dfp.service(:LabelService, API_VERSION)
 
   # Create a statement to only select active labels.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE isActive = :is_active',
       [
           {:key => 'is_active',

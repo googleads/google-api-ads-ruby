@@ -21,7 +21,7 @@
 # This feature is only available to DFP premium solution networks.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 NUMBER_OF_REQUESTS = 50
@@ -39,7 +39,7 @@ def approve_suggested_ad_units()
 
   # Create a statement to only select suggested ad units with 50 or more
   # requests.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE numRequests >= :num_requests',
       [
           {:key => 'num_requests',
@@ -65,7 +65,7 @@ def approve_suggested_ad_units()
         end
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end
 
   puts "Number of suggested ad units to be approved: %d" % unit_count_to_approve

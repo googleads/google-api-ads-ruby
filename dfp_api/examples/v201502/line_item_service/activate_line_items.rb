@@ -24,7 +24,7 @@
 # get_all_line_items.rb. To determine which orders exist, run get_all_orders.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -44,7 +44,7 @@ def activate_line_items()
 
   # Create a statement to only select line items from the specified order that
   # are in the approved (needs creatives) state.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE orderID = :order_id AND status = :status',
       [
           {:key => 'order_id',
@@ -71,14 +71,14 @@ def activate_line_items()
         end
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   puts "Number of line items to be activated: %d" % line_item_ids.size
 
   if !line_item_ids.empty?
     # Modify statement for action. Note, the values are still present.
-    statement = DfpApiStatement::FilterStatement.new(
+    statement = DfpApi::FilterStatement.new(
         "WHERE id IN (%s)" % line_item_ids.join(', '))
 
     # Perform action.

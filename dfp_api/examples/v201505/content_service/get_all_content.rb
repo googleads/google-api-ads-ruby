@@ -21,7 +21,7 @@
 # This feature is only available to DFP video publishers.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -37,7 +37,7 @@ def get_all_content()
   content_service = dfp.service(:ContentService, API_VERSION)
 
   # Create statement for one page with current offset.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   begin
     # Get content by statement.
@@ -50,7 +50,7 @@ def get_all_content()
              content[:id], content[:name], content[:status]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

@@ -21,7 +21,7 @@
 # get_all_first_party_audience_segments.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -40,7 +40,7 @@ def update_audience_segments()
   audience_segment_service = dfp.service(:AudienceSegmentService, API_VERSION)
 
   # Create statement text to select the audience segment to update.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
      'WHERE id = :segment_id ORDER BY id ASC',
      [
          {:key => 'segment_id',
