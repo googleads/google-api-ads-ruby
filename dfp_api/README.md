@@ -76,8 +76,8 @@ constructor:
     dfp = DfpApi::Api.new({
       :authentication => {
           :method => 'OAuth2',
-          :oauth2_client_id: 'INSERT_OAUTH2_CLIENT_ID_HERE',
-          :oauth2_client_secret: 'INSERT_OAUTH2_CLIENT_SECRET_HERE',
+          :oauth2_client_id => 'INSERT_OAUTH2_CLIENT_ID_HERE',
+          :oauth2_client_secret => 'INSERT_OAUTH2_CLIENT_SECRET_HERE',
           :application_name => 'Ruby DFP Sample',
           :network_code => 123456
       }
