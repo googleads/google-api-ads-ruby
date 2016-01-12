@@ -33,9 +33,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201508
+    DEFAULT_VERSION = :v201511
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201508
+    LATEST_VERSION = :v201511
 
     # Set other constants
     API_NAME = 'DfpApi'

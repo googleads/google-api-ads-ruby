@@ -1,3 +1,6 @@
+0.12.1:
+  - Fix environment default to use DFP v201511.
+
 0.12.0:
   - Removed support for DFP v201408.
   - Added support for DFP v201511.
