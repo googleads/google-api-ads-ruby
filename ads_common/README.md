@@ -21,6 +21,7 @@ The following gem libraries are required:
 
  - google-ads-savon
  - httpi
+ - httpclient
  - signet
 
 

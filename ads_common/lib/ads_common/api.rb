@@ -263,6 +263,10 @@ module AdsCommon
       self.logger = (provided_logger.nil?) ?
           create_default_logger() : provided_logger
 
+      # Set up default HTTPI adapter.
+      provided_adapter = @config.read('connection.adapter')
+      @config.set('connection.adapter', :httpclient) if provided_adapter.nil?
+
       # Validating most important parameters.
       ['service.environment', 'authentication.method'].each do |parameter|
         symbolize_config_value(parameter)

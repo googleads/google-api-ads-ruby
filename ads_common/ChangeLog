@@ -1,3 +1,8 @@
+0.11.2:
+  - Updated required version of ads_savon to 1.0.1 to fix issue #74.
+  - Updated default adapter for httpi to httpclient, to fix various errors
+    with parsing responses.
+
 0.11.1:
   - Added streaming get and post options to AdsCommon::Http.
   - Added ability to support put requests to AdsCommon::Http.

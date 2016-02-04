@@ -68,7 +68,10 @@ module AdsCommon
       # Returns:
       # - none
       def process_wsdl()
-        client = GoogleAdsSavon::Client.new(@wsdl_url)
+        proxy_path = get_proxy_path()
+        client = GoogleAdsSavon::Client.new(@wsdl_url) do |_, httpi|
+          httpi.proxy = proxy_path unless proxy_path.nil? || proxy_path.empty?
+        end
         begin
           @generator_args[:namespace] = client.wsdl.namespace
           do_process_wsdl_client(client)
@@ -136,6 +139,10 @@ module AdsCommon
       def make_dir_for_path(path)
         dir_name = File.dirname(path)
         Dir.mkdir(dir_name) if !File.directory?(dir_name)
+      end
+
+      def get_proxy_path()
+        return ENV['ADSAPI_PROXY']
       end
     end
   end

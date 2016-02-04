@@ -209,13 +209,14 @@ module AdsCommon
     def get_wsdls(version)
       res = {}
       wsdl_base = get_wsdl_base(default_environment(), version)
+      postfix = wsdl_base.start_with?('http') ? '?wsdl' : '.wsdl'
       services(version).each do |service|
         path = wsdl_base
         if (!subdir_config().nil?)
           subdir_name = subdir(version, service);
           path = path + subdir_name if subdir_name and !subdir_name.empty?
         end
-        path = path + version.to_s + '/' + service.to_s + '?wsdl'
+        path = path + version.to_s + '/' + service.to_s + postfix
         res[service.to_s] = path
       end
       return res
