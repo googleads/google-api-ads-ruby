@@ -21,23 +21,22 @@
 module AdwordsApi
   class ReportStream
     def initialize(report_utils, report_definition, cid = nil, format = nil,
-        is_awql = false, &block)
+        is_awql = false)
       @report_utils = report_utils
       @report_definition = report_definition
       @format = format
       @cid = cid
-      @block = block
       @is_awql = is_awql
     end
 
-    def self.set_up(report_utils, report_definition, cid = nil, &block)
-      return ReportStream.new(report_utils, report_definition, cid, &block)
+    def self.set_up(report_utils, report_definition, cid = nil)
+      return ReportStream.new(report_utils, report_definition, cid)
     end
 
     def self.set_up_with_awql(
-        report_utils, report_query, format, cid = nil, &block)
+        report_utils, report_query, format, cid = nil)
       return ReportStream.new(
-          report_utils, report_query, cid, format, true, &block)
+          report_utils, report_query, cid, format, true)
     end
 
     def each_line()
@@ -55,10 +54,10 @@ module AdwordsApi
         lines = data_to_process.split('\n')
         leftover_data = lines.pop
         lines.each do |line|
-          @block.call(line)
+          yield line
         end
       end
-      @block.call(leftover_data) unless leftover_data.empty?()
+      yield leftover_data unless leftover_data.nil? || leftover_data.empty?
     end
   end
 end

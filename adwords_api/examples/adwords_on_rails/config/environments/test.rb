@@ -29,9 +29,10 @@ AdwordsOnRails::Application.configure do
   # ActionMailer::Base.deliveries array.
   config.action_mailer.delivery_method = :test
 
-  # Raise exception on mass assignment protection for Active Record models
-  config.active_record.mass_assignment_sanitizer = :strict
-
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  # Eager loads all eager_load_namespaces, including the application and Rails
+  # frameworks.
+  config.eager_load = false
 end

@@ -44,23 +44,22 @@ module AdwordsApi
     #   posting them to the provided URL
     # - service_name: The name of the AdwordsApi service as a symbol that would
     #   normally make this request
-    # - batch_job_url: The URL provided by BatchjobService to post the provided
-    #   operations to
+    # - batch_job_url: The UploadURL provided by BatchJobService
     #
     # Raises:
     # - InvalidBatchJobOperationError: If there is a problem converting the
     # given operations to SOAP.
     #
     def upload_operations(operations, batch_job_url)
-      soap_operations = generate_soap_operations(operations)
-      post_soap_operations(soap_operations, batch_job_url)
+      helper = start_incremental_upload(batch_job_url)
+      helper.upload(operations, true)
     end
 
     # Provides a helper to manage incremental uploads.
     #
     # Args:
-    # - batch_job_url: The URL provided by BatchJobService to put the provided
-    # operations to.
+    # - batch_job_url: The UploadURL provided by BatchJobService for new jobs,
+    # or the upload_url from IncrementalUploadHelper for continued jobs.
     # - uploaded_bytes: The number of bytes already uploaded for this
     # incremental batch job. Can be retrieved from the IncrementalUploadHelper
     # using uploaded_bytes.
@@ -74,14 +73,36 @@ module AdwordsApi
           self, uploaded_bytes, batch_job_url)
     end
 
+    # Initializes an upload URL to get the actual URL to which to upload
+    # operations.
+    #
+    # Args:
+    # - batch_job_url: The UploadURL provided by BatchJobService
+    #
+    # Returns:
+    # - The URL that should actually be used to upload operations.
+    #
+    def initialize_url(batch_job_url)
+      # Initialization is only necessary for v201601 or higher.
+      return batch_job_url if [:v201506, :v201509].include?(@version)
+
+      headers = DEFAULT_HEADERS
+      headers['Content-Length'] = 0
+      headers['x-goog-resumable'] = 'start'
+
+      response = AdsCommon::Http.post_response(
+          batch_job_url, '', @api.config, headers)
+
+      return response.headers['Location']
+    end
+
     # Puts the provided operations to the provided URL, allowing
     # for incremental followup puts.
     #
     # Args:
     # - soap_operations: An array including SOAP operations provided by
     #   generate_soap_operations
-    # - batch_job_url: The URL provided by BatchJobService to post the provided
-    #   operations to
+    # - batch_job_url: The UploadURL provided by BatchJobService
     # - total_content_length: The total number of bytes already uploaded
     #   incrementally. Set this to 0 the first time you call the method.
     # - is_last_request: Whether or not this set of uploads will conclude the
@@ -215,15 +236,6 @@ module AdwordsApi
         operation_xml = extract_soap_operations(full_soap_xml)
         operation_xml
       end
-    end
-
-    def post_soap_operations(soap_operations, batch_job_url)
-      headers = DEFAULT_HEADERS
-      request_body = (UPLOAD_XML_PREFIX % [@version]) + soap_operations.join +
-          UPLOAD_XML_SUFFIX
-      log_request(batch_job_url, headers, request_body)
-      response = AdsCommon::Http.post_response(
-          batch_job_url, request_body, @api.config, headers)
     end
 
     # Given a full SOAP xml string, extract just the operations element

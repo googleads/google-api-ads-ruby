@@ -35,7 +35,11 @@ module AdwordsApi
     def initialize(batch_job_utils, uploaded_bytes, upload_url)
       @batch_job_utils = batch_job_utils
       @uploaded_bytes = uploaded_bytes
-      @upload_url = upload_url
+      if @uploaded_bytes == 0
+        @upload_url = @batch_job_utils.initialize_url(upload_url)
+      else
+        @upload_url = upload_url
+      end
       @finished = false
     end
 

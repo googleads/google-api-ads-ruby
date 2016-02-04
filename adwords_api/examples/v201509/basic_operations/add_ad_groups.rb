@@ -49,8 +49,10 @@ def add_ad_groups(campaign_id)
         ]
       },
       :settings => [
-        # Targeting restriction settings - these settings only affect serving
-        # for the Display Network.
+        # Targeting restriction settings. Depending on the :criterion_type_group
+        # value, most TargetingSettingDetail only affect Display campaigns.
+        # However, the USER_INTEREST_AND_LIST value works for RLSA campaigns -
+        # Search campaigns targeting using a remarketing list.
         {
           :xsi_type => 'TargetingSetting',
           :details => [

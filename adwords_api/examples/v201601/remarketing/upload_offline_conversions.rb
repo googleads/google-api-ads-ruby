@@ -18,7 +18,8 @@
 #
 # This code example imports offline conversion values for specific clicks to
 # your account. To get Google Click ID for a click, run
-# CLICK_PERFORMANCE_REPORT.
+# CLICK_PERFORMANCE_REPORT. To set up a conversion tracker, run the
+# add_conversion_tracker.rb example.
 
 require 'adwords_api'
 require 'date'
@@ -33,28 +34,12 @@ def upload_offline_conversions(conversion_name, google_click_id,
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  conversion_tracker_srv =
-      adwords.service(:ConversionTrackerService, API_VERSION)
   conversion_feed_srv =
       adwords.service(:OfflineConversionFeedService, API_VERSION)
 
-  # Create an upload conversion. Once created, this entry will be visible under
-  # Tools and Analysis->Conversion and will have Source = Import.
-  upload_conversion = {
-    :xsi_type => 'UploadConversion',
-    :category => 'PAGE_VIEW',
-    :name => conversion_name,
-    :viewthrough_lookback_window => 30,
-    :ctc_lookback_window => 90
-  }
-  return_conversions = conversion_tracker_srv.mutate([
-    {:operator => 'ADD', :operand => upload_conversion}])
-  return_conversions[:value].each do |tracker|
-    puts "Upload conversion tracker with name '%s' and ID %d was created." %
-      [tracker[:name], tracker[:id]]
-  end
-
-  # Associate offline conversions with the upload conversion tracker we created.
+  # Associate offline conversions with the existing named conversion tracker. If
+  # this tracker was newly created, it may be a few hours before it can accept
+  # conversions.
   feed = {
     :conversion_name => conversion_name,
     :google_click_id => google_click_id,
@@ -72,10 +57,10 @@ def upload_offline_conversions(conversion_name, google_click_id,
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201509
+  API_VERSION = :v201601
 
   begin
-    # Name of the upload conversion to be created.
+    # Name of the conversion tracker to upload to.
     conversion_name = 'INSERT_CONVERSION_NAME_HERE'
     # Google Click ID of the click for which offline conversions are uploaded.
     google_click_id = 'INSERT_GOOGLE_CLICK_ID_HERE'

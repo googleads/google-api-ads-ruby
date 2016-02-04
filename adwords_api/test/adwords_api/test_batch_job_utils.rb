@@ -21,11 +21,13 @@
 require 'test/unit'
 
 require 'adwords_api'
+require 'nokogiri'
 
 # Overriding default access levels to public for tests.
 module AdwordsApi
   class BatchJobUtils
     public :extract_soap_operations
+    public :generate_soap_operations
     public :add_padding
   end
 end
@@ -75,8 +77,11 @@ class TestBatchJobUtils < Test::Unit::TestCase
 
   # Testing ability to extract operation from XML.
   def test_operation_from_xml()
-    extracted = @batch_job_utils.extract_soap_operations(VALID_SERVICE_XML)
-    assert_equal(EXPECTED_OPERATION, extracted)
+    extracted = Nokogiri::XML(
+        @batch_job_utils.extract_soap_operations(VALID_SERVICE_XML)
+    )
+    expected = Nokogiri::XML(EXPECTED_OPERATION)
+    assert_equal(clean_xml(expected.to_s), clean_xml(extracted.to_s))
   end
 
   # Testing ability to extract operation from a ruby hash.
@@ -106,5 +111,9 @@ class TestBatchJobUtils < Test::Unit::TestCase
     assert_equal(
         @batch_job_utils.add_padding(' ' * (length_increment + 1)).size,
         2 * length_increment)
+  end
+
+  def clean_xml(xml)
+    return xml.gsub(/\n */, '')
   end
 end

@@ -45,10 +45,8 @@ def add_crm_based_user_list(emails)
     :description => 'A list of customers that originated from email addresses',
     # Maximum life span is 180 days.
     :membership_life_span => 180,
-    # This field is required. It links to a service you created that allows
-    # members of this list to remove themselves. It will be shown in the
-    # "Why This Ad?" of an ad and so it needs to be verified. Read more about
-    # "Why This Ad?" here https://support.google.com/ads/answer/2662850.
+    # This field is optional. It links to a service you created that allows
+    # members of this list to remove themselves.
     :opt_out_link => 'http://endpoint1.example.com/optout'
   }
 

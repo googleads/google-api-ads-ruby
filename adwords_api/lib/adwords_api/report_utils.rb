@@ -111,9 +111,9 @@ module AdwordsApi
     # - AdwordsApi::Errors::InvalidReportDefinitionError if the report
     #   definition is invalid
     #
-    def get_stream_helper(report_definition, cid = nil, &block)
+    def get_stream_helper(report_definition, cid = nil)
       return AdwordsApi::ReportStream.set_up(
-          self, report_definition, cid, &block)
+          self, report_definition, cid)
     end
 
     # Downloads and returns a report with AWQL.
@@ -180,9 +180,9 @@ module AdwordsApi
     # Returns:
     # - ReportStream object initialized to begin streaming.
     #
-    def get_stream_helper_with_awql(report_query, format, cid = nil, &block)
+    def get_stream_helper_with_awql(report_query, format, cid = nil)
       return AdwordsApi::ReportStream.set_up_with_awql(
-          self, report_query, format, cid, &block)
+          self, report_query, format, cid)
     end
 
     private
