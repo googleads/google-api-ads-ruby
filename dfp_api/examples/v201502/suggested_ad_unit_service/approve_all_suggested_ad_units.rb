@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,12 +19,9 @@
 # This code example approves all suggested ad units with 50 or more requests.
 #
 # This feature is only available to DFP premium solution networks.
-#
-# Tags: SuggestedAdUnitService.getSuggestedAdUnitsByStatement
-# Tags: SuggestedAdUnitService.performSuggestedAdUnitAction
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 NUMBER_OF_REQUESTS = 50
@@ -44,7 +39,7 @@ def approve_suggested_ad_units()
 
   # Create a statement to only select suggested ad units with 50 or more
   # requests.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE numRequests >= :num_requests',
       [
           {:key => 'num_requests',
@@ -70,7 +65,7 @@ def approve_suggested_ad_units()
         end
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end
 
   puts "Number of suggested ad units to be approved: %d" % unit_count_to_approve

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This example updates custom field descriptions. To determine which custom
 # fields exist, run get_all_custom_fields.rb.
-#
-# Tags: CustomFieldService.updateCustomFields
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -43,7 +39,7 @@ def update_custom_fields()
   custom_field_id = 'INSERT_CUSTOM_FIELD_ID_HERE'.to_i
 
   # Create a statement to only select a single custom field.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id',
       [
           {:key => 'id',

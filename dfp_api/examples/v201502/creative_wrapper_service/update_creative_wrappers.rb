@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +18,9 @@
 #
 # This code example updates a creative wrapper to the 'OUTER' wrapping order. To
 # determine which creative wrappers exist, run get_all_creative_wrappers.rb.
-#
-# Tags: CreativeWrapperService.getCreativeWrappersByStatement
-# Tags: CreativeWrapperService.updateCreativeWrappers
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -44,7 +39,7 @@ def update_creative_wrappers()
   creative_wrapper_id = 'INSERT_CREATIVE_WRAPPER_ID_HERE'.to_i
 
   # Create a statement to only select a single creative wrapper.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id',
       [
           {:key => 'id',

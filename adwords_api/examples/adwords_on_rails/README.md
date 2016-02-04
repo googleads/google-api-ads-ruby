@@ -118,5 +118,5 @@ Contacts:
 
 Authors:
 
-    Danial Klimkin (api.dklimkin@gmail.com)
-    Michael Cloonan (api.mcloonan@gmail.com)
+    Danial Klimkin
+    Michael Cloonan

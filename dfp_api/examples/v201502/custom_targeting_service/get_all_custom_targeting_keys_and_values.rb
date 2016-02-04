@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +18,9 @@
 #
 # This example gets all custom targeting keys and the values. To create custom
 # targeting keys and values, run create_custom_targeting_keys_and_values.rb.
-#
-# Tags: CustomTargetingService.getCustomTargetingKeysByStatement
-# Tags: CustomTargetingService.getCustomTargetingValuesByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -42,7 +37,7 @@ def get_all_custom_targeting_keys_and_values()
 
   begin
     # Create a statement to get one page with current offset.
-    statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+    statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
     # Get custom targeting keys by statement.
     page = custom_targeting_service.get_custom_targeting_keys_by_statement(
@@ -60,7 +55,7 @@ def get_all_custom_targeting_keys_and_values()
         print_all_values_for_key(custom_targeting_service, custom_targeting_key)
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.
@@ -72,7 +67,7 @@ end
 
 def print_all_values_for_key(custom_targeting_service, custom_targeting_key)
   # Create a statement to get values for given key.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE customTargetingKeyId = :key_id',
       [
           {:key => 'key_id',
@@ -96,7 +91,7 @@ def print_all_values_for_key(custom_targeting_service, custom_targeting_key)
              custom_targeting_value[:display_name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

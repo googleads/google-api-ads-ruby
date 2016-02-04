@@ -1,8 +1,5 @@
 # Encoding: utf-8
 #
-# Authors:: api.sgomes@gmail.com (Sérgio Gomes)
-#           api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,6 +23,7 @@ require 'adwords_api/api_config'
 require 'adwords_api/credential_handler'
 require 'adwords_api/errors'
 require 'adwords_api/report_utils'
+require 'adwords_api/batch_job_utils'
 
 # Main namespace for all the client library's modules and classes.
 module AdwordsApi
@@ -62,7 +60,7 @@ module AdwordsApi
     def soap_header_handler(auth_handler, version, header_ns, default_ns)
       auth_method = @config.read('authentication.method', :OAUTH2)
       handler_class = case auth_method
-        when :OAUTH2, :OAUTH2_JWT
+        when :OAUTH2, :OAUTH2_SERVICE_ACCOUNT
           AdsCommon::SavonHeaders::OAuthHeaderHandler
         else
           raise AdsCommon::Errors::AuthError,
@@ -70,35 +68,6 @@ module AdwordsApi
         end
       return handler_class.new(@credential_handler, auth_handler, header_ns,
                                   default_ns, version)
-    end
-
-    # Helper method to provide a simple way of doing an MCC-level operation
-    # without the need to change credentials. Executes a block of code as an
-    # MCC-level operation and/or returns the current status of the property.
-    #
-    # Args:
-    # - accepts a block, which it will execute as an MCC-level operation
-    #
-    # Returns:
-    # - block execution result, if block given
-    # - boolean indicating whether MCC-level operations are currently
-    #   enabled or disabled, if no block provided
-    #
-    def use_mcc(&block)
-      return (block_given?) ?
-        run_with_temporary_flag(:@use_mcc, true, block) :
-        @credential_handler.use_mcc
-    end
-
-    # Helper method to provide a simple way of doing an MCC-level operation
-    # without the need to change credentials. Sets the value of the property
-    # that controls whether MCC-level operations are enabled or disabled.
-    #
-    # Args:
-    # - value: the new value for the property (boolean)
-    #
-    def use_mcc=(value)
-      @credential_handler.use_mcc = value
     end
 
     # Helper method to provide a simple way of doing a validate-only operation
@@ -148,6 +117,24 @@ module AdwordsApi
       @config.set('library.skip_report_summary', value)
     end
 
+    # Helper method to skip the column header when downloading reports.
+    #
+    # Args:
+    # - value: whether to skip the column header (boolean)
+    #
+    def skip_column_header=(value)
+      @config.set('library.skip_column_header', value)
+    end
+
+    # Helper method to include zero impressions when downloading reports.
+    #
+    # Args:
+    # - value: whether to include zero impressions (boolean)
+    #
+    def include_zero_impressions=(value)
+      @config.set('library.include_zero_impressions_header', value)
+    end
+
     # Helper method to provide a simple way of performing requests with support
     # for partial failures. Executes a block of code with partial failures
     # enabled and/or returns the current status of the property.
@@ -189,6 +176,21 @@ module AdwordsApi
         raise AdsCommon::Errors::Error, "Unknown version '%s'" % version
       end
       return AdwordsApi::ReportUtils.new(self, version)
+    end
+
+    # Returns an instance of BatchJobUtils object with all utilities relevant
+    # to running batch jobs.
+    #
+    # Args:
+    # - version: version of the API to use (optional).
+    #
+    def batch_job_utils(version = nil)
+      version = api_config.default_version if version.nil?
+      # Check if version exists.
+      if !api_config.versions.include?(version)
+        raise AdsCommon::Errors::Error, "Unknown version '%s'" % version
+      end
+      return AdwordsApi::BatchJobUtils.new(self, version)
     end
 
     private

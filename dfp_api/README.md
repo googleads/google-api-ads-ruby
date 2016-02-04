@@ -76,8 +76,8 @@ constructor:
     dfp = DfpApi::Api.new({
       :authentication => {
           :method => 'OAuth2',
-          :oauth2_client_id: 'INSERT_OAUTH2_CLIENT_ID_HERE',
-          :oauth2_client_secret: 'INSERT_OAUTH2_CLIENT_SECRET_HERE',
+          :oauth2_client_id => 'INSERT_OAUTH2_CLIENT_ID_HERE',
+          :oauth2_client_secret => 'INSERT_OAUTH2_CLIENT_SECRET_HERE',
           :application_name => 'Ruby DFP Sample',
           :network_code => 123456
       }
@@ -105,9 +105,7 @@ or add it to the bash configuration file:
 
 ## Using OAuth2.0
 
-It is recommended to use OAuth2.0 authentication method instead of ClientLogin
-(explicit email/password combination). OAuth2.0 support is almost transparent to
-the library user. In order to use OAuth you just need to:
+In order to use OAuth you just need to:
 
   - set authentication method to 'OAuth2' in the configuration;
 
@@ -224,11 +222,10 @@ respond in gzipped format. All requests are sent uncompressed regardless.
 
 # External dependencies:
 
-External dependencies should be pulled automatically on gem install. Here is the
-list though:
+The following gem libraries are required:
 
-  - Google Ads Common library (google-ads-common);
-  - Savon 'the heavy metal Ruby SOAP client' (savon).
+  - google-ads-savon
+  - google-ads-common
 
 # Docs for Developers
 
@@ -279,7 +276,7 @@ announcements and other news.
 
 ## License
 
-Copyright 2011-2014, Google Inc. All Rights Reserved.
+Copyright 2011-2015, Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use
 this file except in compliance with the License.
@@ -296,7 +293,7 @@ specific language governing permissions and limitations under the License.
 ## Authors
 
 Author:
-    api.dklimkin@gmail.com (Danial Klimkin)
+    Danial Klimkin
 
 Maintainer:
-    api.nicholaschen@gmail.com (Nicholas Chen)
+    Nicholas Chen

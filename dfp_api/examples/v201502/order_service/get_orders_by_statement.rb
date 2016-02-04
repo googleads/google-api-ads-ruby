@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,11 +19,9 @@
 # This example gets all orders for a given advertiser. To create orders, run
 # create_orders.rb. To determine which companies are advertisers, run
 # get_companies_by_statement.rb.
-#
-# Tags: OrderService.getOrdersByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -44,7 +40,7 @@ def get_orders_by_statement()
   advertiser_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'.to_i
 
   # Create a statement to only select orders for a given advertiser.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE advertiserId = :advertiser_id ORDER BY id ASC',
       [
           {:key => 'advertiser_id',
@@ -63,7 +59,7 @@ def get_orders_by_statement()
             order[:id], order[:advertiser_id], order[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

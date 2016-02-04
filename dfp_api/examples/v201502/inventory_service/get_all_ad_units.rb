@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,11 +17,9 @@
 #           limitations under the License.
 #
 # This example gets all ad units. To create ad units, run create_ad_units.rb.
-#
-# Tags: InventoryService.getAdUnitsByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -39,7 +35,7 @@ def get_all_ad_units()
   inventory_service = dfp.service(:InventoryService, API_VERSION)
 
   # Create a statement to get all ad units
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   begin
     # Get ad units by statement.
@@ -53,7 +49,7 @@ def get_all_ad_units()
              ad_unit[:name], ad_unit[:status]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

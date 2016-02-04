@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This code example gets all first party audience segments. To create audience
 # segments, run create_audience_segments.rb.
-#
-# Tags: AudienceSegmentService.getAudienceSegmentsByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -41,7 +37,7 @@ def get_first_party_audience_segments()
 
   # Statement parts to help build a statement to select all first party audience
   # segments.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'type = :type ORDER BY id ASC',
       [
           {:key => 'type',
@@ -60,7 +56,7 @@ def get_first_party_audience_segments()
             [index + statement.offset, segment[:id], segment[:name], segment[:size]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

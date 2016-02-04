@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This code example gets all active creative wrappers. To create creative
 # wrappers, run create_creative_wrappers.rb.
-#
-# Tags: CreativeWrapperService.getCreativeWrappersByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -40,7 +36,7 @@ def get_creative_wrappers_by_statement()
   creative_wrapper_service = dfp.service(:CreativeWrapperService, API_VERSION)
 
   # Create filter text to select active creative wrappers.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE status = :status ORDER BY id ASC',
       [
         {
@@ -62,7 +58,7 @@ def get_creative_wrappers_by_statement()
              creative_wrapper[:label_id], creative_wrapper[:status]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end
 
   # Print a footer.

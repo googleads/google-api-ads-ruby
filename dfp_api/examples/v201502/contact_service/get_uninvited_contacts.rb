@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.davidtorres@gmail.com (David Torres)
-#
 # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This example gets uninvited contacts. To create contacts, run
 # create_contacts.rb.
-#
-# Tags: ContactService.getContactsByStatement.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 PAGE_SIZE = 500
@@ -47,7 +43,7 @@ def get_uninvited_contacts()
 
   # Create statement.
 
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE status = :status ORDER BY id ASC',
       [
           {:key => 'status',
@@ -67,7 +63,7 @@ def get_uninvited_contacts()
              contact[:id], contact[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

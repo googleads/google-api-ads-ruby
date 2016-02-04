@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +18,9 @@
 #
 # This example deactivates all active line item custom fields. To determine
 # which custom fields exist, run get_all_custom_fields.rb.
-#
-# Tags: CustomFieldService.getCustomFieldsByStatement
-# Tags: CustomFieldService.performCustomFieldAction
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -41,7 +36,7 @@ def deactivate_all_line_item_custom_fields()
   custom_field_service = dfp.service(:CustomFieldService, API_VERSION)
 
   # Create statement text to select active ad units.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE entityType = :entity_type AND isActive = :is_active',
       [
           {:key => 'entity_type',
@@ -62,7 +57,7 @@ def deactivate_all_line_item_custom_fields()
             [index + statement.offset, custom_field[:id], custom_field[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Update statement for action.

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +18,9 @@
 #
 # This example creates new placements for various ad unit sizes. To determine
 # which placements exist, run get_all_placements.rb.
-#
-# Tags: PlacementService.createPlacements
-# Tags: InventoryService.getAdUnitsByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -66,7 +61,7 @@ def create_placements()
 
   # Get the first 500 ad units.
   page = inventory_service.get_ad_units_by_statement(
-      DfpApiStatement::FilterStatement.new('ORDER BY id ASC').toStatement())
+      DfpApi::FilterStatement.new('ORDER BY id ASC').toStatement())
 
   # Separate the ad units by size.
   if page and page[:results]

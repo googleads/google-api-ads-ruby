@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,12 +20,9 @@
 # association by setting the overridden access type to read only for the first
 # 500 teams that the user belongs to. To determine which users exists, run
 # get_all_users.rb.
-#
-# Tags: UserTeamAssociationService.getUserTeamAssociationsByStatement
-# Tags: UserTeamAssociationService.updateUserTeamAssociations
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -46,7 +41,7 @@ def update_user_team_associations()
   user_id = 'INSERT_USER_ID_HERE'.to_i
 
   # Create filter text to select user team associations by the user ID.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE userId = :user_id ORDER BY id ASC',
       [
           {:key => 'user_id',

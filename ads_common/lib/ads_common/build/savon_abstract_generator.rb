@@ -1,7 +1,5 @@
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +17,7 @@
 #
 # Code template generator base class
 
-require 'savon'
+require 'ads_savon'
 require 'erb'
 
 module AdsCommon

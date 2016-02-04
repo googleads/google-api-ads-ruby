@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,12 +19,9 @@
 # This example updates the display name of each custom targeting value belonging
 # to a single key. To determine which custom targeting keys exist, run
 # get_all_custom_targeting_keys_and_values.rb.
-#
-# Tags: CustomTargetingService.getCustomTargetingValuesByStatement
-# Tags: CustomTargetingService.updateCustomTargetingValues
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -45,7 +40,7 @@ def update_custom_targeting_values()
   custom_targeting_key_id = 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'.to_i
 
   # Create a statement to get first 500 custom targeting keys.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       :query => 'WHERE customTargetingKeyId = :key_id',
       :values => [
           {:key => 'key_id',
@@ -84,7 +79,7 @@ def update_custom_targeting_values()
         end
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 end
 

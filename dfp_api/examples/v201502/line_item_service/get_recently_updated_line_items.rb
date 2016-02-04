@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,13 +19,11 @@
 # This code example shows how to get recently updated line items. To create line
 # items, run create_line_items.rb. To determine which orders exist, run
 # get_all_orders.rb.
-#
-# Tags: LineItemService.getLineItemsByStatement
 
 require 'date'
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -47,7 +43,7 @@ def get_recently_updated_line_items()
 
   # Create statement object to only select line items belonging to the order and
   # have been modified in the last 3 days.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
     'WHERE lastModifiedDateTime >= :date_time_string AND ' +
     'orderId = :order_id ORDER BY id ASC',
     [
@@ -73,7 +69,7 @@ def get_recently_updated_line_items()
             line_item[:order_id], line_item[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,12 +19,9 @@
 # This example updates the display name of each custom targeting key up to the
 # first 500. To determine which custom targeting keys exist, run
 # get_all_custom_targeting_keys_and_values.rb.
-#
-# Tags: CustomTargetingService.getCustomTargetingKeysByStatement
-# Tags: CustomTargetingService.updateCustomTargetingKeys
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -42,7 +37,7 @@ def update_custom_targeting_keys()
   custom_targeting_service = dfp.service(:CustomTargetingService, API_VERSION)
 
   # Create a statement to get all custom targeting keys.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   # Get custom targeting keys by statement.
   page = custom_targeting_service.get_custom_targeting_keys_by_statement(

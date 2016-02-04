@@ -1,6 +1,4 @@
-# -*- encoding: utf-8 -*-
-#
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
+# Encoding: utf-8
 #
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
@@ -27,9 +25,9 @@ Gem::Specification.new do |s|
   s.version = DfpApi::ApiConfig::CLIENT_LIB_VERSION
   s.summary = 'Ruby Client libraries for DFP API'
   s.description = "%s is a DFP API client library for Ruby" % s.name
-  s.homepage = 'http://code.google.com/p/google-api-ads-ruby/'
-  s.authors = ['Danial Klimkin']
-  s.email = ['api.dklimkin@gmail.com']
+  s.homepage = 'https://github.com/googleads/google-api-ads-ruby'
+  s.authors = ['Danial Klimkin', 'Nicholas Chen']
+  s.email = ['dfpapi-advisor+nicholas@google.com']
   s.license = 'Apache-2.0'
   s.platform = Gem::Platform::RUBY
   s.required_rubygems_version = '>= 1.3.6'
@@ -38,5 +36,5 @@ Gem::Specification.new do |s|
   s.files = Dir.glob('{examples,lib,test}/**/*') +
       %w(COPYING README.md ChangeLog dfp_api.yml)
   s.test_files = Dir.glob('test/**/test_*.rb')
-  s.add_dependency('google-ads-common', '~> 0.9.4')
+  s.add_dependency('google-ads-common', '~> 0.11.0')
 end

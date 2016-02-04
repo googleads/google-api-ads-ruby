@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This example gets all active placements. To create a placement, run
 # create_placements.rb.
-#
-# Tags: PlacementService.getPlacementsByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -40,7 +36,7 @@ def get_placements_by_statement()
   placement_service = dfp.service(:PlacementService, API_VERSION)
 
   # Create a statement to only select active placements.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE status = :status ORDER BY id ASC',
       [
           {:key => 'status',
@@ -60,7 +56,7 @@ def get_placements_by_statement()
             placement[:id], placement[:name], placement[:status]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

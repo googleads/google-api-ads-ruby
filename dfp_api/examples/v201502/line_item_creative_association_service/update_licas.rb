@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This example updates the destination URL of all LICAs belonging to a line item.
 # To determine which LICAs exist, run get_all_licas.rb.
-#
-# Tags: LineItemCreativeAssociationService.getLineItemCreativeAssociationsByStatement
-# Tags: LineItemCreativeAssociationService.updateLineItemCreativeAssociations
 
 require 'dfp_api'
+
 
 API_VERSION = :v201502
 
@@ -43,7 +39,7 @@ def update_licas()
   line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
 
   # Create a statement to only select LICAs for the given line item ID.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE lineItemId = :line_item_id ORDER BY lineItemId, creativeId ASC',
       [
           {:key => 'line_item_id',

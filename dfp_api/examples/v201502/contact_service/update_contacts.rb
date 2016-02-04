@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.davidtorres@gmail.com (David Torres)
-#
 # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This example updates contact comments. To determine which contacts exist,
 # run get_all_contacts.rb.
-#
-# Tags: ContactService.updateContacts
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -42,7 +38,7 @@ def update_contacts()
   contact_id = 'INSERT_CONTACT_ID_HERE'.to_i
 
   # Create a statement to only select a single contact.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id',
       [
           {:key => 'id',

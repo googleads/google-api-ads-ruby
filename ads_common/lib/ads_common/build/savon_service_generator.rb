@@ -1,7 +1,5 @@
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2010, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,7 +17,7 @@
 #
 # Code template for wrappers generation for Savon backend
 
-require 'savon'
+require 'ads_savon'
 require 'ads_common/build/savon_abstract_generator'
 
 module AdsCommon
@@ -50,6 +48,10 @@ module AdsCommon
 
           def <%= action %>(*args, &block)
             return execute_action('<%= action %>', args, &block)
+          end
+
+          def <%= action %>_to_xml(*args)
+            return get_soap_xml('<%= action %>', args)
           end
           <% end %>
 

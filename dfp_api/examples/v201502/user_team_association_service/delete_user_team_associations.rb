@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +18,9 @@
 #
 # This example removes the user from all its teams. To determine which users
 # exist, run get_all_users.rb.
-#
-# Tags: UserTeamAssociationService.getUserTeamAssociationsByStatement
-# Tags: UserTeamAssociationService.performUserTeamAssociationAction
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -44,7 +39,7 @@ def delete_user_team_associations()
   user_id = 'INSERT_USER_ID_HERE'.to_i
 
   # Create filter text to remove association by user ID.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE userId = :user_id',
       [
           {:key => 'user_id',
@@ -63,7 +58,7 @@ def delete_user_team_associations()
             "deleted.") % [association[:user_id], association[:team_id]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Reset offset back to 0 to perform action.

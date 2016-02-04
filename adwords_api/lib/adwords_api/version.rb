@@ -1,7 +1,5 @@
 # Encoding: utf-8
 #
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,6 +19,6 @@
 
 module AdwordsApi
   module ApiConfig
-    CLIENT_LIB_VERSION = '0.14.2'
+    CLIENT_LIB_VERSION = '0.18.0'
   end
 end

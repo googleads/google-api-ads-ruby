@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +18,9 @@
 #
 # This example gets all teams that the current user belongs to.
 # To create teams, run create_user_team_associations.rb.
-#
-# Tags: UserTeamAssociationService.getUserTeamAssociationsByStatement
-# Tags: UserService.getCurrentUser
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -47,7 +42,7 @@ def get_user_team_associations_by_statement()
   user = user_service.get_current_user()
 
   # Create filter text to select user team associations by the user ID.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE userId = :user_id ORDER BY id',
       [
           {:key => 'user_id',
@@ -67,7 +62,7 @@ def get_user_team_associations_by_statement()
              association[:user_id]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

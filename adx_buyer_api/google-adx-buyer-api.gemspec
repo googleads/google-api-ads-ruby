@@ -1,6 +1,4 @@
-# -*- encoding: utf-8 -*-
-#
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
+# Encoding: utf-8
 #
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
@@ -19,18 +17,17 @@
 
 Gem::Specification.new do |s|
   s.name = 'google-adx-buyer-api'
-  s.version = '0.4.8'
+  s.version = '0.5.1'
   s.summary = 'Ruby examples for DoubleClick Ad Exchange Buyer API'
   s.description = "AdWords API and DoubleClick Ad Exchange Buyer API client " +
       "library for Ruby"
-  s.homepage = 'http://code.google.com/p/google-api-ads-ruby/'
+  s.homepage = 'https://github.com/googleads/google-api-ads-ruby'
   s.authors = ['Danial Klimkin']
-  s.email = ['api.dklimkin@gmail.com']
   s.license = 'Apache-2.0'
   s.platform = Gem::Platform::RUBY
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project = 'google-adx-buyer-api'
   s.require_path = 'lib'
-  s.files = Dir.glob('examples/**/*') + %w(COPYING README ChangeLog)
-  s.add_dependency('google-adwords-api', '~> 0.11.1')
+  s.files = Dir.glob('examples/**/*') + %w(COPYING README.md ChangeLog Rakefile)
+  s.add_dependency('google-adwords-api', '~> 0.16.0')
 end

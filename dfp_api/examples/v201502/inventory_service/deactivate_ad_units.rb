@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +18,9 @@
 #
 # This example deactivates all active ad units. To determine which ad units
 # exist, run get_all_ad_units.rb or get_inventory_tree.rb.
-#
-# Tags: InventoryService.getLineItemsByStatement
-# Tags: InventoryService.performAdUnitAction
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -41,7 +36,7 @@ def deactivate_ad_units()
   inventory_service = dfp.service(:InventoryService, API_VERSION)
 
   # Create statement text to select active ad units.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE status = :status',
       [
           {:key => 'status',
@@ -63,14 +58,14 @@ def deactivate_ad_units()
         ad_unit_ids << ad_unit[:id]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   puts "Number of ad units to be deactivated: %d" % ad_unit_ids.size
 
   if !ad_unit_ids.empty?
     # Modify statement for action. Note, the values are still present.
-    statement = DfpApiStatement::FilterStatement.new(
+    statement = DfpApi::FilterStatement.new(
         "WHERE status = :status AND id in (%s)" % ad_unit_ids.join(', '),
         [
             {:key => 'status',

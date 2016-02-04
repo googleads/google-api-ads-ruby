@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This example gets all custom fields that apply to line items. To create custom
 # fields, run create_custom_fields.rb.
-#
-# Tags: CustomFieldService.getCustomFieldsByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -40,7 +36,7 @@ def get_all_line_item_custom_fields()
   custom_field_service = dfp.service(:CustomFieldService, API_VERSION)
 
   # Create statement to select only custom fields that apply to line items.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
      'WHERE entityType = :entity_type ORDER BY id ASC',
      [
          {:key => 'entity_type',
@@ -52,7 +48,7 @@ def get_all_line_item_custom_fields()
     # Get custom fields by statement.
     page = custom_field_service.get_custom_fields_by_statement(
         statement.toStatement())
-  
+
     if page[:results]
       # Print details about each custom field in results.
       page[:results].each_with_index do |custom_field, index|
@@ -60,7 +56,7 @@ def get_all_line_item_custom_fields()
             [index + statement.offset, custom_field[:id], custom_field[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

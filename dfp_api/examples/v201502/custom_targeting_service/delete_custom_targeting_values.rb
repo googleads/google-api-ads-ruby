@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,12 +19,9 @@
 # This example deletes custom targeting values for a given custom targeting key.
 # To determine which custom targeting keys and values exist, run
 # get_all_custom_targeting_keys_and_values.rb.
-#
-# Tags: CustomTargetingService.getCustomTargetingValuesByStatement
-# Tags: CustomTargetingService.performCustomTargetingValueAction
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -49,7 +44,7 @@ def delete_custom_targeting_values()
 
   # Create statement to only select custom values by the given custom targeting
   # key ID.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE customTargetingKeyId = :key_id',
       [
           {:key => 'key_id',
@@ -71,7 +66,7 @@ def delete_custom_targeting_values()
         custom_target_value_ids << value[:id]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.
@@ -80,7 +75,7 @@ def delete_custom_targeting_values()
 
   if !(custom_target_value_ids.empty?)
     # Modify statement for action, note, values are still present.
-    statement = DfpApiStatement::FilterStatement.new(
+    statement = DfpApi::FilterStatement.new(
         "WHERE customTargetingKeyId = :key_id AND id IN (%s)" %
         [custom_target_value_ids.join(', ')],
         [

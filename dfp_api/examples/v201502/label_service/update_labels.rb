@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,11 +20,9 @@
 # description. To determine which labels exist, run get_all_labels.rb.
 #
 # This feature is only available to DFP premium solution networks.
-#
-# Tags: LabelService.getLabelsByStatement, LabelService.updateLabels
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -42,7 +38,7 @@ def update_labels()
   label_service = dfp.service(:LabelService, API_VERSION)
 
   # Create a statement to only select active labels.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE isActive = :is_active',
       [
           {:key => 'is_active',

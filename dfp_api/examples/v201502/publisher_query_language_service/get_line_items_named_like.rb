@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This example gets all line items which have a name beginning with "line item".
 # This example may take a while to run.
-#
-# Tags: PublisherQueryLanguageService.select
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 # A string to separate columns in output. Use "," to get CSV.
@@ -46,7 +42,7 @@ def get_line_items_named_like()
       "SELECT Id, Name, Status FROM Line_Item WHERE Name LIKE 'line item%%' " +
       "ORDER BY Id ASC"
 
-  statement = DfpApiStatement::FilterStatement.new(statement_text)
+  statement = DfpApi::FilterStatement.new(statement_text)
 
   # Set initial values for paging.
   result_set, all_rows = nil, 0
@@ -68,9 +64,9 @@ def get_line_items_named_like()
     end
 
     # Update the counters.
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
     all_rows += result_set[:rows].size
-  end while result_set[:rows].size == DfpApiStatement::SUGGESTED_PAGE_LIMIT
+  end while result_set[:rows].size == DfpApi::SUGGESTED_PAGE_LIMIT
 
   # Print a footer.
   if result_set[:rows]

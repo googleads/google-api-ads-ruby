@@ -1,3 +1,26 @@
+0.11.1:
+  - Added streaming get and post options to AdsCommon::Http.
+  - Added ability to support put requests to AdsCommon::Http.
+  - Added support for additional scopes when generating OAuth2 tokens.
+
+0.11.0:
+  - Updated to use 'ads_savon' library over 'savon'.
+  - Add support for services to return SOAP XML without making a request. This
+    requires stub regeneration in the specific libraries.
+  - Updated httpi dependency to version 2.3.
+  - Updated http to follow redirects by default, to allow use of
+    AdsCommon::Http for fetching web resources that require redirects.
+
+0.10.1:
+  - General file cleanup.
+  - Fix the OAUTH2_SERVICE_ACCOUNT constant in ads_common.
+
+0.10.0:
+  - Renamed all references of OAUTH2 JWT to OAUTH2 Service Account.
+
+0.9.9:
+  - Fixing minor issue where signet doesn't handle String-based times.
+
 0.9.8:
   - Updating signet dependency to 0.6.0.
 

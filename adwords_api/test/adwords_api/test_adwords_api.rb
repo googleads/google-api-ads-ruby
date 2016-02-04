@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,7 +34,7 @@ end
 
 class TestAdwordsApi < Test::Unit::TestCase
 
-  API_VERSION = :v201409
+  API_VERSION = :v201506
 
   def setup()
     @logger = LoggerStub.new
@@ -54,15 +52,6 @@ class TestAdwordsApi < Test::Unit::TestCase
       api_config = adwords_api.api_config()
       assert_not_nil(api_config)
       assert_kind_of(AdsCommon::ApiConfig, api_config)
-    end
-  end
-
-  def test_use_mcc()
-    adwords_api = AdwordsApi::Api.new({})
-    adwords_api.use_mcc = false
-    assert(!adwords_api.use_mcc)
-    adwords_api.use_mcc do
-      assert(adwords_api.use_mcc)
     end
   end
 

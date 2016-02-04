@@ -1,7 +1,5 @@
 # Encoding: utf-8
 #
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,6 +22,7 @@ require 'ads_common/savon_headers/oauth_header_handler'
 require 'dfp_api/api_config'
 require 'dfp_api/credential_handler'
 require 'dfp_api/errors'
+require 'dfp_api/dfp_api_statement'
 
 # Main namespace for all the client library's modules and classes.
 module DfpApi
@@ -50,7 +49,7 @@ module DfpApi
     def soap_header_handler(auth_handler, version, header_ns, default_ns)
       auth_method = @config.read('authentication.method', :OAUTH2)
       handler_class  = case auth_method
-        when :OAUTH2, :OAUTH2_JWT
+        when :OAUTH2, :OAUTH2_SERVICE_ACCOUNT
           AdsCommon::SavonHeaders::OAuthHeaderHandler
         else
           raise AdsCommon::Errors::AuthError,

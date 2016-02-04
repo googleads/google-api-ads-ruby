@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This example deactivates all active placements. To determine which placements
 # exist, run get_all_placements.rb.
-#
-# Tags: PlacementService.getPlacementsByStatement
-# Tags: PlacementService.performPlacementAction
 
 require 'dfp_api'
+
 
 API_VERSION = :v201502
 
@@ -40,7 +36,7 @@ def deactivate_placements()
   placement_service = dfp.service(:PlacementService, API_VERSION)
 
   # Create statement to select active placements.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE status = :status',
       [
           {:key => 'status',
@@ -70,7 +66,7 @@ def deactivate_placements()
 
   if !placement_ids.empty?
     # Create a statement for action.
-    statement = DfpApiStatement::FilterStatement.new(
+    statement = DfpApi::FilterStatement.new(
         "WHERE id IN (%s)" % placement_ids.join(', '))
 
     # Perform action.

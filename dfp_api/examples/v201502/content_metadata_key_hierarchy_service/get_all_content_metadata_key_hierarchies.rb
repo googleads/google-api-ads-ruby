@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.nicholaschen@gmail.com (Nicholas Chen)
-#
 # Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,11 +19,9 @@
 # This example gets all content metadata key hierarchies.
 #
 # This feature is only available to DFP video publishers.
-#
-# Tags: ContentMetadataKeyHierarchyService.getContentMetadataKeyHierarchiesByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -41,7 +37,7 @@ def get_all_content_metadata_key_hierarchies()
   cmkh_service = dfp.service(:ContentMetadataKeyHierarchyService, API_VERSION)
 
   # Create statement for one page with current offset.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   begin
 
@@ -58,7 +54,7 @@ def get_all_content_metadata_key_hierarchies()
                 content_metadata_key_hierarchy[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,10 +19,9 @@
 # This example adds a new 1x1 creative placeholder for a specific ad unit. To
 # determine which ad units exist, run get_all_ad_units.rb or
 # get_inventory_tree.rb.
-#
-# Tags: InventoryService.getAdUnitsByStatement, InventoryService.updateAdUnits
 
 require 'dfp_api'
+
 
 API_VERSION = :v201502
 
@@ -43,7 +40,7 @@ def update_ad_units()
   ad_unit_id = 'INSERT_AD_UNIT_ID_HERE'.to_i
 
   # Create a statement to get first 500 ad units.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id',
       [
           {:key => 'id',

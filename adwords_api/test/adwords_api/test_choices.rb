@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,12 +21,12 @@
 require 'test/unit'
 
 require 'ads_common/parameters_validator'
-require 'adwords_api/v201409/adwords_user_list_service_registry'
+require 'adwords_api/v201506/adwords_user_list_service_registry'
 
 class TestChoices < Test::Unit::TestCase
 
   def setup()
-    registry_module = AdwordsApi::V201409::AdwordsUserListService
+    registry_module = AdwordsApi::V201506::AdwordsUserListService
     registry = registry_module::AdwordsUserListServiceRegistry
     @validator = AdsCommon::ParametersValidator.new(registry)
   end

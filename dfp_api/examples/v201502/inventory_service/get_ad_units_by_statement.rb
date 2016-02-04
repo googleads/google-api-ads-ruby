@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This example gets first 500 children below the effective root ad unit. To
 # create ad units, run create_ad_units.rb.
-#
-# Tags: InventoryService.getAdUnitsByStatement, NetworkService.getCurrentNetwork
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -49,7 +45,7 @@ def get_ad_units_by_statement()
   puts "Using effective root ad unit: %d" % effective_root_ad_unit_id
 
   # Create a statement to select the children of the effective root ad unit.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
      'WHERE parentId = :id ORDER BY id',
      [
          {:key => 'id',
@@ -70,7 +66,7 @@ def get_ad_units_by_statement()
              ad_unit[:name], ad_unit[:status]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

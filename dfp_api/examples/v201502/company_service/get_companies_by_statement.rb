@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,11 +19,9 @@
 # This example gets all companies that are advertisers. The statement retrieves
 # up to the maximum page size limit of 500. To create companies, run
 # create_companies.rb.
-#
-# Tags: CompanyService.getCompaniesByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -42,7 +38,7 @@ def get_companies_by_statement()
 
   # Create a statement to only select companies that are advertisers, sorted by
   # name.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE type = :type ORDER BY id ASC',
       [
           {:key => 'type',
@@ -62,7 +58,7 @@ def get_companies_by_statement()
              company[:id], company[:name], company[:type]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

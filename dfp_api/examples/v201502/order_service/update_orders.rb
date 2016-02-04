@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This example updates the notes of a specific order.
 # To determine which orders exist, run get_all_orders.rb.
-#
-# Tags: OrderService.getOrdersByStatement, OrderService.updateOrders
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -42,7 +38,7 @@ def update_orders()
   order_id = 'INSERT_ORDER_ID_HERE'.to_i
 
   # Create a statement to get first 500 orders.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
           {:key => 'id',

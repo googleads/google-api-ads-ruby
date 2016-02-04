@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,11 +20,9 @@
 # ID. The statement retrieves up to the maximum page size limit of 500. To
 # create LICAs, run create_licas.rb. To determine which line items exist, run
 # get_all_line_items.rb.
-#
-# Tags: LineItemCreativeAssociationService.getLineItemCreativeAssociationsByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -45,7 +41,7 @@ def get_licas_by_statement()
   line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
 
   # Create a statement to only select LICAs for the given line item ID.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE lineItemId = :line_item_id ORDER BY lineItemId, orderId ASC',
       [
           {:key => 'line_item_id',

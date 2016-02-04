@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This example gets all custom fields. To create custom fields, run
 # create_custom_fields.rb.
-#
-# Tags: CustomFieldService.getCustomFieldsByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -40,7 +36,7 @@ def get_all_custom_fields()
   custom_field_service = dfp.service(:CustomFieldService, API_VERSION)
 
   # Create a statement to get one page with current offset.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id')
+  statement = DfpApi::FilterStatement.new('ORDER BY id')
 
   begin
     # Get custom fields by statement.
@@ -63,7 +59,7 @@ def get_all_custom_fields()
         end
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

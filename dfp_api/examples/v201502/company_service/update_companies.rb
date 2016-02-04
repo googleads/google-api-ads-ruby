@@ -1,8 +1,6 @@
 # !/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,11 +19,9 @@
 # This example updates the names of all companies that are advertisers by
 # appending "LLC." up to the first 500. To determine which companies exist, run
 # get_all_companies.rb.
-#
-# Tags: CompanyService.getCompaniesByStatement, CompanyService.updateCompanies
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -44,7 +40,7 @@ def update_companies()
   company_id = 'INSERT_COMPANY_ID_HERE'
 
   # Create a statement to only select a single company.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :company_id ORDER BY id ASC',
       [
           {:key => 'company_id',

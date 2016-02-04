@@ -19,7 +19,7 @@ Install it using the gem install command.
 
 The following gem libraries are required:
 
- - savon
+ - google-ads-savon
  - httpi
  - signet
 
@@ -62,7 +62,7 @@ Google Ads Developers Plus page:
 
 # Copyright/License Info
 
-Copyright 2010-2014, Google Inc. All Rights Reserved.
+Copyright 2010-2015, Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -79,10 +79,10 @@ limitations under the License.
 
 ## Authors
 
- - Sérgio Gomes (api.sgomes@gmail.com)
- - Danial Klimkin (api.dklimkin@gmail.com)
- - Michael Cloonan (api.mcloonan@gmail.com)
+ - Sérgio Gomes
+ - Danial Klimkin
+ - Michael Cloonan
 
 ## Maintainer
 
- - Michael Cloonan (api.mcloonan@gmail.com)
+ - Michael Cloonan

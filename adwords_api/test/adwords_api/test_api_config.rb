@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,27 +30,27 @@ class TestApiConfig < Test::Unit::TestCase
 
   # Tests correct require path.
   def test_do_require()
-    name1 = @config.do_require(:v201406, :CampaignService)
-    assert_equal('adwords_api/v201406/campaign_service', name1)
+    name1 = @config.do_require(:v201506, :CampaignService)
+    assert_equal('adwords_api/v201506/campaign_service', name1)
   end
 
   # Tests correct module name.
   def test_module_name()
-    name1 = @config.module_name(:v201406, :CampaignService)
-    assert_equal('AdwordsApi::V201406::CampaignService', name1)
+    name1 = @config.module_name(:v201506, :CampaignService)
+    assert_equal('AdwordsApi::V201506::CampaignService', name1)
   end
 
   # Tests correct interface name.
   def test_interface_name()
-    name1 = @config.interface_name(:v201406, :CampaignService)
-    assert_equal('AdwordsApi::V201406::CampaignService::CampaignService', name1)
+    name1 = @config.interface_name(:v201506, :CampaignService)
+    assert_equal('AdwordsApi::V201506::CampaignService::CampaignService', name1)
   end
 
   # Tests AdHoc report URL generator (prod).
   def test_adhoc_report_download_url_prod()
-    url = AdwordsApi::ApiConfig.adhoc_report_download_url(:PRODUCTION, :v201406)
+    url = AdwordsApi::ApiConfig.adhoc_report_download_url(:PRODUCTION, :v201506)
     expected_url =
-        'https://adwords.google.com/api/adwords/reportdownload/v201406'
+        'https://adwords.google.com/api/adwords/reportdownload/v201506'
     assert_equal(expected_url, url)
   end
 end

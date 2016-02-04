@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,12 +20,9 @@
 # custom fields exist, run get_all_custom_fields.rb. To determine which line
 # items exist, run get_all_line_items.rb. To create custom field options, run
 # create_custom_field_options.rb.
-#
-# Tags: CustomFieldService.getCustomFieldsByStatement,
-#       LineItemService.getLineItemsByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -52,7 +47,7 @@ def set_line_item_custom_field_value()
   line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
 
   # Create a statement to only select a single custom field.
-  custom_field_statement = DfpApiStatement::FilterStatement.new(
+  custom_field_statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
           {:key => 'id',
@@ -62,7 +57,7 @@ def set_line_item_custom_field_value()
   )
 
   # Create a statement to only select a single drop down custom field.
-  drop_down_custom_field_statement = DfpApiStatement::FilterStatement.new(
+  drop_down_custom_field_statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
           {:key => 'id',
@@ -73,7 +68,7 @@ def set_line_item_custom_field_value()
   )
 
   # Create a statement to only select a single line item.
-  line_item_statement = DfpApiStatement::FilterStatement.new(
+  line_item_statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
           {:key => 'id',

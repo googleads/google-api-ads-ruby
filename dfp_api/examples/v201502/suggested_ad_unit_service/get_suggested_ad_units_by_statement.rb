@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,14 +16,12 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets suggested ad units that have more than 50 requests. 
+# This example gets suggested ad units that have more than 50 requests.
 #
 # This feature is only available to DFP premium solution networks.
-#
-# Tags: SuggestedAdUnitService.getSuggestedAdUnitsByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 NUMBER_OF_REQUESTS = 50
@@ -43,7 +39,7 @@ def get_suggested_ad_units_by_statement()
 
   # Create a statement to only select suggested ad units with more than 50
   # requests.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE numRequests > :num_requests ORDER BY id ASC',
       [
           {:key => 'num_requests',
@@ -64,7 +60,7 @@ def get_suggested_ad_units_by_statement()
             [index + statement.offset, ad_unit[:id], ad_unit[:num_requests]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end statement.offset < page[:total_result_set_size]
 
   # Print a footer.

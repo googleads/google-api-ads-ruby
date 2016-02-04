@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,12 +20,9 @@
 # determine which line items exist, run get_all_line_items.rb. To determine
 # which custom targeting keys and values exist, run
 # get_all_custom_targeting_keys_and_values.rb.
-#
-# Tags: LineItemService.getLineItemsByStatement,
-#       LineItemService.updateLineItems
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 require 'pp'
 
@@ -92,7 +87,7 @@ def target_custom_criteria()
 
 
   # Create a statement to only select a single line item.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
           {:key => 'id',
@@ -107,7 +102,7 @@ def target_custom_criteria()
   if page[:results]
     line_item = page[:results].first
 
-    line_item[:targeting] = {:custom_targeting => top_custom_criteria_set}
+    line_item[:targeting][:custom_targeting] = top_custom_criteria_set
 
     # Update the line items on the server.
     return_line_item = line_item_service.update_line_items([line_item])

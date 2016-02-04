@@ -1,7 +1,5 @@
 # Encoding: utf-8
 #
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -61,6 +59,15 @@ module AdwordsApi
       skip_report_summary = @config.read('library.skip_report_summary')
       unless skip_report_summary.nil?
         headers['skipReportSummary'] = skip_report_summary.to_s
+      end
+      skip_column_header = @config.read('library.skip_column_header')
+      unless skip_column_header.nil?
+        headers['skipColumnHeader'] = skip_column_header.to_s
+      end
+      include_zero_impressions_header =
+          @config.read('library.include_zero_impressions_header')
+      unless include_zero_impressions_header.nil?
+        headers['includeZeroImpressions'] = include_zero_impressions_header.to_s
       end
       return headers
     end

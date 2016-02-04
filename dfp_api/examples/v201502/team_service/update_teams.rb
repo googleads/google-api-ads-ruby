@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,11 +19,9 @@
 # This example updates teams by adding an ad unit to the first 5. To determine
 # which teams exist, run get_all_teams.rb. To determine which ad units exist,
 # run get_all_ad_units.rb.
-#
-# Tags: TeamService.getTeamsByStatement, TeamService.updateTeams
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -44,7 +40,7 @@ def update_teams()
   team_service = dfp.service(:TeamService, API_VERSION)
 
   # Create a statement to select first 5 teams that aren't built-in.
-  statement = DfpApiStatement::FilterStatement.new('WHERE id > 0', [], 5)
+  statement = DfpApi::FilterStatement.new('WHERE id > 0', [], 5)
 
   # Get teams by statement.
   page = team_service.get_teams_by_statement(statement.toStatement())

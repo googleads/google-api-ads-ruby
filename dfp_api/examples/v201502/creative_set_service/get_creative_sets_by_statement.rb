@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This code example gets all creative sets for a master creative. To create
 # creative sets, run create_creative_sets.rb.
-#
-# Tags: CreativeSetService.getCreativeSetsByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -43,7 +39,7 @@ def get_creative_sets_by_statement()
 
   # Create a statement to get all creative sets that have the given master
   # creative.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE masterCreativeId = :master_creative_id ORDER BY id ASC',
       [
           {:key => 'master_creative_id',
@@ -65,7 +61,7 @@ def get_creative_sets_by_statement()
              creative_set[:companion_creative_ids].join(', ')]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

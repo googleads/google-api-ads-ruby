@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: Nicholas Chen
-#
 # Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,11 +18,9 @@
 #
 # This example gets all activity groups. To create activity groups,
 # run create_activity_groups.rb.
-#
-# Tags: ActivityGroupService.getActivityGroupsByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -40,7 +36,7 @@ def get_all_activity_groups()
   activity_group_service = dfp.service(:ActivityGroupService, API_VERSION)
 
   # Create a statement to select all activity groups.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   begin
     # Get activity groups by statement.
@@ -54,12 +50,12 @@ def get_all_activity_groups()
             activity_group[:id], activity_group[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer
   if page.include?(:total_result_set_size)
-    puts "Total number of results: %d" % page[:total_result_set_sizet]
+    puts "Total number of results: %d" % page[:total_result_set_size]
   end
 end
 

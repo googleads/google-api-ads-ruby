@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.nicholaschen@gmail.com (Nicholas Chen)
-#
 # Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,12 +19,9 @@
 # This example deletes a single content metadata key hierarchy.
 #
 # This feature is only available to DFP video publishers.
-#
-# Tags: ContentMetadataKeyHierarchyService.getContentMetadataKeyHierarchiesByStatement
-# Tags: ContentMetadataKeyHierarchyService.performContentMetadataKeyHierarchyAction
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -45,7 +40,7 @@ def delete_content_metadata_key_hierarchies()
   content_metadata_key_hierarchy_id = 'CONTENT_METADATA_KEY_HIERARCHY_ID'
 
   # Create a statement to only select a single content metadata key hierarchy.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
           {:key => 'id',

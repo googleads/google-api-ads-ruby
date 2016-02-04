@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.davidtorres@gmail.com (David Torres)
-#
 # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,11 +17,9 @@
 #           limitations under the License.
 #
 # This example gets all contacts. To create contacts, run create_contacts.rb.
-#
-# Tags: ContactService.getContactsByStatement.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -39,7 +35,7 @@ def get_all_contacts()
   contact_service = dfp.service(:ContactService, API_VERSION)
 
   # Create statement for one page with current offset.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   begin
     # Get contacts by statement.
@@ -53,7 +49,7 @@ def get_all_contacts()
              contact[:id], contact[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

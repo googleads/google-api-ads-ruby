@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,11 +22,9 @@
 #
 # See https://developers.google.com/doubleclick-publishers/docs/service_accounts
 # for more information.
-#
-# Tags: UserService.getUsersByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -58,7 +54,7 @@ def oauth2_jwt_handling()
   user_service = dfp.service(:UserService, API_VERSION)
 
   # Create a statement to select all users.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
   # Define initial values.
 
   begin
@@ -72,7 +68,7 @@ def oauth2_jwt_handling()
             [index + statement.offset, user[:id], user[:name], user[:email]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

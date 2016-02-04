@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,12 +18,9 @@
 #
 # This code example updates a creative set by adding a companion creative. To
 # determine which creative sets exist, run get_all_creative_sets.rb.
-#
-# Tags: CreativeSetService.getCreativeSet
-# Tags: CreativeSetService.updateCreativeSet
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -45,7 +40,7 @@ def update_creative_sets()
   creative_set_service = dfp.service(:CreativeSetService, API_VERSION)
 
   # Create a statement to only select a single creative set.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id'
       [
           {:key => 'id',

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -24,12 +22,9 @@
 # order to which they belong by running approve_orders.rb. To create LICAs, run
 # create_licas.rb. To determine which line items exist, run
 # get_all_line_items.rb. To determine which orders exist, run get_all_orders.rb.
-#
-# Tags: LineItemService.getLineItemsByStatement
-# Tags: LineItemService.performLineItemAction
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -49,7 +44,7 @@ def activate_line_items()
 
   # Create a statement to only select line items from the specified order that
   # are in the approved (needs creatives) state.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE orderID = :order_id AND status = :status',
       [
           {:key => 'order_id',
@@ -76,14 +71,14 @@ def activate_line_items()
         end
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   puts "Number of line items to be activated: %d" % line_item_ids.size
 
   if !line_item_ids.empty?
     # Modify statement for action. Note, the values are still present.
-    statement = DfpApiStatement::FilterStatement.new(
+    statement = DfpApi::FilterStatement.new(
         "WHERE id IN (%s)" % line_item_ids.join(', '))
 
     # Perform action.

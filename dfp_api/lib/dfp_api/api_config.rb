@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Authors:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -35,9 +33,9 @@ module DfpApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201502
+    DEFAULT_VERSION = :v201511
     DEFAULT_ENVIRONMENT = :PRODUCTION
-    LATEST_VERSION = :v201502
+    LATEST_VERSION = :v201511
 
     # Set other constants
     API_NAME = 'DfpApi'
@@ -45,68 +43,6 @@ module DfpApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v201403 => [:ActivityGroupService, :ActivityService, :AdRuleService,
-                   :AudienceSegmentService, :BaseRateService, :CompanyService,
-                   :ContactService, :ContentBundleService,
-                   :ContentMetadataKeyHierarchyService, :ContentService,
-                   :CreativeService, :CreativeSetService,
-                   :CreativeTemplateService, :CreativeWrapperService,
-                   :CustomFieldService, :CustomTargetingService,
-                   :ExchangeRateService, :ForecastService, :InventoryService,
-                   :LabelService, :LineItemCreativeAssociationService,
-                   :LineItemService, :LineItemTemplateService,
-                   :NetworkService, :LiveStreamEventService,
-                   :OrderService, :PlacementService, :ProductService,
-                   :ProductTemplateService, :ProposalLineItemService,
-                   :ProposalService, :PublisherQueryLanguageService,
-                   :RateCardCustomizationService,
-                   :RateCardCustomizationGroupService, :RateCardService,
-                   :ReconciliationOrderReportService,
-                   :ReconciliationReportRowService,
-                   :ReconciliationReportService, :ReportService,
-                   :SuggestedAdUnitService, :TeamService, :UserService,
-                   :UserTeamAssociationService, :WorkflowRequestService],
-      :v201405 => [:ActivityGroupService, :ActivityService, :AdRuleService,
-                   :AudienceSegmentService, :BaseRateService, :CompanyService,
-                   :ContactService, :ContentBundleService,
-                   :ContentMetadataKeyHierarchyService, :ContentService,
-                   :CreativeService, :CreativeSetService,
-                   :CreativeTemplateService, :CreativeWrapperService,
-                   :CustomFieldService, :CustomTargetingService,
-                   :ExchangeRateService, :ForecastService, :InventoryService,
-                   :LabelService, :LineItemCreativeAssociationService,
-                   :LineItemService, :LineItemTemplateService,
-                   :NetworkService, :LiveStreamEventService,
-                   :OrderService, :PlacementService, :ProductService,
-                   :ProductTemplateService, :ProposalLineItemService,
-                   :ProposalService, :PublisherQueryLanguageService,
-                   :RateCardCustomizationService,
-                   :RateCardCustomizationGroupService, :RateCardService,
-                   :ReconciliationOrderReportService,
-                   :ReconciliationReportRowService,
-                   :ReconciliationReportService, :ReportService,
-                   :SuggestedAdUnitService, :TeamService, :UserService,
-                   :UserTeamAssociationService, :WorkflowRequestService],
-      :v201408 => [:ActivityGroupService, :ActivityService, :AdRuleService,
-                   :AudienceSegmentService, :BaseRateService, :CompanyService,
-                   :ContactService, :ContentBundleService,
-                   :ContentMetadataKeyHierarchyService, :ContentService,
-                   :CreativeService, :CreativeSetService,
-                   :CreativeTemplateService, :CreativeWrapperService,
-                   :CustomFieldService, :CustomTargetingService,
-                   :ExchangeRateService, :ForecastService, :InventoryService,
-                   :LabelService, :LineItemCreativeAssociationService,
-                   :LineItemService, :LineItemTemplateService,
-                   :NetworkService, :LiveStreamEventService,
-                   :OrderService, :PlacementService,
-                   :PremiumRateService, :ProductService,
-                   :ProductTemplateService, :ProposalLineItemService,
-                   :ProposalService, :PublisherQueryLanguageService,
-                   :RateCardService, :ReconciliationOrderReportService,
-                   :ReconciliationReportRowService,
-                   :ReconciliationReportService, :ReportService,
-                   :SuggestedAdUnitService, :TeamService, :UserService,
-                   :UserTeamAssociationService, :WorkflowRequestService],
       :v201411 => [:ActivityGroupService, :ActivityService,
                    :AdExclusionRuleService, :AdRuleService,
                    :AudienceSegmentService, :BaseRateService, :CompanyService,
@@ -151,6 +87,77 @@ module DfpApi
                    :ReconciliationReportService, :ReportService,
                    :SharedAdUnitService, :SuggestedAdUnitService,
                    :TeamService, :UserService,
+                   :UserTeamAssociationService, :WorkflowRequestService],
+      :v201505 => [:ActivityGroupService, :ActivityService,
+                   :AdExclusionRuleService, :AdRuleService,
+                   :AudienceSegmentService, :BaseRateService, :CompanyService,
+                   :ContactService, :ContentBundleService,
+                   :ContentMetadataKeyHierarchyService, :ContentService,
+                   :CreativeService, :CreativeSetService,
+                   :CreativeTemplateService, :CreativeWrapperService,
+                   :CustomFieldService, :CustomTargetingService,
+                   :ExchangeRateService, :ForecastService, :InventoryService,
+                   :LabelService, :LineItemCreativeAssociationService,
+                   :LineItemService, :LineItemTemplateService,
+                   :NetworkService, :LiveStreamEventService,
+                   :OrderService, :PackageService, :ProductPackageService,
+                   :ProductPackageItemService, :PlacementService,
+                   :PremiumRateService, :ProductService,
+                   :ProductTemplateService, :ProposalLineItemService,
+                   :ProposalService, :PublisherQueryLanguageService,
+                   :RateCardService, :ReconciliationOrderReportService,
+                   :ReconciliationReportRowService,
+                   :ReconciliationReportService, :ReportService,
+                   :SharedAdUnitService, :SuggestedAdUnitService,
+                   :TeamService, :UserService,
+                   :UserTeamAssociationService, :WorkflowRequestService],
+      :v201508 => [:ActivityGroupService, :ActivityService,
+                   :AdExclusionRuleService, :AdRuleService,
+                   :AudienceSegmentService, :BaseRateService, :CompanyService,
+                   :ContactService, :ContentBundleService,
+                   :ContentMetadataKeyHierarchyService, :ContentService,
+                   :CreativeService, :CreativeSetService,
+                   :CreativeTemplateService, :CreativeWrapperService,
+                   :CustomFieldService, :CustomTargetingService,
+                   :ExchangeRateService, :ForecastService, :InventoryService,
+                   :LabelService, :LineItemCreativeAssociationService,
+                   :LineItemService, :LineItemTemplateService,
+                   :NetworkService, :LiveStreamEventService,
+                   :OrderService, :PackageService, :ProductPackageService,
+                   :ProductPackageItemService, :PlacementService,
+                   :PremiumRateService, :ProductService,
+                   :ProductTemplateService, :ProposalLineItemService,
+                   :ProposalService, :PublisherQueryLanguageService,
+                   :RateCardService, :ReconciliationOrderReportService,
+                   :ReconciliationLineItemReportService,
+                   :ReconciliationReportRowService,
+                   :ReconciliationReportService, :ReportService,
+                   :SharedAdUnitService, :SuggestedAdUnitService,
+                   :TeamService, :UserService,
+                   :UserTeamAssociationService, :WorkflowRequestService],
+      :v201511 => [:ActivityGroupService, :ActivityService,
+                   :AdExclusionRuleService, :AdRuleService,
+                   :AudienceSegmentService, :BaseRateService, :CompanyService,
+                   :ContactService, :ContentBundleService,
+                   :ContentMetadataKeyHierarchyService, :ContentService,
+                   :CreativeService, :CreativeSetService,
+                   :CreativeTemplateService, :CreativeWrapperService,
+                   :CustomFieldService, :CustomTargetingService,
+                   :ExchangeRateService, :ForecastService, :InventoryService,
+                   :LabelService, :LineItemCreativeAssociationService,
+                   :LineItemService, :LineItemTemplateService,
+                   :NetworkService, :LiveStreamEventService,
+                   :OrderService, :PackageService, :ProductPackageService,
+                   :ProductPackageItemService, :PlacementService,
+                   :PremiumRateService, :ProductService,
+                   :ProductTemplateService, :ProposalLineItemService,
+                   :ProposalService, :PublisherQueryLanguageService,
+                   :RateCardService, :ReconciliationOrderReportService,
+                   :ReconciliationLineItemReportService,
+                   :ReconciliationReportRowService,
+                   :ReconciliationReportService, :ReportService,
+                   :SharedAdUnitService, :SuggestedAdUnitService,
+                   :TeamService, :UserService,
                    :UserTeamAssociationService, :WorkflowRequestService]
     }
 
@@ -159,12 +166,11 @@ module DfpApi
       :PRODUCTION => {
         :oauth_scope => 'https://www.googleapis.com/auth/dfp',
         :header_ns => 'https://www.google.com/apis/ads/publisher/',
-        :v201403 => 'https://ads.google.com/apis/ads/publisher/',
-        :v201405 => 'https://ads.google.com/apis/ads/publisher/',
-        :v201408 => 'https://ads.google.com/apis/ads/publisher/',
         :v201411 => 'https://ads.google.com/apis/ads/publisher/',
-        :v201502 => 'https://ads.google.com/apis/ads/publisher/'
-
+        :v201502 => 'https://ads.google.com/apis/ads/publisher/',
+        :v201505 => 'https://ads.google.com/apis/ads/publisher/',
+        :v201508 => 'https://ads.google.com/apis/ads/publisher/',
+        :v201511 => 'https://ads.google.com/apis/ads/publisher/'
       }
     }
 

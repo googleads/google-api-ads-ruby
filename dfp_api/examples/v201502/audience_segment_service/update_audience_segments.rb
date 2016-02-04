@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,12 +19,9 @@
 # This example updates rule based first party audience segments. To determine
 # which first party audience segments exist, run
 # get_all_first_party_audience_segments.rb.
-#
-# Tags: AudienceSegmentService.getAudienceSegmentsByStatement
-# Tags: AudienceSegmentService.updateAudienceSegments
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -45,7 +40,7 @@ def update_audience_segments()
   audience_segment_service = dfp.service(:AudienceSegmentService, API_VERSION)
 
   # Create statement text to select the audience segment to update.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
      'WHERE id = :segment_id ORDER BY id ASC',
      [
          {:key => 'segment_id',

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.nicholaschen@gmail.com (Nicholas Chen)
-#
 # Copyright:: Copyright 2014, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,11 +19,9 @@
 # This example gets all line items for a given order. To create line
 # items, run create_line_items.rb. To determine which orders exist, run
 # get_all_orders.rb.
-#
-# Tags: LineItemService.getLineItemsByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -44,7 +40,7 @@ def get_line_items_by_statement()
   order_id = 'INSERT_ORDER_ID_HERE'.to_i
 
   # Create a statement to only select line items from a given order.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE orderId = :order_id ORDER BY id ASC',
       [
           {:key => 'order_id',
@@ -62,7 +58,7 @@ def get_line_items_by_statement()
           index + statement.offset,
           line_item[:id], line_item[:order_id], line_item[:name]]
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
     page = line_item_service.get_line_items_by_statement(
         statement.toStatement())
   end

@@ -1,8 +1,6 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Author:: api.dklimkin@gmail.com (Danial Klimkin)
-#
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,11 +17,9 @@
 #           limitations under the License.
 #
 # This example gets system defined creative templates.
-#
-# Tags: CreativeTemplateService.getCreativeTemplatesByStatement
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -39,7 +35,7 @@ def get_creative_templates_by_statement()
   creative_template_service = dfp.service(:CreativeTemplateService, API_VERSION)
 
   # Create a statement to only select system defined creative_templates.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE type = :type ORDER BY id ASC',
       [
           {:key => 'type',
@@ -60,7 +56,7 @@ def get_creative_templates_by_statement()
              template[:id], template[:name], template[:type]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.
