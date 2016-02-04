@@ -21,7 +21,7 @@
 # get_all_orders.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -40,7 +40,7 @@ def get_line_items_by_statement()
   order_id = 'INSERT_ORDER_ID_HERE'.to_i
 
   # Create a statement to only select line items from a given order.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE orderId = :order_id ORDER BY id ASC',
       [
           {:key => 'order_id',
@@ -58,7 +58,7 @@ def get_line_items_by_statement()
           index + statement.offset,
           line_item[:id], line_item[:order_id], line_item[:name]]
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
     page = line_item_service.get_line_items_by_statement(
         statement.toStatement())
   end

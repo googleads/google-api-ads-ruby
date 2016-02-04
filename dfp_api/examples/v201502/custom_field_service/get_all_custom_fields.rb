@@ -20,7 +20,7 @@
 # create_custom_fields.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -36,7 +36,7 @@ def get_all_custom_fields()
   custom_field_service = dfp.service(:CustomFieldService, API_VERSION)
 
   # Create a statement to get one page with current offset.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id')
+  statement = DfpApi::FilterStatement.new('ORDER BY id')
 
   begin
     # Get custom fields by statement.
@@ -59,7 +59,7 @@ def get_all_custom_fields()
         end
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

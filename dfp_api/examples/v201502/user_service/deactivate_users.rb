@@ -22,6 +22,7 @@
 
 require 'dfp_api'
 
+
 API_VERSION = :v201502
 
 def deactivate_users()
@@ -39,7 +40,7 @@ def deactivate_users()
   user_id = 'INSERT_USER_ID_HERE'
 
   # Create filter text to select user by id.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :user_id',
       [
           {:key => 'user_id',

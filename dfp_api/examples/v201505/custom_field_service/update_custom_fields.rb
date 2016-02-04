@@ -20,7 +20,7 @@
 # fields exist, run get_all_custom_fields.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -39,7 +39,7 @@ def update_custom_fields()
   custom_field_id = 'INSERT_CUSTOM_FIELD_ID_HERE'.to_i
 
   # Create a statement to only select a single custom field.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id',
       [
           {:key => 'id',

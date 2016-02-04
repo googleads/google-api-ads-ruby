@@ -21,7 +21,7 @@
 # get_all_companies.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -40,7 +40,7 @@ def update_companies()
   company_id = 'INSERT_COMPANY_ID_HERE'
 
   # Create a statement to only select a single company.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :company_id ORDER BY id ASC',
       [
           {:key => 'company_id',

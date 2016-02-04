@@ -20,7 +20,7 @@
 # To determine which audience segments exist, run get_audience_segments.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -37,7 +37,7 @@ def populate_first_party_audience_segments(audience_segment_id)
 
   # Statement parts to help build a statement to select first party audience
   # segment for an ID.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
      'WHERE type = :type AND id = :audience_segment_id ORDER BY id ASC',
      [
        {:key => 'type',

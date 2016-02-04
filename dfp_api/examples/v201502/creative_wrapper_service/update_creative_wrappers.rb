@@ -20,7 +20,7 @@
 # determine which creative wrappers exist, run get_all_creative_wrappers.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -39,7 +39,7 @@ def update_creative_wrappers()
   creative_wrapper_id = 'INSERT_CREATIVE_WRAPPER_ID_HERE'.to_i
 
   # Create a statement to only select a single creative wrapper.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id',
       [
           {:key => 'id',

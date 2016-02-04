@@ -22,7 +22,7 @@
 # get_all_users.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -41,7 +41,7 @@ def update_user_team_associations()
   user_id = 'INSERT_USER_ID_HERE'.to_i
 
   # Create filter text to select user team associations by the user ID.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE userId = :user_id ORDER BY id ASC',
       [
           {:key => 'user_id',

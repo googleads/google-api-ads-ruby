@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <title>AdwordsOnRails Demo</title>
+<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
 <%= stylesheet_link_tag    "application" %>
 <%= javascript_include_tag "application" %>
 <%= csrf_meta_tags %>
@@ -9,7 +10,7 @@
   <span>Active account: <%= account_text %></span>
 </div>
 
-<div id="global-alers">
+<div id="global-alert">
   <% if flash[:alert] %>
     <div class="alert"><%= flash[:alert] %></div>
   <% end %>

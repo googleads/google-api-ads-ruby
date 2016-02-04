@@ -20,7 +20,7 @@
 # which placements exist, run get_all_placements.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -61,7 +61,7 @@ def create_placements()
 
   # Get the first 500 ad units.
   page = inventory_service.get_ad_units_by_statement(
-      DfpApiStatement::FilterStatement.new('ORDER BY id ASC').toStatement())
+      DfpApi::FilterStatement.new('ORDER BY id ASC').toStatement())
 
   # Separate the ad units by size.
   if page and page[:results]

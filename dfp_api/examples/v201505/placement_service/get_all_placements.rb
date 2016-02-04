@@ -20,7 +20,7 @@
 # create_placements.rb
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -36,7 +36,7 @@ def get_all_placements()
   placement_service = dfp.service(:PlacementService, API_VERSION)
 
   # Create statement for placements ordered by ID.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   begin
     # Get placements by statement.
@@ -50,7 +50,7 @@ def get_all_placements()
             [index + statement.offset, placement[:id], placement[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

@@ -69,7 +69,7 @@ module AdsCommon
       agent_app ||= File.basename($0)
       agent_data = extra_ids
       agent_data << 'Common-Ruby/%s' % AdsCommon::ApiConfig::CLIENT_LIB_VERSION
-      agent_data << 'Savon/%s' % Savon::VERSION
+      agent_data << 'GoogleAdsSavon/%s' % GoogleAdsSavon::VERSION
       ruby_engine = defined?(RUBY_ENGINE) ? RUBY_ENGINE : 'ruby'
       agent_data << [ruby_engine, RUBY_VERSION].join('/')
       agent_data << 'HTTPI/%s' % HTTPI::VERSION

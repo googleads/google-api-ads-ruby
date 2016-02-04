@@ -20,7 +20,7 @@
 # fields, run create_custom_fields.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -36,7 +36,7 @@ def get_all_line_item_custom_fields()
   custom_field_service = dfp.service(:CustomFieldService, API_VERSION)
 
   # Create statement to select only custom fields that apply to line items.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
      'WHERE entityType = :entity_type ORDER BY id ASC',
      [
          {:key => 'entity_type',
@@ -56,7 +56,7 @@ def get_all_line_item_custom_fields()
             [index + statement.offset, custom_field[:id], custom_field[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

@@ -20,7 +20,7 @@
 # associations, run create_user_team_assocations.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -36,7 +36,7 @@ def get_all_user_team_associations()
   uta_service = dfp.service(:UserTeamAssociationService, API_VERSION)
 
   # Create statement for all user team associations.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   begin
     # Get the user team associations by statement.
@@ -51,7 +51,7 @@ def get_all_user_team_associations()
              association[:team_id], association[:user_id]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

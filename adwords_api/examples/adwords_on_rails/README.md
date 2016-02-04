@@ -26,21 +26,21 @@ developers and to demonstrate some of the core functionality in the API.
 How do I get started?
 ---------------------
 
-1. Make sure you have Ruby 1.9.2 or later installed:
+1. Make sure you have Ruby 2.1 or later installed:
 
     $ ruby -v
-    ruby 1.9.2p0 (2010-08-18 revision 29036) [x86_64-linux]
+    ruby 2.2.2p95 (2015-04-13 revision 50295) [x86_64-linux]
 
 2. Download the application from [GitHub](https://github.com/googleads/google-api-ads-ruby).
 3. Unpack the contents and change to the application root:
 
     $ tar xvzf adwords_on_rails-<version>.tar.gz && cd adwords_on_rails
 
-4. Install the Ruby bundle:
+4. Install the bundle gem:
 
     $ gem install bundle
 
-5. Install all required dependencies:
+5. Install all required dependencies using bundle:
 
     $ bundle install
 
@@ -88,13 +88,13 @@ named adwords_api.yml.
 For details regarding configuration directive please refer to the [library
 README](https://github.com/googleads/google-api-ads-ruby/blob/master/adwords_api/README.md).
 
+
 Production accounts
 -------------------
 
-This demo is capable of accessing production accounts. Be aware that the API
-unit costs of the requests made by the AdWords on Rails application will be
-recorded against the developer token specified in the credentials and may be
-significant.
+This demo is capable of accessing production accounts. Although the app doesn't
+perform any mutate opertions, it's best to be careful especially if modifying it
+to include additional functionality.
 
 
 Where do I submit bug reports and feature requests?

@@ -21,11 +21,14 @@
 require 'time'
 
 require 'ads_common/auth/oauth2_handler'
+require 'ads_common/config'
 require 'webmock/test_unit'
 
 module AdsCommon
   module Auth
     class OAuth2Handler
+      attr_reader :scopes
+
       def client()
         @client
       end
@@ -56,7 +59,7 @@ class TestOAuth < Test::Unit::TestCase
   end
 
   def test_string_issued_at()
-    handler = AdsCommon::Auth::OAuth2Handler.new('', {})
+    handler = AdsCommon::Auth::OAuth2Handler.new(AdsCommon::Config.new(), nil)
 
     # Modify @client in the handler to get around a full setup.
     handler.setup_client()
@@ -68,5 +71,14 @@ class TestOAuth < Test::Unit::TestCase
     assert_nothing_raised do
       token = handler.refresh_token!();
     end
+  end
+
+  def test_additional_scopes()
+    config = AdsCommon::Config.new()
+    config.set('authentication.oauth2_extra_scopes', ['extra-scope'])
+    handler = AdsCommon::Auth::OAuth2Handler.new(config, 'base-scope')
+    scopes = handler.scopes
+    assert(scopes.include?('base-scope'), 'Missing base scope.')
+    assert(scopes.include?('extra-scope'), 'Missing extra scope.')
   end
 end

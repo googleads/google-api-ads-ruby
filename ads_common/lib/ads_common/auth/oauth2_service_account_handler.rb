@@ -42,7 +42,11 @@ module AdsCommon
       #
       def initialize(config, scope)
         super(config)
-        @scope, @client = scope, nil
+        @scopes = []
+        @scopes << scope unless scope.nil?
+        additional_scopes = @config.read('authentication.oauth2_extra_scopes')
+        @scopes += additional_scopes if additional_scopes.is_a?(Array)
+        @client = nil
       end
 
       # Invalidates the stored token if the required credential has changed.
@@ -82,7 +86,7 @@ module AdsCommon
 
       # Refreshes access token from refresh token.
       def refresh_token!()
-        return nil if @token.nil? or @token[:refresh_token].nil?
+        return nil if @token.nil?
         @client.refresh!
         @token = token_from_client(@client)
         return @token
@@ -101,7 +105,7 @@ module AdsCommon
       # - AdsCommon::Errors::AuthError if validation fails
       #
       def validate_credentials(credentials)
-        if @scope.nil?
+        if @scopes.empty?
           raise AdsCommon::Errors::AuthError, 'Scope is not specified.'
         end
 
@@ -172,7 +176,7 @@ module AdsCommon
             :issuer => credentials[:oauth2_issuer],
             :signing_key => credentials[:oauth2_key],
             :person => credentials[:oauth2_prn],
-            :scope => @scope,
+            :scope => @scopes.join(' '),
         })
         return Signet::OAuth2::Client.new(oauth_options)
       end

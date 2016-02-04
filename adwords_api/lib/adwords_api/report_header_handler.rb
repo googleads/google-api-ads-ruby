@@ -67,7 +67,7 @@ module AdwordsApi
       include_zero_impressions_header =
           @config.read('library.include_zero_impressions_header')
       unless include_zero_impressions_header.nil?
-        headers['includeZeroImpressoins'] = include_zero_impressions_header.to_s
+        headers['includeZeroImpressions'] = include_zero_impressions_header.to_s
       end
       return headers
     end

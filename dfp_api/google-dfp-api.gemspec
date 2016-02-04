@@ -26,7 +26,8 @@ Gem::Specification.new do |s|
   s.summary = 'Ruby Client libraries for DFP API'
   s.description = "%s is a DFP API client library for Ruby" % s.name
   s.homepage = 'https://github.com/googleads/google-api-ads-ruby'
-  s.authors = ['Danial Klimkin']
+  s.authors = ['Danial Klimkin', 'Nicholas Chen']
+  s.email = ['dfpapi-advisor+nicholas@google.com']
   s.license = 'Apache-2.0'
   s.platform = Gem::Platform::RUBY
   s.required_rubygems_version = '>= 1.3.6'
@@ -35,5 +36,5 @@ Gem::Specification.new do |s|
   s.files = Dir.glob('{examples,lib,test}/**/*') +
       %w(COPYING README.md ChangeLog dfp_api.yml)
   s.test_files = Dir.glob('test/**/test_*.rb')
-  s.add_dependency('google-ads-common', '~> 0.10.1')
+  s.add_dependency('google-ads-common', '~> 0.11.0')
 end

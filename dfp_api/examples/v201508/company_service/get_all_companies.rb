@@ -19,7 +19,7 @@
 # This example gets all companies. To create companies, run create_companies.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -35,7 +35,7 @@ def get_all_companies()
   company_service = dfp.service(:CompanyService, API_VERSION)
 
   # Create a statement to select all companies.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   begin
     # Get companies by statement.
@@ -49,7 +49,7 @@ def get_all_companies()
              company[:id], company[:name], company[:type]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

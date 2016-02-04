@@ -17,7 +17,7 @@ class AccountController < ApplicationController
   def get_accounts_graph()
     adwords = get_adwords_api()
 
-    # First get the MCC ID.
+    # First get the AdWords manager account ID.
     customer_srv = adwords.service(:CustomerService, get_api_version())
     customer = customer_srv.get()
     adwords.credential_handler.set_credential(

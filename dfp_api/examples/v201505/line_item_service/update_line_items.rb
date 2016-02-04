@@ -22,6 +22,7 @@
 
 require 'dfp_api'
 
+
 API_VERSION = :v201505
 
 def update_line_items()
@@ -39,7 +40,7 @@ def update_line_items()
   order_id = 'INSERT_ORDER_ID_HERE'.to_i
 
   # Create a statement to get line items with even delivery rates.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE deliveryRateType = :delivery_rate_type AND ' +
       'orderId = :order_id ',
       [

@@ -19,7 +19,7 @@
 # This example gets all teams. To create teams, run create_teams.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -35,7 +35,7 @@ def get_all_teams()
   team_service = dfp.service(:TeamService, API_VERSION)
 
   # Create statement for all teams.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   begin
     # Get teams by statement.
@@ -48,7 +48,7 @@ def get_all_teams()
             [index + statement.offset, team[:id], team[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

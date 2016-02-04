@@ -17,7 +17,7 @@
 #           limitations under the License.
 #
 # This example illustrates how to create an account. Note by default this
-# account will only be accessible via parent MCC.
+# account will only be accessible via parent AdWords manager account.
 
 require 'adwords_api'
 require 'adwords_api/utils'

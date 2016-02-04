@@ -22,6 +22,7 @@
 
 require 'dfp_api'
 
+
 API_VERSION = :v201502
 
 def update_ad_units()
@@ -39,7 +40,7 @@ def update_ad_units()
   ad_unit_id = 'INSERT_AD_UNIT_ID_HERE'.to_i
 
   # Create a statement to get first 500 ad units.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id',
       [
           {:key => 'id',

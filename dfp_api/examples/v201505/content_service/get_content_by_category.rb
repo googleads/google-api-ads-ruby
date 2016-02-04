@@ -22,7 +22,7 @@
 # This feature is only available to DFP video publishers.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -46,7 +46,7 @@ def get_content_by_statement()
   custom_targeting_service = dfp.service(:CustomTargetingService, API_VERSION)
 
   # Create a statement to select the categories matching the name comedy.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE customTargetingKeyId = :targeting_key_id' +
       ' and name = :category ORDER BY id ASC',
       [
@@ -71,7 +71,7 @@ def get_content_by_statement()
     # Get the ContentService.
     content_service = dfp.service(:ContentService, API_VERSION)
 
-    statement = DfpApiStatement::FilterStatement.new(
+    statement = DfpApi::FilterStatement.new(
         'WHERE status = :status ORDER BY id ASC',
         [
             {:key => 'status',
@@ -92,7 +92,7 @@ def get_content_by_statement()
                content[:status]]
         end
       end
-      statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
     end while statement.offset < page[:total_result_set_size]
 
     # Print a footer.

@@ -20,7 +20,7 @@
 # create_audience_segments.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -36,7 +36,7 @@ def get_all_audience_segments()
   audience_segment_service = dfp.service(:AudienceSegmentService, API_VERSION)
 
   # Create a statement to select all audience segments.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   begin
     # Get audience segments by statement.
@@ -50,7 +50,7 @@ def get_all_audience_segments()
              segment[:id], segment[:name], segment[:size]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

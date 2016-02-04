@@ -21,7 +21,7 @@
 # create_companies.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -38,7 +38,7 @@ def get_companies_by_statement()
 
   # Create a statement to only select companies that are advertisers, sorted by
   # name.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE type = :type ORDER BY id ASC',
       [
           {:key => 'type',
@@ -58,7 +58,7 @@ def get_companies_by_statement()
              company[:id], company[:name], company[:type]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

@@ -21,7 +21,7 @@
 # This feature is only available to DFP premium solution networks.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 NUMBER_OF_REQUESTS = 50
@@ -39,7 +39,7 @@ def get_suggested_ad_units_by_statement()
 
   # Create a statement to only select suggested ad units with more than 50
   # requests.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE numRequests > :num_requests ORDER BY id ASC',
       [
           {:key => 'num_requests',
@@ -60,7 +60,7 @@ def get_suggested_ad_units_by_statement()
             [index + statement.offset, ad_unit[:id], ad_unit[:num_requests]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end statement.offset < page[:total_result_set_size]
 
   # Print a footer.

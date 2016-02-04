@@ -21,7 +21,7 @@
 # create_creatives.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -37,7 +37,7 @@ def get_creatives_by_statement()
   creative_service = dfp.service(:CreativeService, API_VERSION)
 
   # Create a statement to only select image creatives.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
      'WHERE creativeType = :creative_type ORDER BY id ASC',
      [
          {:key => 'creative_type',
@@ -57,7 +57,7 @@ def get_creatives_by_statement()
              creative[:id], creative[:name], creative[:creative_type]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

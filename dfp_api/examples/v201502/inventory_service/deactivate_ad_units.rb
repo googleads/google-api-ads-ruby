@@ -20,7 +20,7 @@
 # exist, run get_all_ad_units.rb or get_inventory_tree.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -36,7 +36,7 @@ def deactivate_ad_units()
   inventory_service = dfp.service(:InventoryService, API_VERSION)
 
   # Create statement text to select active ad units.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE status = :status',
       [
           {:key => 'status',
@@ -58,14 +58,14 @@ def deactivate_ad_units()
         ad_unit_ids << ad_unit[:id]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   puts "Number of ad units to be deactivated: %d" % ad_unit_ids.size
 
   if !ad_unit_ids.empty?
     # Modify statement for action. Note, the values are still present.
-    statement = DfpApiStatement::FilterStatement.new(
+    statement = DfpApi::FilterStatement.new(
         "WHERE status = :status AND id in (%s)" % ad_unit_ids.join(', '),
         [
             {:key => 'status',

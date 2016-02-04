@@ -22,7 +22,7 @@
 # This feature is only available to DFP premium solution networks.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -38,7 +38,7 @@ def deactivate_labels()
   label_service = dfp.service(:LabelService, API_VERSION)
 
   # Create statement to select active labels.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE isActive = :is_active',
       [
           {:key => 'is_active',
@@ -60,14 +60,14 @@ def deactivate_labels()
         label_ids << label[:id]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   puts "Number of labels to be deactivated: %d" % label_ids.size
 
   if !label_ids.empty?
     # Create a statement for action.
-    statement = DfpApiStatement::FilterStatement.new(
+    statement = DfpApi::FilterStatement.new(
         "WHERE id IN (%s)" % label_ids.join(', '))
 
     # Perform action.

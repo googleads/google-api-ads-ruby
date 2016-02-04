@@ -20,7 +20,7 @@
 # create ad units, run create_ad_units.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -45,7 +45,7 @@ def get_ad_units_by_statement()
   puts "Using effective root ad unit: %d" % effective_root_ad_unit_id
 
   # Create a statement to select the children of the effective root ad unit.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
      'WHERE parentId = :id ORDER BY id',
      [
          {:key => 'id',
@@ -66,7 +66,7 @@ def get_ad_units_by_statement()
              ad_unit[:name], ad_unit[:status]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.
