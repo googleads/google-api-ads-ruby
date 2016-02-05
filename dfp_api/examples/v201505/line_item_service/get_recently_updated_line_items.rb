@@ -23,7 +23,7 @@
 require 'date'
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -43,7 +43,7 @@ def get_recently_updated_line_items()
 
   # Create statement object to only select line items belonging to the order and
   # have been modified in the last 3 days.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
     'WHERE lastModifiedDateTime >= :date_time_string AND ' +
     'orderId = :order_id ORDER BY id ASC',
     [
@@ -69,7 +69,7 @@ def get_recently_updated_line_items()
             line_item[:order_id], line_item[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

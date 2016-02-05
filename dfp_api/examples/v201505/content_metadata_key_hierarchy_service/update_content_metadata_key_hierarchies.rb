@@ -21,7 +21,7 @@
 # This feature is only available to DFP video publishers.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -44,7 +44,7 @@ def update_content_metadata_key_hierarchies()
   custom_targeting_key_id = "INSERT_CUSTOM_TARGETING_KEY_ID_HERE"
 
   # Create a statement to only select a single content metadata key hierarchy.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
           {:key => 'id',

@@ -21,7 +21,7 @@
 # targeting keys, run create_custom_targeting_keys_and_values.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -37,7 +37,7 @@ def get_custom_targeting_keys_by_statement()
   custom_targeting_service = dfp.service(:CustomTargetingService, API_VERSION)
 
   # Create a statement to only select predefined custom targeting keys.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE type = :type ORDER BY id ASC',
       [
           {:key => 'type',
@@ -61,7 +61,7 @@ def get_custom_targeting_keys_by_statement()
                                             custom_targeting_key[:type]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

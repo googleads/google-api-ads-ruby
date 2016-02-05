@@ -20,7 +20,7 @@
 # custom targeting keys exist, run get_all_custom_targeting_keys_and_values.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -43,7 +43,7 @@ def delete_custom_targeting_keys()
   custom_target_key_ids = []
 
   # Create statement to only select custom targeting key by the given name.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE name = :name',
       [
           {:key => 'name',
@@ -63,7 +63,7 @@ def delete_custom_targeting_keys()
         custom_target_key_ids << key[:id]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.
@@ -72,7 +72,7 @@ def delete_custom_targeting_keys()
 
   if !(custom_target_key_ids.empty?)
     # Modify statement for action.
-    statement = DfpApiStatement::FilterStatement.new(
+    statement = DfpApi::FilterStatement.new(
         "WHERE id IN (%s)" %
         [custom_target_key_ids.join(', ')]
     )

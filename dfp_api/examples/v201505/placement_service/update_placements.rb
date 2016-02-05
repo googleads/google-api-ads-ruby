@@ -20,7 +20,7 @@
 # To determine which placements exist, run get_all_placements.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -38,7 +38,7 @@ def update_placements()
   placement_id = 'INSERT_PLACEMENT_ID_HERE'.to_i
 
   # Create a statement to get a single placement by ID.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
          {:key => 'id',

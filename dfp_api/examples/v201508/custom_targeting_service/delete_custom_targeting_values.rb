@@ -21,7 +21,7 @@
 # get_all_custom_targeting_keys_and_values.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -44,7 +44,7 @@ def delete_custom_targeting_values()
 
   # Create statement to only select custom values by the given custom targeting
   # key ID.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE customTargetingKeyId = :key_id',
       [
           {:key => 'key_id',
@@ -66,7 +66,7 @@ def delete_custom_targeting_values()
         custom_target_value_ids << value[:id]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.
@@ -75,7 +75,7 @@ def delete_custom_targeting_values()
 
   if !(custom_target_value_ids.empty?)
     # Modify statement for action, note, values are still present.
-    statement = DfpApiStatement::FilterStatement.new(
+    statement = DfpApi::FilterStatement.new(
         "WHERE customTargetingKeyId = :key_id AND id IN (%s)" %
         [custom_target_value_ids.join(', ')],
         [

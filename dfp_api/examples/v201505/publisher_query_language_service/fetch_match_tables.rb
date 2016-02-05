@@ -26,7 +26,7 @@
 require 'tempfile'
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 # A string to separate columns in output. Use "," to get CSV.
@@ -55,7 +55,7 @@ end
 # Fetches a match table from a PQL statement and writes it to a file.
 def fetch_match_table(table_name, pql_service)
   # Create a statement to select all items for the table.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'SELECT Id, Name, Status FROM %s ' % table_name + 'ORDER BY Id ASC')
 
   # Set initial values.
@@ -79,8 +79,8 @@ def fetch_match_table(table_name, pql_service)
         end
       end
       # Update the counters.
-      statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
-    end while result_set[:rows].size == DfpApiStatement::SUGGESTED_PAGE_LIMIT
+      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+    end while result_set[:rows].size == DfpApi::SUGGESTED_PAGE_LIMIT
   end
   return file_path
 end

@@ -19,7 +19,7 @@
 # This code example gets all ad unit sizes.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -35,7 +35,7 @@ def get_all_ad_unit_sizes()
   inventory_service = dfp.service(:InventoryService, API_VERSION)
 
   # Create statement select all ad unit sizes.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   # Get ad unit sizes by statement.
   ad_unit_sizes = inventory_service.get_ad_unit_sizes_by_statement(

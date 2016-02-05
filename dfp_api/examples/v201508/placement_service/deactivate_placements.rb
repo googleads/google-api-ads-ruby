@@ -21,6 +21,7 @@
 
 require 'dfp_api'
 
+
 API_VERSION = :v201508
 
 def deactivate_placements()
@@ -35,7 +36,7 @@ def deactivate_placements()
   placement_service = dfp.service(:PlacementService, API_VERSION)
 
   # Create statement to select active placements.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE status = :status',
       [
           {:key => 'status',
@@ -65,7 +66,7 @@ def deactivate_placements()
 
   if !placement_ids.empty?
     # Create a statement for action.
-    statement = DfpApiStatement::FilterStatement.new(
+    statement = DfpApi::FilterStatement.new(
         "WHERE id IN (%s)" % placement_ids.join(', '))
 
     # Perform action.

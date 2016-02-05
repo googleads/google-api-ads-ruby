@@ -19,7 +19,7 @@
 # This example gets all creative templates.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -35,7 +35,7 @@ def get_all_creative_templates()
   creative_template_service = dfp.service(:CreativeTemplateService, API_VERSION)
 
   # Create a statement to get one page with current offset.
-  statement = DfpApiStatement::FilterStatement.new(ORDER BY id ASC)
+  statement = DfpApi::FilterStatement.new(ORDER BY id ASC)
 
   begin
 
@@ -51,7 +51,7 @@ def get_all_creative_templates()
              template[:name], template[:type]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

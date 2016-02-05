@@ -19,7 +19,7 @@
 # This example gets all teams ordered by name.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -35,7 +35,7 @@ def get_teams_by_statement()
   team_service = dfp.service(:TeamService, API_VERSION)
 
   # Create a statement to order teams by id.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY name ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY name ASC')
 
   begin
     # Get teams by statement.
@@ -47,7 +47,7 @@ def get_teams_by_statement()
                                              team[:id], team[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

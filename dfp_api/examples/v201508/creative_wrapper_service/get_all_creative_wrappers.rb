@@ -20,7 +20,7 @@
 # wrappers, run create_creative_wrappers.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -36,7 +36,7 @@ def get_all_creative_wrappers()
   creative_wrapper_service = dfp.service(:CreativeWrapperService, API_VERSION)
 
   # Create statement for one page with current offset.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   begin
     # Get creative wrappers by statement.
@@ -51,7 +51,7 @@ def get_all_creative_wrappers()
             creative_wrapper[:id], creative_wrapper[:label_id]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

@@ -1,3 +1,21 @@
+0.18.1:
+  - Support and examples for v201601.
+  - Updated batch_job_utils to handle API changes in v201601.
+  - Require google-ads-common 0.11.2 or later from now on.
+
+0.18.0:
+  - Removed deprecated API version v201502.
+  - Support for streaming report requests in report_utils.
+  - Require google-ads-common 0.11.1 or later from now on.
+  - Updated batch_job_utils to support incremental uploads.
+  - Changed interface of batch_job_utils to avoid requiring users to manually
+    manage SOAP XML.
+
+0.17.0:
+  - Support and examples for v201509.
+  - Require google-ads-common 0.11.0 or later from now on.
+  - Updating report_utils for new version of nori in ads_common.
+
 0.16.1:
   - General file cleanup.
   - Improved errors handling (based on GitHub pull request).
@@ -10,7 +28,7 @@
     behavior).
 
 0.15.2:
-  - Support and examples for v201502.
+  - Support and examples for v201506.
   - Added support for including zero impression rows in reports via HTTP header.
 
 0.15.1:

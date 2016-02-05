@@ -1,3 +1,16 @@
+0.12.1:
+  - Fix environment default to use DFP v201511.
+
+0.12.0:
+  - Removed support for DFP v201408.
+  - Added support for DFP v201511.
+
+0.11.0:
+  - Moved FilterStatement under DfpApi module to reduce requires.
+  - Require google-ads-common 0.11.0 or later from now on.
+  - Regenerated stubs for DFP.
+  - Removed support for v201405.
+
 0.10.1:
   - Added support for v201508
   - Added ReconciliationLineItemReportService.

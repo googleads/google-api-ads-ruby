@@ -21,7 +21,7 @@
 # creatives exist, run get_all_creatives.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 require 'base64'
 
 API_VERSION = :v201505
@@ -46,7 +46,7 @@ def copy_image_creatives()
   ]
 
   # Create the statement to filter image creatives by ID.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       "WHERE id IN (%s) AND creativeType = :creative_type" %
           image_creative_ids.join(', '),
       [

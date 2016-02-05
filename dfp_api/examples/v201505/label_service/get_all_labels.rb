@@ -21,7 +21,7 @@
 # This feature is only available to DFP premium solution networks.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -37,7 +37,7 @@ def get_all_labels()
   label_service = dfp.service(:LabelService, API_VERSION)
 
   # Create statement for all labels.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   begin
     # Get labels by statement.
@@ -51,7 +51,7 @@ def get_all_labels()
              label[:types]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

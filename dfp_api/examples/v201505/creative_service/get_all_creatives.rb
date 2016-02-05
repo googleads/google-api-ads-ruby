@@ -19,7 +19,7 @@
 # This example gets all creatives. To create creatives, run create_creatives.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -35,7 +35,7 @@ def get_all_creatives()
   creative_service = dfp.service(:CreativeService, API_VERSION)
 
   # Create a statement to get one page with current offset.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY id ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
 
   begin
     # Get creatives by statement.
@@ -49,7 +49,7 @@ def get_all_creatives()
              creative[:name], creative[:creative_type]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

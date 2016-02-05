@@ -21,7 +21,7 @@
 # run get_all_ad_units.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -40,7 +40,7 @@ def update_teams()
   team_service = dfp.service(:TeamService, API_VERSION)
 
   # Create a statement to select first 5 teams that aren't built-in.
-  statement = DfpApiStatement::FilterStatement.new('WHERE id > 0', [], 5)
+  statement = DfpApi::FilterStatement.new('WHERE id > 0', [], 5)
 
   # Get teams by statement.
   page = team_service.get_teams_by_statement(statement.toStatement())

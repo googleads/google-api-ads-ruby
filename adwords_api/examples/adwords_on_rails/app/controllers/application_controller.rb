@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
 
   # Returns the API version in use.
   def get_api_version()
-    return :v201502
+    return :v201509
   end
 
   # Returns currently selected account.

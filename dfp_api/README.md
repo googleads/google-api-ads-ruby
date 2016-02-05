@@ -76,8 +76,8 @@ constructor:
     dfp = DfpApi::Api.new({
       :authentication => {
           :method => 'OAuth2',
-          :oauth2_client_id: 'INSERT_OAUTH2_CLIENT_ID_HERE',
-          :oauth2_client_secret: 'INSERT_OAUTH2_CLIENT_SECRET_HERE',
+          :oauth2_client_id => 'INSERT_OAUTH2_CLIENT_ID_HERE',
+          :oauth2_client_secret => 'INSERT_OAUTH2_CLIENT_SECRET_HERE',
           :application_name => 'Ruby DFP Sample',
           :network_code => 123456
       }
@@ -222,11 +222,10 @@ respond in gzipped format. All requests are sent uncompressed regardless.
 
 # External dependencies:
 
-External dependencies should be pulled automatically on gem install. Here is the
-list though:
+The following gem libraries are required:
 
-  - Google Ads Common library (google-ads-common);
-  - Savon 'the heavy metal Ruby SOAP client' (savon).
+  - google-ads-savon
+  - google-ads-common
 
 # Docs for Developers
 

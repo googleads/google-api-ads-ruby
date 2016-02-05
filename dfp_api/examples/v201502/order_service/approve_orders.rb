@@ -22,6 +22,7 @@
 require 'date'
 require 'dfp_api'
 
+
 API_VERSION = :v201502
 PAGE_SIZE = 500
 
@@ -37,7 +38,7 @@ def approve_orders()
   order_service = dfp.service(:OrderService, API_VERSION)
 
   # Create a statement text to select all eligible draft or pending orders.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       "WHERE status IN ('DRAFT', 'PENDING_APPROVAL') " +
       "AND endDateTime >= :today AND isArchived = FALSE",
       [
@@ -62,14 +63,14 @@ def approve_orders()
         order_ids << order[:id]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   puts "Number of orders to be approved: %d" % order_ids.size
 
   if !order_ids.empty?
     # Create statement for action.
-    statement = DfpApiStatement::FilterStatement.new(
+    statement = DfpApi::FilterStatement.new(
         "WHERE id IN (%s)" % order_ids.join(', '))
 
     # Perform action.

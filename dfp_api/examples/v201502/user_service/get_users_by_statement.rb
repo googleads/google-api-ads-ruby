@@ -20,7 +20,7 @@
 # create_users.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -36,7 +36,7 @@ def get_users_by_statement()
   user_service = dfp.service(:UserService, API_VERSION)
 
   # Create a statement to get all users sorted by id.
-  statement = DfpApiStatement::FilterStatement.new('ORDER BY name ASC')
+  statement = DfpApi::FilterStatement.new('ORDER BY name ASC')
 
   begin
     # Get users by statement.
@@ -49,7 +49,7 @@ def get_users_by_statement()
             user[:role_name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

@@ -20,7 +20,7 @@
 # To determine which users exist, run get_all_users.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -38,7 +38,7 @@ def update_users()
   user_id = 'INSERT_USER_ID_HERE'.to_i
 
   # Create a statement to get all users.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
          {:key => 'id',

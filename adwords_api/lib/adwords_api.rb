@@ -23,6 +23,7 @@ require 'adwords_api/api_config'
 require 'adwords_api/credential_handler'
 require 'adwords_api/errors'
 require 'adwords_api/report_utils'
+require 'adwords_api/batch_job_utils'
 
 # Main namespace for all the client library's modules and classes.
 module AdwordsApi
@@ -175,6 +176,21 @@ module AdwordsApi
         raise AdsCommon::Errors::Error, "Unknown version '%s'" % version
       end
       return AdwordsApi::ReportUtils.new(self, version)
+    end
+
+    # Returns an instance of BatchJobUtils object with all utilities relevant
+    # to running batch jobs.
+    #
+    # Args:
+    # - version: version of the API to use (optional).
+    #
+    def batch_job_utils(version = nil)
+      version = api_config.default_version if version.nil?
+      # Check if version exists.
+      if !api_config.versions.include?(version)
+        raise AdsCommon::Errors::Error, "Unknown version '%s'" % version
+      end
+      return AdwordsApi::BatchJobUtils.new(self, version)
     end
 
     private

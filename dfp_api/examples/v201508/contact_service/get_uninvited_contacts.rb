@@ -20,7 +20,7 @@
 # create_contacts.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 PAGE_SIZE = 500
@@ -43,7 +43,7 @@ def get_uninvited_contacts()
 
   # Create statement.
 
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE status = :status ORDER BY id ASC',
       [
           {:key => 'status',
@@ -63,7 +63,7 @@ def get_uninvited_contacts()
              contact[:id], contact[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer

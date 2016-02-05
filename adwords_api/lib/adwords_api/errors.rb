@@ -93,6 +93,9 @@ module AdwordsApi
       end
     end
 
+    class InvalidBatchJobOperationError < AdsCommon::Errors::ApiException
+    end
+
     # Error for server-side rate exceeded error.
     class RateExceededError < AdsCommon::Errors::ApiException
       attr_reader :http_code, :type, :trigger, :field_path, :reason, :rate_scope, :rate_name, :retry_after_seconds

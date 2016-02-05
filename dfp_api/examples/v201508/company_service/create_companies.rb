@@ -38,7 +38,8 @@ def create_companies()
 
   # Create an array to store local company objects.
   companies = (1..ITEM_COUNT).map do |index|
-    {:name => "Advertiser #%d" % index, :type => 'ADVERTISER'}
+    {:name => "Advertiser #%d-%d" % [Time.new.to_f * 1000, index],
+     :type => 'ADVERTISER'}
   end
 
   # Create the companies on the server.

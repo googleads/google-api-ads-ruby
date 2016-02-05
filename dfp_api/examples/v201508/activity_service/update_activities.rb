@@ -20,7 +20,7 @@
 # exist, run get_all_activities.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -39,7 +39,7 @@ def update_activities()
   activity_id = 'INSERT_ACTIVITY_ID_HERE'
 
   # Create statement to select a single activity.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
      'WHERE id = :id ORDER BY id ASC',
      [
          {:key => 'id',

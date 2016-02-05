@@ -21,7 +21,7 @@
 # This feature is only available to DFP video publishers.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201508
 
@@ -40,7 +40,7 @@ def delete_content_metadata_key_hierarchies()
   content_metadata_key_hierarchy_id = 'CONTENT_METADATA_KEY_HIERARCHY_ID'
 
   # Create a statement to only select a single content metadata key hierarchy.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
           {:key => 'id',

@@ -23,7 +23,7 @@
 # targeting keys exist, run get_all_custom_targeting_keys_and_values.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201502
 
@@ -42,7 +42,7 @@ def get_custom_targeting_values_by_statement()
   custom_targeting_key_id = 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'.to_i
 
   # Create a statement to only select custom targeting values for a given key.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE customTargetingKeyId = :key_id ORDER BY id',
       [
           {:key => 'key_id',
@@ -67,7 +67,7 @@ def get_custom_targeting_values_by_statement()
                                    custom_targeting_value[:display_name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.

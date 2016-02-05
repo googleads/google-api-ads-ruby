@@ -20,7 +20,7 @@
 # To determine which image creatives exist, run get_all_creatives.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -39,7 +39,7 @@ def update_creatives()
   creative_id = 'INSERT_CREATIVE_ID_HERE'.to_i
 
   # Create a statement to get first 500 image creatives.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
           {:key => 'id',

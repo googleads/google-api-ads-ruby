@@ -21,6 +21,7 @@
 
 require 'dfp_api'
 
+
 API_VERSION = :v201505
 
 def update_activity_groups()
@@ -39,7 +40,7 @@ def update_activity_groups()
   advertiser_company_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'
 
   # Create statement to select a single activity group.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE id = :id ORDER BY id ASC',
       [
           {:key => 'id',

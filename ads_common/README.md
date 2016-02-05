@@ -19,8 +19,9 @@ Install it using the gem install command.
 
 The following gem libraries are required:
 
- - savon
+ - google-ads-savon
  - httpi
+ - httpclient
  - signet
 
 

@@ -21,7 +21,7 @@
 # get_companies_by_statement.rb.
 
 require 'dfp_api'
-require 'dfp_api_statement'
+
 
 API_VERSION = :v201505
 
@@ -40,7 +40,7 @@ def get_orders_by_statement()
   advertiser_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'.to_i
 
   # Create a statement to only select orders for a given advertiser.
-  statement = DfpApiStatement::FilterStatement.new(
+  statement = DfpApi::FilterStatement.new(
       'WHERE advertiserId = :advertiser_id ORDER BY id ASC',
       [
           {:key => 'advertiser_id',
@@ -59,7 +59,7 @@ def get_orders_by_statement()
             order[:id], order[:advertiser_id], order[:name]]
       end
     end
-    statement.offset += DfpApiStatement::SUGGESTED_PAGE_LIMIT
+    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.
