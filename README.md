@@ -10,7 +10,7 @@ New to the library? Check out the [Getting Started video screencast on YouTube](
 
 ## Products currently supported
 
- - Google AdWords and DoubleClick Ad Exchange Buyer API
+ - Google AdWords API
  - Google's DoubleClick For Publishers API
 
 ## Client Library Feature
