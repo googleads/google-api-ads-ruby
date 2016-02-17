@@ -38,6 +38,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('google-ads-savon', '~> 1.0.1')
   s.add_runtime_dependency('httpi', '~> 2.3')
   s.add_runtime_dependency('httpclient', '~> 2.7')
-  s.add_runtime_dependency('signet', '~> 0.6.0')
+  s.add_runtime_dependency('signet', '~> 0.6')
   s.add_development_dependency('rake', '>= 10.4.2')
 end
