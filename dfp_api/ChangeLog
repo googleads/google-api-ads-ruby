@@ -1,3 +1,9 @@
+0.13.0:
+  - Added support for DFP v201602.
+  - Removed support for DFP v201411.
+  - Removed examples for v201502.
+  - Removed SharedAdUnitService.
+
 0.12.1:
   - Fix environment default to use DFP v201511.
 
