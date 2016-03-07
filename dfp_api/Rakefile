@@ -20,9 +20,6 @@
 lib = File.expand_path('../lib/', __FILE__)
 $:.unshift lib unless $:.include?(lib)
 
-# Google common ads library used for wrapper code generation.
-require 'ads_common/build/savon_generator'
-
 require 'dfp_api/api_config'
 
 desc 'Default target - generate and build.'
@@ -42,6 +39,9 @@ end
 
 desc 'Generate API stubs only'
 task :generate, :version, :service do |_, args|
+  # Google common ads library used for wrapper code generation.
+  require 'ads_common/build/savon_generator'
+
   logger = Logger.new(STDOUT)
   logger.level = Logger::INFO
 

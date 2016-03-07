@@ -1,3 +1,6 @@
+0.13.1:
+  - Require google-ads-common 0.11.3 or later from now on.
+
 0.13.0:
   - Added support for DFP v201602.
   - Removed support for DFP v201411.
