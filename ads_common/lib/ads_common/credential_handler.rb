@@ -18,6 +18,7 @@
 # Generic class to handle credentials across client libraries.
 
 require 'ads_common/api_config'
+require 'thread'
 
 module AdsCommon
   class CredentialHandler
@@ -26,6 +27,8 @@ module AdsCommon
     def initialize(config)
       @config = config
       @auth_handler = nil
+      @extra_user_agents = {}
+      @extra_user_agents_lock = Mutex.new
       load_from_config(config)
     end
 
@@ -64,6 +67,18 @@ module AdsCommon
       @auth_handler.property_changed(credential, value) if @auth_handler
     end
 
+    # Adds a custom string to the user agent, one time, the next time a user
+    # agent is generated. This will be rendered in the format "name/suffix",
+    # or just "name" if the suffix is nil or omitted.
+    def include_in_user_agent(name, suffix = nil)
+      return if name.nil?
+      unless @config.read('library.include_utilities_in_user_agent') == false
+        @extra_user_agents_lock.synchronize do
+          @extra_user_agents[name] = suffix
+        end
+      end
+    end
+
     # Generates string for UserAgent to put into headers.
     def generate_user_agent(extra_ids = [], agent_app = nil)
       agent_app ||= File.basename($0)
@@ -74,6 +89,7 @@ module AdsCommon
       agent_data << [ruby_engine, RUBY_VERSION].join('/')
       agent_data << 'HTTPI/%s' % HTTPI::VERSION
       agent_data << HTTPI::Adapter.use.to_s
+      agent_data += get_extra_user_agents()
       return '%s (%s)' % [agent_app, agent_data.join(', ')]
     end
 
@@ -87,6 +103,18 @@ module AdsCommon
     # Loads the credentials from the config data.
     def load_from_config(config)
       @credentials = config.read('authentication')
+    end
+
+    # Generates an array of extra user agents to include in the user agent
+    # string.
+    def get_extra_user_agents()
+      @extra_user_agents_lock.synchronize do
+        user_agents = @extra_user_agents.collect do |k, v|
+          v.nil? ? k : '%s/%s' % [k, v]
+        end
+        @extra_user_agents.clear
+        return user_agents
+      end
     end
   end
 end
