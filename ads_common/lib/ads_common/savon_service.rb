@@ -31,6 +31,8 @@ module AdsCommon
     attr_reader :version
     attr_reader :namespace
 
+    FALLBACK_API_ERROR_EXCEPTION = "ApiException"
+
     # Creates a new service.
     def initialize(config, endpoint, namespace, version)
       if self.class() == AdsCommon::SavonService
@@ -132,7 +134,9 @@ module AdsCommon
         fault = response[:fault]
         if fault[:detail] and fault[:detail][:api_exception_fault]
           exception_fault = fault[:detail][:api_exception_fault]
-          exception_name = exception_fault[:application_exception_type]
+          exception_name = (
+              exception_fault[:application_exception_type] ||
+              FALLBACK_API_ERROR_EXCEPTION)
           exception_class = get_module().const_get(exception_name)
           return exception_class.new(exception_fault)
         elsif fault[:faultstring]

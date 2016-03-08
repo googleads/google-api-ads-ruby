@@ -64,6 +64,30 @@ class TestCredentialHandler < Test::Unit::TestCase
     assert_match(/#{Regexp.escape(test_str)}/, result1)
   end
 
+  def test_generate_user_agent_include_simple()
+    test_str = 'Tester'
+    @handler.include_in_user_agent(test_str)
+    result1 = @handler.generate_user_agent()
+    assert_kind_of(String, result1)
+    assert_match(/#{Regexp.escape(test_str)}/, result1)
+    result2 = @handler.generate_user_agent()
+    assert_kind_of(String, result2)
+    assert_no_match(/#{Regexp.escape(test_str)}/, result2)
+  end
+
+  def test_generate_user_agent_include_version()
+    test_str = 'Tester/0.2.0'
+    argument1 = 'Tester'
+    argument2 = '0.2.0'
+    @handler.include_in_user_agent(argument1, argument2)
+    result1 = @handler.generate_user_agent()
+    assert_kind_of(String, result1)
+    assert_match(/#{Regexp.escape(test_str)}/, result1)
+    result2 = @handler.generate_user_agent()
+    assert_kind_of(String, result2)
+    assert_no_match(/#{Regexp.escape(test_str)}/, result2)
+  end
+
   def test_auth_handler_callback_once()
     mock = MiniTest::Mock.new()
     mock.expect(:property_changed,  nil, [:foo, 'bar'])
