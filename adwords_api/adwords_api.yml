@@ -51,3 +51,5 @@
   #:skip_report_header: true
   #:skip_report_summary: true
   #:skip_column_header: true
+  # Optional: uncomment to disable user agent showing used utilities.
+  #:include_utilities_in_user_agent: false

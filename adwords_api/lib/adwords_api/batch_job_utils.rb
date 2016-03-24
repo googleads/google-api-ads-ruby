@@ -114,6 +114,7 @@ module AdwordsApi
     def put_incremental_operations(
         operations, batch_job_url, total_content_length = 0,
         is_last_request = false)
+      @api.utils_reporter.batch_job_utils_used()
       headers = DEFAULT_HEADERS
       soap_operations = generate_soap_operations(operations)
       request_body = soap_operations.join
@@ -163,6 +164,7 @@ module AdwordsApi
     # - the results of the batch job, as a ruby hash, or nil if none yet exist
     #
     def get_job_results(batch_job_url)
+      @api.utils_reporter.batch_job_utils_used()
       xml_response = AdsCommon::Http.get_response(batch_job_url, @api.config)
       begin
         return sanitize_result(

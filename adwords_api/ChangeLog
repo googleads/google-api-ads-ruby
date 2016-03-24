@@ -1,3 +1,10 @@
+0.18.3:
+  - Support and examples for v201603.
+
+0.18.2:
+  - Require google-ads-common 0.11.3 or later from now on.
+  - Added support for custom user agent strings to include utility usage.
+
 0.18.1:
   - Support and examples for v201601.
   - Updated batch_job_utils to handle API changes in v201601.

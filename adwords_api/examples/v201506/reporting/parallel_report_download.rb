@@ -70,9 +70,7 @@ def parallel_report_download()
       :report_name => 'Custom ADGROUP_PERFORMANCE_REPORT',
       :report_type => 'ADGROUP_PERFORMANCE_REPORT',
       :download_format => 'CSV',
-      :date_range_type => 'LAST_7_DAYS',
-      # Enable to get rows with zero impressions.
-      :include_zero_impressions => false
+      :date_range_type => 'LAST_7_DAYS'
   }
 
   puts 'Retrieving %d reports with %d threads:' % [queue.size, THREADS]

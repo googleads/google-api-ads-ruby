@@ -117,7 +117,6 @@ class TestReportUtils < Test::Unit::TestCase
   # Tests generated hash order for root (complete set).
   def test_add_report_definition_hash_order_root1()
     node = {
-      :include_zero_impressions => false,
       :download_format => 'CSV',
       :report_type => 'CRITERIA_PERFORMANCE_REPORT',
       :selector => {},
@@ -125,7 +124,7 @@ class TestReportUtils < Test::Unit::TestCase
       :date_range_type => 'LAST_7_DAYS'
     }
     expected = [:selector, :report_name, :report_type, :date_range_type,
-                :download_format, :include_zero_impressions]
+                :download_format]
     @report_utils.add_report_definition_hash_order(node)
     assert_not_nil(node[:order!])
     assert_equal(expected, node[:order!])
@@ -157,12 +156,11 @@ class TestReportUtils < Test::Unit::TestCase
         :predicates => {:operator => 'IN', :field => 'S', :values => ['A']},
         :fields => ['CampaignId']
       },
-      :include_zero_impressions => false,
       :download_format => 'CSV',
       :date_range_type => 'LAST_7_DAYS'
     }
     expected1 = [:selector, :report_name, :report_type, :date_range_type,
-                 :download_format, :include_zero_impressions]
+                 :download_format]
     expected2 = [:fields, :predicates, :date_range]
     expected3 = [:min, :max]
     expected4 = [:field, :operator, :values]

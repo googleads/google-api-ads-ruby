@@ -94,9 +94,11 @@ class TestBatchJobUtils < Test::Unit::TestCase
         :status => 'PAUSED'
       }
     }
-    extracted = @batch_job_utils.generate_soap_operations(
-        [operation])
-    assert_equal([EXPECTED_OPERATION], extracted)
+    extracted = Nokogiri::XML(
+        @batch_job_utils.generate_soap_operations([operation]).first
+    )
+    expected = Nokogiri::XML(EXPECTED_OPERATION)
+    assert_equal(clean_xml(expected.to_s), clean_xml(extracted.to_s))
   end
 
   # Testing padding to make sure that it pads to the right length.

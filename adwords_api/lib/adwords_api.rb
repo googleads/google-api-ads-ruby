@@ -24,6 +24,7 @@ require 'adwords_api/credential_handler'
 require 'adwords_api/errors'
 require 'adwords_api/report_utils'
 require 'adwords_api/batch_job_utils'
+require 'adwords_api/utils_reporter'
 
 # Main namespace for all the client library's modules and classes.
 module AdwordsApi
@@ -34,10 +35,13 @@ module AdwordsApi
   #
   class Api < AdsCommon::Api
 
+    attr_reader :utils_reporter
+
     # Constructor for API.
     def initialize(provided_config = nil)
       super(provided_config)
       @credential_handler = AdwordsApi::CredentialHandler.new(@config)
+      @utils_reporter = AdwordsApi::UtilsReporter.new(@credential_handler)
     end
 
     # Getter for the API service configurations
