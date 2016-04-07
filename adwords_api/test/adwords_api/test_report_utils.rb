@@ -54,7 +54,7 @@ GZIPPED_REPORT = "\x1F\x8B\b\x00\x00\x00\x00\x00\x00\x00Sr.-.\xC9\xCFUptq\x0F\xF
 
 class TestReportUtils < Test::Unit::TestCase
 
-  API_VERSION = :v201506
+  API_VERSION = :v201603
 
   # Initialize tests.
   def setup()

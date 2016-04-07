@@ -84,7 +84,7 @@ module AdwordsApi
     #
     def initialize_url(batch_job_url)
       # Initialization is only necessary for v201601 or higher.
-      return batch_job_url if [:v201506, :v201509].include?(@version)
+      return batch_job_url if @version == :v201509
 
       headers = DEFAULT_HEADERS
       headers['Content-Length'] = 0
