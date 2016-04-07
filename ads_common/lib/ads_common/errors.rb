@@ -111,5 +111,9 @@ module AdsCommon
         super(message)
       end
     end
+
+    # Raised if current Ruby version is not compatible with the library.
+    class VersionError < Error
+    end
   end
 end
