@@ -51,7 +51,7 @@ module AdwordsApi
       leftover_data = ''
       @report_utils.send(method, *args) do |batch|
         data_to_process = leftover_data + batch
-        lines = data_to_process.split('\n')
+        lines = data_to_process.split("\n")
         leftover_data = lines.pop
         lines.each do |line|
           yield line
