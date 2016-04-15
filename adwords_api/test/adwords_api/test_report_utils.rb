@@ -204,4 +204,33 @@ class TestReportUtils < Test::Unit::TestCase
     assert(error_str.include?(XML_REPLY[:field_path]),
         'Field path was not passed to the error message')
   end
+
+  # Testing check_for_rate_exceeded_error.
+  def test_check_for_rate_exceeded_error()
+    xml_reply = {
+      :reply => '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><reportDownloadError><ApiError><type>RateExceededError.RATE_EXCEEDED</type><trigger>foo</trigger><fieldPath>bar</fieldPath><reason>RateExceededError.Reason.RATE_EXCEEDED</reason><rateScope>scope</rateScope><rateName>rate name</rateName><retryAfterSeconds>60</retryAfterSeconds></ApiError></reportDownloadError>',
+      :type => 'RateExceededError.RATE_EXCEEDED',
+      :trigger => 'foo',
+      :field_path => 'bar',
+      :reason => 'RateExceededError.Reason.RATE_EXCEEDED',
+      :rate_scope => 'scope',
+      :rate_name => 'rate name',
+      :retry_after_seconds => '60'
+    }
+
+    begin
+      @report_utils.send(:check_for_rate_exceeded_error, xml_reply[:reply], 42)
+      assert(false, 'No exception thrown for code 42')
+    rescue AdwordsApi::Errors::RateExceededError => e
+      assert_equal(42, e.http_code)
+      assert_equal(xml_reply[:type], e.type)
+      assert_equal(xml_reply[:trigger], e.trigger)
+      assert_equal(xml_reply[:field_path], e.field_path)
+      assert_equal(xml_reply[:reason], e.reason)
+      assert_equal(xml_reply[:rate_scope], e.rate_scope)
+      assert_equal(xml_reply[:rate_name], e.rate_name)
+      assert_equal(xml_reply[:retry_after_seconds], e.retry_after_seconds)
+      assert_not_nil(e.message)
+    end
+  end
 end
