@@ -1,3 +1,6 @@
+0.12.1:
+  - Adding support for JSON keyfiles for service accounts.
+
 0.12.0:
   - Require Ruby version 2.0 or higher from now on. It is recommended to use
     Ruby version 2.1 or higher.
@@ -62,7 +65,7 @@
 
 0.9.0:
   - Switched to Signet OAuth implementation.
-  - Removed deprecated OAuth1.0a scheme, please use OAuth2.0 instead.
+  - Removed deprecated OAuth1.0a scheme, please use OAuth2 instead.
   - Support for JWT authorization (OAuth2 service accounts).
 
 0.8.2:
@@ -78,7 +81,7 @@
   - Compatibility with Savon -> 1.0.0 (not backward-compatible).
   - Now require HTTPI ~> 1.0.0.
   - HttpClient is no longer explicitely required.
-  - Support for OAuth2.0 authorization method.
+  - Support for OAuth2 authorization method.
 
 0.7.2:
   - Compatibility with savon-0.9.10 (not backward-compatible).

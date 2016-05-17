@@ -37,7 +37,7 @@ module AdsCommon
       end
     end
 
-    # Raised when OAuth2.0 access token is required.
+    # Raised when OAuth2 access token is required.
     class OAuth2VerificationRequired < AuthError
       attr_reader :oauth_url
       def initialize(oauth_url)

@@ -15,7 +15,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This module manages OAuth2.0 authentication.
+# This module manages OAuth2 authentication.
 
 require 'time'
 
@@ -28,7 +28,7 @@ require 'ads_common/errors'
 module AdsCommon
   module Auth
 
-    # Credentials class to handle OAuth2.0 authentication.
+    # Credentials class to handle OAuth2 authentication.
     class OAuth2Handler < AdsCommon::Auth::BaseHandler
       OAUTH2_CONFIG = {
           :authorization_uri =>
@@ -67,7 +67,7 @@ module AdsCommon
         raise error
       end
 
-      # Generates auth string for OAuth2.0 method of authentication.
+      # Generates auth string for OAuth2 method of authentication.
       #
       # Args:
       # - credentials: credentials set for authorization
@@ -142,7 +142,7 @@ module AdsCommon
       end
 
       # Auxiliary method to generate an authentication token for logging via
-      # the OAuth2.0 API.
+      # the OAuth2 API.
       #
       # Args:
       # - credentials: a hash with the credentials for the account being
