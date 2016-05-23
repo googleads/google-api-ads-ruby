@@ -1,3 +1,6 @@
+0.16.0:
+  - Require google-ads-common 0.12.3 or later from now on.
+
 0.15.0:
   - Added support for v201605.
   - Removed support for v201502.
