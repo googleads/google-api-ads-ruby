@@ -1,3 +1,10 @@
+0.12.3
+  - Fix discrepancy in version between Github and RubyGems due to failure to
+    push to Github.
+
+0.12.2
+  - Fix permissions for Ads Common gem.
+
 0.12.1:
   - Adding support for JSON keyfiles for service accounts.
 
