@@ -50,12 +50,12 @@ and fill out the required properties.
 
   **If you're accessing an API using your own credentials...**
 
-  * [Using AdWords](https://github.com/googleads/vtsao-test/wiki/%5BRuby%5D-API-access-using-own-credentials-(installed-application-flow))
-  * [Using DFP](https://github.com/googleads/vtsao-test/wiki/%5BRuby%5D-Editing-API-access-using-own-credentials-(server-to-server-flow))
+  * [Using AdWords](https://github.com/googleads/google-api-ads-ruby/wiki/API-access-using-own-credentials-(installed-application-flow))
+  * [Using DFP](https://github.com/googleads/google-api-ads-ruby/wiki/API-access-using-own-credentials-(server-to-server-flow))
 
   **If you're accessing an API on behalf of clients...**
 
-  * [Developing a web application (AdWords or DFP)](https://github.com/googleads/vtsao-test/wiki/%5BRuby%5D-API-access-on-behalf-of-your-clients-(web-flow))
+  * [Developing a web application (AdWords or DFP)](https://github.com/googleads/google-api-ads-ruby/wiki/API-access-on-behalf-of-your-clients-(web-flow))
 
 1. See each language's individual README for more specific instructions from here
 
