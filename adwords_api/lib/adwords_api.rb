@@ -136,7 +136,16 @@ module AdwordsApi
     # - value: whether to include zero impressions (boolean)
     #
     def include_zero_impressions=(value)
-      @config.set('library.include_zero_impressions_header', value)
+      @config.set('library.include_zero_impressions', value)
+    end
+
+    # Helper method to use raw enum values when downloading reports.
+    #
+    # Args:
+    # - value: whether to use raw enum values (boolean)
+    #
+    def use_raw_enum_values=(value)
+      @config.set('library.use_raw_enum_values', value)
     end
 
     # Helper method to provide a simple way of performing requests with support

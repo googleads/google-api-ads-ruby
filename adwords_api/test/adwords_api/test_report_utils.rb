@@ -22,13 +22,33 @@ require 'test/unit'
 
 require 'adwords_api'
 
-# Overriding default access levels to public for tests.
 module AdwordsApi
+  # Overriding default access levels to public for tests.
   class ReportUtils
     public :check_for_errors
     public :check_for_xml_error
     public :add_report_definition_hash_order
     public :check_report_definition_hash
+    public :get_report_request_headers
+  end
+
+  # Removing OAuth step so we can test header generation.
+  class CredentialHandler
+    def credentials(override = nil)
+      {
+        :client_customer_id => '123-456-7890',
+        :developer_token => 'token'
+      }
+    end
+  end
+end
+
+module AdsCommon
+  module Auth
+    class OAuth2Handler
+      def auth_string(credentials)
+      end
+    end
   end
 end
 
@@ -54,7 +74,7 @@ GZIPPED_REPORT = "\x1F\x8B\b\x00\x00\x00\x00\x00\x00\x00Sr.-.\xC9\xCFUptq\x0F\xF
 
 class TestReportUtils < Test::Unit::TestCase
 
-  API_VERSION = :v201603
+  API_VERSION = :v201605
 
   # Initialize tests.
   def setup()
@@ -203,5 +223,45 @@ class TestReportUtils < Test::Unit::TestCase
         'Error trigger was not passed to the error message')
     assert(error_str.include?(XML_REPLY[:field_path]),
         'Field path was not passed to the error message')
+  end
+
+  def test_skip_report()
+    headers = @report_utils.get_report_request_headers(nil, nil)
+    assert_nil(headers['skipReportHeader'])
+    @api.skip_report_header = true
+    headers = @report_utils.get_report_request_headers(nil, nil)
+    assert_equal('true', headers['skipReportHeader'])
+  end
+
+  def test_skip_report_summary()
+    headers = @report_utils.get_report_request_headers(nil, nil)
+    assert_nil(headers['skipReportSummary'])
+    @api.skip_report_summary = true
+    headers = @report_utils.get_report_request_headers(nil, nil)
+    assert_equal('true', headers['skipReportSummary'])
+  end
+
+  def test_skip_column_header()
+    headers = @report_utils.get_report_request_headers(nil, nil)
+    assert_nil(headers['skipColumnHeader'])
+    @api.skip_column_header = true
+    headers = @report_utils.get_report_request_headers(nil, nil)
+    assert_equal('true', headers['skipColumnHeader'])
+  end
+
+  def test_include_zero_impressions()
+    headers = @report_utils.get_report_request_headers(nil, nil)
+    assert_nil(headers['includeZeroImpressions'])
+    @api.include_zero_impressions = true
+    headers = @report_utils.get_report_request_headers(nil, nil)
+    assert_equal('true', headers['includeZeroImpressions'])
+  end
+
+  def test_use_raw_enum_values()
+    headers = @report_utils.get_report_request_headers(nil, nil)
+    assert_nil(headers['useRawEnumValues'])
+    @api.use_raw_enum_values = true
+    headers = @report_utils.get_report_request_headers(nil, nil)
+    assert_equal('true', headers['useRawEnumValues'])
   end
 end

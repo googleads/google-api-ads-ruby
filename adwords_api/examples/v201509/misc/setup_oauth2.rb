@@ -16,7 +16,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to set up OAuth2.0 authentication credentials.
+# This example illustrates how to set up OAuth2 authentication credentials.
 
 require 'adwords_api'
 

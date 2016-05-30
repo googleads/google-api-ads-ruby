@@ -30,9 +30,9 @@ examples_mask = File.join(examples_dir_path, 'v*/**/*.rb')
 
 Dir.glob(examples_mask).each do |file|
   method_name = 'test_%s' % File.basename(file)
-  Class.new(Test::Unit::TestCase) do
+  Class.new(ExampleRunner) do
     define_method(method_name) do
-      ExampleRunner.new(file).engage(self)
+      self.engage(file)
     end
   end
 end

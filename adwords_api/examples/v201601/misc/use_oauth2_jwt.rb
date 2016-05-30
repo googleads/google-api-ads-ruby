@@ -16,7 +16,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to use OAuth2.0 authentication method with
+# This example illustrates how to use OAuth2 authentication method with
 # Service Account (JWT). For this example to work, your Service Account must be
 # a Google Apps for Business Account.
 #
