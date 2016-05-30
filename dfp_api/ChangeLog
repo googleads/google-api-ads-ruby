@@ -1,3 +1,6 @@
+0.16.2:
+  - Added minimum ruby version to the gemspec to prevent the gem from being installed in unsupported versions
+
 0.16.1:
   - Generate stubs for v201605.
   - Remove non-needed stubs for v201411, v201502.

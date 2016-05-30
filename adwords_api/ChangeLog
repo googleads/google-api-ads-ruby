@@ -1,3 +1,6 @@
+0.19.1:
+  - Added minimum ruby version to the gemspec to prevent the gem from being installed in unsupported versions
+
 0.19.0:
   - Require google-ads-common 0.12.0 or later from now on. This also means
     that Ruby 2.0 or later is required. Ruby 2.1 or later is recommended.
