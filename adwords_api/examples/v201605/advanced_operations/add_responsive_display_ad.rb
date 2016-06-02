@@ -38,10 +38,9 @@ def add_responsive_display_ad(ad_group_id)
   # Create an image.
   image_url = 'https://goo.gl/3b9Wfh'
   raw_image_data = AdsCommon::Http.get(image_url, adwords.config)
-  image_data = Base64.encode64(image_data)
   image = {
     :xsi_type => 'Image',
-    :data => image_data,
+    :data => Base64.encode64(raw_image_data),
     :type => 'IMAGE'
   }
 
@@ -56,11 +55,16 @@ def add_responsive_display_ad(ad_group_id)
   # Create the responsive display ad.
   responsive_display_ad = {
     :xsi_type => 'ResponsiveDisplayAd',
-    :marketing_image => image,
+    # This ad format does not allow the creation of an image using the
+    # Image.data field. An image must first be created using the MediaService,
+    # and Image.mediaId must be populated when creating the ad.
+    :marketing_image => {
+      :media_id => image[:media_id]
+    },
     :short_headline => 'Travel',
     :long_headline => 'Traver the World',
     :description => 'Take to the air!',
-    :advertiser_name => 'Interplanetary Cruises',
+    :business_name => 'Interplanetary Cruises',
     :final_urls => ['http://www.example.com/']
   }
 
