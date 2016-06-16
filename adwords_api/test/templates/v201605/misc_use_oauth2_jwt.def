@@ -40,7 +40,7 @@ def setup_mocks()
         {"env:Envelope"=>
           {"env:Header"=>
             {"wsdl:RequestHeader"=>
-              {"userAgent"=>"ruby-tests (AwApi-Ruby/0.19.1, Common-Ruby/0.12.3, GoogleAdsSavon/1.0.1, ruby/2.2.1, HTTPI/2.4.1, httpclient)",
+              {"userAgent"=>"ruby-tests (AwApi-Ruby/0.20.0, Common-Ruby/0.12.3, GoogleAdsSavon/1.0.1, ruby/2.2.1, HTTPI/2.4.1, httpclient)",
                "developerToken"=>"dev_token123",
                "clientCustomerId"=>"123-456-7890",
                "xmlns"=>"https://adwords.google.com/api/adwords/cm/v201605"}},

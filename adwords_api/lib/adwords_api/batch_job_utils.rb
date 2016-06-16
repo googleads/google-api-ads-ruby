@@ -83,9 +83,6 @@ module AdwordsApi
     # - The URL that should actually be used to upload operations.
     #
     def initialize_url(batch_job_url)
-      # Initialization is only necessary for v201601 or higher.
-      return batch_job_url if @version == :v201509
-
       headers = DEFAULT_HEADERS
       headers['Content-Length'] = 0
       headers['x-goog-resumable'] = 'start'

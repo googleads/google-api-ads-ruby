@@ -1,3 +1,7 @@
+0.20.0:
+  - Started enforcing minumum Ruby runtime version via gemspec.
+  - Removed deprecated API version v201509.
+
 0.19.1:
   - Support and examples for v201605.
   - Require google-ads-common 0.12.3 or later from now on to support JSON
