@@ -31,16 +31,13 @@ def get_delivery_forecast_for_line_items()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # [START forecasting_4] MOE:strip_line
   # Get the ForecastService.
   forecast_service = dfp.service(:ForecastService, API_VERSION)
-  # [END forecasting_4] MOE:strip_line
 
   # Set the line items to get a forecast for.
   line_item_id1 = 'INSERT_LINE_ITEM_ID_1_HERE'.to_i
   line_item_id2 = 'INSERT_LINE_ITEM_ID_2_HERE'.to_i
 
-  # [START forecasting_5] MOE:strip_line
   # Get forecast for the line item.
   forecast = forecast_service.get_delivery_forecast_by_ids(
       [line_item_id1, line_item_id2], nil)
@@ -56,7 +53,6 @@ def get_delivery_forecast_for_line_items()
                 single_forecast[:predicted_delivery_units], unit_type]
     end
   end
-  # [END forecasting_5] MOE:strip_line
 end
 
 if __FILE__ == $0

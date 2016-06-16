@@ -82,7 +82,6 @@ def get_availability_forecast()
     :cost_type => 'CPM'
   }
 
-  # [START forecasting_3] MOE:strip_line
   prospective_line_item = {
     :advertiser_id => advertiser_id,
     :line_item => line_item
@@ -97,7 +96,6 @@ def get_availability_forecast()
   # Get forecast for the line item.
   forecast = forecast_service.get_availability_forecast(
       prospective_line_item, forecast_options)
-  # [END forecasting_3] MOE:strip_line
 
   if forecast
     # Display results.

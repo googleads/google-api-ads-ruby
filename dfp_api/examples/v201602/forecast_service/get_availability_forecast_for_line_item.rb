@@ -31,15 +31,12 @@ def get_availability_forecast_for_line_item()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # [START forecasting_1] MOE:strip_line
   # Get the ForecastService.
   forecast_service = dfp.service(:ForecastService, API_VERSION)
-  # [END forecasting_1] MOE:strip_line
 
   # Set the line item to get a forecast for.
   line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
 
-  # [START forecasting_2] MOE:strip_line
   # Set forecasting options.
   forecast_options = {
     :include_contending_line_items => True,
@@ -63,7 +60,6 @@ def get_availability_forecast_for_line_item()
       puts "%.2f%% %s possible." % [possible_percent, unit_type]
     end
   end
-  # [END forecasting_2] MOE:strip_line
 end
 
 if __FILE__ == $0

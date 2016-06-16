@@ -1,3 +1,6 @@
+#!/usr/bin/env ruby
+# Encoding: utf-8
+#
 # Copyright:: Copyright 2016, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");

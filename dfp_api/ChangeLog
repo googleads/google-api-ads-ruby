@@ -1,3 +1,7 @@
+0.17.0:
+  - Started enforcing minumum Ruby runtime version via gemspec.
+  - Cleanup DFP examples.
+
 0.16.1:
   - Generate stubs for v201605.
   - Remove non-needed stubs for v201411, v201502.
