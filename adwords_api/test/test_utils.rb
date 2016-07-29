@@ -44,7 +44,10 @@ class ExampleRunner < Test::Unit::TestCase
     eval_ruby_file(example_file)
 
     setup_mocks()
-    self.send(get_example_method())
+    method_name = get_example_method()
+    required_arguments = self.method(method_name).parameters.size
+    args = [0] * required_arguments
+    self.send(method_name, *args)
     run_asserts()
     reset_state()
   end

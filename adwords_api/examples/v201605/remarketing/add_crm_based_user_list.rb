@@ -16,8 +16,8 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example adds a remarketing user list (a.k.a. audience) and uploads
-# hashed email addresses to populate the list.
+# This example adds a user list (a.k.a. audience) and uploads hashed email
+# addresses to populate the list.
 #
 # Note: It may take several hours for the list to be populated with members.
 # Email addresses must be associated with a Google account. For privacy

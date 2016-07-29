@@ -21,12 +21,12 @@
 require 'test/unit'
 
 require 'ads_common/parameters_validator'
-require 'adwords_api/v201605/adwords_user_list_service_registry'
+require 'adwords_api/v201607/adwords_user_list_service_registry'
 
 class TestChoices < Test::Unit::TestCase
 
   def setup()
-    registry_module = AdwordsApi::V201605::AdwordsUserListService
+    registry_module = AdwordsApi::V201607::AdwordsUserListService
     registry = registry_module::AdwordsUserListServiceRegistry
     @validator = AdsCommon::ParametersValidator.new(registry)
   end

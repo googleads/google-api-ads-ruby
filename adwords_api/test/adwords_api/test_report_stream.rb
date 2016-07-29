@@ -34,7 +34,7 @@ module AdwordsApi
 end
 
 class TestReportStream < Test::Unit::TestCase
-  API_VERSION = :v201605
+  API_VERSION = :v201607
 
   # Initialize tests.
   def setup()

@@ -91,8 +91,8 @@ def add_click_to_download_ad(ad_group_id)
   ])
   if response and response[:value]
     response[:value].each do |ad|
-      puts "Added new click-to-download ad to ad group ID %d with url '%s'." %
-          [ad[:ad][:id], ad[:ad][:final_urls[0]]]
+      puts 'Added new click-to-download ad with ID %d and final url "%s".' %
+          [ad[:ad][:id], ad[:ad][:final_urls][0]]
     end
   else
     raise StandardError, 'No ads were added.'

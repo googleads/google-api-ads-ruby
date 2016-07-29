@@ -38,13 +38,13 @@ def add_html5_ad(ad_group_id)
   # Designer (https://www.google.com/webdesigner).
   html5_url = 'http://goo.gl/9Y7qI2'
   html5_data = AdsCommon::Http.get(html5_url, adwords.config)
-  base64_html5_data = Base64.encode64(html5_data)
+  html5_data_base64 = Base64.encode64(html5_data)
 
   # Create a media bundle containing the zip file with all the HTML5
   # components.
   media_bundle = {
     :xsi_type => 'MediaBundle',
-    :data => base64_html5_data,
+    :data => html5_data_base64,
     :entry_point => 'carousel/index.html',
     :type => 'MEDIA_BUNDLE'
   }
