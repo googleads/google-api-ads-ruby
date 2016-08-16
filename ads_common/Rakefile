@@ -20,7 +20,7 @@
 require 'rake/testtask'
 
 desc 'Default target - build.'
-task :default => [:build, :test]
+task default: [:build, :test]
 
 desc 'Package the Common library into a gem file.'
 task :build do

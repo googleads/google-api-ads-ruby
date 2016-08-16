@@ -26,25 +26,22 @@ require 'ads_common/config'
 require 'ads_common/credential_handler'
 
 class TestCredentialHandler < Test::Unit::TestCase
-
-  def setup()
+  def setup
     logger = Logger.new(STDERR)
-    @default_credentials = {:client_customer_id => '1234567890', :foo => 'bar'}
-    config = AdsCommon::Config.new({
-        :library => {:logger => logger},
-        :authentication => @default_credentials
-    })
+    @default_credentials = { client_customer_id: '1234567890', foo: 'bar' }
+    config = AdsCommon::Config.new(library: { logger: logger },
+                                   authentication: @default_credentials)
     @handler = AdsCommon::CredentialHandler.new(config)
   end
 
-  def test_credentials_simple()
+  def test_credentials_simple
     credentials = @handler.credentials()
     assert_equal(@default_credentials, credentials)
     assert_not_same(@default_credentials, credentials)
   end
 
-  def test_credentials_override()
-    @override = {:client_customer_id => 42}
+  def test_credentials_override
+    @override = { client_customer_id: 42 }
     credentials = @handler.credentials(@override)
     assert_not_equal(@default_credentials, credentials)
     assert_not_same(@default_credentials, credentials)
@@ -52,70 +49,70 @@ class TestCredentialHandler < Test::Unit::TestCase
     assert_equal('bar', credentials[:foo])
   end
 
-  def test_generate_user_agent_simple()
-    result1 = @handler.generate_user_agent()
+  def test_generate_user_agent_simple
+    result1 = @handler.generate_user_agent
     assert_kind_of(String, result1)
   end
 
-  def test_generate_user_agent_chained()
+  def test_generate_user_agent_chained
     test_str = 'Tester/0.2.0'
     result1 = @handler.generate_user_agent([test_str])
     assert_kind_of(String, result1)
     assert_match(/#{Regexp.escape(test_str)}/, result1)
   end
 
-  def test_generate_user_agent_include_simple()
+  def test_generate_user_agent_include_simple
     test_str = 'Tester'
     @handler.include_in_user_agent(test_str)
-    result1 = @handler.generate_user_agent()
+    result1 = @handler.generate_user_agent
     assert_kind_of(String, result1)
     assert_match(/#{Regexp.escape(test_str)}/, result1)
-    result2 = @handler.generate_user_agent()
+    result2 = @handler.generate_user_agent
     assert_kind_of(String, result2)
     assert_no_match(/#{Regexp.escape(test_str)}/, result2)
   end
 
-  def test_generate_user_agent_include_version()
+  def test_generate_user_agent_include_version
     test_str = 'Tester/0.2.0'
     argument1 = 'Tester'
     argument2 = '0.2.0'
     @handler.include_in_user_agent(argument1, argument2)
-    result1 = @handler.generate_user_agent()
+    result1 = @handler.generate_user_agent
     assert_kind_of(String, result1)
     assert_match(/#{Regexp.escape(test_str)}/, result1)
-    result2 = @handler.generate_user_agent()
+    result2 = @handler.generate_user_agent
     assert_kind_of(String, result2)
     assert_no_match(/#{Regexp.escape(test_str)}/, result2)
   end
 
-  def test_auth_handler_callback_once()
-    mock = MiniTest::Mock.new()
-    mock.expect(:property_changed,  nil, [:foo, 'bar'])
+  def test_auth_handler_callback_once
+    mock = MiniTest::Mock.new
+    mock.expect(:property_changed, nil, [:foo, 'bar'])
     @handler.set_auth_handler(mock)
     @handler.set_credential(:foo, 'bar')
     assert(mock.verify)
   end
 
-  def test_auth_handler_callback_compare()
+  def test_auth_handler_callback_compare
     credentials = @handler.credentials
 
     credentials[:foo] = 'bar'
     credentials[:baz] = 42
-    mock1 = MiniTest::Mock.new()
+    mock1 = MiniTest::Mock.new
     mock1.expect(:property_changed, nil, [:baz, 42])
     @handler.set_auth_handler(mock1)
     @handler.credentials = credentials
     assert(mock1.verify)
 
     credentials.delete(:baz)
-    mock2 = MiniTest::Mock.new()
+    mock2 = MiniTest::Mock.new
     mock2.expect(:property_changed, nil, [:baz, nil])
     @handler.set_auth_handler(mock2)
     @handler.credentials = credentials
     assert(mock2.verify)
 
     credentials[:foo] = nil
-    mock3 = MiniTest::Mock.new()
+    mock3 = MiniTest::Mock.new
     mock3.expect(:property_changed, nil, [:foo, nil])
     mock3.expect(:property_changed, nil, [:baz, nil])
     @handler.set_auth_handler(mock3)

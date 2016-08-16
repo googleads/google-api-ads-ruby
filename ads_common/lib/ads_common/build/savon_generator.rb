@@ -27,10 +27,8 @@ require 'ads_common/errors'
 
 module AdsCommon
   module Build
-
     # Contains the methods that handle wrapper code generation.
     class SavonGenerator
-
       # Create a new generator for given WSDL.
       #
       # Args:
@@ -44,10 +42,10 @@ module AdsCommon
         @wsdl_url = wsdl_url
         @code_path = code_path
         @generator_args = {
-            :api_name => api_name,
-            :version => version,
-            :service_name => service_name,
-            :require_path => @code_path.sub(/^lib\//, '')
+          api_name: api_name,
+          version: version,
+          service_name: service_name,
+          require_path: @code_path.sub(/^lib\//, '')
         }
         @logger = Logger.new(STDOUT)
         @logger.level = Logger::INFO
@@ -67,8 +65,8 @@ module AdsCommon
       #
       # Returns:
       # - none
-      def process_wsdl()
-        proxy_path = get_proxy_path()
+      def process_wsdl
+        proxy_path = get_proxy_path
         client = GoogleAdsSavon::Client.new(@wsdl_url) do |_, httpi|
           httpi.proxy = proxy_path unless proxy_path.nil? || proxy_path.empty?
         end
@@ -76,8 +74,8 @@ module AdsCommon
           @generator_args[:namespace] = client.wsdl.namespace
           do_process_wsdl_client(client)
         rescue AdsCommon::Errors::Error => e
-          error_msg = "An unrecoverable error occured during code generation"
-          error_msg += " for service [%s]: %s" % [@wsdl_url, e]
+          error_msg = 'An unrecoverable error occured during code generation'
+          error_msg += ' for service [%s]: %s' % [@wsdl_url, e]
           raise AdsCommon::Errors::BuildError, error_msg
         end
       end
@@ -90,18 +88,18 @@ module AdsCommon
         check_service(wsdl)
 
         service_file_name = @generator_args[:service_name].to_s.snakecase
-        wrapper_file_name = "%s/%s.rb" % [@code_path, service_file_name]
+        wrapper_file_name = '%s/%s.rb' % [@code_path, service_file_name]
         write_wrapper(wsdl, wrapper_file_name)
 
-        registry_file_name = "%s/%s_registry.rb" %
-            [@code_path, service_file_name]
+        registry_file_name = '%s/%s_registry.rb' %
+                             [@code_path, service_file_name]
         write_registry(wsdl, registry_file_name)
       end
 
       def check_service(wsdl)
         if wsdl.endpoint.nil? || wsdl.namespace.nil?
           raise AdsCommon::Errors::BuildError,
-              'WSDL could not be retrieved or parsed.'
+                'WSDL could not be retrieved or parsed.'
         end
       end
 
@@ -110,7 +108,7 @@ module AdsCommon
         wrapper_file = create_new_file(file_name)
         generator = SavonServiceGenerator.new(@generator_args)
         generator.add_actions(wsdl.soap_actions.dup)
-        wrapper_file.write(generator.generate_code())
+        wrapper_file.write(generator.generate_code)
         wrapper_file.close
       end
 
@@ -123,26 +121,26 @@ module AdsCommon
         generator.add_methods(registry.soap_methods)
         generator.add_namespaces(registry.soap_namespaces)
         generator.add_types(registry.soap_types)
-        registry_file.write(generator.generate_code())
+        registry_file.write(generator.generate_code)
         registry_file.close
       end
 
       # Creates a new file on specified path, overwriting existing one if it
       # exists.
       def create_new_file(file_name)
-        @logger.info("Creating %s..." % [file_name])
+        @logger.info('Creating %s...' % [file_name])
         make_dir_for_path(file_name)
-        new_file = File.new(file_name, File::WRONLY|File::TRUNC|File::CREAT)
+        new_file = File.new(file_name, File::WRONLY | File::TRUNC | File::CREAT)
       end
 
       # Creates a directory for the file path specified if not exists.
       def make_dir_for_path(path)
         dir_name = File.dirname(path)
-        Dir.mkdir(dir_name) if !File.directory?(dir_name)
+        Dir.mkdir(dir_name) unless File.directory?(dir_name)
       end
 
-      def get_proxy_path()
-        return ENV['ADSAPI_PROXY']
+      def get_proxy_path
+        ENV['ADSAPI_PROXY']
       end
     end
   end

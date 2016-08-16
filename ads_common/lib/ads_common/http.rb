@@ -24,7 +24,6 @@ require 'ads_common/errors'
 
 module AdsCommon
   class Http
-
     # HTTP read and open timeouts in seconds.
     HTTP_READ_TIMEOUT = 15 * 60
     HTTP_OPEN_TIMEOUT = 5 * 60
@@ -34,13 +33,13 @@ module AdsCommon
     def self.get_response(url, config, headers = nil)
       request = prepare_request(url, config, headers)
       response = HTTPI.get(request)
-      return response
+      response
     end
 
     # Performs a get on a URL, using all of the connection options in the
     # client library, returning the response body as a string.
     def self.get(url, config, headers = nil)
-      return get_response(url, config, headers).body
+      get_response(url, config, headers).body
     end
 
     # Performs a get on a URL, using all of the connection options in the
@@ -49,20 +48,20 @@ module AdsCommon
       request = prepare_request(url, config, headers)
       request.on_body(&block)
       HTTPI.get(request)
-      return nil
+      nil
     end
 
     # Performs a post on a URL, using all of the connection options in the
     # client library, returning a HTTPI::Response.
     def self.post_response(url, data, config, headers = nil)
       request = prepare_request(url, config, headers, data)
-      return HTTPI.post(request)
+      HTTPI.post(request)
     end
 
     # Performs a post on a URL, using all of the connection options in the
     # client library, returning the response body as a string.
     def self.post(url, data, config, headers = nil)
-      return post_response(url, data, config, headers).body
+      post_response(url, data, config, headers).body
     end
 
     # Performs a post on a URL, using all of the connection options in the
@@ -71,20 +70,20 @@ module AdsCommon
       request = prepare_request(url, config, headers, data)
       request.on_body(&block)
       HTTPI.post(request)
-      return nil
+      nil
     end
 
     # Performs a put on a URL, using all of the connection options in the
     # client library, returning a HTTPI::Response.
     def self.put_response(url, data, config, headers = nil)
       request = prepare_request(url, config, headers, data)
-      return HTTPI.put(request)
+      HTTPI.put(request)
     end
 
     # Performs a put on a URL, using all of the connection options in the
     # client library, returning the response body as a string.
     def self.put(url, data, config, headers = nil)
-      return put_response(url, data, config, headers).body
+      put_response(url, data, config, headers).body
     end
 
     private
@@ -97,7 +96,7 @@ module AdsCommon
       request.headers = headers if headers
       request.body = data if data
       configure_httpi(config, request)
-      return request
+      request
     end
 
     # Configures HTTPI request according to the config provided.
@@ -114,11 +113,11 @@ module AdsCommon
         HTTPI.log_level = :debug
       end
       httpi.read_timeout =
-          config.read('connection.read_timeout', HTTP_READ_TIMEOUT)
+        config.read('connection.read_timeout', HTTP_READ_TIMEOUT)
       httpi.open_timeout =
-          config.read('connection.open_timeout', HTTP_OPEN_TIMEOUT)
+        config.read('connection.open_timeout', HTTP_OPEN_TIMEOUT)
       strict_ssl =
-          config.read('connection.strict_ssl_verification', true)
+        config.read('connection.strict_ssl_verification', true)
       httpi.auth.ssl.verify_mode = strict_ssl ? :peer : :none
     end
   end

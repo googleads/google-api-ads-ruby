@@ -22,12 +22,12 @@ require 'simplecov'
 
 SimpleCov.start
 
-$:.unshift File.expand_path('../../', __FILE__)
+$LOAD_PATH.unshift File.expand_path('../../', __FILE__)
 require File.join(File.dirname(__FILE__), 'suite_unittests.rb')
 
 # Now loading all files in the library to make sure we hit all untested files.
 lib_base_path = File.expand_path('../../lib', __FILE__)
-$:.unshift lib_base_path
+$LOAD_PATH.unshift lib_base_path
 
 code_files_mask = File.join(lib_base_path, '**/*.rb')
-Dir.glob(code_files_mask).each {|file| require file}
+Dir.glob(code_files_mask).each { |file| require file }

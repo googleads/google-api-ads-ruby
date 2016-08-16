@@ -24,7 +24,7 @@ require 'pp'
 module AdsCommon
   module Build
     class SavonRegistryGenerator < SavonAbstractGenerator
-      REGISTRY_TEMPLATE = %q{<% %>
+      REGISTRY_TEMPLATE = "<% %>
       # Encoding: utf-8
       #
       # This is auto-generated code, changes will be overwritten.
@@ -83,7 +83,7 @@ module AdsCommon
         <% end %>
       <%= @modules_close_string %>
 
-      }.gsub(/^      /, '')
+      ".gsub(/^      /, '')
 
       def initialize(args)
         super(args)
@@ -91,10 +91,10 @@ module AdsCommon
         @methods = []
         @types = []
         @namespaces = []
-        @default_exception_base = "%s::Errors::ApiException" % @api_name
+        @default_exception_base = '%s::Errors::ApiException' % @api_name
       end
 
-      def get_code_template()
+      def get_code_template
         REGISTRY_TEMPLATE
       end
 
@@ -121,29 +121,29 @@ module AdsCommon
       def format_doc(doc)
         res = []
         doc.split(/\n/).each do |line|
-          line = line.strip();
-          res << line if !(line.empty?)
+          line = line.strip
+          res << line unless line.empty?
         end
-        return res
+        res
       end
 
       # Prepares a hash string based on array of hashes passed.
       def format_signature(objects_array)
         objects_hash = get_hash_for_names_array(objects_array)
-        return PP.singleline_pp(objects_hash, '')
+        PP.singleline_pp(objects_hash, '')
       end
 
       # Prepares string representing a simple array.
       def format_array(objects_array)
-        return (objects_array.nil?) ? '[]' : PP.singleline_pp(objects_array, '')
+        objects_array.nil? ? '[]' : PP.singleline_pp(objects_array, '')
       end
 
       # Converts an array of hashes to a hash based on ":name" fields:
       # [{:name => 'foo', :data => 'bar'}] => {:foo => {:data => 'bar'}}
       def get_hash_for_names_array(input)
-        return input.inject({}) do |output, e|
+        input.inject({}) do |output, e|
           key = e[:name].to_sym
-          output[key] = e.reject {|k, v| k.equal?(:name)}
+          output[key] = e.reject { |k, _v| k.equal?(:name) }
           output
         end
       end

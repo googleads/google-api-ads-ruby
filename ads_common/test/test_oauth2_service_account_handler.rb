@@ -32,28 +32,29 @@ module AdsCommon
 end
 
 class TestOAuthServiceAccount < Test::Unit::TestCase
-  def test_file_extension_check()
+  def test_file_extension_check
     assert_nothing_raised do
-      validate_credentials(["test", ".json"])
+      validate_credentials(['test', '.json'])
     end
     assert_nothing_raised do
-      validate_credentials(["test", ".p12"])
+      validate_credentials(['test', '.p12'])
     end
     assert_raise do
-      validate_credentials(["test", ".other"])
+      validate_credentials(['test', '.other'])
     end
   end
 
   def validate_credentials(filename)
     file = Tempfile.new(filename)
     credentials = {
-      :method => 'OAUTH2_SERVICE_ACCOUNT',
-      :oauth2_keyfile => file.path,
-      :oauth2_issuer => 'issuer',
-      :oauth2_secret => 'secret'
+      method: 'OAUTH2_SERVICE_ACCOUNT',
+      oauth2_keyfile: file.path,
+      oauth2_issuer: 'issuer',
+      oauth2_secret: 'secret'
     }
     handler = AdsCommon::Auth::OAuth2ServiceAccountHandler.new(
-        AdsCommon::Config.new(), 'https://www.googleapis.com/auth/adwords')
+      AdsCommon::Config.new, 'https://www.googleapis.com/auth/adwords'
+    )
     handler.validate_credentials(credentials)
     file.close
     file.unlink

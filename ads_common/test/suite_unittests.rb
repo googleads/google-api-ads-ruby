@@ -20,9 +20,9 @@
 
 require 'test/unit'
 
-$:.unshift File.expand_path('../../lib/', __FILE__)
-$:.unshift File.expand_path('../../', __FILE__)
+$LOAD_PATH.unshift File.expand_path('../../lib/', __FILE__)
+$LOAD_PATH.unshift File.expand_path('../../', __FILE__)
 
 # Ads Common units tests.
 test_files_mask = File.join(File.dirname(__FILE__), 'test_*.rb')
-Dir.glob(test_files_mask).each {|file| require file}
+Dir.glob(test_files_mask).each { |file| require file }

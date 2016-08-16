@@ -44,12 +44,11 @@ module AdsCommon
     def validate_args(action_name, args)
       in_params = @registry.get_method_signature(action_name)[:input]
       # TODO: compare number of parameters.
-      args_hash = in_params.each_with_index.inject({}) do
-          |result, (in_param, index)|
-        result.merge({in_param[:name] => deep_copy(args[index])})
+      args_hash = in_params.each_with_index.inject({}) do |result, (in_param, index)|
+        result.merge(in_param[:name] => deep_copy(args[index]))
       end
       validate_arguments(args_hash, in_params)
-      return args_hash
+      args_hash
     end
 
     private
@@ -62,24 +61,23 @@ module AdsCommon
         key = field[:name]
         item = args_hash[key]
         check_required_argument_present(item, field)
-        unless item.nil?
-          original_name = field[:original_name]
-          if original_name
-            key = handle_name_override(args_hash, key, original_name)
-          end
+        next if item.nil?
+        original_name = field[:original_name]
+        if original_name
+          key = handle_name_override(args_hash, key, original_name)
+        end
 
-          item_type = get_full_type_signature(field[:type])
-          item_ns = field[:ns] || type_ns
-          key = handle_namespace_override(args_hash, key, item_ns) if item_ns
+        item_type = get_full_type_signature(field[:type])
+        item_ns = field[:ns] || type_ns
+        key = handle_namespace_override(args_hash, key, item_ns) if item_ns
 
-          # Separate validation for choice types as we need to inject nodes into
-          # the tree. Validate as usual if not a choice type.
-          unless validate_choice_argument(item, args_hash, key, item_type)
-            validate_arg(item, args_hash, key, item_type)
-          end
+        # Separate validation for choice types as we need to inject nodes into
+        # the tree. Validate as usual if not a choice type.
+        unless validate_choice_argument(item, args_hash, key, item_type)
+          validate_arg(item, args_hash, key, item_type)
         end
       end
-      return args_hash
+      args_hash
     end
 
     # Special handling for choice types. Goes over each item, checks xsi_type
@@ -87,16 +85,17 @@ module AdsCommon
     # recurces with the correct item type.
     def validate_choice_argument(item, parent, key, item_type)
       result = false
-      if item_type.kind_of?(Hash) && item_type.include?(:choices)
+      if item_type.is_a?(Hash) && item_type.include?(:choices)
         new_root = {}
         choice_items = arrayize(item)
         choice_items.each do |choice_item|
           choice_type = choice_item.delete(:xsi_type)
           choice_item_type =
-              find_choice_by_xsi_type(choice_type, item_type[:choices])
+            find_choice_by_xsi_type(choice_type, item_type[:choices])
           if choice_type.nil? || choice_item_type.nil?
             raise AdsCommon::Errors::TypeMismatchError.new(
-              'choice subtype', choice_type, choice_item.to_s())
+              'choice subtype', choice_type, choice_item.to_s
+            )
           end
           new_root[choice_type] ||= []
           new_root[choice_type] << choice_item
@@ -106,26 +105,26 @@ module AdsCommon
         parent[key] = new_root
         result = true
       end
-      return result
+      result
     end
 
     def find_choice_by_xsi_type(xsi_type, item_def)
-      index = item_def.index {|item| xsi_type.eql?(item[:original_name])}
-      return index.nil? ? nil : item_def[index]
+      index = item_def.index { |item| xsi_type.eql?(item[:original_name]) }
+      index.nil? ? nil : item_def[index]
     end
 
     # Checks if no extra fields provided outside of known ones.
     def check_extra_fields(args_hash, known_fields)
       extra_fields = args_hash.keys - known_fields - IGNORED_HASH_KEYS
       unless extra_fields.empty?
-        raise AdsCommon::Errors::UnexpectedParametersError.new(extra_fields)
+        raise AdsCommon::Errors::UnexpectedParametersError, extra_fields
       end
     end
 
     # Generates order of XML elements for SOAP request. Adds :order! key to
     # keep the correct order.
     def add_order_key(args, fields_list)
-      all_args = fields_list.map {|field| field[:name]}
+      all_args = fields_list.map { |field| field[:name] }
       order_array = (all_args & args.keys)
       args[:order!] = order_array unless order_array.empty?
     end
@@ -133,20 +132,23 @@ module AdsCommon
     # Checks the provided data structure matches wsdl definition.
     def check_required_argument_present(arg, field)
       # At least one item required, none passed.
-      if field[:min_occurs] > 0 and arg.nil?
+      if field[:min_occurs] > 0 && arg.nil?
         raise AdsCommon::Errors::MissingPropertyError.new(
-            field[:name], field[:type])
+          field[:name], field[:type]
+        )
       end
       # An object passed when an array is expected.
-      if (field[:max_occurs] == :unbounded) and
-          !(arg.nil? or arg.kind_of?(Array))
+      if (field[:max_occurs] == :unbounded) &&
+         !(arg.nil? || arg.is_a?(Array))
         raise AdsCommon::Errors::TypeMismatchError.new(
-            Array, arg.class, field[:name])
+          Array, arg.class, field[:name]
+        )
       end
       # An array passed when an object is expected.
-      if (field[:max_occurs] == 1) and arg.kind_of?(Array)
+      if (field[:max_occurs] == 1) && arg.is_a?(Array)
         raise AdsCommon::Errors::TypeMismatchError.new(
-            field[:type], Array, field[:name])
+          field[:type], Array, field[:name]
+        )
       end
     end
 
@@ -154,32 +156,32 @@ module AdsCommon
     def handle_name_override(args, key, original_name)
       rename_hash_key(args, key, original_name)
       replace_array_item(args[:order!], key, original_name)
-      return original_name
+      original_name
     end
 
     # Overrides non-default namespace if requested.
     def handle_namespace_override(args, key, ns)
       add_extra_namespace(ns)
-      new_key = prefix_key_with_namespace(key.to_s.lower_camelcase, ns)
+      new_key = prefix_key_with_namespace(Utils.lower_camelcase(key), ns)
       rename_hash_key(args, key, new_key)
       replace_array_item(args[:order!], key, new_key)
-      return new_key
+      new_key
     end
 
     # Validates single argument.
     def validate_arg(arg, parent, key, arg_type)
       result = case arg
-        when Array
-          validate_array_arg(arg, parent, key, arg_type)
-        when Hash
-          validate_hash_arg(arg, parent, key, arg_type)
-        when Time
-          arg = validate_time_arg(arg, parent, key)
-          validate_hash_arg(arg, parent, key, arg_type)
-        else
-          arg
+               when Array
+                 validate_array_arg(arg, parent, key, arg_type)
+               when Hash
+                 validate_hash_arg(arg, parent, key, arg_type)
+               when Time
+                 arg = validate_time_arg(arg, parent, key)
+                 validate_hash_arg(arg, parent, key, arg_type)
+               else
+                 arg
       end
-      return result
+      result
     end
 
     # Validates Array argument.
@@ -187,7 +189,7 @@ module AdsCommon
       result = arg.map do |item|
         validate_arg(item, parent, key, arg_type)
       end
-      return result
+      result
     end
 
     # Validates Hash argument.
@@ -200,7 +202,7 @@ module AdsCommon
     def validate_time_arg(arg, parent, key)
       xml_value = time_to_xml_hash(arg)
       parent[key] = xml_value
-      return xml_value
+      xml_value
     end
 
     # Handles custom xsi:type.
@@ -209,8 +211,7 @@ module AdsCommon
       if xsi_type
         xsi_field_type = get_full_type_signature(xsi_type)
         if xsi_field_type.nil?
-          raise AdsCommon::Errors::ApiException.new(
-              "Incorrect xsi:type specified: '%s'" % [xsi_type])
+          raise AdsCommon::Errors::ApiException, "Incorrect xsi:type specified: '%s'" % [xsi_type]
         else
           # TODO: make sure xsi_type is derived from arg_type.
           arg_type = xsi_field_type
@@ -221,18 +222,18 @@ module AdsCommon
         end
         add_xsi_type(parent, key, xsi_type)
       end
-      return arg_type
+      arg_type
     end
 
     # Replaces an item in an array with a different one into the same position.
     def replace_array_item(data, old_item, new_item)
-      data.map! {|item| (item == old_item) ? new_item : item}
+      data.map! { |item| (item == old_item) ? new_item : item }
     end
 
     # Replaces an item in an array with a different one into the same position.
     def rename_hash_key(data, old_key, new_key)
       data[new_key] = data.delete(old_key)
-      return data
+      data
     end
 
     # Adds ":attributes!" record for Savon to specify xsi:type.
@@ -254,30 +255,30 @@ module AdsCommon
 
     # Prefixes a key with a given namespace index or default namespace.
     def prefix_key_with_namespace(key, ns_index = nil)
-      namespace = (ns_index.nil?) ? DEFAULT_NAMESPACE : ("ns%d" % ns_index)
-      return prefix_key(key, namespace)
+      namespace = ns_index.nil? ? DEFAULT_NAMESPACE : ('ns%d' % ns_index)
+      prefix_key(key, namespace)
     end
 
     # Prefixes with a given namespace.
     def prefix_key(key, ns)
-      return [ns, key].join(':')
+      [ns, key].join(':')
     end
 
     # Returns list of 'names' for objects in array.
     def array_from_named_list(fields_list)
-      return fields_list.map {|field| field[:name]}
+      fields_list.map { |field| field[:name] }
     end
 
     # Returns copy of object and its sub-objects ("deep" copy).
     def deep_copy(data)
-      return Marshal.load(Marshal.dump(data))
+      Marshal.load(Marshal.dump(data))
     end
 
     # Returns type signature with all inherited fields.
     def get_full_type_signature(type_name)
-      result = (type_name.nil?) ? nil : @registry.get_type_signature(type_name)
-      result[:fields] = implode_parent(result) if result and result[:base]
-      return result
+      result = type_name.nil? ? nil : @registry.get_type_signature(type_name)
+      result[:fields] = implode_parent(result) if result && result[:base]
+      result
     end
 
     # Returns all inherited fields of superclasses for given type.
@@ -289,32 +290,30 @@ module AdsCommon
       end
       data_type[:fields].each do |field|
         # If the parent type includes a field with the same name, overwrite it.
-        result.reject! {|parent_field| parent_field[:name].eql?(field[:name])}
+        result.reject! { |parent_field| parent_field[:name].eql?(field[:name]) }
         # Storing field's namespace.
         field[:ns] = data_type[:ns] if data_type[:ns]
         result << field
       end
-      return result
+      result
     end
 
     # Adds additional namespace for XML generation.
     def add_extra_namespace(ns_index)
-      @extra_namespaces.merge!({
-          "xmlns:ns%d" % ns_index => @registry.get_namespace(ns_index)
-      })
+      @extra_namespaces.merge!('xmlns:ns%d' % ns_index => @registry.get_namespace(ns_index))
     end
 
     # Makes sure object is an array.
     def arrayize(object)
       return [] if object.nil?
-      return object.is_a?(Array) ? object : [object]
+      object.is_a?(Array) ? object : [object]
     end
 
     # Converts Time to a hash for XML marshalling.
     def time_to_xml_hash(time)
-      return {
-          :hour => time.hour, :minute => time.min, :second => time.sec,
-          :date => {:year => time.year, :month => time.month, :day => time.day}
+      {
+        hour: time.hour, minute: time.min, second: time.sec,
+        date: { year: time.year, month: time.month, day: time.day }
       }
     end
   end

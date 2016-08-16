@@ -22,7 +22,6 @@ require 'thread'
 
 module AdsCommon
   class CredentialHandler
-
     # Initializes CredentialHandler.
     def initialize(config)
       @config = config
@@ -34,9 +33,9 @@ module AdsCommon
 
     # Returns credentials set for the next call.
     def credentials(credentials_override = nil)
-      credentials = @credentials.dup()
+      credentials = @credentials.dup
       credentials.merge!(credentials_override) unless credentials_override.nil?
-      return credentials
+      credentials
     end
 
     # Set the credentials hash to a new one. Calculate difference, and call the
@@ -49,7 +48,7 @@ module AdsCommon
       end
 
       # Find removed properties.
-      diff = @credentials.inject(diff) do |result, (key, value)|
+      diff = @credentials.inject(diff) do |result, (key, _value)|
         result << [key, nil] unless new_credentials.include?(key)
         result
       end
@@ -57,7 +56,7 @@ module AdsCommon
       # Set each property.
       diff.each { |entry| set_credential(entry[0], entry[1]) }
 
-      return nil
+      nil
     end
 
     # Set a single credential to a new value. Call the AuthHandler callback
@@ -81,7 +80,7 @@ module AdsCommon
 
     # Generates string for UserAgent to put into headers.
     def generate_user_agent(extra_ids = [], agent_app = nil)
-      agent_app ||= File.basename($0)
+      agent_app ||= File.basename($PROGRAM_NAME)
       agent_data = extra_ids
       agent_data << 'Common-Ruby/%s' % AdsCommon::ApiConfig::CLIENT_LIB_VERSION
       agent_data << 'GoogleAdsSavon/%s' % GoogleAdsSavon::VERSION
@@ -89,8 +88,8 @@ module AdsCommon
       agent_data << [ruby_engine, RUBY_VERSION].join('/')
       agent_data << 'HTTPI/%s' % HTTPI::VERSION
       agent_data << HTTPI::Adapter.use.to_s
-      agent_data += get_extra_user_agents()
-      return '%s (%s)' % [agent_app, agent_data.join(', ')]
+      agent_data += get_extra_user_agents
+      '%s (%s)' % [agent_app, agent_data.join(', ')]
     end
 
     # Sets authorization handler to notify about credential changes.
@@ -107,7 +106,7 @@ module AdsCommon
 
     # Generates an array of extra user agents to include in the user agent
     # string.
-    def get_extra_user_agents()
+    def get_extra_user_agents
       @extra_user_agents_lock.synchronize do
         user_agents = @extra_user_agents.collect do |k, v|
           v.nil? ? k : '%s/%s' % [k, v]

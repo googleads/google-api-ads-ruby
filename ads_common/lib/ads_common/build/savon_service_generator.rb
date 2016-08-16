@@ -23,8 +23,7 @@ require 'ads_common/build/savon_abstract_generator'
 module AdsCommon
   module Build
     class SavonServiceGenerator < SavonAbstractGenerator
-
-      SERVICE_TEMPLATE = %q{<% %>
+      SERVICE_TEMPLATE = "<% %>
       # Encoding: utf-8
       #
       # This is auto-generated code, changes will be overwritten.
@@ -67,7 +66,7 @@ module AdsCommon
         end
       <%= @modules_close_string %>
 
-      }.gsub(/^      /, '')
+      ".gsub(/^      /, '')
 
       def initialize(args)
         super(args)
@@ -78,7 +77,7 @@ module AdsCommon
         @actions += actions
       end
 
-      def get_code_template()
+      def get_code_template
         SERVICE_TEMPLATE
       end
     end

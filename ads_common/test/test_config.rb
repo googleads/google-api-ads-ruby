@@ -24,10 +24,10 @@ require 'ads_common/config'
 
 class TestConfig < Test::Unit::TestCase
   DEFAULT_CONFIG_HASH = {
-      :service => {:use_ruby_names => false,
-                   :environment => 'sandbox'},
-      :authentication => {:method => 'ClientLogin',
-                          :email => 'root@example.com'}
+    service: { use_ruby_names: false,
+               environment: 'sandbox' },
+    authentication: { method: 'ClientLogin',
+                      email: 'root@example.com' }
   }
 
   DEFAULT_CONFIG_FILENAME = 'test/test_config.yml'

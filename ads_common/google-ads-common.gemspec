@@ -16,7 +16,7 @@
 #           limitations under the License.
 
 lib = File.expand_path('../lib/', __FILE__)
-$:.unshift lib unless $:.include?(lib)
+$LOAD_PATH.unshift lib unless $LOAD_PATH.include?(lib)
 
 require 'ads_common/version'
 
@@ -31,9 +31,8 @@ Gem::Specification.new do |s|
   s.license = 'Apache-2.0'
   s.platform = Gem::Platform::RUBY
   s.required_rubygems_version = '>= 1.3.6'
-  s.rubyforge_project = 'google-ads-common'
   s.require_path = 'lib'
-  s.files = Dir.glob('{lib,test}/**/*') + %w(COPYING README.md ChangeLog)
+  s.files = Dir.glob('{lib,test}/**/*') + %w(COPYING README.md CHANGELOG)
   s.test_files = Dir.glob('test/test_*.rb')
   s.add_runtime_dependency('google-ads-savon', '~> 1.0.1')
   s.add_runtime_dependency('httpi', '~> 2.3')

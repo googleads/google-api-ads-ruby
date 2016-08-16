@@ -22,7 +22,6 @@ require 'pp'
 
 module AdsCommon
   module Errors
-
     # Generic error class for non-specific errors.
     class Error < ::StandardError
     end
@@ -33,7 +32,8 @@ module AdsCommon
       attr_reader :error, :info
       def initialize(message = self.class.to_s, error = nil, info = nil)
         super(message)
-        @error, @info = error, info
+        @error = error
+        @info = info
       end
     end
 
@@ -52,8 +52,10 @@ module AdsCommon
       attr_reader :captcha_url, :auth_url
       def initialize(error, captcha_token, captcha_url, auth_url)
         super()
-        @error, @captcha_token  = error, captcha_token
-        @captcha_url, @auth_url = captcha_url, auth_url
+        @error = error
+        @captcha_token = captcha_token
+        @captcha_url = captcha_url
+        @auth_url = auth_url
       end
     end
 
@@ -61,10 +63,12 @@ module AdsCommon
     class MissingPropertyError < Error
       attr_reader :property, :object_type
       def initialize(property, object_type)
-        @property, @object_type = property, object_type
+        @property = property
+        @object_type = object_type
       end
-      def to_s()
-        return "%s: name: %s, type: %s" % [super, @property, @object_type]
+
+      def to_s
+        '%s: name: %s, type: %s' % [super, @property, @object_type]
       end
     end
 
@@ -72,11 +76,14 @@ module AdsCommon
     class TypeMismatchError < Error
       attr_reader :expected, :provided, :field_name
       def initialize(expected, provided, field_name)
-        @expected, @provided, @field_name = expected, provided, field_name
+        @expected = expected
+        @provided = provided
+        @field_name = field_name
       end
-      def to_s()
-        return "%s: expected: '%s', provided: '%s' for field '%s'" %
-            [super, @expected, @provided, @field_name]
+
+      def to_s
+        "%s: expected: '%s', provided: '%s' for field '%s'" %
+          [super, @expected, @provided, @field_name]
       end
     end
 
@@ -86,8 +93,9 @@ module AdsCommon
       def initialize(parameters_list)
         @parameters_list = parameters_list
       end
-      def to_s()
-        return "%s: %s" % [super, PP.singleline_pp(@parameters_list, '')]
+
+      def to_s
+        '%s: %s' % [super, PP.singleline_pp(@parameters_list, '')]
       end
     end
 
