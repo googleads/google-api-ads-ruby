@@ -22,7 +22,6 @@ require 'ads_common/savon_headers/base_header_handler'
 module AdsCommon
   module SavonHeaders
     class OAuthHeaderHandler < BaseHeaderHandler
-
       private
 
       # Generates SOAP request header with login credentials and namespace
@@ -40,7 +39,7 @@ module AdsCommon
         credentials = @credential_handler.credentials
         request.url = soap.endpoint
         request.headers['Authorization'] =
-            @auth_handler.auth_string(credentials)
+          @auth_handler.auth_string(credentials)
       end
     end
   end

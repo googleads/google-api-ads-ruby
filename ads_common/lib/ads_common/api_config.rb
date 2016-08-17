@@ -49,7 +49,7 @@ module AdsCommon
     # given version
     #
     def environment_has_version(environment, version)
-      return !environment_config(environment, version).nil?
+      !environment_config(environment, version).nil?
     end
 
     # Does the given version exist and contain the given service?
@@ -59,8 +59,8 @@ module AdsCommon
     # given service
     #
     def version_has_service(version, service)
-      return service_config.include?(version) &&
-          service_config[version].include?(service)
+      service_config.include?(version) &&
+        service_config[version].include?(service)
     end
 
     # Get the default API version.
@@ -91,7 +91,7 @@ module AdsCommon
 
     # Get the API path.
     def api_path
-      return api_name.to_s.snakecase
+      api_name.to_s.snakecase
     end
 
     # Get the default environment.
@@ -121,10 +121,10 @@ module AdsCommon
     def endpoint(environment, version, service)
       base = get_wsdl_base(environment, version)
       # TODO(dklimkin): Unflatten subdir constants. Cross-API refactor 0.9.0.
-      if !subdir_config().nil?
-        base = base.to_s + subdir_config()[[version, service]].to_s
+      unless subdir_config.nil?
+        base = base.to_s + subdir_config[[version, service]].to_s
       end
-      return base.to_s + version.to_s + '/' + service.to_s
+      base.to_s + version.to_s + '/' + service.to_s
     end
 
     # Get the subdirectory for a service, for a given API version.
@@ -137,9 +137,9 @@ module AdsCommon
     # The subdir infix
     #
     def subdir(version, service)
-      return nil if subdir_config().nil?
+      return nil if subdir_config.nil?
       # TODO(dklimkin): Unflatten subdir constants. Cross-API refactor 0.9.0.
-      subdir_config()[[version, service]]
+      subdir_config[[version, service]]
     end
 
     # Get the authentication server details for an environment. Allows to
@@ -152,7 +152,7 @@ module AdsCommon
     # The full URL for the auth server
     #
     def auth_server(environment)
-      return ENV['ADSAPI_AUTH_URL'] || auth_server_config[environment]
+      ENV['ADSAPI_AUTH_URL'] || auth_server_config[environment]
     end
 
     # Perform the loading of the necessary source files for a version.
@@ -167,7 +167,7 @@ module AdsCommon
     def do_require(version, service)
       filename = [api_path, version.to_s, service.to_s.snakecase].join('/')
       require filename
-      return filename
+      filename
     end
 
     # Returns the full module name for a given service.
@@ -180,7 +180,7 @@ module AdsCommon
     # The full module name for the given service
     #
     def module_name(version, service)
-      return [api_name, version.to_s.upcase, service.to_s].join('::')
+      [api_name, version.to_s.upcase, service.to_s].join('::')
     end
 
     # Returns the full interface class name for a given service.
@@ -193,7 +193,7 @@ module AdsCommon
     # The full interface class name for the given service
     #
     def interface_name(version, service)
-      return [module_name(version, service), service.to_s].join('::')
+      [module_name(version, service), service.to_s].join('::')
     end
 
     # Generates an array of WSDL URLs based on defined Services and version
@@ -208,18 +208,18 @@ module AdsCommon
     #
     def get_wsdls(version)
       res = {}
-      wsdl_base = get_wsdl_base(default_environment(), version)
+      wsdl_base = get_wsdl_base(default_environment, version)
       postfix = wsdl_base.start_with?('http') ? '?wsdl' : '.wsdl'
       services(version).each do |service|
         path = wsdl_base
-        if (!subdir_config().nil?)
-          subdir_name = subdir(version, service);
-          path = path + subdir_name if subdir_name and !subdir_name.empty?
+        unless subdir_config.nil?
+          subdir_name = subdir(version, service)
+          path += subdir_name if subdir_name && !subdir_name.empty?
         end
         path = path + version.to_s + '/' + service.to_s + postfix
         res[service.to_s] = path
       end
-      return res
+      res
     end
 
     # Returns WSDL base url defined in Service configuration. Allows to override
@@ -233,8 +233,8 @@ module AdsCommon
     #   String containing base URL
     #
     def get_wsdl_base(environment, version)
-      return ENV['ADSAPI_BASE_URL'] ||
-          environment_config(environment, version)
+      ENV['ADSAPI_BASE_URL'] ||
+        environment_config(environment, version)
     end
   end
 end

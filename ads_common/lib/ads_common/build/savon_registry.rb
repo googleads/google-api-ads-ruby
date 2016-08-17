@@ -56,7 +56,7 @@ module AdsCommon
         doc = REXML::Document.new(wsdl.xml)
         process_types(doc)
         process_methods(doc)
-        sort_exceptions()
+        sort_exceptions
       end
 
       # Extracts different types from XML.
@@ -68,7 +68,7 @@ module AdsCommon
           (complex_types + simple_types).each do |ctype|
             ctype_name = get_element_name(ctype)
             @soap_types << extract_type(ctype, ns_index)
-            if ctype_name.match('.+Exception$')
+            if ctype_name =~ '.+Exception$'
               @soap_exceptions << extract_exception(ctype)
             end
           end
@@ -87,7 +87,7 @@ module AdsCommon
           end
           return ns_index
         end
-        return nil
+        nil
       end
 
       # Extracts SOAP actions as methods.
@@ -100,41 +100,41 @@ module AdsCommon
 
       # Extracts ComplexTypes from node into an array.
       def get_complex_types(node)
-        return REXML::XPath.each(node, 'complexType').to_a
+        REXML::XPath.each(node, 'complexType').to_a
       end
 
       # Extracts SimpleTypes from node into an array.
       def get_simple_types(node)
-        return REXML::XPath.each(node, 'simpleType').to_a
+        REXML::XPath.each(node, 'simpleType').to_a
       end
 
       # Extracts exception parameters from ComplexTypes element.
       def extract_exception(exception_element)
-        return {:name => get_element_name(exception_element),
-                :doc => get_element_doc(exception_element),
-                :base => get_element_base(exception_element),
-                :fields => get_element_fields(exception_element)}
+        { name: get_element_name(exception_element),
+          doc: get_element_doc(exception_element),
+          base: get_element_base(exception_element),
+          fields: get_element_fields(exception_element) }
       end
 
       # Extracts method parameters from ComplexTypes element.
       def extract_method(method_element, doc)
         name = get_element_name(method_element)
         method = {
-            :name => name.snakecase,
-            :input => extract_input_parameters(method_element, doc),
-            :output => extract_output_parameters(method_element, doc)
-            # This could be used to include documentation from wsdl.
-            #:doc => get_element_doc(operation, 'wsdl')
+          name: name.snakecase,
+          input: extract_input_parameters(method_element, doc),
+          output: extract_output_parameters(method_element, doc)
+          # This could be used to include documentation from wsdl.
+          #:doc => get_element_doc(operation, 'wsdl')
         }
         original_name = get_original_name_if_needed(name)
         method[:original_name] = original_name unless original_name.nil?
-        return method
+        method
       end
 
       # Extracts definition of all types. If a non standard undefined type is
       # found it process it recursively.
       def extract_type(type_element, ns_index)
-        type = {:name => get_element_name(type_element), :fields => []}
+        type = { name: get_element_name(type_element), fields: [] }
         if attribute_to_boolean(type_element.attribute('abstract'))
           type[:abstract] = true
         end
@@ -142,20 +142,20 @@ module AdsCommon
         type[:base] = base_type if base_type
         type[:ns] = ns_index if ns_index
         REXML::XPath.each(type_element,
-            'sequence | complexContent/extension/sequence') do |seq_node|
+                          'sequence | complexContent/extension/sequence') do |seq_node|
           type[:fields] += get_element_fields(seq_node)
         end
         REXML::XPath.each(type_element, 'choice') do |seq_node|
           type[:choices] ||= []
           type[:choices] += get_element_fields(seq_node)
         end
-        return type
+        type
       end
 
       # Extracts input parameters of given method as an array.
       def extract_input_parameters(op_node, doc)
         op_name = get_element_name(op_node)
-        return find_sequence_fields(op_name, doc)
+        find_sequence_fields(op_name, doc)
       end
 
       # Extracts output parameter name and fields.
@@ -163,42 +163,42 @@ module AdsCommon
         output_element = REXML::XPath.first(op_node, 'descendant::wsdl:output')
         output_name = get_element_name(output_element)
         output_fields = find_sequence_fields(output_name, doc)
-        return {:name => output_name.snakecase, :fields => output_fields}
+        { name: output_name.snakecase, fields: output_fields }
       end
 
       # Finds sequence fields for the element of given name.
       def find_sequence_fields(name, doc)
         result = []
         doc.each_element_with_attribute('name', name, 0,
-            '//schema/element') do |element_node|
+                                        '//schema/element') do |element_node|
           REXML::XPath.each(element_node, 'complexType/sequence') do |seq_node|
             result += get_element_fields(seq_node)
           end
         end
-        return result
+        result
       end
 
       # Gets element name defined as its attribute.
       def get_element_name(element)
-        return element.attribute('name').to_s
+        element.attribute('name').to_s
       end
 
       # Gets element base defined as an attribute in sibling.
       def get_element_base(element)
         base_element = REXML::XPath.first(element, 'complexContent/extension')
-        base = (base_element.nil?) ? nil :
+        base = base_element.nil? ? nil :
             base_element.attribute('base').to_s.gsub(/^.+:/, '')
-        return base
+        base
       end
 
       # Gets element documentation text.
       def get_element_doc(root, namespace = nil)
         key = 'documentation'
-        key = "%s:%s" % [namespace, key] if namespace
-        doc_element = REXML::XPath.first(root, "descendant::%s" % key)
-        doc = (doc_element.nil?) ? '' :
+        key = '%s:%s' % [namespace, key] if namespace
+        doc_element = REXML::XPath.first(root, 'descendant::%s' % key)
+        doc = doc_element.nil? ? '' :
             REXML::Text.unnormalize(doc_element.get_text.to_s)
-        return doc
+        doc
       end
 
       # Gets subfields defined as elements under given root.
@@ -208,39 +208,39 @@ module AdsCommon
           name = get_element_name(item)
           original_name = get_original_name_if_needed(name)
           field = {
-              :name => name.snakecase.to_sym,
-              :original_name => original_name,
-              :type => item.attribute('type').to_s.gsub(/^.+:/, ''),
-              :min_occurs => attribute_to_int(item.attribute('minOccurs')),
-              :max_occurs => attribute_to_int(item.attribute('maxOccurs'))}
-          fields << field.reject {|k, v| v.nil?}
+            name: name.snakecase.to_sym,
+            original_name: original_name,
+            type: item.attribute('type').to_s.gsub(/^.+:/, ''),
+            min_occurs: attribute_to_int(item.attribute('minOccurs')),
+            max_occurs: attribute_to_int(item.attribute('maxOccurs'))
+          }
+          fields << field.reject { |_k, v| v.nil? }
         end
-        return fields
+        fields
       end
 
       # Returns original name if it can not be back-converted and required for
       # XML serialization.
       def get_original_name_if_needed(name)
-        return (name.nil? || (name.snakecase.lower_camelcase == name)) ?
-            nil : name
+        (name.nil? || (Utils.lower_camelcase(name.snakecase) == name)) ? nil : name
       end
 
       # Simple converter for int values.
       def attribute_to_int(attribute)
         return nil if attribute.nil?
-        return attribute.value.eql?('unbounded') ?
+        attribute.value.eql?('unbounded') ?
             :unbounded : attribute.value.to_i
       end
 
       # Simple converter for boolean values.
       def attribute_to_boolean(attribute)
-        return (attribute.nil?) ? nil : attribute.value.eql?('true')
+        attribute.nil? ? nil : attribute.value.eql?('true')
       end
 
       # Reorders exceptions so that base ones always come before derived.
-      def sort_exceptions()
+      def sort_exceptions
         @ordered_exceptions = []
-        @soap_exceptions.each {|exception| do_include_exception(exception)}
+        @soap_exceptions.each { |exception| do_include_exception(exception) }
         @soap_exceptions = @ordered_exceptions
       end
 
@@ -260,9 +260,9 @@ module AdsCommon
       # Finds object (exception) by name attribute in a list.
       def find_exception(exception, list)
         list.each do |e|
-          return e if (e.eql?(exception) || e[:name].eql?(exception))
+          return e if e.eql?(exception) || e[:name].eql?(exception)
         end
-        return nil
+        nil
       end
     end
   end

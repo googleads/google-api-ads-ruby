@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Encoding: utf-8
 #
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.

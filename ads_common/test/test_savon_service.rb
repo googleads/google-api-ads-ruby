@@ -18,7 +18,7 @@
 #
 # Tests the array replies from services.
 
-require 'test/unit'
+require 'minitest'
 
 # Work around jruby <= 1.7.8 issue with OpenSSL definition.
 require 'openssl'
@@ -29,43 +29,39 @@ require 'ads_common/savon_service'
 
 # SavonService is abstract, defining a child class for the test.
 class StubService < AdsCommon::SavonService
-
   public :get_service_registry, :get_module
 
   def initialize(namespace, endpoint, version)
     @logger = Logger.new(STDERR)
-    @config = AdsCommon::Config.new({:library => {:logger => @logger}})
+    @config = AdsCommon::Config.new(library: { logger: @logger })
     super(@config, namespace, endpoint, version)
   end
 end
 
-
-class TestSavonService < Test::Unit::TestCase
+class TestSavonService < Minitest::Test
 
   TEST_NAMESPACE = 'namespace'
   TEST_ENDPOINT = 'endpoint'
   TEST_VERSION = :vVersion
 
   # Initialize tests.
-  def setup()
+  def setup
     @stub_service = StubService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
   end
 
-  def test_initialize_abstract()
+  def test_initialize_abstract
     assert_raises(NoMethodError) do
       AdsCommon::SavonService.new(nil, TEST_NAMESPACE, TEST_ENDPOINT,
-          TEST_VERSION)
+                                  TEST_VERSION)
     end
-    assert_nothing_raised do
-      StubService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
-    end
+    StubService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
   end
 
-  def test_get_service_registry_abstract()
-    assert_raises(NoMethodError) { @stub_service.get_service_registry() }
+  def test_get_service_registry_abstract
+    assert_raises(NoMethodError) { @stub_service.get_service_registry }
   end
 
-  def test_get_module_abstract()
-    assert_raises(NoMethodError) { @stub_service.get_module() }
+  def test_get_module_abstract
+    assert_raises(NoMethodError) { @stub_service.get_module }
   end
 end

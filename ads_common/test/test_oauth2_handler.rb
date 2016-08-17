@@ -22,59 +22,53 @@ require 'time'
 
 require 'ads_common/auth/oauth2_handler'
 require 'ads_common/config'
-require 'webmock/test_unit'
+require 'webmock/minitest'
 
 module AdsCommon
   module Auth
     class OAuth2Handler
       attr_reader :scopes
 
-      def client()
-        @client
-      end
+      attr_reader :client
 
       # Overrides to ensure @client stores issued_at as a string, to test
       # converting it back.
-      def setup_client()
-        @client = Signet::OAuth2::Client.new({
-          :authorization_uri => 'https://accounts.google.com/o/oauth2/auth',
-          :token_credential_uri => 'https://accounts.google.com/o/oauth2/token',
-          :client_id => 'client_id123',
-          :client_secret => 'client_secret123',
-          :scope => 'https://www.googleapis.com/auth/adwords'
-        })
+      def setup_client
+        @client = Signet::OAuth2::Client.new(authorization_uri: 'https://accounts.google.com/o/oauth2/auth',
+                                             token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
+                                             client_id: 'client_id123',
+                                             client_secret: 'client_secret123',
+                                             scope: 'https://www.googleapis.com/auth/adwords')
       end
     end
   end
 end
 
-class TestOAuth < Test::Unit::TestCase
-  def setup()
+class TestOAuth < Minitest::Test
+  def setup
     stub_request(:post, 'https://accounts.google.com/o/oauth2/auth').to_return(
-        :status => 200,
-        :body => '{"access_token":"access_token123",' +
-            '"token_type":"Bearer","expires_in":"3600"}\n',
-        :headers => {}
+      status: 200,
+      body: '{"access_token":"access_token123",' \
+          '"token_type":"Bearer","expires_in":"3600"}\n',
+      headers: {}
     )
   end
 
-  def test_string_issued_at()
-    handler = AdsCommon::Auth::OAuth2Handler.new(AdsCommon::Config.new(), nil)
+  def test_string_issued_at
+    handler = AdsCommon::Auth::OAuth2Handler.new(AdsCommon::Config.new, nil)
 
     # Modify @client in the handler to get around a full setup.
-    handler.setup_client()
-    assert_not_nil(handler.client)
+    handler.setup_client
+    refute_nil(handler.client)
     handler.client.issued_at = Time.now.to_s
-    assert_equal(String, handler.client.issued_at.class)
+    assert_kind_of(Time, handler.client.issued_at)
 
     # Make sure that we are still able to refresh the token.
-    assert_nothing_raised do
-      token = handler.refresh_token!();
-    end
+    handler.refresh_token!
   end
 
-  def test_additional_scopes()
-    config = AdsCommon::Config.new()
+  def test_additional_scopes
+    config = AdsCommon::Config.new
     config.set('authentication.oauth2_extra_scopes', ['extra-scope'])
     handler = AdsCommon::Auth::OAuth2Handler.new(config, 'base-scope')
     scopes = handler.scopes

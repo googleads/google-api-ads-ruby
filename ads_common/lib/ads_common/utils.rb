@@ -19,21 +19,18 @@
 
 module AdsCommon
   module Utils
-    module String
-
-      # Returns the String in lowerCamelCase.
-      def lower_camelcase()
-        result = dup()
-        result.gsub!(/^([A-Z])/) {$1.downcase()}
-        result.gsub!(/(?:_)([a-zA-Z\d])/) {$1.upcase()}
-        return result
-      end
+    # Returns the String in lowerCamelCase.
+    def self.lower_camelcase(string)
+      result = string.to_s.split('_').map { |s|
+        s[0, 1].upcase + s[1..-1]
+      }.join('')
+      result[0, 1].downcase + result[1..-1].to_s
     end
 
     # Converts all hash keys to strings.
     def self.hash_keys_to_str(data)
       return nil if data.nil?
-      return data.inject({}) do |result, (k, v)|
+      data.inject({}) do |result, (k, v)|
         result[k.to_s] = v
         result
       end
@@ -42,7 +39,7 @@ module AdsCommon
     # Converts all hash keys to symbols.
     def self.hash_keys_to_sym(data)
       return nil if data.nil?
-      return data.inject({}) do |result, (k, v)|
+      data.inject({}) do |result, (k, v)|
         result[k.to_sym] = v
         result
       end
@@ -52,12 +49,12 @@ module AdsCommon
     def self.save_oauth2_token(filename, token)
       config_data = {}
       if File.exist?(filename)
-        config_data = YAML::load_file(filename)
-        new_file_name = self.find_new_name(filename)
+        config_data = YAML.load_file(filename)
+        new_file_name = find_new_name(filename)
         File.rename(filename, new_file_name)
       end
       config_data[:authentication][:oauth2_token] = token
-      File.open(filename, 'w') {|f| f.write(YAML::dump(config_data))}
+      File.open(filename, 'w') { |f| f.write(YAML.dump(config_data)) }
     end
 
     private
@@ -69,9 +66,7 @@ module AdsCommon
         filename = old_name + '.backup' + ((counter > 0) ? counter.to_s : '')
         counter += 1
       end while File.exist?(filename)
-      return filename
+      filename
     end
   end
 end
-
-String.send(:include, AdsCommon::Utils::String)

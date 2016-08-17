@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Encoding: utf-8
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
@@ -22,7 +23,6 @@ require 'ads_savon'
 module AdsCommon
   module SavonHeaders
     class BaseHeaderHandler
-
       # Default namespace alias.
       DEFAULT_NAMESPACE = 'wsdl'
       DEFAULT_ELEMENT_NAME = 'RequestHeader'
@@ -60,12 +60,12 @@ module AdsCommon
       def prepare_request(request, soap)
         soap.namespace = @namespace
         # Sets the default namespace for the body.
-        soap.input[2] = {:xmlns => @namespace}
+        soap.input[2] = { xmlns: @namespace }
         # Sets User-Agent in the HTTP header.
         request.headers['User-Agent'] =
-            @credential_handler.generate_user_agent()
+          @credential_handler.generate_user_agent
         # Set headers namespace.
-        header_name = prepend_namespace(get_header_element_name())
+        header_name = prepend_namespace(get_header_element_name)
         soap.header[:attributes!] ||= {}
         soap.header[:attributes!][header_name] ||= {}
         soap.header[:attributes!][header_name]['xmlns'] = @header_ns
@@ -76,8 +76,8 @@ module AdsCommon
       private
 
       # Returns element name for SOAP header.
-      def get_header_element_name()
-        return DEFAULT_ELEMENT_NAME
+      def get_header_element_name
+        DEFAULT_ELEMENT_NAME
       end
 
       # Adds namespace to the given string.
@@ -89,18 +89,18 @@ module AdsCommon
       #  - String with a namespace
       #
       def prepend_namespace(str)
-        return "%s:%s" % [DEFAULT_NAMESPACE, str]
+        '%s:%s' % [DEFAULT_NAMESPACE, str]
       end
 
       # Generates SOAP headers with the default request header element.
-      def generate_headers(request, soap)
-        element_name = get_header_element_name()
-        soap.header[prepend_namespace(element_name)] = generate_request_header()
+      def generate_headers(_request, soap)
+        element_name = get_header_element_name
+        soap.header[prepend_namespace(element_name)] = generate_request_header
       end
 
       # Generates SOAP default request header with all requested headers.
-      def generate_request_header()
-        return @credential_handler.credentials[:extra_headers]
+      def generate_request_header
+        @credential_handler.credentials[:extra_headers]
       end
     end
   end

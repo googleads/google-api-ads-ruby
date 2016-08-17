@@ -18,26 +18,24 @@
 #
 # Tests the array replies from services.
 
-require 'test/unit'
+require 'minitest'
 
 require 'ads_common/config'
 
-class TestConfig < Test::Unit::TestCase
+class TestConfig < Minitest::Test
   DEFAULT_CONFIG_HASH = {
-      :service => {:use_ruby_names => false,
-                   :environment => 'sandbox'},
-      :authentication => {:method => 'ClientLogin',
-                          :email => 'root@example.com'}
+    service: { use_ruby_names: false,
+               environment: 'sandbox' },
+    authentication: { method: 'ClientLogin',
+                      email: 'root@example.com' }
   }
 
   DEFAULT_CONFIG_FILENAME = 'test/test_config.yml'
 
   # Test initializer with no arguments.
   def test_initialize_nil
-    assert_nothing_raised do
-      config = AdsCommon::Config.new
-      assert_nil(config.read('service.use_ruby_names'))
-    end
+    config = AdsCommon::Config.new
+    assert_nil(config.read('service.use_ruby_names'))
   end
 
   # Test initializer with hash argument.

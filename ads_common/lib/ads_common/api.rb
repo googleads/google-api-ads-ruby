@@ -29,7 +29,6 @@ require 'ads_common/auth/oauth2_service_account_handler'
 
 module AdsCommon
   class Api
-
     # Methods that return the client library configuration. Needs to be
     # redefined in subclasses.
     attr_reader :config
@@ -54,8 +53,8 @@ module AdsCommon
     end
 
     # Getter for the API service configurations.
-    def api_config()
-      return AdsCommon::ApiConfig
+    def api_config
+      AdsCommon::ApiConfig
     end
 
     # Obtain an API service, given a version and its name.
@@ -69,7 +68,7 @@ module AdsCommon
     #
     def service(name, version = nil)
       name = name.to_sym
-      version = (version.nil?) ? api_config.default_version : version.to_sym
+      version = version.nil? ? api_config.default_version : version.to_sym
       environment = @config.read('service.environment')
 
       # Check if the combination is available.
@@ -77,12 +76,12 @@ module AdsCommon
 
       # Try to re-use the service for this version if it was requested before.
       wrapper = if @wrappers.include?(version) && @wrappers[version][name]
-        @wrappers[version][name]
-      else
-        @wrappers[version] ||= {}
-        @wrappers[version][name] = prepare_wrapper(version, name)
+                  @wrappers[version][name]
+                else
+                  @wrappers[version] ||= {}
+                  @wrappers[version][name] = prepare_wrapper(version, name)
       end
-      return wrapper
+      wrapper
     end
 
     # Authorize with specified authentication method.
@@ -98,13 +97,13 @@ module AdsCommon
     #  - AdsCommon::Errors::AuthError or derived if authetication error has
     #    occured
     #
-    def authorize(parameters = {}, &block)
+    def authorize(parameters = {})
       parameters.each_pair do |key, value|
         @credential_handler.set_credential(key, value)
       end
 
-      auth_handler = get_auth_handler()
-      token = auth_handler.get_token()
+      auth_handler = get_auth_handler
+      token = auth_handler.get_token
 
       # If token is invalid ask for a new one.
       if token.nil?
@@ -112,18 +111,19 @@ module AdsCommon
           credentials = @credential_handler.credentials
           token = auth_handler.get_token(credentials)
         rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-          verification_code = (block_given?) ? yield(e.oauth_url) : nil
+          verification_code = block_given? ? yield(e.oauth_url) : nil
           # Retry with verification code if one provided.
           if verification_code
             @credential_handler.set_credential(
-                :oauth2_verification_code, verification_code)
+              :oauth2_verification_code, verification_code
+            )
             retry
           else
             raise e
           end
         end
       end
-      return token
+      token
     end
 
     # Auxiliary method to get an authentication handler. Creates a new one if
@@ -132,19 +132,20 @@ module AdsCommon
     # Returns:
     # - auth handler
     #
-    def get_auth_handler()
+    def get_auth_handler
       if @auth_handler.nil?
-        @auth_handler = create_auth_handler()
+        @auth_handler = create_auth_handler
         @credential_handler.set_auth_handler(@auth_handler)
       end
-      return @auth_handler
+      @auth_handler
     end
 
     # Updates default configuration file to include OAuth2 token information.
     def save_oauth2_token(token)
       raise AdsCommon::Errors::Error, "Can't save nil token" if token.nil?
       AdsCommon::Utils.save_oauth2_token(
-          File.join(ENV['HOME'], api_config.default_config_filename), token)
+        File.join(ENV['HOME'], api_config.default_config_filename), token
+      )
     end
 
     private
@@ -154,15 +155,15 @@ module AdsCommon
       # Check if the current environment supports the requested version.
       unless api_config.environment_has_version(environment, version)
         raise AdsCommon::Errors::Error,
-            "Environment '%s' does not support version '%s'" %
-            [environment.to_s, version.to_s]
+              "Environment '%s' does not support version '%s'" %
+              [environment.to_s, version.to_s]
       end
 
       # Check if the specified version has the requested service.
       unless api_config.version_has_service(version, service)
         raise AdsCommon::Errors::Error,
-            "Version '%s' does not contain service '%s'" %
-            [version.to_s, service.to_s]
+              "Version '%s' does not contain service '%s'" %
+              [version.to_s, service.to_s]
       end
     end
 
@@ -180,7 +181,7 @@ module AdsCommon
     # Returns:
     # - a SOAP header handler
     #
-    def soap_header_handler(auth_handler, version, header_ns, default_ns)
+    def soap_header_handler(_auth_handler, _version, _header_ns, _default_ns)
       raise NotImplementedError, 'soap_header_handler not overridden.'
     end
 
@@ -189,28 +190,28 @@ module AdsCommon
     # Returns:
     # - auth handler
     #
-    def create_auth_handler()
+    def create_auth_handler
       auth_method = @config.read('authentication.method', :OAUTH2)
-      return case auth_method
-        when :OAUTH
-          raise AdsCommon::Errors::Error,
+      case auth_method
+      when :OAUTH
+        raise AdsCommon::Errors::Error,
               'OAuth authorization method is deprecated, use OAuth2 instead.'
-        when :OAUTH2
-          environment = @config.read('service.environment',
-              api_config.default_environment())
-          AdsCommon::Auth::OAuth2Handler.new(
-              @config,
-              api_config.environment_config(environment, :oauth_scope)
-          )
-        when :OAUTH2_SERVICE_ACCOUNT
-          environment = @config.read('service.environment',
-              api_config.default_environment())
-          AdsCommon::Auth::OAuth2ServiceAccountHandler.new(
-              @config,
-              api_config.environment_config(environment, :oauth_scope)
-          )
-        else
-          raise AdsCommon::Errors::Error,
+      when :OAUTH2
+        environment = @config.read('service.environment',
+                                   api_config.default_environment)
+        AdsCommon::Auth::OAuth2Handler.new(
+          @config,
+          api_config.environment_config(environment, :oauth_scope)
+        )
+      when :OAUTH2_SERVICE_ACCOUNT
+        environment = @config.read('service.environment',
+                                   api_config.default_environment)
+        AdsCommon::Auth::OAuth2ServiceAccountHandler.new(
+          @config,
+          api_config.environment_config(environment, :oauth_scope)
+        )
+      else
+        raise AdsCommon::Errors::Error,
               "Unknown authentication method '%s'" % auth_method
         end
     end
@@ -232,39 +233,41 @@ module AdsCommon
       interface_class_name = api_config.interface_name(version, service)
 
       wrapper = class_for_path(interface_class_name).new(@config, endpoint)
-      auth_handler = get_auth_handler()
+      auth_handler = get_auth_handler
       header_ns =
-          api_config.environment_config(environment, :header_ns) + version.to_s
+        api_config.environment_config(environment, :header_ns) + version.to_s
       soap_handler = soap_header_handler(auth_handler, version, header_ns,
                                          wrapper.namespace)
       wrapper.header_handler = soap_handler
 
-      return wrapper
+      wrapper
     end
 
     # Auxiliary method to create a default Logger.
-    def create_default_logger()
+    def create_default_logger
       logger = Logger.new(STDOUT)
       logger.level = get_log_level_for_string(
-          @config.read('library.log_level', 'INFO'))
-      return logger
+        @config.read('library.log_level', 'INFO')
+      )
+      logger
     end
 
     # Helper method to load the default configuration file or a given config.
     def load_config(provided_config = nil)
-      @config = (provided_config.nil?) ?
+      @config = provided_config.nil? ?
           AdsCommon::Config.new(
-              File.join(ENV['HOME'], api_config.default_config_filename)) :
+            File.join(ENV['HOME'], api_config.default_config_filename)
+          ) :
           AdsCommon::Config.new(provided_config)
-      init_config()
+      init_config
     end
 
     # Initializes config with default values and converts existing if required.
-    def init_config()
+    def init_config
       # Set up logger.
       provided_logger = @config.read('library.logger')
-      self.logger = (provided_logger.nil?) ?
-          create_default_logger() : provided_logger
+      self.logger = provided_logger.nil? ?
+          create_default_logger : provided_logger
 
       # Set up default HTTPI adapter.
       provided_adapter = @config.read('connection.adapter')
@@ -279,7 +282,7 @@ module AdsCommon
     # Converts value of a config key to uppercase symbol.
     def symbolize_config_value(key)
       value_str = @config.read(key).to_s
-      if !value_str.nil? and !value_str.empty?
+      if !value_str.nil? && !value_str.empty?
         value = value_str.upcase.to_sym
         @config.set(key, value)
       end
@@ -287,7 +290,7 @@ module AdsCommon
 
     # Converts log level string (from config) to Logger value.
     def get_log_level_for_string(log_level)
-      return Logger.const_get(log_level)
+      Logger.const_get(log_level)
     end
 
     # Converts complete class path into class object.

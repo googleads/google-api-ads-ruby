@@ -18,7 +18,7 @@
 #
 # Tests validator methods.
 
-require 'test/unit'
+require 'minitest'
 
 require 'ads_common/errors'
 require 'ads_common/parameters_validator'
@@ -30,7 +30,7 @@ module AdsCommon
   end
 end
 
-class TestParametersValidator < Test::Unit::TestCase
+class TestParametersValidator < Minitest::Test
   def setup
     @validator = AdsCommon::ParametersValidator.new(nil)
   end
@@ -47,33 +47,37 @@ class TestParametersValidator < Test::Unit::TestCase
 
     result4 = @validator.deep_copy([])
     assert_equal([], result4)
-    assert_not_same([], result4)
+    refute_same([], result4)
 
     result5 = @validator.deep_copy({})
     assert_equal({}, result5)
-    assert_not_same({}, result5)
+    refute_same({}, result5)
   end
 
   def test_deep_copy_complex
-    data = {:ab => 'ab', :cd => ['cd', 'de', 'ef']}
+    data = { ab: 'ab', cd: %w(cd de ef) }
 
     result1 = @validator.deep_copy(data)
     assert_equal(data, result1)
-    assert_not_same(data, result1)
+    refute_same(data, result1)
 
     result2 = @validator.deep_copy(data)
     assert_equal(result2, result1)
-    assert_not_same(result2, result1)
+    refute_same(result2, result1)
 
     result2[:cd] = nil
-    assert_not_equal(data, result2)
+    refute_equal(data, result2)
     assert_equal(data, result1)
   end
 
   def test_add_attribute
     node = {}
 
-    key, name, value1, value2, value3 = 'key', 'name', 'Lorem', 'ipsum', 'dolor'
+    key = 'key'
+    name = 'name'
+    value1 = 'Lorem'
+    value2 = 'ipsum'
+    value3 = 'dolor'
 
     @validator.add_attribute(node, key, name, value1)
     assert_kind_of(Hash, node)
@@ -96,36 +100,32 @@ class TestParametersValidator < Test::Unit::TestCase
   end
 
   def test_array_from_named_list
-    src = [{:name => 'foo'}, {:name => 'bar', :bar => :baz}, {:name => 'ipsum'}]
+    src = [{ name: 'foo' }, { name: 'bar', bar: :baz }, { name: 'ipsum' }]
     result = @validator.array_from_named_list(src)
-    assert_equal(['foo', 'bar', 'ipsum'], result)
+    assert_equal(%w(foo bar ipsum), result)
   end
 
   def test_check_required_argument_present
-    field1 = {:min_occurs => 1, :max_occurs => 1,
-              :name => 'field1', :type => 'type1'}
+    field1 = { min_occurs: 1, max_occurs: 1,
+               name: 'field1', type: 'type1' }
     assert_raises(AdsCommon::Errors::MissingPropertyError) do
       @validator.check_required_argument_present(nil, field1)
     end
     assert_raises(AdsCommon::Errors::TypeMismatchError) do
       @validator.check_required_argument_present([], field1)
     end
-    assert_nothing_raised do
-      @validator.check_required_argument_present({}, field1)
-      @validator.check_required_argument_present('foobar', field1)
-      @validator.check_required_argument_present(42, field1)
-    end
+    @validator.check_required_argument_present({}, field1)
+    @validator.check_required_argument_present('foobar', field1)
+    @validator.check_required_argument_present(42, field1)
 
-    field2 = {:min_occurs => 0, :max_occurs => :unbounded,
-              :name => 'field2', :type => 'type2'}
+    field2 = { min_occurs: 0, max_occurs: :unbounded,
+               name: 'field2', type: 'type2' }
     assert_raises(AdsCommon::Errors::TypeMismatchError) do
       @validator.check_required_argument_present({}, field2)
     end
-    assert_nothing_raised do
-      @validator.check_required_argument_present(nil, field2)
-      @validator.check_required_argument_present([], field2)
-      @validator.check_required_argument_present([field1, field2], field2)
-    end
+    @validator.check_required_argument_present(nil, field2)
+    @validator.check_required_argument_present([], field2)
+    @validator.check_required_argument_present([field1, field2], field2)
   end
 
   def test_arrayize_empty
@@ -144,7 +144,7 @@ class TestParametersValidator < Test::Unit::TestCase
     assert_equal(1, result1.size, 'array changed size')
     assert_equal(nil, result1[0], 'array changed data')
 
-    result2 = @validator.arrayize(['a', 'b'])
+    result2 = @validator.arrayize(%w(a b))
     assert_instance_of(Array, result2, 'returned object is not an Array')
     assert_equal(2, result2.size, 'array changed size')
     assert_equal('a', result2[0], 'array changed data')

@@ -19,7 +19,6 @@
 
 module AdsCommon
   class ResultsExtractor
-
     # Instance initializer.
     #
     # Args:
@@ -37,7 +36,7 @@ module AdsCommon
       result = response.to_hash
       result = result[action] if result.include?(action)
       result = normalize_output(result, method)
-      return result[:rval] || result
+      result[:rval] || result
     end
 
     # Extracts misc data from response header.
@@ -46,7 +45,7 @@ module AdsCommon
       headers = response.header[:response_header].dup
       process_attributes(headers, false)
       headers = normalize_fields(headers, header_type[:fields])
-      return headers
+      headers
     end
 
     # Extracts misc data from SOAP fault.
@@ -54,7 +53,7 @@ module AdsCommon
       exception_type = get_full_type_signature(exception_name)
       process_attributes(soap_fault, false)
       soap_fault = normalize_fields(soap_fault, exception_type[:fields])
-      return soap_fault
+      soap_fault
     end
 
     private
@@ -70,14 +69,13 @@ module AdsCommon
     def normalize_fields(data, fields)
       fields.each do |field|
         field_name = field[:name]
-        if data.include?(field_name)
-          field_data = data[field_name]
-          field_data = normalize_output_field(field_data, field)
-          field_data = check_array_collapse(field_data, field)
-          data[field_name] = field_data unless field_data.nil?
-        end
+        next unless data.include?(field_name)
+        field_data = data[field_name]
+        field_data = normalize_output_field(field_data, field)
+        field_data = check_array_collapse(field_data, field)
+        data[field_name] = field_data unless field_data.nil?
       end
-      return data
+      data
     end
 
     # Normalizes one field of a given data recursively.
@@ -87,13 +85,13 @@ module AdsCommon
     #  - field_def: field type definition for the data
     #
     def normalize_output_field(field_data, field_def)
-      return case field_data
-        when Array
-          normalize_array_field(field_data, field_def)
-        when Hash
-          normalize_hash_field(field_data, field_def)
-        else
-          normalize_item(field_data, field_def)
+      case field_data
+      when Array
+        normalize_array_field(field_data, field_def)
+      when Hash
+        normalize_hash_field(field_data, field_def)
+      else
+        normalize_item(field_data, field_def)
       end
     end
 
@@ -102,14 +100,14 @@ module AdsCommon
       result = data
       # Convert a specific structure to a handy hash if detected.
       if check_key_value_struct(result)
-        result = convert_key_value_to_hash(result).inject({}) do |result, (k,v)|
+        result = convert_key_value_to_hash(result).inject({}) do |result, (k, v)|
           result[k] = normalize_output_field(v, field_def)
           result
         end
       else
-        result = data.map {|item| normalize_output_field(item, field_def)}
+        result = data.map { |item| normalize_output_field(item, field_def) }
       end
-      return result
+      result
     end
 
     # Normalizes every item of a Hash.
@@ -122,7 +120,7 @@ module AdsCommon
       xsi_type_override = determine_xsi_type_override(field, field_def)
       unless xsi_type_override.nil?
         field_def = get_full_type_signature(xsi_type_override)
-        return (field_def.nil?) ? field :
+        return field_def.nil? ? field :
             normalize_fields(field, field_def[:fields])
       end
 
@@ -130,21 +128,21 @@ module AdsCommon
 
       # Now checking for choice options from wsdl.
       choice_type_override = determine_choice_type_override(field, field_def)
-      unless choice_type_override.nil?
+      if choice_type_override.nil?
+        # Otherwise using the best we have.
+        unless field_def.nil?
+          result = normalize_fields(field, field_def[:fields])
+        end
+      else
         # For overrides we need to process sub-field and than return it
         # in the original structure.
         field_key = field.keys.first
         field_data = field[field_key]
         field_def = get_full_type_signature(choice_type_override)
-        if !field_def.nil? and field_data.kind_of?(Hash)
+        if !field_def.nil? && field_data.is_a?(Hash)
           field_data = normalize_fields(field_data, field_def[:fields])
         end
-        result = {field_key => field_data}
-      else
-        # Otherwise using the best we have.
-        unless field_def.nil?
-          result = normalize_fields(field, field_def[:fields])
-        end
+        result = { field_key => field_data }
       end
 
       # Convert a single key-value hash to a proper hash if detected.
@@ -152,61 +150,59 @@ module AdsCommon
         result = convert_key_value_to_hash(result)
       end
 
-      return result
+      result
     end
 
     # Checks if all elements of the array or hash passed are hashes and have
     # ':key' and ':value' keys only.
     def check_key_value_struct(data)
-      if data.kind_of?(Hash)
-        return check_key_value_hash(data)
-      end
-      if data.kind_of?(Array) && !data.empty?
+      return check_key_value_hash(data) if data.is_a?(Hash)
+      if data.is_a?(Array) && !data.empty?
         data.each do |item|
-          return false if !check_key_value_hash(item)
+          return false unless check_key_value_hash(item)
         end
         return true
       end
-      return false
+      false
     end
 
     # Checks if the argument is hash and has exactly ':key' and ':value' keys.
     def check_key_value_hash(item)
-      return (item.kind_of?(Hash) && item.include?(:key) &&
+      (item.is_a?(Hash) && item.include?(:key) &&
           item.include?(:value) && (item.keys.size == 2))
     end
 
     # Converts an array containing hashes or a hash with ':key' and ':value'
     # keys only into a key -> value hash.
     def convert_key_value_to_hash(data)
-      return case data
-        when Hash then {data[:key] => data[:value]}
-        when Array then
-          data.inject({}) do |result, item|
-            result[item[:key]] = item[:value]
-            result
-          end
+      case data
+      when Hash then { data[:key] => data[:value] }
+      when Array then
+        data.inject({}) do |result, item|
+          result[item[:key]] = item[:value]
+          result
+        end
       end
     end
 
     # Determines an xsi:type override for for the field. Returns nil if no
     # override found.
-    def determine_xsi_type_override(field_data, field_def)
+    def determine_xsi_type_override(field_data, _field_def)
       result = nil
-      if field_data.kind_of?(Hash) and field_data.include?(:xsi_type)
+      if field_data.is_a?(Hash) && field_data.include?(:xsi_type)
         result = field_data[:xsi_type]
       end
-      return result
+      result
     end
 
     # Determines a choice type override for for the field. Returns nil if no
     # override found.
     def determine_choice_type_override(field_data, field_def)
       result = nil
-      if field_data.kind_of?(Hash) and field_def.include?(:choices)
+      if field_data.is_a?(Hash) && field_def.include?(:choices)
         result = determine_choice(field_data, field_def[:choices])
       end
-      return result
+      result
     end
 
     # Finds the choice option matching data provided.
@@ -217,23 +213,23 @@ module AdsCommon
         choice = find_named_entry(field_choices, key_name)
         result = choice[:type] unless choice.nil?
       end
-      return result
+      result
     end
 
     # Finds an item in an Array based on its ':name' field.
     def find_named_entry(data_array, name)
-      index = data_array.index {|item| name.eql?(item[:name])}
-      return index.nil? ? nil : data_array[index]
+      index = data_array.index { |item| name.eql?(item[:name]) }
+      index.nil? ? nil : data_array[index]
     end
 
     # Converts one leaf item to a built-in type.
     def normalize_item(item, field_def)
-      return case field_def[:type]
-        when 'long', 'int' then Integer(item)
-        when 'double', 'float' then Float(item)
-        when 'boolean' then item.kind_of?(String) ?
+      case field_def[:type]
+      when 'long', 'int' then Integer(item)
+      when 'double', 'float' then Float(item)
+      when 'boolean' then item.is_a?(String) ?
             item.casecmp('true') == 0 : item
-        else item
+      else item
       end
     end
 
@@ -242,18 +238,18 @@ module AdsCommon
     def check_array_collapse(data, field_def)
       result = data
       if !field_def[:min_occurs].nil? &&
-          (field_def[:max_occurs] == :unbounded ||
-              (!field_def[:max_occurs].nil? && field_def[:max_occurs] > 1)) &&
-                  !(field_def[:type] =~ /MapEntry$/)
+         (field_def[:max_occurs] == :unbounded ||
+             (!field_def[:max_occurs].nil? && field_def[:max_occurs] > 1)) &&
+         !(field_def[:type] =~ /MapEntry$/)
         result = arrayize(result)
       end
-      return result
+      result
     end
 
     # Makes sure object is an array.
     def arrayize(object)
       return [] if object.nil?
-      return object.is_a?(Array) ? object : [object]
+      object.is_a?(Array) ? object : [object]
     end
 
     # Returns all inherited fields of superclasses for given type.
@@ -265,17 +261,17 @@ module AdsCommon
       end
       data_type[:fields].each do |field|
         # If the parent type includes a field with the same name, overwrite it.
-        result.reject! {|parent_field| parent_field[:name].eql?(field[:name])}
+        result.reject! { |parent_field| parent_field[:name].eql?(field[:name]) }
         result << field
       end
-      return result
+      result
     end
 
     # Returns type signature with all inherited fields.
     def get_full_type_signature(type_name)
-      result = (type_name.nil?) ? nil : @registry.get_type_signature(type_name)
-      result[:fields] = implode_parent(result) if result and result[:base]
-      return result
+      result = type_name.nil? ? nil : @registry.get_type_signature(type_name)
+      result[:fields] = implode_parent(result) if result && result[:base]
+      result
     end
 
     # Handles attributes received from Savon.
@@ -284,7 +280,7 @@ module AdsCommon
         xsi_type = data.delete(:"@xsi:type")
         data[:xsi_type] = xsi_type if xsi_type
       end
-      data.reject! {|key, value| key.to_s.start_with?('@')}
+      data.reject! { |key, _value| key.to_s.start_with?('@') }
     end
   end
 end

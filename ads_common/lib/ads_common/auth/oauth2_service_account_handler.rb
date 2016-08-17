@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Encoding: utf-8
 #
 # Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
@@ -26,13 +27,11 @@ require 'ads_common/errors'
 
 module AdsCommon
   module Auth
-
     # Credentials class to handle OAuth2 authentication.
     class OAuth2ServiceAccountHandler < AdsCommon::Auth::BaseHandler
-
       OAUTH2_CONFIG = {
-        :token_credential_uri => 'https://accounts.google.com/o/oauth2/token',
-        :audience => 'https://accounts.google.com/o/oauth2/token'
+        token_credential_uri: 'https://accounts.google.com/o/oauth2/token',
+        audience: 'https://accounts.google.com/o/oauth2/token'
       }
 
       # Initializes the OAuthHandler2 with all the necessary details.
@@ -51,15 +50,15 @@ module AdsCommon
       end
 
       # Invalidates the stored token if the required credential has changed.
-      def property_changed(prop, value)
+      def property_changed(prop, _value)
         oauth2_keys =
-            [:oauth2_issuer, :oauth2_secret, :oauth2_keyfile, :oauth2_key]
+          [:oauth2_issuer, :oauth2_secret, :oauth2_keyfile, :oauth2_key]
         @client = nil if oauth2_keys.include?(prop)
       end
 
       def handle_error(error)
         # TODO: Add support.
-        get_logger().error(error)
+        get_logger.error(error)
         raise error
       end
 
@@ -74,23 +73,24 @@ module AdsCommon
       #
       def auth_string(credentials)
         token = get_token(credentials)
-        return ::Signet::OAuth2.generate_bearer_authorization_header(
-                    token[:access_token])
+        ::Signet::OAuth2.generate_bearer_authorization_header(
+          token[:access_token]
+        )
       end
 
       # Overrides base get_token method to account for the token expiration.
       def get_token(credentials = nil)
         token = super(credentials)
         token = refresh_token! if !@client.nil? && @client.expired?
-        return token
+        token
       end
 
       # Refreshes access token from refresh token.
-      def refresh_token!()
+      def refresh_token!
         return nil if @token.nil?
         @client.refresh!
         @token = token_from_client(@client)
-        return @token
+        @token
       end
 
       private
@@ -116,12 +116,12 @@ module AdsCommon
 
         if credentials[:oauth2_key].nil? && credentials[:oauth2_keyfile].nil?
           raise AdsCommon::Errors::AuthError,
-              'Either key or key file must be provided for OAuth2 service account.'
+                'Either key or key file must be provided for OAuth2 service account.'
         end
 
         if credentials[:oauth2_key] && credentials[:oauth2_keyfile]
           raise AdsCommon::Errors::AuthError,
-              'Both service account key and key file provided, only one can be used.'
+                'Both service account key and key file provided, only one can be used.'
         end
 
         p12 = true
@@ -130,30 +130,30 @@ module AdsCommon
           if File.file?(file_name)
             unless file_name.end_with?('.p12') || file_name.end_with?('.json')
               raise AdsCommon::Errors::AuthError,
-                  "Key file '%s' must be either a .p12 or .json file." %
-                  file_name
+                    "Key file '%s' must be either a .p12 or .json file." %
+                    file_name
             end
             p12 = false if file_name.end_with?('.json')
           else
             raise AdsCommon::Errors::AuthError,
-                "Key file '%s' does not exist or not a file." % file_name
+                  "Key file '%s' does not exist or not a file." % file_name
           end
         end
 
         if credentials[:oauth2_issuer].nil? && p12
           raise AdsCommon::Errors::AuthError,
-              'Issuer is not included in the credentials.'
+                'Issuer is not included in the credentials.'
         end
 
         if credentials[:oauth2_secret].nil? && p12
           raise AdsCommon::Errors::AuthError,
-              'Key secret is not included in the credentials.'
+                'Key secret is not included in the credentials.'
         end
 
         if credentials[:oauth2_key] &&
-            !credentials[:oauth2_key].kind_of?(OpenSSL::PKey::RSA)
+           !credentials[:oauth2_key].is_a?(OpenSSL::PKey::RSA)
           raise AdsCommon::Errors::AuthError,
-              'OAuth2 service account key provided must be of type OpenSSL::PKey::RSA.'
+                'OAuth2 service account key provided must be of type OpenSSL::PKey::RSA.'
         end
       end
 
@@ -175,20 +175,18 @@ module AdsCommon
       def create_token(credentials)
         validate_credentials(credentials)
         @client ||= create_client(credentials)
-        @client.fetch_access_token!()
-        return token_from_client(@client)
+        @client.fetch_access_token!
+        token_from_client(@client)
       end
 
       # Creates a Signet client based on credentials.
       def create_client(credentials)
         credentials = load_oauth2_service_account_credentials(credentials)
-        oauth_options = OAUTH2_CONFIG.merge({
-            :issuer => credentials[:oauth2_issuer],
-            :signing_key => credentials[:oauth2_key],
-            :person => credentials[:oauth2_prn],
-            :scope => @scopes.join(' '),
-        })
-        return Signet::OAuth2::Client.new(oauth_options)
+        oauth_options = OAUTH2_CONFIG.merge(issuer: credentials[:oauth2_issuer],
+                                            signing_key: credentials[:oauth2_key],
+                                            person: credentials[:oauth2_prn],
+                                            scope: @scopes.join(' '))
+        Signet::OAuth2::Client.new(oauth_options)
       end
 
       # Loads service account key if configured with a filename.
@@ -201,24 +199,24 @@ module AdsCommon
           key_secret = credentials[:oauth2_secret]
           key = OpenSSL::PKCS12.new(key_file, key_secret).key
         else
-          key_file_hash = JSON.parse(key_file, :symbolize_names => true)
+          key_file_hash = JSON.parse(key_file, symbolize_names: true)
           key = OpenSSL::PKey::RSA.new(key_file_hash[:private_key])
           issuer = key_file_hash[:client_email]
         end
-        result = credentials.merge({:oauth2_key => key})
+        result = credentials.merge(oauth2_key: key)
         result[:oauth2_issuer] = issuer unless issuer.nil?
         result.delete(:oauth2_keyfile)
-        return result
+        result
       end
 
       # Create a token Hash from a client.
       def token_from_client(client)
         return nil if client.access_token.nil?
-        return {
-          :access_token => client.access_token,
-          :issued_at => client.issued_at,
-          :expires_in => client.expires_in,
-          :id_token => client.id_token
+        {
+          access_token: client.access_token,
+          issued_at: client.issued_at,
+          expires_in: client.expires_in,
+          id_token: client.id_token
         }
       end
     end

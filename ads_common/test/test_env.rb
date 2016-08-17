@@ -19,20 +19,19 @@
 # Tests environment is correct.
 
 require 'openssl'
-require 'test/unit'
+require 'minitest'
 
-class TestEnv < Test::Unit::TestCase
-
+class TestEnv < Minitest::Test
   # Output ruby interpreter version to the tests log.
   def test_ruby_version
     puts "\nRunning tests with %s-%s-%s.\n" %
-        [RUBY_ENGINE, RUBY_VERSION, RUBY_PATCHLEVEL]
+         [RUBY_ENGINE, RUBY_VERSION, RUBY_PATCHLEVEL]
   end
 
   # Output SSL version to the tests log. There is a known issue with this
   # required property not defined in some JRuby implementations.
   def test_openssl_version
     puts "\nUsing OpenSSL %s with %d methods.\n" %
-        [OpenSSL::OPENSSL_VERSION, OpenSSL::SSL::SSLContext::METHODS.count]
+         [OpenSSL::OPENSSL_VERSION, OpenSSL::SSL::SSLContext::METHODS.count]
   end
 end

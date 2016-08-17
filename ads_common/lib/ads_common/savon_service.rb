@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # Encoding: utf-8
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
@@ -25,20 +26,21 @@ require 'ads_common/results_extractor'
 
 module AdsCommon
   class SavonService
-
     attr_accessor :header_handler
     attr_reader :config
     attr_reader :version
     attr_reader :namespace
 
-    FALLBACK_API_ERROR_EXCEPTION = "ApiException"
+    FALLBACK_API_ERROR_EXCEPTION = 'ApiException'
 
     # Creates a new service.
     def initialize(config, endpoint, namespace, version)
-      if self.class() == AdsCommon::SavonService
+      if self.class == AdsCommon::SavonService
         raise NoMethodError, 'Tried to instantiate an abstract class'
       end
-      @config, @version, @namespace = config, version, namespace
+      @config = config
+      @version = version
+      @namespace = namespace
       @client = create_savon_client(endpoint, namespace)
       @xml_only = false
     end
@@ -46,17 +48,17 @@ module AdsCommon
     private
 
     # Returns currently configured Logger.
-    def get_logger()
-      return @config.read('library.logger')
+    def get_logger
+      @config.read('library.logger')
     end
 
     # Returns ServiceRegistry for the current service. Has to be overridden.
-    def get_service_registry()
+    def get_service_registry
       raise NoMethodError, 'This method needs to be overridden'
     end
 
     # Returns Module for the current service. Has to be overridden.
-    def get_module()
+    def get_module
       raise NoMethodError, 'This method needs to be overridden'
     end
 
@@ -68,52 +70,54 @@ module AdsCommon
         AdsCommon::Http.configure_httpi(@config, httpi)
       end
       client.config.raise_errors = false
-      client.config.logger.subject = get_logger()
-      return client
+      client.config.logger.subject = get_logger
+      client
     end
 
     # Generates and returns SOAP XML for the specified action and args.
     def get_soap_xml(action_name, args)
-      registry = get_service_registry()
+      registry = get_service_registry
       validator = ParametersValidator.new(registry)
       args = validator.validate_args(action_name, args)
-      return handle_soap_request(
-          action_name.to_sym, true, args, validator.extra_namespaces)
+      handle_soap_request(
+        action_name.to_sym, true, args, validator.extra_namespaces
+      )
     end
 
     # Executes SOAP action specified as a string with given arguments.
     def execute_action(action_name, args, &block)
-      registry = get_service_registry()
+      registry = get_service_registry
       validator = ParametersValidator.new(registry)
       args = validator.validate_args(action_name, args)
       response = handle_soap_request(
-          action_name.to_sym, false, args, validator.extra_namespaces)
+        action_name.to_sym, false, args, validator.extra_namespaces
+      )
       log_headers(response.http.headers)
       handle_errors(response)
       extractor = ResultsExtractor.new(registry)
       result = extractor.extract_result(response, action_name, &block)
       run_user_block(extractor, response, result, &block) if block_given?
-      return result
+      result
     end
 
     # Logs response headers.
     # TODO: this needs to go on http or httpi level.
     def log_headers(headers)
-      get_logger().debug(headers.map {|k, v| [k, v].join(': ')}.join(', '))
+      get_logger.debug(headers.map { |k, v| [k, v].join(': ') }.join(', '))
     end
 
     # Executes the SOAP request with original SOAP name.
     def handle_soap_request(action, xml_only, args, extra_namespaces)
       original_action_name =
-          get_service_registry.get_method_signature(action)[:original_name]
+        get_service_registry.get_method_signature(action)[:original_name]
       original_action_name = action if original_action_name.nil?
-      response = @client.request(original_action_name) do |soap, wsdl, http|
+      response = @client.request(original_action_name) do |soap, _wsdl, http|
         soap.body = args
         header_handler.prepare_request(http, soap)
         soap.namespaces.merge!(extra_namespaces) unless extra_namespaces.nil?
         return soap.to_xml if xml_only
       end
-      return response
+      response
     end
 
     # Checks for errors in response and raises appropriate exception.
@@ -124,33 +128,33 @@ module AdsCommon
       end
       if response.http_error?
         raise AdsCommon::Errors::HttpError,
-            "HTTP Error occurred: %s" % response.http_error
+              'HTTP Error occurred: %s' % response.http_error
       end
     end
 
     # Finds an exception object for a given response.
     def exception_for_soap_fault(response)
-      begin
-        fault = response[:fault]
-        if fault[:detail] and fault[:detail][:api_exception_fault]
-          exception_fault = fault[:detail][:api_exception_fault]
-          exception_name = (
-              exception_fault[:application_exception_type] ||
-              FALLBACK_API_ERROR_EXCEPTION)
-          exception_class = get_module().const_get(exception_name)
-          return exception_class.new(exception_fault)
-        elsif fault[:faultstring]
-          fault_message = fault[:faultstring]
-          return AdsCommon::Errors::ApiException.new(
-              "Unknown exception with error: %s" % fault_message)
-        else
-          raise ArgumentError.new(fault.to_s)
-        end
-      rescue Exception => e
+      fault = response[:fault]
+      if fault[:detail] && fault[:detail][:api_exception_fault]
+        exception_fault = fault[:detail][:api_exception_fault]
+        exception_name = (
+            exception_fault[:application_exception_type] ||
+            FALLBACK_API_ERROR_EXCEPTION)
+        exception_class = get_module.const_get(exception_name)
+        return exception_class.new(exception_fault)
+      elsif fault[:faultstring]
+        fault_message = fault[:faultstring]
         return AdsCommon::Errors::ApiException.new(
-            "Failed to resolve exception (%s), SOAP fault: %s" %
-            [e.message, response.soap_fault])
+          'Unknown exception with error: %s' % fault_message
+        )
+      else
+        raise ArgumentError, fault.to_s
       end
+    rescue Exception => e
+      return AdsCommon::Errors::ApiException.new(
+        'Failed to resolve exception (%s), SOAP fault: %s' %
+        [e.message, response.soap_fault]
+      )
     end
 
     # Yields to user-specified block with additional information such as
@@ -158,13 +162,13 @@ module AdsCommon
     def run_user_block(extractor, response, body, &block)
       header = extractor.extract_header_data(response)
       case block.arity
-        when 1 then yield(header)
-        when 2 then yield(header, body)
-        else
-          raise AdsCommon::Errors::ApiException,
-              "Wrong number of block parameters: %d" % block.arity
+      when 1 then yield(header)
+      when 2 then yield(header, body)
+      else
+        raise AdsCommon::Errors::ApiException,
+              'Wrong number of block parameters: %d' % block.arity
       end
-      return nil
+      nil
     end
   end
 end

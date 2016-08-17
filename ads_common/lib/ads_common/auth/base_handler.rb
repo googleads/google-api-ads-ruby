@@ -22,7 +22,6 @@
 module AdsCommon
   module Auth
     class BaseHandler
-
       # Default initializer.
       def initialize(config)
         @config = config
@@ -45,19 +44,19 @@ module AdsCommon
       # Returns authorization token of some kind. Attempts to create a new one
       # if the token has not yet been created and credentials present.
       def get_token(credentials = nil)
-        @token = create_token(credentials) if @token.nil? and credentials
-        return @token
+        @token = create_token(credentials) if @token.nil? && credentials
+        @token
       end
 
       # Returns authorization string. Needs to be overridden.
-      def auth_string(credentials)
+      def auth_string(_credentials)
         raise NotImplementedError, 'auth_string not overridden.'
       end
 
       private
 
       # Creates authorization token. Needs to be overridden.
-      def create_token(credentials)
+      def create_token(_credentials)
         raise NotImplementedError, 'create_token not overridden.'
       end
     end
