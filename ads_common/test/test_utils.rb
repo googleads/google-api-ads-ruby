@@ -19,12 +19,13 @@
 # Tests the utils.
 
 require 'tempfile'
-require 'test/unit'
+require 'minitest/autorun'
+
 require 'yaml'
 
 require 'ads_common/utils'
 
-class TestUtils < Test::Unit::TestCase
+class TestUtils < Minitest::Test
   def test_dont_monkeypatch_string_class
     refute('str'.respond_to?(:lower_camelcase))
   end
@@ -49,7 +50,7 @@ class TestUtils < Test::Unit::TestCase
   def test_lower_camelcase_non_destructive
     str = 'str_snake'
     result = AdsCommon::Utils.lower_camelcase(str)
-    assert_not_same(str, result)
+    refute_same(str, result)
     assert_equal('str_snake', str)
   end
 
@@ -60,7 +61,7 @@ class TestUtils < Test::Unit::TestCase
     assert_equal(43, result['b5'])
     assert_equal(:abc, result['xyz'])
     assert_equal(3, result.size)
-    assert_not_same(result, data)
+    refute_same(result, data)
   end
 
   def test_hash_keys_to_sym
@@ -71,7 +72,7 @@ class TestUtils < Test::Unit::TestCase
     assert_equal(:abc, result[:xyz])
     assert_equal(:xyz, result[:f5])
     assert_equal(4, result.size)
-    assert_not_same(result, data)
+    refute_same(result, data)
   end
 
   def test_save_oauth2_token

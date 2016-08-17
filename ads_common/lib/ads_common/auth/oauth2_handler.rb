@@ -90,7 +90,7 @@ module AdsCommon
 
       # Refreshes access token from refresh token.
       def refresh_token!
-        return nil if @token.nil? || @token[:refresh_token].nil?
+        return nil if @token.nil? or @token[:refresh_token].nil?
         begin
           if @client.issued_at.is_a?(String)
             @client.issued_at = Time.parse(@client.issued_at)

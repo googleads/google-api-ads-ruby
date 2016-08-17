@@ -18,7 +18,7 @@
 #
 # Tests validator methods.
 
-require 'test/unit'
+require 'minitest'
 
 require 'ads_common/errors'
 require 'ads_common/parameters_validator'
@@ -30,7 +30,7 @@ module AdsCommon
   end
 end
 
-class TestParametersValidator < Test::Unit::TestCase
+class TestParametersValidator < Minitest::Test
   def setup
     @validator = AdsCommon::ParametersValidator.new(nil)
   end
@@ -47,11 +47,11 @@ class TestParametersValidator < Test::Unit::TestCase
 
     result4 = @validator.deep_copy([])
     assert_equal([], result4)
-    assert_not_same([], result4)
+    refute_same([], result4)
 
     result5 = @validator.deep_copy({})
     assert_equal({}, result5)
-    assert_not_same({}, result5)
+    refute_same({}, result5)
   end
 
   def test_deep_copy_complex
@@ -59,14 +59,14 @@ class TestParametersValidator < Test::Unit::TestCase
 
     result1 = @validator.deep_copy(data)
     assert_equal(data, result1)
-    assert_not_same(data, result1)
+    refute_same(data, result1)
 
     result2 = @validator.deep_copy(data)
     assert_equal(result2, result1)
-    assert_not_same(result2, result1)
+    refute_same(result2, result1)
 
     result2[:cd] = nil
-    assert_not_equal(data, result2)
+    refute_equal(data, result2)
     assert_equal(data, result1)
   end
 
@@ -114,22 +114,18 @@ class TestParametersValidator < Test::Unit::TestCase
     assert_raises(AdsCommon::Errors::TypeMismatchError) do
       @validator.check_required_argument_present([], field1)
     end
-    assert_nothing_raised do
-      @validator.check_required_argument_present({}, field1)
-      @validator.check_required_argument_present('foobar', field1)
-      @validator.check_required_argument_present(42, field1)
-    end
+    @validator.check_required_argument_present({}, field1)
+    @validator.check_required_argument_present('foobar', field1)
+    @validator.check_required_argument_present(42, field1)
 
     field2 = { min_occurs: 0, max_occurs: :unbounded,
                name: 'field2', type: 'type2' }
     assert_raises(AdsCommon::Errors::TypeMismatchError) do
       @validator.check_required_argument_present({}, field2)
     end
-    assert_nothing_raised do
-      @validator.check_required_argument_present(nil, field2)
-      @validator.check_required_argument_present([], field2)
-      @validator.check_required_argument_present([field1, field2], field2)
-    end
+    @validator.check_required_argument_present(nil, field2)
+    @validator.check_required_argument_present([], field2)
+    @validator.check_required_argument_present([field1, field2], field2)
   end
 
   def test_arrayize_empty

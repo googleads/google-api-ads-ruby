@@ -18,7 +18,7 @@
 #
 # Tests the array replies from services.
 
-require 'test/unit'
+require 'minitest'
 
 # Work around jruby <= 1.7.8 issue with OpenSSL definition.
 require 'openssl'
@@ -38,7 +38,7 @@ class StubService < AdsCommon::SavonService
   end
 end
 
-class TestSavonService < Test::Unit::TestCase
+class TestSavonService < Minitest::Test
 
   TEST_NAMESPACE = 'namespace'
   TEST_ENDPOINT = 'endpoint'
@@ -54,9 +54,7 @@ class TestSavonService < Test::Unit::TestCase
       AdsCommon::SavonService.new(nil, TEST_NAMESPACE, TEST_ENDPOINT,
                                   TEST_VERSION)
     end
-    assert_nothing_raised do
-      StubService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
-    end
+    StubService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
   end
 
   def test_get_service_registry_abstract

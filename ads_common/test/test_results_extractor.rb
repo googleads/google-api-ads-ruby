@@ -18,7 +18,7 @@
 #
 # Tests the array replies from services.
 
-require 'test/unit'
+require 'minitest'
 
 require 'ads_common/results_extractor'
 
@@ -46,7 +46,7 @@ class StubResponse
   attr_accessor :header
 end
 
-class TestResultsExtractor < Test::Unit::TestCase
+class TestResultsExtractor < Minitest::Test
   # Initialize tests.
   def setup
     registry = StubRegistry.new
@@ -200,7 +200,7 @@ class TestResultsExtractor < Test::Unit::TestCase
     response.header = { response_header: headers }
     result = @extractor.extract_header_data(response)
     assert_equal(headers, result)
-    assert_not_same(headers, result)
+    refute_same(headers, result)
   end
 
   def test_extract_headers_passthrough
@@ -209,7 +209,7 @@ class TestResultsExtractor < Test::Unit::TestCase
     response.header = { response_header: headers }
     result = @extractor.extract_header_data(response)
     assert_equal(headers, result)
-    assert_not_same(headers, result)
+    refute_same(headers, result)
   end
 
   def test_extract_headers_attrs_removed

@@ -32,11 +32,13 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.required_rubygems_version = '>= 1.3.6'
   s.require_path = 'lib'
-  s.files = Dir.glob('{lib,test}/**/*') + %w(COPYING README.md CHANGELOG)
+  s.files = Dir.glob('{lib,test}/**/*') + %w(COPYING README.md ChangeLog)
   s.test_files = Dir.glob('test/test_*.rb')
   s.add_runtime_dependency('google-ads-savon', '~> 1.0.1')
   s.add_runtime_dependency('httpi', '~> 2.3')
   s.add_runtime_dependency('httpclient', '~> 2.7')
   s.add_runtime_dependency('signet', '~> 0.7.0')
-  s.add_development_dependency('rake', '>= 10.4.2')
+  s.add_development_dependency('rake', '~> 10.4')
+  s.add_development_dependency('minitest', '~> 5.0')
+  s.add_development_dependency('webmock', '~> 1.17')
 end

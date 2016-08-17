@@ -22,7 +22,7 @@ require 'time'
 
 require 'ads_common/auth/oauth2_handler'
 require 'ads_common/config'
-require 'webmock/test_unit'
+require 'webmock/minitest'
 
 module AdsCommon
   module Auth
@@ -44,7 +44,7 @@ module AdsCommon
   end
 end
 
-class TestOAuth < Test::Unit::TestCase
+class TestOAuth < Minitest::Test
   def setup
     stub_request(:post, 'https://accounts.google.com/o/oauth2/auth').to_return(
       status: 200,
@@ -59,14 +59,12 @@ class TestOAuth < Test::Unit::TestCase
 
     # Modify @client in the handler to get around a full setup.
     handler.setup_client
-    assert_not_nil(handler.client)
+    refute_nil(handler.client)
     handler.client.issued_at = Time.now.to_s
-    assert_equal(String, handler.client.issued_at.class)
+    assert_kind_of(Time, handler.client.issued_at)
 
     # Make sure that we are still able to refresh the token.
-    assert_nothing_raised do
-      token = handler.refresh_token!
-    end
+    handler.refresh_token!
   end
 
   def test_additional_scopes

@@ -19,13 +19,12 @@
 # Tests credential handler methods.
 
 require 'logger'
-require 'minitest/mock'
-require 'test/unit'
+require 'minitest'
 
 require 'ads_common/config'
 require 'ads_common/credential_handler'
 
-class TestCredentialHandler < Test::Unit::TestCase
+class TestCredentialHandler < Minitest::Test
   def setup
     logger = Logger.new(STDERR)
     @default_credentials = { client_customer_id: '1234567890', foo: 'bar' }
@@ -37,14 +36,14 @@ class TestCredentialHandler < Test::Unit::TestCase
   def test_credentials_simple
     credentials = @handler.credentials()
     assert_equal(@default_credentials, credentials)
-    assert_not_same(@default_credentials, credentials)
+    refute_same(@default_credentials, credentials)
   end
 
   def test_credentials_override
     @override = { client_customer_id: 42 }
     credentials = @handler.credentials(@override)
-    assert_not_equal(@default_credentials, credentials)
-    assert_not_same(@default_credentials, credentials)
+    refute_equal(@default_credentials, credentials)
+    refute_same(@default_credentials, credentials)
     assert_equal(42, credentials[:client_customer_id])
     assert_equal('bar', credentials[:foo])
   end
@@ -69,7 +68,7 @@ class TestCredentialHandler < Test::Unit::TestCase
     assert_match(/#{Regexp.escape(test_str)}/, result1)
     result2 = @handler.generate_user_agent
     assert_kind_of(String, result2)
-    assert_no_match(/#{Regexp.escape(test_str)}/, result2)
+    refute_match(/#{Regexp.escape(test_str)}/, result2)
   end
 
   def test_generate_user_agent_include_version
@@ -82,11 +81,11 @@ class TestCredentialHandler < Test::Unit::TestCase
     assert_match(/#{Regexp.escape(test_str)}/, result1)
     result2 = @handler.generate_user_agent
     assert_kind_of(String, result2)
-    assert_no_match(/#{Regexp.escape(test_str)}/, result2)
+    refute_match(/#{Regexp.escape(test_str)}/, result2)
   end
 
   def test_auth_handler_callback_once
-    mock = MiniTest::Mock.new
+    mock = Minitest::Mock.new
     mock.expect(:property_changed, nil, [:foo, 'bar'])
     @handler.set_auth_handler(mock)
     @handler.set_credential(:foo, 'bar')
@@ -98,21 +97,21 @@ class TestCredentialHandler < Test::Unit::TestCase
 
     credentials[:foo] = 'bar'
     credentials[:baz] = 42
-    mock1 = MiniTest::Mock.new
+    mock1 = Minitest::Mock.new
     mock1.expect(:property_changed, nil, [:baz, 42])
     @handler.set_auth_handler(mock1)
     @handler.credentials = credentials
     assert(mock1.verify)
 
     credentials.delete(:baz)
-    mock2 = MiniTest::Mock.new
+    mock2 = Minitest::Mock.new
     mock2.expect(:property_changed, nil, [:baz, nil])
     @handler.set_auth_handler(mock2)
     @handler.credentials = credentials
     assert(mock2.verify)
 
     credentials[:foo] = nil
-    mock3 = MiniTest::Mock.new
+    mock3 = Minitest::Mock.new
     mock3.expect(:property_changed, nil, [:foo, nil])
     mock3.expect(:property_changed, nil, [:baz, nil])
     @handler.set_auth_handler(mock3)
