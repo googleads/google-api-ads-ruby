@@ -10,8 +10,7 @@ class ReportController < ApplicationController
     :report_name => 'AdWords on Rails report',
     :report_type => nil,
     :download_format => nil,
-    :date_range_type => 'LAST_7_DAYS',
-    :include_zero_impressions => false
+    :date_range_type => 'LAST_7_DAYS'
   }
 
   def index
@@ -29,6 +28,7 @@ class ReportController < ApplicationController
     api = get_adwords_api()
     report_utils = api.report_utils()
     definition = Report.create_definition(REPORT_DEFINITION_TEMPLATE, params)
+    api.include_zero_impressions = true if 'true'.eql?(params[:zeroes])
     begin
       # Here we only expect reports that fit into memory. For large reports
       # you may want to save them to files and serve separately.

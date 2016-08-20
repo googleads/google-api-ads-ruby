@@ -22,13 +22,33 @@ require 'test/unit'
 
 require 'adwords_api'
 
-# Overriding default access levels to public for tests.
 module AdwordsApi
+  # Overriding default access levels to public for tests.
   class ReportUtils
     public :check_for_errors
     public :check_for_xml_error
     public :add_report_definition_hash_order
     public :check_report_definition_hash
+    public :get_report_request_headers
+  end
+
+  # Removing OAuth step so we can test header generation.
+  class CredentialHandler
+    def credentials(override = nil)
+      {
+        :client_customer_id => '123-456-7890',
+        :developer_token => 'token'
+      }
+    end
+  end
+end
+
+module AdsCommon
+  module Auth
+    class OAuth2Handler
+      def auth_string(credentials)
+      end
+    end
   end
 end
 
@@ -54,7 +74,7 @@ GZIPPED_REPORT = "\x1F\x8B\b\x00\x00\x00\x00\x00\x00\x00Sr.-.\xC9\xCFUptq\x0F\xF
 
 class TestReportUtils < Test::Unit::TestCase
 
-  API_VERSION = :v201506
+  API_VERSION = :v201607
 
   # Initialize tests.
   def setup()
@@ -117,7 +137,6 @@ class TestReportUtils < Test::Unit::TestCase
   # Tests generated hash order for root (complete set).
   def test_add_report_definition_hash_order_root1()
     node = {
-      :include_zero_impressions => false,
       :download_format => 'CSV',
       :report_type => 'CRITERIA_PERFORMANCE_REPORT',
       :selector => {},
@@ -125,7 +144,7 @@ class TestReportUtils < Test::Unit::TestCase
       :date_range_type => 'LAST_7_DAYS'
     }
     expected = [:selector, :report_name, :report_type, :date_range_type,
-                :download_format, :include_zero_impressions]
+                :download_format]
     @report_utils.add_report_definition_hash_order(node)
     assert_not_nil(node[:order!])
     assert_equal(expected, node[:order!])
@@ -157,12 +176,11 @@ class TestReportUtils < Test::Unit::TestCase
         :predicates => {:operator => 'IN', :field => 'S', :values => ['A']},
         :fields => ['CampaignId']
       },
-      :include_zero_impressions => false,
       :download_format => 'CSV',
       :date_range_type => 'LAST_7_DAYS'
     }
     expected1 = [:selector, :report_name, :report_type, :date_range_type,
-                 :download_format, :include_zero_impressions]
+                 :download_format]
     expected2 = [:fields, :predicates, :date_range]
     expected3 = [:min, :max]
     expected4 = [:field, :operator, :values]
@@ -234,5 +252,44 @@ class TestReportUtils < Test::Unit::TestCase
       assert_equal(xml_reply[:retry_after_seconds], e.retry_after_seconds)
       assert_not_nil(e.message)
     end
-  end
+
+    def test_skip_report()
+      headers = @report_utils.get_report_request_headers(nil, nil)
+      assert_nil(headers['skipReportHeader'])
+      @api.skip_report_header = true
+      headers = @report_utils.get_report_request_headers(nil, nil)
+      assert_equal('true', headers['skipReportHeader'])
+    end
+
+    def test_skip_report_summary()
+      headers = @report_utils.get_report_request_headers(nil, nil)
+      assert_nil(headers['skipReportSummary'])
+      @api.skip_report_summary = true
+      headers = @report_utils.get_report_request_headers(nil, nil)
+      assert_equal('true', headers['skipReportSummary'])
+    end
+
+    def test_skip_column_header()
+      headers = @report_utils.get_report_request_headers(nil, nil)
+      assert_nil(headers['skipColumnHeader'])
+      @api.skip_column_header = true
+      headers = @report_utils.get_report_request_headers(nil, nil)
+      assert_equal('true', headers['skipColumnHeader'])
+    end
+
+    def test_include_zero_impressions()
+      headers = @report_utils.get_report_request_headers(nil, nil)
+      assert_nil(headers['includeZeroImpressions'])
+      @api.include_zero_impressions = true
+      headers = @report_utils.get_report_request_headers(nil, nil)
+      assert_equal('true', headers['includeZeroImpressions'])
+    end
+
+    def test_use_raw_enum_values()
+      headers = @report_utils.get_report_request_headers(nil, nil)
+      assert_nil(headers['useRawEnumValues'])
+      @api.use_raw_enum_values = true
+      headers = @report_utils.get_report_request_headers(nil, nil)
+      assert_equal('true', headers['useRawEnumValues'])
+    end
 end

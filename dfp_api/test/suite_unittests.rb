@@ -21,6 +21,10 @@
 $:.unshift File.expand_path('../../lib/', __FILE__)
 $:.unshift File.expand_path('../../', __FILE__)
 
+# Work around jruby <= 1.7.8 issue with OpenSSL definition.
+require 'openssl'
+OpenSSL::SSL::SSLContext::METHODS = []
+
 # DFP API units tests.
 dfp_mask = File.join(File.dirname(__FILE__), 'dfp_api', 'test_*.rb')
 Dir.glob(dfp_mask).each { |file| require file }

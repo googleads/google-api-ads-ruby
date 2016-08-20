@@ -1,7 +1,7 @@
-# Google AdWords and DoubleClick Ad Exchange Buyer Client Library
+# Google AdWords Client Library
 
 Welcome to the next generation Google-developed Ruby client library for the
-AdWords and DoubleClick Ad Exchange Buyer API!
+AdWords API!
 
 It contains full support for all API services with full stubs, and a simplified
 programming interface that lets you handle everything in native Ruby
@@ -12,17 +12,12 @@ collections.
 
 ## 1 - Installation
 
-`google-adwords-api` and `google-adx-buyer-api` are ruby gems. See
-[http://docs.rubygems.org/read/book/1]().
+`google-adwords-api` is a ruby gem. See
+[http://guides.rubygems.org/rubygems-basics/]().
 
-Install them using the gem install command:
+Install it using the gem install command:
 
     $ gem install --remote google-adwords-api
-    $ gem install --remote google-adx-buyer-api
-
-Please note the `google-adx-buyer-api` gem contains only DoubleClick Ad
-Exchange Buyer client library examples. The gem also depends on the
-AdWords library, which will be installed automatically.
 
 The following gem libraries are required:
 
@@ -74,7 +69,7 @@ The basics of making a request are:
 
  3. Specify which service you're looking to use, and which version:
 
-        campaign_srv = adwords.service(:CampaignService, :v201509)
+        campaign_srv = adwords.service(:CampaignService, :v201607)
 
  4. You should now be able to just use the API methods in the returned object:
 
@@ -91,21 +86,6 @@ For example:
     config[:connection] = {
       :proxy => 'http://user:password@proxy_hostname:8080'
     }
-
-*Note*: If you are using Ruby 1.8 you may need to include RubyGems to be able
-to require other gems code. There are several ways to do it, the easiest one is
-to pass '-rubygems' parameter to the ruby interpreter:
-
-    $ ruby -rubygems my_program_that_uses_gems
-
-you can also set this up in the environment:
-
-    $ export RUBYOPT="rubygems"
-
-or add it to the bash configuration file:
-
-    $ echo 'export RUBYOPT="rubygems"' >> ~/.bashrc
-
 
 ### 2.1 - Ruby names for a Ruby library
 
@@ -211,7 +191,7 @@ To target a specific version:
 
 For example:
 
-    $ rake generate[v201509]
+    $ rake generate[v201607]
 
 To target a specific service in a specific version:
 
@@ -219,12 +199,11 @@ To target a specific service in a specific version:
 
 For example:
 
-    $ rake generate[v201509,CampaignService]
+    $ rake generate[v201607,CampaignService]
 
 To build the gems:
 
     $ gem build google-adwords-api.gemspec
-    $ gem build google-adx-buyer-api.gemspec
 
 To run unit tests on the library:
 
@@ -247,7 +226,7 @@ announcements and other news.
 
 ## Licence
 
-Copyright 2010-2015, Google Inc. All Rights Reserved.
+Copyright 2010-2016, Google Inc. All Rights Reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

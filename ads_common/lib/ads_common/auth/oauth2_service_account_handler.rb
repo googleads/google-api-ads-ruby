@@ -15,10 +15,11 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This module manages OAuth2.0 service account authentication.
+# This module manages OAuth2 service account authentication.
 
 require 'faraday'
 require 'signet/oauth_2/client'
+require 'json'
 
 require 'ads_common/auth/base_handler'
 require 'ads_common/errors'
@@ -26,7 +27,7 @@ require 'ads_common/errors'
 module AdsCommon
   module Auth
 
-    # Credentials class to handle OAuth2.0 authentication.
+    # Credentials class to handle OAuth2 authentication.
     class OAuth2ServiceAccountHandler < AdsCommon::Auth::BaseHandler
 
       OAUTH2_CONFIG = {
@@ -62,7 +63,7 @@ module AdsCommon
         raise error
       end
 
-      # Generates auth string for OAuth2.0 service account method of
+      # Generates auth string for OAuth2 service account method of
       # authentication.
       #
       # Args:
@@ -113,16 +114,6 @@ module AdsCommon
           raise AdsCommon::Errors::AuthError, 'No credentials supplied.'
         end
 
-        if credentials[:oauth2_issuer].nil?
-          raise AdsCommon::Errors::AuthError,
-              'Issuer is not included in the credentials.'
-        end
-
-        if credentials[:oauth2_secret].nil?
-          raise AdsCommon::Errors::AuthError,
-              'Key secret is not included in the credentials.'
-        end
-
         if credentials[:oauth2_key].nil? && credentials[:oauth2_keyfile].nil?
           raise AdsCommon::Errors::AuthError,
               'Either key or key file must be provided for OAuth2 service account.'
@@ -133,22 +124,41 @@ module AdsCommon
               'Both service account key and key file provided, only one can be used.'
         end
 
+        p12 = true
+        if credentials[:oauth2_keyfile]
+          file_name = credentials[:oauth2_keyfile]
+          if File.file?(file_name)
+            unless file_name.end_with?('.p12') || file_name.end_with?('.json')
+              raise AdsCommon::Errors::AuthError,
+                  "Key file '%s' must be either a .p12 or .json file." %
+                  file_name
+            end
+            p12 = false if file_name.end_with?('.json')
+          else
+            raise AdsCommon::Errors::AuthError,
+                "Key file '%s' does not exist or not a file." % file_name
+          end
+        end
+
+        if credentials[:oauth2_issuer].nil? && p12
+          raise AdsCommon::Errors::AuthError,
+              'Issuer is not included in the credentials.'
+        end
+
+        if credentials[:oauth2_secret].nil? && p12
+          raise AdsCommon::Errors::AuthError,
+              'Key secret is not included in the credentials.'
+        end
+
         if credentials[:oauth2_key] &&
             !credentials[:oauth2_key].kind_of?(OpenSSL::PKey::RSA)
           raise AdsCommon::Errors::AuthError,
               'OAuth2 service account key provided must be of type OpenSSL::PKey::RSA.'
         end
-
-        if credentials[:oauth2_keyfile] &&
-            !File.file?(credentials[:oauth2_keyfile])
-          raise AdsCommon::Errors::AuthError,
-              "Key file '%s' does not exist or not a file." %
-              credentials[:oauth2_keyfile]
-        end
       end
 
       # Auxiliary method to generate an authentication token for logging via
-      # the OAuth2.0 API.
+      # the OAuth2 API.
       #
       # Args:
       # - credentials: a hash with the credentials for the account being
@@ -185,9 +195,18 @@ module AdsCommon
       def load_oauth2_service_account_credentials(credentials)
         return credentials unless credentials.include?(:oauth2_keyfile)
         key_file = File.read(credentials[:oauth2_keyfile])
-        key_secret = credentials[:oauth2_secret]
-        key = OpenSSL::PKCS12.new(key_file, key_secret).key
+        key = nil
+        issuer = nil
+        if credentials[:oauth2_keyfile].end_with?('.p12')
+          key_secret = credentials[:oauth2_secret]
+          key = OpenSSL::PKCS12.new(key_file, key_secret).key
+        else
+          key_file_hash = JSON.parse(key_file, :symbolize_names => true)
+          key = OpenSSL::PKey::RSA.new(key_file_hash[:private_key])
+          issuer = key_file_hash[:client_email]
+        end
         result = credentials.merge({:oauth2_key => key})
+        result[:oauth2_issuer] = issuer unless issuer.nil?
         result.delete(:oauth2_keyfile)
         return result
       end

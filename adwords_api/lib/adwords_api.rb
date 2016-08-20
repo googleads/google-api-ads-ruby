@@ -24,6 +24,7 @@ require 'adwords_api/credential_handler'
 require 'adwords_api/errors'
 require 'adwords_api/report_utils'
 require 'adwords_api/batch_job_utils'
+require 'adwords_api/utils_reporter'
 
 # Main namespace for all the client library's modules and classes.
 module AdwordsApi
@@ -34,10 +35,13 @@ module AdwordsApi
   #
   class Api < AdsCommon::Api
 
+    attr_reader :utils_reporter
+
     # Constructor for API.
     def initialize(provided_config = nil)
       super(provided_config)
       @credential_handler = AdwordsApi::CredentialHandler.new(@config)
+      @utils_reporter = AdwordsApi::UtilsReporter.new(@credential_handler)
     end
 
     # Getter for the API service configurations
@@ -132,7 +136,16 @@ module AdwordsApi
     # - value: whether to include zero impressions (boolean)
     #
     def include_zero_impressions=(value)
-      @config.set('library.include_zero_impressions_header', value)
+      @config.set('library.include_zero_impressions', value)
+    end
+
+    # Helper method to use raw enum values when downloading reports.
+    #
+    # Args:
+    # - value: whether to use raw enum values (boolean)
+    #
+    def use_raw_enum_values=(value)
+      @config.set('library.use_raw_enum_values', value)
     end
 
     # Helper method to provide a simple way of performing requests with support

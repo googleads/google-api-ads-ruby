@@ -144,8 +144,7 @@ def retrieve_negative_keywords(report_utils)
     :report_name => 'Negative campaign keywords',
     :report_type => 'CAMPAIGN_NEGATIVE_KEYWORDS_PERFORMANCE_REPORT',
     :download_format => 'CSV',
-    :date_range_type => 'TODAY',
-    :include_zero_impressions => true
+    :date_range_type => 'TODAY'
   }
 
   campaigns = {}
@@ -202,8 +201,7 @@ def retrieve_positive_keyword_report(report_utils, allowed_values)
     :report_name => 'Ad group keywords',
     :report_type => 'KEYWORDS_PERFORMANCE_REPORT',
     :download_format => 'CSV',
-    :date_range_type => 'TODAY',
-    :include_zero_impressions => true
+    :date_range_type => 'TODAY'
   }
 
   report = report_utils.download_report(report_definition)
@@ -287,7 +285,7 @@ end
 
 
 if __FILE__ == $0
-  API_VERSION = :v201509
+  API_VERSION = :v201605
 
   begin
     options = {}

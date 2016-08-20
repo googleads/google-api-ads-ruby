@@ -125,7 +125,6 @@ class Report
     result[:selector][:fields] = string_to_array(data['fields'])
     result[:report_type] = data[:type]
     result[:download_format] = data[:format]
-    result[:include_zero_impressions] = true if 'true'.eql?(data[:zeroes])
     return result
   end
 

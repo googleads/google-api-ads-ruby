@@ -83,9 +83,6 @@ module AdwordsApi
     # - The URL that should actually be used to upload operations.
     #
     def initialize_url(batch_job_url)
-      # Initialization is only necessary for v201601 or higher.
-      return batch_job_url if [:v201506, :v201509].include?(@version)
-
       headers = DEFAULT_HEADERS
       headers['Content-Length'] = 0
       headers['x-goog-resumable'] = 'start'
@@ -114,6 +111,7 @@ module AdwordsApi
     def put_incremental_operations(
         operations, batch_job_url, total_content_length = 0,
         is_last_request = false)
+      @api.utils_reporter.batch_job_utils_used()
       headers = DEFAULT_HEADERS
       soap_operations = generate_soap_operations(operations)
       request_body = soap_operations.join
@@ -127,15 +125,16 @@ module AdwordsApi
       end
 
       request_body = add_padding(request_body)
-      content_length = request_body.size
+      content_length = request_body.bytesize
 
-      headers['Content-Length'] = content_length.to_s
+      headers['Content-Length'] = content_length
 
       lower_bound = total_content_length
       upper_bound = total_content_length + content_length - 1
       total_bytes = is_last_request ? upper_bound + 1 : '*'
-      content_range = "bytes %d-%d/%s" %
-          [lower_bound, upper_bound, total_bytes]
+      content_range =
+          "bytes %d-%d/%s" % [lower_bound, upper_bound, total_bytes]
+
       headers['Content-Range'] = content_range
 
       log_request(batch_job_url, headers, request_body)
@@ -163,6 +162,7 @@ module AdwordsApi
     # - the results of the batch job, as a ruby hash, or nil if none yet exist
     #
     def get_job_results(batch_job_url)
+      @api.utils_reporter.batch_job_utils_used()
       xml_response = AdsCommon::Http.get_response(batch_job_url, @api.config)
       begin
         return sanitize_result(
@@ -295,7 +295,7 @@ module AdwordsApi
     end
 
     def add_padding(xml)
-      remainder = xml.size % REQUIRED_CONTENT_LENGTH_INCREMENT
+      remainder = xml.bytesize % REQUIRED_CONTENT_LENGTH_INCREMENT
       return xml if remainder == 0
       bytes_to_add = REQUIRED_CONTENT_LENGTH_INCREMENT - remainder
       padded_xml = xml + (' ' * bytes_to_add)
