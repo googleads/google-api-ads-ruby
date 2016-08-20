@@ -1,3 +1,31 @@
+0.20.1:
+  - Support and examples for v201607.
+  - Fixed issue #91 related to BJS utilities handling special characters.
+
+0.20.0:
+  - Started enforcing minumum Ruby runtime version via gemspec.
+  - Removed deprecated API version v201509.
+
+0.19.1:
+  - Support and examples for v201605.
+  - Require google-ads-common 0.12.3 or later from now on to support JSON
+    keyfiles for service accounts.
+
+0.19.0:
+  - Require google-ads-common 0.12.0 or later from now on. This also means
+    that Ruby 2.0 or later is required. Ruby 2.1 or later is recommended.
+  - Removed deprecated API version v201506.
+
+0.18.3:
+  - Support and examples for v201603.
+  - The include_zero_impressions field is no longer settable on a report
+    definition hash directly. Updated utilities and examples to set
+    corresponding HTTP level header instead.
+
+0.18.2:
+  - Require google-ads-common 0.11.3 or later from now on.
+  - Added support for custom user agent strings to include utility usage.
+
 0.18.1:
   - Support and examples for v201601.
   - Updated batch_job_utils to handle API changes in v201601.
@@ -136,7 +164,7 @@
 
 0.6.2:
   - Require google-ads-common 0.7.3 or later from now on.
-  - Support for OAuth2.0 authentication method.
+  - Support for OAuth2 authentication method.
 
 0.6.1:
   - Require google-ads-common 0.7.1 or later from now on.

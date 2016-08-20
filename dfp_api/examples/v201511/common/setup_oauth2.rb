@@ -16,7 +16,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example shows how to use OAuth2.0 authorization method. It is designed to
+# This example shows how to use OAuth2 authorization method. It is designed to
 # be run from console and requires user input.
 
 require 'dfp_api'

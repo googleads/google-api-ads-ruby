@@ -19,6 +19,8 @@
 
 require 'logger'
 
+require 'ads_common/env_check'
+
 require 'ads_common/config'
 require 'ads_common/errors'
 require 'ads_common/utils'
@@ -42,6 +44,7 @@ module AdsCommon
     def initialize(provided_config = nil)
       @wrappers = {}
       load_config(provided_config)
+      check_version(@logger)
     end
 
     # Sets the logger to use.

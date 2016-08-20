@@ -103,7 +103,7 @@ or add it to the bash configuration file:
     $ echo 'export RUBYOPT="rubygems"' >> ~/.bashrc
 
 
-## Using OAuth2.0
+## Using OAuth2
 
 In order to use OAuth you just need to:
 

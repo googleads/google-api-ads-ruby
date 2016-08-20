@@ -5,7 +5,7 @@
   # Authentication method, for web applications OAuth is recommended.
   :method: OAuth2
 
-  # Auth parameters for OAuth2.0 method.
+  # Auth parameters for OAuth2 method.
   # Set the OAuth2 client id and secret. Register your application here to
   # obtain these values:
   #   https://console.developers.google.com/

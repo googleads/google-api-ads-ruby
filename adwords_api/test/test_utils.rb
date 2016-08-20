@@ -30,25 +30,24 @@ class ExampleRunner < Test::Unit::TestCase
 
   include RR::Adapters::TestUnit
 
-  def initialize(example_file)
-    @version, template_file = extract_strings(example_file)
+  def engage(example_file)
+    version, template_file = extract_strings(example_file)
+    self.instance_eval('API_VERSION = :%s' % version)
 
     begin
       eval_ruby_file(template_file)
     rescue Errno::ENOENT => e
-      @template_error = "No template for example: '%s'" % example_file
+      omit("No template for example: '%s'" % example_file)
     end
 
     @all_methods = self.methods
     eval_ruby_file(example_file)
-  end
 
-  def engage(test)
-    test.skip(@template_error) if @template_error
     setup_mocks()
-    self.instance_eval('API_VERSION = :%s' % @version)
-    self.instance_eval('PAGE_SIZE = %d' % PAGE_SIZE)
-    self.send(get_example_method())
+    method_name = get_example_method()
+    required_arguments = self.method(method_name).parameters.size
+    args = [0] * required_arguments
+    self.send(method_name, *args)
     run_asserts()
     reset_state()
   end
