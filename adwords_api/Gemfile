@@ -1,5 +1,9 @@
 source 'https://rubygems.org'
 
+gem 'rack', '~> 1.4.0', github: 'Invoca/rack', branch: 'invoca-1.4.5'
+gem 'rake'
+
 gemspec
 
-ruby '2.1.2'
+ruby '2.1.9'
+

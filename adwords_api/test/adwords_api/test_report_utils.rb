@@ -292,4 +292,5 @@ class TestReportUtils < Test::Unit::TestCase
       headers = @report_utils.get_report_request_headers(nil, nil)
       assert_equal('true', headers['useRawEnumValues'])
     end
+  end
 end
