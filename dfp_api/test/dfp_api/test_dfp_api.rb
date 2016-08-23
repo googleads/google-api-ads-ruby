@@ -50,7 +50,7 @@ class TestDfpApi < Test::Unit::TestCase
           :oauth2_client_id => 'myClientId',
           :oauth2_client_secret => 'This is MY secret!',
           :oauth2_token => 'my access token',
-          :application_name => 'ruby_test_suit',
+          :application_name => 'ruby_test_suite',
           :network_code => 1234567
       }
   }
@@ -105,7 +105,7 @@ class TestDfpApi < Test::Unit::TestCase
   # Utility method to check the actual data.
   def check_config_data(config)
     assert_equal(:OAUTH2, config.read('authentication.method'))
-    assert_equal('ruby_test_suit',
+    assert_equal('ruby_test_suite',
         config.read('authentication.application_name'))
     assert_equal('myClientId', config.read('authentication.oauth2_client_id'))
     assert_equal('This is MY secret!', config.read(

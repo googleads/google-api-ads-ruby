@@ -34,7 +34,7 @@
   #:oauth2_prn: INSERT_OAUTH2_PRN_HERE
 
   # Other parameters.
-  :application_name: dfp_ruby_examples
+  :application_name: INSERT_APPLICATION_NAME_HERE
 
   # Required for all calls other than GetAllNetworks and MakeTestNetwork.
   :network_code: INSERT_NETWORK_CODE_HERE

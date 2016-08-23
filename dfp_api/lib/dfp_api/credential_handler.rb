@@ -21,6 +21,10 @@ require 'ads_common/credential_handler'
 require 'dfp_api/api_config'
 
 module DfpApi
+
+  LEGACY_DEFAULT_APPLICATION_NAME = 'dfp_ruby_examples'
+  DEFAULT_APPLICATION_NAME = 'INSERT_APPLICATION_NAME_HERE'
+
   class CredentialHandler < AdsCommon::CredentialHandler
     # Create the list of credentials to be used by the auth handler for header
     # generation.
@@ -45,10 +49,13 @@ module DfpApi
 
     # Validates that the right credentials are being used for the chosen
     # environment.
-    # TODO(dklimkin): implement NetworkCode check.
     def validate_headers_for_server(credentials)
-      if credentials[:application_name].nil?
-        raise AdsCommon::Errors::AuthError, 'Application name is not specified'
+      application_name = credentials[:application_name]
+      if (application_name.nil? or application_name.empty? or
+          application_name.include?(DEFAULT_APPLICATION_NAME) or
+          application_name.include?(LEGACY_DEFAULT_APPLICATION_NAME))
+        raise AdsCommon::Errors::AuthError, (
+            'Application name must be specified and cannot be the default')
       end
       return nil
     end

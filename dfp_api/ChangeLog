@@ -1,3 +1,9 @@
+0.18.0:
+  - Start enforcing actual application name.
+  - Added support for v201608.
+  - Removed support for v201505.
+  - Removed examples for v201508 and v201511.
+
 0.17.0:
   - Started enforcing minumum Ruby runtime version via gemspec.
   - Cleanup DFP examples.
