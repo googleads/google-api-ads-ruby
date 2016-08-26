@@ -1,3 +1,7 @@
+0.21.0:
+  - Removed deprecated API version v201601.
+  - Disallowed user agents with non-ASCII characters.
+
 0.20.1:
   - Support and examples for v201607.
   - Fixed issue #91 related to BJS utilities handling special characters.

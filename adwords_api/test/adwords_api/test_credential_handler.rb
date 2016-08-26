@@ -16,7 +16,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Tests credential handler.
+# Tests adwords credential handler.
 
 require 'logger'
 require 'test/unit'

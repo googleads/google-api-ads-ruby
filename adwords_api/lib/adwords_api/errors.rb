@@ -93,7 +93,18 @@ module AdwordsApi
       end
     end
 
+    # Error for use an unsupported operation in a batch job.
     class InvalidBatchJobOperationError < AdsCommon::Errors::ApiException
+    end
+
+    # Error for using an invalid user agent string.
+    class InvalidUserAgentError < AdsCommon::Errors::Error
+      attr_reader :user_agent
+
+      def initialize(message, user_agent)
+        super(message)
+        @user_agent = user_agent
+      end
     end
   end
 end

@@ -54,6 +54,10 @@ module AdwordsApi
     # Generates string to use as user agent in headers.
     def generate_user_agent(extra_ids = [])
       agent_app = @config.read('authentication.user_agent')
+      if !agent_app.nil? && !agent_app.ascii_only?
+        raise AdwordsApi::Errors::InvalidUserAgentError.new(
+            'User agent contains non-ASCII characters.', agent_app)
+      end
       extra_ids << ['AwApi-Ruby/%s' % AdwordsApi::ApiConfig::CLIENT_LIB_VERSION]
       super(extra_ids, agent_app)
     end

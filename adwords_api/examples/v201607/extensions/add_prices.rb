@@ -64,48 +64,30 @@ def add_prices(campaign_id)
     },
     # To create a price extension, at least three table rows are needed.
     :table_rows => [
-      {
-        :header => 'Scrubs',
-        :description => 'Body Scrub, Salt Scrub',
-        :final_urls => {
-          :urls => ['http://www.example.com/scrubs']
-        },
-        :price => {
-          :money => {
-            :micro_amount => 60 * MICROS_PER_DOLLAR
-          },
-          :currency_code => 'USD'
-        },
-        :price_unit => 'PER_HOUR'
-      },
-      {
-        :header => 'Hair Cuts',
-        :description => 'Once a month',
-        :final_urls => {
-          :urls => ['http://www.example.com/haircuts']
-        },
-        :price => {
-          :money => {
-            :micro_amount => 75 * MICROS_PER_DOLLAR
-          },
-          :currency_code => 'USD'
-        },
-        :price_unit => 'PER_MONTH'
-      },
-      {
-        :header => 'Skin Care Package',
-        :description => 'Four times a month',
-        :final_urls => {
-          :urls => ['http://www.example.com/skincarepackage']
-        },
-        :price => {
-          :money => {
-            :micro_amount => 250 * MICROS_PER_DOLLAR
-          },
-          :currency_code => 'USD'
-        },
-        :price_unit => 'PER_MONTH'
-      }
+      create_price_table_row(
+          'Scrubs',
+          'Body Scrub, Salt Scrub',
+          'http://www.example.com/scrubs',
+          60000000,
+          'USD',
+          'PER_HOUR'
+      ),
+      create_price_table_row(
+          'Hair Cuts',
+          'Once a month',
+          'http://www.example.com/haircuts',
+          75000000,
+          'USD',
+          'PER_MONTH'
+      ),
+      create_price_table_row(
+          'Skin Care Package',
+          'Four times a month',
+          'http://www.example.com/skincarepackage',
+          250000000,
+          'USD',
+          'PER_MONTH'
+      )
     ]
   }
 
@@ -128,10 +110,26 @@ def add_prices(campaign_id)
       new_extension_setting[:extension_type]
 end
 
+def create_price_table_row(
+    header, description, final_url, price_in_micros, currency_code, price_unit)
+  return {
+    :header => header,
+    :description => description,
+    :final_urls => {
+      :urls => [final_url]
+    },
+    :price => {
+      :money => {
+        :micro_amount => price_in_micros
+      },
+      :currency_code => currency_code
+    },
+    :price_unit => price_unit
+  }
+end
+
 if __FILE__ == $0
   API_VERSION = :v201607
-
-  MICROS_PER_DOLLAR = 1000000
 
   begin
     # Campaign ID to add site link to.
