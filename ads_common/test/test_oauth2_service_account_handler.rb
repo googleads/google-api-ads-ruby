@@ -34,13 +34,13 @@ end
 class TestOAuthServiceAccount < Test::Unit::TestCase
   def test_file_extension_check()
     assert_nothing_raised do
-      validate_credentials(["test", ".json"])
+      validate_credentials(['test', '.json'])
     end
     assert_nothing_raised do
-      validate_credentials(["test", ".p12"])
+      validate_credentials(['test', '.p12'])
     end
-    assert_raise do
-      validate_credentials(["test", ".other"])
+    assert_raises(AdsCommon::Errors::AuthError) do
+      validate_credentials(['test', '.other'])
     end
   end
 

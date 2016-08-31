@@ -89,7 +89,7 @@ class TestCredentialHandler < Test::Unit::TestCase
   end
 
   def test_auth_handler_callback_once()
-    mock = MiniTest::Mock.new()
+    mock = Minitest::Mock.new()
     mock.expect(:property_changed,  nil, [:foo, 'bar'])
     @handler.set_auth_handler(mock)
     @handler.set_credential(:foo, 'bar')
@@ -101,21 +101,21 @@ class TestCredentialHandler < Test::Unit::TestCase
 
     credentials[:foo] = 'bar'
     credentials[:baz] = 42
-    mock1 = MiniTest::Mock.new()
+    mock1 = Minitest::Mock.new()
     mock1.expect(:property_changed, nil, [:baz, 42])
     @handler.set_auth_handler(mock1)
     @handler.credentials = credentials
     assert(mock1.verify)
 
     credentials.delete(:baz)
-    mock2 = MiniTest::Mock.new()
+    mock2 = Minitest::Mock.new()
     mock2.expect(:property_changed, nil, [:baz, nil])
     @handler.set_auth_handler(mock2)
     @handler.credentials = credentials
     assert(mock2.verify)
 
     credentials[:foo] = nil
-    mock3 = MiniTest::Mock.new()
+    mock3 = Minitest::Mock.new()
     mock3.expect(:property_changed, nil, [:foo, nil])
     mock3.expect(:property_changed, nil, [:baz, nil])
     @handler.set_auth_handler(mock3)

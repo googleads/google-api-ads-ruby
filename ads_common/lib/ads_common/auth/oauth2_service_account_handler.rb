@@ -115,13 +115,13 @@ module AdsCommon
         end
 
         if credentials[:oauth2_key].nil? && credentials[:oauth2_keyfile].nil?
-          raise AdsCommon::Errors::AuthError,
-              'Either key or key file must be provided for OAuth2 service account.'
+          raise AdsCommon::Errors::AuthError, 'Either key or key file must ' +
+              'be provided for OAuth2 service account.'
         end
 
         if credentials[:oauth2_key] && credentials[:oauth2_keyfile]
-          raise AdsCommon::Errors::AuthError,
-              'Both service account key and key file provided, only one can be used.'
+          raise AdsCommon::Errors::AuthError, 'Both service account key and ' +
+              'key file provided, only one can be used.'
         end
 
         p12 = true
@@ -152,8 +152,8 @@ module AdsCommon
 
         if credentials[:oauth2_key] &&
             !credentials[:oauth2_key].kind_of?(OpenSSL::PKey::RSA)
-          raise AdsCommon::Errors::AuthError,
-              'OAuth2 service account key provided must be of type OpenSSL::PKey::RSA.'
+          raise AdsCommon::Errors::AuthError, 'OAuth2 service account key ' +
+              'provided must be of type OpenSSL::PKey::RSA.'
         end
       end
 

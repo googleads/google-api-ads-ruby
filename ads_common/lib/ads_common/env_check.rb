@@ -19,18 +19,11 @@
 
 require 'ads_common/errors'
 
-MIN_RUBY_VERSION = Gem::Version.new('2.0')
 MIN_RUBY_RECOMMENDED_VERSION = Gem::Version.new('2.1')
-
-if Gem::Version.new(RUBY_VERSION.dup()) < MIN_RUBY_VERSION
-  raise AdsCommon::Errors::VersionError,
-      'Unsupported Ruby version %s. Upgrade to version %s or later' %
-      [RUBY_VERSION, MIN_RUBY_RECOMMENDED_VERSION]
-end
 
 # Checks current ruby version to make sure it's supported.
 def check_version(logger)
-  if Gem::Version.new(RUBY_VERSION) < MIN_RUBY_RECOMMENDED_VERSION
+  if Gem::Version.new(RUBY_VERSION.dup()) < MIN_RUBY_RECOMMENDED_VERSION
     logger.warn(
         ('You are using a deprecated version of Ruby (%s). ' +
         'Consider upgrading to a fully supported version %s or later') %

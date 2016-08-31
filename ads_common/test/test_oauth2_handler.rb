@@ -65,7 +65,7 @@ class TestOAuth < Test::Unit::TestCase
     handler.setup_client()
     assert_not_nil(handler.client)
     handler.client.issued_at = Time.now.to_s
-    assert_equal(String, handler.client.issued_at.class)
+    assert_equal(Time, handler.client.issued_at.class)
 
     # Make sure that we are still able to refresh the token.
     assert_nothing_raised do
