@@ -37,6 +37,7 @@ def add_product_scope(campaign_id)
     # This set of dimensions is for demonstration purposes only. It is
     # extremely unlikely that you want to include so many dimensions in your
     # product scope.
+    :xsi_type => 'ProductScope',
     :dimensions => [
       {
         :xsi_type => 'ProductBrand',
@@ -79,7 +80,7 @@ def add_product_scope(campaign_id)
 
   campaign_criterion = {
     :campaign_id => campaign_id,
-    :product_scope => product_scope
+    :criterion => product_scope
   }
 
   campaign_criterion_operation = {
