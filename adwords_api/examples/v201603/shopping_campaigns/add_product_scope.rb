@@ -45,7 +45,7 @@ def add_product_scope(campaign_id)
       },
       {
         :xsi_type => 'ProductCanonicalCondition',
-        :value => 'NEW'
+        :condition => 'NEW'
       },
       {
         :xsi_type => 'ProductCustomAttribute',
