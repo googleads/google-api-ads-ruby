@@ -189,12 +189,15 @@ module AdwordsApi
       'AdGroupBidModifierOperation' => :AdGroupBidModifierService,
       'AdGroupCriterionOperation' => :AdGroupCriterionService,
       'AdGroupCriterionLabelOperation' => :AdGroupCriterionService,
+      'AdGroupExtensionSettingOperation' => :AdGroupExtensionSettingService,
       'AdGroupOperation' => :AdGroupService,
       'AdGroupLabelOperation' => :AdGroupService,
       'BudgetOperation' => :BudgetService,
       'CampaignCriterionOperation' => :CampaignCriterionService,
+      'CampaignExtensionSettingOperation' => :CampaignExtensionSettingService,
       'CampaignOperation' => :CampaignService,
       'CampaignLabelOperation' => :CampaignService,
+      'CustomerExtensionSettingOperation' => :CustomerExtensionSettingService,
       'FeedItemOperation' => :FeedItemService
     }
 
@@ -204,12 +207,15 @@ module AdwordsApi
       'AdGroupBidModifierOperation' => 'mutate_to_xml',
       'AdGroupCriterionOperation' => 'mutate_to_xml',
       'AdGroupCriterionLabelOperation' => 'mutate_label_to_xml',
+      'AdGroupExtensionSettingOperation' => 'mutate_to_xml',
       'AdGroupOperation' => 'mutate_to_xml',
       'AdGroupLabelOperation' => 'mutate_label_to_xml',
       'BudgetOperation' => 'mutate_to_xml',
       'CampaignCriterionOperation' => 'mutate_to_xml',
+      'CampaignExtensionSettingOperation' => 'mutate_to_xml',
       'CampaignOperation' => 'mutate_to_xml',
       'CampaignLabelOperation' => 'mutate_label_to_xml',
+      'CustomerExtensionSettingOperation' => 'mutate_to_xml',
       'FeedItemOperation' => 'mutate_to_xml'
     }
 
