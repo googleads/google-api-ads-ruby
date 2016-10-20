@@ -132,7 +132,7 @@ module AdsCommon
 
     def find_choice_by_xsi_type(xsi_type, item_def)
       return nil if xsi_type.nil?
-      # Method may allow this class name or any of it's ancestors.
+      # Method may allow this class name or any of its ancestors.
       possible_names = collect_parent_types(xsi_type)
       index = item_def.index do |item|
         possible_names.include?(item[:original_name])
