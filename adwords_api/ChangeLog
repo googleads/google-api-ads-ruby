@@ -1,3 +1,6 @@
+0.22.0:
+  - Removed deprecated API version v201603.
+
 0.21.1:
   - Support and examples for v201609.
   - Added logging of reporting HTTP response headers on DEBUG level.

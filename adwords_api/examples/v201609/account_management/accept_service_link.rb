@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Copyright:: Copyright 2013, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2016, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to add an ad group level mobile bid modifier
-# override for a campaign.
+# This example accepts a pending invitation to link your AdWords account to a
+# Google Merchant Center account.
 
 require 'adwords_api'
 
-def add_ad_group_bid_modifier(ad_group_id, bid_modifier)
+def accept_service_link(service_link_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -30,50 +30,40 @@ def add_ad_group_bid_modifier(ad_group_id, bid_modifier)
   # the configuration file or provide your own logger:
   # adwords.logger = Logger.new('adwords_xml.log')
 
-  bid_modifier_srv = adwords.service(:AdGroupBidModifierService, API_VERSION)
+  # Get the CustomerService.
+  customer_srv = adwords.service(:CustomerService, API_VERSION)
 
-  # Mobile criterion ID.
-  criterion_id = 30001
-
-  # Prepare to add an ad group level override.
+  # Create the operation to set the status to ACTIVE.
   operation = {
-    # Use 'ADD' to add a new modifier and 'SET' to update an existing one. A
-    # modifier can be removed with the 'REMOVE' operator.
-    :operator => 'ADD',
+    :operator => 'SET',
     :operand => {
-      :ad_group_id => ad_group_id,
-      :criterion => {
-        :xsi_type => 'Platform',
-        :id => criterion_id
-      },
-      :bid_modifier => bid_modifier
+      :service_link_id => service_link_id,
+      :service_type => 'MERCHANT_CENTER',
+      :link_status => 'ACTIVE'
     }
   }
 
-  # Add ad group level mobile bid modifier.
-  response = bid_modifier_srv.mutate([operation])
-  if response and response[:value]
-    modifier = response[:value].first
-    value = modifier[:bid_modifier] || 'unset'
-    puts ('Campaign ID %d, AdGroup ID %d, Criterion ID %d was updated with ' +
-        'ad group level modifier: %s') %
-           [modifier[:campaign_id], modifier[:ad_group_id],
-            modifier[:criterion][:id], value]
-  else
-    puts 'No modifiers were added.'
+  # Update the service link.
+  mutated_service_links = customer_srv.mutate_service_links([operation])
+
+  # Display the results.
+  mutated_service_links.each do |mutated_service_link|
+    puts ("Service link with service link ID %d, type '%s' updated to status:" +
+        "%s.") % [
+          mutated_service_link[:service_link_id],
+          mutated_service_link[:service_type],
+          mutated_service_link[:link_status]
+        ]
   end
 end
 
 if __FILE__ == $0
-  API_VERSION = :v201603
+  API_VERSION = :v201609
 
   begin
-    # ID of an ad group to add an override for.
-    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
-    # Bid modifier to override with.
-    bid_modifier = 1.5
+    service_link_id = 'INSERT_SERVICE_LINK_ID_HERE'.to_i
 
-    add_ad_group_bid_modifier(ad_group_id, bid_modifier)
+    accept_service_link(service_link_id)
 
   # Authorization error.
   rescue AdsCommon::Errors::OAuth2VerificationRequired => e

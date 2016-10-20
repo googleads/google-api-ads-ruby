@@ -53,6 +53,9 @@ def add_universal_app_campaigns()
   # Create campaigns.
   universal_app_campaign = {
     :name => "Interplanetary Cruise #%d" % (Time.new.to_f * 1000).to_i,
+    # Recommendation: Set the campaign to PAUSED when creating it to stop the
+    # ads from immediately serving. Set it to ENABLED once you've added
+    # targeting and the ads are ready to serve.
     :status => 'PAUSED',
     # Set the advertising channel and subchannel types for universal app
     # campaigns.

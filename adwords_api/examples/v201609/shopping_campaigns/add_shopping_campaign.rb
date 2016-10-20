@@ -39,6 +39,10 @@ def add_shopping_campaign(budget_id, merchant_id)
     :name => "Shopping campaign #%d" % (Time.new.to_f * 1000).to_i,
     # The advertising_channel_type is what makes this a Shopping campaign.
     :advertising_channel_type => 'SHOPPING',
+    # Recommendation: Set the campaign to PAUSED when creating it to stop the
+    # ads from immediately serving. Set to ENABLED once you've added
+    # targeting and the ads are ready to serve.
+    :status => 'PAUSED',
     :budget => {:budget_id => budget_id},
     :bidding_strategy_configuration => {
       :bidding_strategy_type => 'MANUAL_CPC'

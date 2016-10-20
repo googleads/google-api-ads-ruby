@@ -18,7 +18,7 @@
 #
 # This example illustrates how to use OAuth2 authentication method with
 # Service Account (JWT). For this example to work, your Service Account must be
-# a Google Apps for Business Account.
+# a G Suite account.
 #
 # See https://developers.google.com/adwords/api/docs/guides/service-accounts
 # for more information.

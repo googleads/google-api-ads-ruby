@@ -43,7 +43,9 @@ class TestChoices < Test::Unit::TestCase
         'NumberRuleItem' => {
           :key => {:name => 'foo', :'order!' => [:name]},
           :op => 'EQUALS', :value => 42, :'order!' => [:key, :op, :value]},
-        :'attributes!'=>{'NumberRuleItem'=>{'xsi:type'=>'NumberRuleItem'}},
+        :'attributes!' => {
+          'NumberRuleItem' => {'xsi:type' => 'NumberRuleItem'}
+        },
       }
     ])
     result = @validator.validate_args('mutate', [[op]])[:operations][0]
@@ -61,16 +63,20 @@ class TestChoices < Test::Unit::TestCase
       {
         'NumberRuleItem' => {
           :key => {:name => 'foo', :'order!' => [:name]},
-          :op => 'EQUALS', :value => 42, :'order!' => [:key, :op, :value]},
-        :'attributes!' =>
-          {'NumberRuleItem' => {'xsi:type' => 'NumberRuleItem'}}
+          :op => 'EQUALS', :value => 42, :'order!' => [:key, :op, :value]
+        },
+        :'attributes!' => {
+          'NumberRuleItem' => {'xsi:type' => 'NumberRuleItem'}
+        }
       },
       {
         'NumberRuleItem' => {
           :key => {:name => 'bar', :'order!' => [:name]},
-          :op => 'EQUALS', :value => 84, :'order!' => [:key, :op, :value]},
-        :'attributes!' =>
-          {'NumberRuleItem' => {'xsi:type' => 'NumberRuleItem'}}
+          :op => 'EQUALS', :value => 84, :'order!' => [:key, :op, :value]
+        },
+        :'attributes!' => {
+          'NumberRuleItem' => {'xsi:type' => 'NumberRuleItem'}
+        }
       }
     ])
     result = @validator.validate_args('mutate', [[op]])[:operations][0]
@@ -86,16 +92,20 @@ class TestChoices < Test::Unit::TestCase
     ])
     expected = get_expected_for_items([
       {
-          'NumberRuleItem' =>
-            {:key => {:name => 'foo', :'order!' => [:name]},
-             :op => 'EQUALS', :value => 42, :'order!' => [:key, :op, :value]},
-          :'attributes!' =>
-            {'NumberRuleItem' => {'xsi:type' => 'NumberRuleItem'}}
+          'NumberRuleItem' => {
+            :key => {:name => 'foo', :'order!' => [:name]},
+            :op => 'EQUALS', :value => 42, :'order!' => [:key, :op, :value]
+          },
+          :'attributes!' => {
+            'NumberRuleItem' => {'xsi:type' => 'NumberRuleItem'}
+          }
       },
       {
-          'StringRuleItem' =>
-            {:key => {:name => 'bar', :'order!' => [:name]},
-             :op => 'EQUALS', :value=> 'baz', :'order!' => [:key, :op, :value]},
+          'StringRuleItem' => {
+            :key => {:name => 'bar', :'order!' => [:name]},
+            :op => 'EQUALS', :value => 'baz',
+            :'order!' => [:key, :op, :value]
+          },
           :'attributes!' => {
             'StringRuleItem' => {'xsi:type' => 'StringRuleItem'}
           }

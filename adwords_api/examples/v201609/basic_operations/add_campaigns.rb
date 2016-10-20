@@ -49,6 +49,9 @@ def add_campaigns()
   campaigns = [
     {
       :name => "Interplanetary Cruise #%d" % (Time.new.to_f * 1000).to_i,
+      # Recommendation: Set the campaign to PAUSED when creating it to stop the
+      # ads from immediately serving. Set to ENABLED once you've added
+      # targeting and the ads are ready to serve.
       :status => 'PAUSED',
       :bidding_strategy_configuration => {
         :bidding_strategy_type => 'MANUAL_CPC'

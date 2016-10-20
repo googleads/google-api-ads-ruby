@@ -183,6 +183,9 @@ def build_campaign_operations(temp_id_generator, budget_operation)
   NUMBER_OF_CAMPAIGNS_TO_ADD.times do
     campaign = {
       :name => "Batch Campaign %s" % get_time_microseconds(),
+      # Recommendation: Set the campaign to PAUSED when creating it to stop the
+      # ads from immediately serving. Set to ENABLED once you've added
+      # targeting and the ads are ready to serve.
       :status => 'PAUSED',
       :id => temp_id_generator.next,
       :advertising_channel_type => 'SEARCH',
