@@ -88,6 +88,19 @@ module AdsCommon
     def validate_choice_argument(item, parent, key, item_type)
       result = false
       if item_type.kind_of?(Hash) && item_type.include?(:choices)
+        # If we have an array of choices, we need to go over them individually.
+        # We drop original array and replace it with the generated one that's
+        # nested one level more.
+        if item.kind_of?(Array)
+          parent[key] = []
+          item.each do |sub_item|
+            unless validate_choice_argument(sub_item, parent, key, item_type)
+              validate_arg(sub_item, parent, key, item_type)
+            end
+          end
+          return true
+        end
+        # New root needed for extra nesting we have (choice field).
         new_root = {}
         choice_items = arrayize(item)
         choice_items.each do |choice_item|
@@ -98,20 +111,42 @@ module AdsCommon
             raise AdsCommon::Errors::TypeMismatchError.new(
               'choice subtype', choice_type, choice_item.to_s())
           end
-          new_root[choice_type] ||= []
-          new_root[choice_type] << choice_item
+          choice_item[:xsi_type] = choice_type
+          # Note we use original name that produces a string like
+          # "BasicUserList". That's needed as the name is generated out of
+          # standard naming ("basicUserList") which would otherwise be produced.
+          choice_key = choice_item_type[:original_name]
+          new_root[choice_key] = choice_item
           type_signature = get_full_type_signature(choice_type)
-          validate_arg(choice_item, new_root, choice_type, type_signature)
+          validate_arg(choice_item, new_root, choice_key, type_signature)
         end
-        parent[key] = new_root
+        if parent[key].kind_of?(Array)
+          parent[key] << new_root
+        else
+          parent[key] = new_root
+        end
         result = true
       end
       return result
     end
 
     def find_choice_by_xsi_type(xsi_type, item_def)
-      index = item_def.index {|item| xsi_type.eql?(item[:original_name])}
+      return nil if xsi_type.nil?
+      # Method may allow this class name or any of it's ancestors.
+      possible_names = collect_parent_types(xsi_type)
+      index = item_def.index do |item|
+        possible_names.include?(item[:original_name])
+      end
       return index.nil? ? nil : item_def[index]
+    end
+
+    def collect_parent_types(xsi_type)
+      result = [xsi_type]
+      type_signature = @registry.get_type_signature(xsi_type)
+      if !type_signature.nil? && !type_signature[:base].nil?
+        result += collect_parent_types(type_signature[:base])
+      end
+      return result
     end
 
     # Checks if no extra fields provided outside of known ones.
