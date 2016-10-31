@@ -19,13 +19,13 @@
 # Tests the utils.
 
 require 'tempfile'
-require 'test/unit'
+require 'minitest'
 require 'yaml'
 
 require 'ads_common/utils'
 
 
-class TestUtils < Test::Unit::TestCase
+class TestUtils < Minitest::Test
 
   def test_has_lower_camelcase()
     assert('str'.respond_to?(:lower_camelcase))

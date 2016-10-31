@@ -20,12 +20,12 @@
 
 require 'logger'
 require 'minitest/mock'
-require 'test/unit'
+require 'minitest'
 
 require 'ads_common/config'
 require 'ads_common/credential_handler'
 
-class TestCredentialHandler < Test::Unit::TestCase
+class TestCredentialHandler < Minitest::Test
 
   def setup()
     logger = Logger.new(STDERR)

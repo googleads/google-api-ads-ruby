@@ -18,11 +18,11 @@
 #
 # Tests the array replies from services.
 
-require 'test/unit'
+require 'minitest'
 
 require 'ads_common/config'
 
-class TestConfig < Test::Unit::TestCase
+class TestConfig < Minitest::Test
   DEFAULT_CONFIG_HASH = {
       :service => {:use_ruby_names => false,
                    :environment => 'sandbox'},
@@ -63,7 +63,7 @@ class TestConfig < Test::Unit::TestCase
   # Test initializer with an incorrect existing file.
   def test_initialize_filename_incorrect
     assert_raises (AdsCommon::Errors::Error) do
-      config = AdsCommon::Config.new('/dev/null')
+      AdsCommon::Config.new('/dev/null')
     end
   end
 
