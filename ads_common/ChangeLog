@@ -1,3 +1,12 @@
+0.12.6:
+  - Added support for config param :oauth2_prompt and removed support for
+    :oauth2_approval_prompt, and updated URI parameter name. The expected value
+    for this parameter has changed along with this naming change. For example,
+    instead of using "force" you should use "consent".
+    For more information, see here:
+    https://developers.google.com/identity/protocols/OAuth2UserAgent#formingtheurl
+  - Fixed issue #7.
+
 0.12.5:
   - Fixed issue #75.
 

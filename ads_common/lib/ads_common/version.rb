@@ -19,6 +19,6 @@
 
 module AdsCommon
   module ApiConfig
-    CLIENT_LIB_VERSION = '0.12.5'
+    CLIENT_LIB_VERSION = '0.12.6'
   end
 end

@@ -314,6 +314,7 @@ module AdwordsApi
       nori_options = {
         :strip_namespaces      => true,
         :convert_tags_to       => lambda { |tag| tag.snakecase.to_sym },
+        :empty_tag_value       => "",
         :advanced_typecasting  => false
       }
 
