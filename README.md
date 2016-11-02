@@ -96,6 +96,6 @@ other news.
  - [AdWords library ChangeLog](https://github.com/googleads/google-api-ads-ruby/blob/master/adwords_api/ChangeLog)
  - [DFP library ChangeLog](https://github.com/googleads/google-api-ads-ruby/blob/master/dfp_api/ChangeLog)
 
-## CONTRIBUTING:
+## Contributing
 If you have an ad blocker active, you might experience issues while submitting an issue or pull request. 
 You can still contribute by disabling the ad blocker for this project URL.
