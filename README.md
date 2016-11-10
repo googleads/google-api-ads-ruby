@@ -37,12 +37,17 @@ programmatically access your accounts.
 
 1. Install your library of choice using RubyGems.
 
-    $ gem install google-adwords-api
+        $ gem install google-adwords-api
 
- or
+   or
 
-    $ gem install google-dfp-api
+        $ gem install google-dfp-api
 
+   Note: If you're using a version of Ruby lower than 2.2.2, you will need to
+   manually install a previous version of Rack, a dependency of our HTTP
+   library. You can do this with:
+
+        $ gem install rack -v 1.6.4
 
 1. Copy the sample config file (**adwords_api.yml** or **dfp_api.yml**) for your
 product to your home directory and fill out the required properties.
