@@ -22,7 +22,7 @@ require 'time'
 
 require 'ads_common/auth/oauth2_handler'
 require 'ads_common/config'
-require 'webmock/test_unit'
+require 'webmock/minitest'
 
 module AdsCommon
   module Auth
@@ -48,7 +48,7 @@ module AdsCommon
   end
 end
 
-class TestOAuth < Test::Unit::TestCase
+class TestOAuth < Minitest::Test
   def setup()
     stub_request(:post, 'https://accounts.google.com/o/oauth2/auth').to_return(
         :status => 200,

@@ -18,13 +18,12 @@
 #
 # Tests the array replies from services.
 
-require 'test/unit'
+require 'minitest'
 
 # Work around jruby <= 1.7.8 issue with OpenSSL definition.
 require 'openssl'
 OpenSSL::SSL::SSLContext::METHODS = []
 
-require 'ads_common/config'
 require 'ads_common/savon_service'
 
 # SavonService is abstract, defining a child class for the test.
@@ -40,7 +39,7 @@ class StubService < AdsCommon::SavonService
 end
 
 
-class TestSavonService < Test::Unit::TestCase
+class TestSavonService < Minitest::Test
 
   TEST_NAMESPACE = 'namespace'
   TEST_ENDPOINT = 'endpoint'

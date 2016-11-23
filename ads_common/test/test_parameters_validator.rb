@@ -18,7 +18,7 @@
 #
 # Tests validator methods.
 
-require 'test/unit'
+require 'minitest'
 
 require 'ads_common/errors'
 require 'ads_common/parameters_validator'
@@ -30,7 +30,7 @@ module AdsCommon
   end
 end
 
-class TestParametersValidator < Test::Unit::TestCase
+class TestParametersValidator < Minitest::Test
   def setup
     @validator = AdsCommon::ParametersValidator.new(nil)
   end

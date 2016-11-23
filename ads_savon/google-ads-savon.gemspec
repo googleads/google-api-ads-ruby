@@ -26,9 +26,6 @@ Gem::Specification.new do |s|
   s.add_dependency "nokogiri", ">= 1.4.0"
 
   s.add_development_dependency "rake",    "~> 10.1"
-  s.add_development_dependency "rspec",   "~> 2.14"
-  s.add_development_dependency "mocha",   "~> 0.14"
-  s.add_development_dependency "timecop", "~> 0.3"
 
   s.files = Dir["**/*"]
   s.require_path = "lib"

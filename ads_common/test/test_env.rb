@@ -19,9 +19,9 @@
 # Tests environment is correct.
 
 require 'openssl'
-require 'test/unit'
+require 'minitest'
 
-class TestEnv < Test::Unit::TestCase
+class TestEnv < Minitest::Test
 
   # Output ruby interpreter version to the tests log.
   def test_ruby_version

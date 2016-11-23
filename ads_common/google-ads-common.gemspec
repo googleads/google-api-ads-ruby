@@ -41,4 +41,6 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency('httpclient', '~> 2.7')
   s.add_runtime_dependency('signet', '~> 0.7.0')
   s.add_development_dependency('rake', '>= 10.4.2')
+  s.add_development_dependency('minitest', '~> 5.9')
+  s.add_development_dependency('webmock', '~> 2.1')
 end

@@ -31,7 +31,7 @@ module AdsCommon
   end
 end
 
-class TestOAuthServiceAccount < Test::Unit::TestCase
+class TestOAuthServiceAccount < Minitest::Test
   def test_file_extension_check()
     assert_nothing_raised do
       validate_credentials(['test', '.json'])

@@ -18,7 +18,7 @@
 #
 # Tests the array replies from services.
 
-require 'test/unit'
+require 'minitest'
 
 require 'ads_common/results_extractor'
 
@@ -47,7 +47,7 @@ class StubResponse
   attr_accessor :header
 end
 
-class TestResultsExtractor < Test::Unit::TestCase
+class TestResultsExtractor < Minitest::Test
 
   # Initialize tests.
   def setup()
