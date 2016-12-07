@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2016, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -16,65 +16,73 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets all companies. To create companies, run create_companies.rb.
-
+# This example gets all companies.
 require 'dfp_api'
 
+class GetAllCompanies
 
-API_VERSION = :v201608
+  def self.run_example(dfp)
+    company_service =
+        dfp.service(:CompanyService, :v201608)
 
-def get_all_companies()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
+    # Create a statement to select companies.
+    statement = DfpApi::FilterStatement.new()
 
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
+    # Retrieve a small amount of companies at a time, paging
+    # through until all companies have been retrieved.
+    total_result_set_size = 0;
+    begin
+      page = company_service.get_companies_by_statement(
+          statement.toStatement())
 
-  # Get the CompanyService.
-  company_service = dfp.service(:CompanyService, API_VERSION)
+      # Print out some information for each company.
+      if page[:results]
+        total_result_set_size = page[:total_result_set_size]
+        page[:results].each_with_index do |company, index|
+          puts "%d) Company with ID %d, name '%s', and type '%s' was found." % [
+              index + statement.offset,
+              company[:id],
+              company[:name],
+              company[:type]
+          ]
+        end
+      end
+      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+    end while statement.offset < page[:total_result_set_size]
 
-  # Create a statement to select all companies.
-  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
+    puts 'Total number of companies: %d' %
+        total_result_set_size
+  end
 
-  begin
-    # Get companies by statement.
-    page = company_service.get_companies_by_statement(
-        statement.toStatement())
+  def self.main()
+    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+    dfp = DfpApi::Api.new
 
-    if page[:results]
-      page[:results].each_with_index do |company, index|
-        puts "%d) Company ID: %d, name: '%s', type: '%s'" %
-            [index + statement.offset,
-             company[:id], company[:name], company[:type]]
+    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+    # the configuration file or provide your own logger:
+    # dfp.logger = Logger.new('dfp_xml.log')
+
+    begin
+      run_example(dfp)
+
+    # HTTP errors.
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+
+    # API errors.
+    rescue DfpApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
+        end
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-  end while statement.offset < page[:total_result_set_size]
-
-  # Print a footer.
-  if page.include?(:total_result_set_size)
-    puts "Total number of companies: %d" % page[:total_result_set_size]
   end
 end
 
 if __FILE__ == $0
-  begin
-    get_all_companies()
-
-  # HTTP errors.
-  rescue AdsCommon::Errors::HttpError => e
-    puts "HTTP Error: %s" % e
-
-  # API errors.
-  rescue DfpApi::Errors::ApiException => e
-    puts "Message: %s" % e.message
-    puts 'Errors:'
-    e.errors.each_with_index do |error, index|
-      puts "\tError [%d]:" % (index + 1)
-      error.each do |field, value|
-        puts "\t\t%s: %s" % [field, value]
-      end
-    end
-  end
+  GetAllCompanies.main()
 end

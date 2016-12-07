@@ -58,6 +58,11 @@ or if you downloaded the gem package manually, use:
 
     $ gem install --local google-dfp-api-VERSION.gem
 
+Note: If you're using a version of Ruby lower than 2.2.2, you will need to
+manually install a previous version of Rack, a dependency of our HTTP library.
+You can do this with:
+
+    $ gem install rack -v 1.6.4
 
 ## Using the library
 

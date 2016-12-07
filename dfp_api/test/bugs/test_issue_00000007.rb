@@ -25,7 +25,7 @@ require 'test/unit'
 require 'ads_common/config'
 require 'ads_common/savon_service'
 require 'ads_savon/soap/response'
-require 'dfp_api/v201605/line_item_service'
+require 'dfp_api/v201608/line_item_service'
 
 class HeaderHandler
   def prepare_request(http, soap)
@@ -33,23 +33,23 @@ class HeaderHandler
 end
 
 # SavonService is abstract, defining a child class for the test.
-class StubService < AdsCommon::SavonService
+class StubService7 < AdsCommon::SavonService
 
   public :get_module
 
   def initialize(namespace, endpoint, version)
-    @logger = Logger.new(STDERR)
-    @config = AdsCommon::Config.new({:library => {:logger => @logger}})
+    logger = Logger.new(STDERR)
+    @config = AdsCommon::Config.new({:library => {:logger => logger}})
     super(@config, namespace, endpoint, version)
     @header_handler = HeaderHandler.new
   end
 
   def get_module()
-    return DfpApi::V201605::LineItemService
+    return DfpApi::V201608::LineItemService
   end
 
   def get_service_registry()
-    return DfpApi::V201605::LineItemService::LineItemServiceRegistry
+    return DfpApi::V201608::LineItemService::LineItemServiceRegistry
   end
 end
 
@@ -60,9 +60,9 @@ end
 class TestDfpIssue7 < Test::Unit::TestCase
 
   TEST_NAMESPACE = 'https://ads.google.com/apis/ads/publisher/'
-  TEST_ENDPOINT = (
-      'https://ads.google.com/apis/ads/publisher/v201602/LineItemService?wsdl')
-  TEST_VERSION = :v201605
+  TEST_ENDPOINT =
+      'https://ads.google.com/apis/ads/publisher/v201608/LineItemService?wsdl'
+  TEST_VERSION = :v201608
 
   def test_issue_7_request()
     args = {:line_items => [
@@ -70,7 +70,8 @@ class TestDfpIssue7 < Test::Unit::TestCase
     ]}
     want = '<webPropertyCode></webPropertyCode>'
 
-    savon_service = StubService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
+    savon_service =
+        StubService7.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
     result = savon_service.send(
         :handle_soap_request, :update_line_items, true, args, nil)
 
@@ -94,7 +95,7 @@ class TestDfpIssue7 < Test::Unit::TestCase
   def get_xml_response_text()
     return <<EOT
   <soap:Body>
-    <getLineItemsByStatementResponse xmlns="https://www.google.com/apis/ads/publisher/v201605">
+    <getLineItemsByStatementResponse xmlns="https://www.google.com/apis/ads/publisher/v201608">
       <rval>
         <totalResultSetSize>1</totalResultSetSize>
         <startIndex>0</startIndex>

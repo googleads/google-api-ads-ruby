@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2016, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -17,66 +17,71 @@
 #           limitations under the License.
 #
 # This example gets all creative templates.
-
 require 'dfp_api'
 
+class GetAllCreativeTemplates
 
-API_VERSION = :v201608
+  def self.run_example(dfp)
+    creative_template_service =
+        dfp.service(:CreativeTemplateService, :v201608)
 
-def get_all_creative_templates()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
+    # Create a statement to select creative templates.
+    statement = DfpApi::FilterStatement.new()
 
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
+    # Retrieve a small amount of creative templates at a time, paging
+    # through until all creative templates have been retrieved.
+    total_result_set_size = 0;
+    begin
+      page = creative_template_service.get_creative_templates_by_statement(
+          statement.toStatement())
 
-  # Get the CreativeTemplateService.
-  creative_template_service = dfp.service(:CreativeTemplateService, API_VERSION)
+      # Print out some information for each creative template.
+      if page[:results]
+        total_result_set_size = page[:total_result_set_size]
+        page[:results].each_with_index do |creative_template, index|
+          puts "%d) Creative template with ID %d and name '%s' was found." % [
+              index + statement.offset,
+              creative_template[:id],
+              creative_template[:name]
+          ]
+        end
+      end
+      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+    end while statement.offset < page[:total_result_set_size]
 
-  # Create a statement to get one page with current offset.
-  statement = DfpApi::FilterStatement.new(ORDER BY id ASC)
+    puts 'Total number of creative templates: %d' %
+        total_result_set_size
+  end
 
-  begin
+  def self.main()
+    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+    dfp = DfpApi::Api.new
 
-    # Get creative templates by statement.
-    page = creative_template_service.get_creative_templates_by_statement(
-        statement.toStatement())
+    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+    # the configuration file or provide your own logger:
+    # dfp.logger = Logger.new('dfp_xml.log')
 
-    if page[:results]
-      # Print details about each creative template in results.
-      page[:results].each_with_index do |template, index|
-        puts "%d) Creative template ID: %d, name: %s, type: %s" %
-            [index + statement.offset, template[:id],
-             template[:name], template[:type]]
+    begin
+      run_example(dfp)
+
+    # HTTP errors.
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+
+    # API errors.
+    rescue DfpApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
+        end
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-  end while statement.offset < page[:total_result_set_size]
-
-  # Print a footer.
-  if page.include?(:total_result_set_size)
-    puts "Total number of creative templates: %d" % page[:total_result_set_size]
   end
 end
 
 if __FILE__ == $0
-  begin
-    get_all_creative_templates()
-
-  # HTTP errors.
-  rescue AdsCommon::Errors::HttpError => e
-    puts "HTTP Error: %s" % e
-
-  # API errors.
-  rescue DfpApi::Errors::ApiException => e
-    puts "Message: %s" % e.message
-    puts 'Errors:'
-    e.errors.each_with_index do |error, index|
-      puts "\tError [%d]:" % (index + 1)
-      error.each do |field, value|
-        puts "\t\t%s: %s" % [field, value]
-      end
-    end
-  end
+  GetAllCreativeTemplates.main()
 end

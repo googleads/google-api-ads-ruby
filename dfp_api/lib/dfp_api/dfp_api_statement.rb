@@ -44,5 +44,10 @@ module DfpApi
     def toStatementForAction()
       return {:query => @query_statement.dup(), :values => @values}
     end
+
+    def toStatementWithoutOffset()
+      statement = @query_statement + ' LIMIT %d' % [@limit]
+      return {:query => statement, :values => @values}
+    end
   end
 end

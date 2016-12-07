@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2016, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -16,66 +16,72 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets all placements. To create placements, run
-# create_placements.rb
-
+# This example gets all placements.
 require 'dfp_api'
 
+class GetAllPlacements
 
-API_VERSION = :v201608
+  def self.run_example(dfp)
+    placement_service =
+        dfp.service(:PlacementService, :v201608)
 
-def get_all_placements()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
+    # Create a statement to select placements.
+    statement = DfpApi::FilterStatement.new()
 
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
+    # Retrieve a small amount of placements at a time, paging
+    # through until all placements have been retrieved.
+    total_result_set_size = 0;
+    begin
+      page = placement_service.get_placements_by_statement(
+          statement.toStatement())
 
-  # Get the PlacementService.
-  placement_service = dfp.service(:PlacementService, API_VERSION)
+      # Print out some information for each placement.
+      if page[:results]
+        total_result_set_size = page[:total_result_set_size]
+        page[:results].each_with_index do |placement, index|
+          puts "%d) Placement with ID %d and name '%s' was found." % [
+              index + statement.offset,
+              placement[:id],
+              placement[:name]
+          ]
+        end
+      end
+      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+    end while statement.offset < page[:total_result_set_size]
 
-  # Create statement for placements ordered by ID.
-  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
+    puts 'Total number of placements: %d' %
+        total_result_set_size
+  end
 
-  begin
-    # Get placements by statement.
-    page = placement_service.get_placements_by_statement(
-        statement.toStatement())
+  def self.main()
+    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+    dfp = DfpApi::Api.new
 
-    if page[:results]
-      # Print details about each placement in results page.
-      page[:results].each_with_index do |placement, index|
-        puts "%d) Placement ID: %d, name: %s." %
-            [index + statement.offset, placement[:id], placement[:name]]
+    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+    # the configuration file or provide your own logger:
+    # dfp.logger = Logger.new('dfp_xml.log')
+
+    begin
+      run_example(dfp)
+
+    # HTTP errors.
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+
+    # API errors.
+    rescue DfpApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
+        end
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-  end while statement.offset < page[:total_result_set_size]
-
-  # Print a footer
-  if page.include?(:total_result_set_size)
-    puts "Total number of placements: %d" % page[:total_result_set_size]
   end
 end
 
 if __FILE__ == $0
-  begin
-    get_all_placements()
-
-  # HTTP errors.
-  rescue AdsCommon::Errors::HttpError => e
-    puts "HTTP Error: %s" % e
-
-  # API errors.
-  rescue DfpApi::Errors::ApiException => e
-    puts "Message: %s" % e.message
-    puts 'Errors:'
-    e.errors.each_with_index do |error, index|
-      puts "\tError [%d]:" % (index + 1)
-      error.each do |field, value|
-        puts "\t\t%s: %s" % [field, value]
-      end
-    end
-  end
+  GetAllPlacements.main()
 end

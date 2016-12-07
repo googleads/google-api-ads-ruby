@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2016, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -16,64 +16,72 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets all teams. To create teams, run create_teams.rb.
-
+# This example gets all teams.
 require 'dfp_api'
 
+class GetAllTeams
 
-API_VERSION = :v201608
+  def self.run_example(dfp)
+    team_service =
+        dfp.service(:TeamService, :v201608)
 
-def get_all_teams()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
+    # Create a statement to select teams.
+    statement = DfpApi::FilterStatement.new()
 
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
+    # Retrieve a small amount of teams at a time, paging
+    # through until all teams have been retrieved.
+    total_result_set_size = 0;
+    begin
+      page = team_service.get_teams_by_statement(
+          statement.toStatement())
 
-  # Get the TeamService.
-  team_service = dfp.service(:TeamService, API_VERSION)
+      # Print out some information for each team.
+      if page[:results]
+        total_result_set_size = page[:total_result_set_size]
+        page[:results].each_with_index do |team, index|
+          puts "%d) Team with ID %d and name '%s' was found." % [
+              index + statement.offset,
+              team[:id],
+              team[:name]
+          ]
+        end
+      end
+      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+    end while statement.offset < page[:total_result_set_size]
 
-  # Create statement for all teams.
-  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
+    puts 'Total number of teams: %d' %
+        total_result_set_size
+  end
 
-  begin
-    # Get teams by statement.
-    page = team_service.get_teams_by_statement(statement.toStatement())
+  def self.main()
+    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+    dfp = DfpApi::Api.new
 
-    if page[:results]
-      # Print details about each team in results page.
-      page[:results].each_with_index do |team, index|
-        puts "%d) Team ID: %d, name: %s" %
-            [index + statement.offset, team[:id], team[:name]]
+    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+    # the configuration file or provide your own logger:
+    # dfp.logger = Logger.new('dfp_xml.log')
+
+    begin
+      run_example(dfp)
+
+    # HTTP errors.
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+
+    # API errors.
+    rescue DfpApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
+        end
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-  end while statement.offset < page[:total_result_set_size]
-
-  # Print a footer
-  if page.include?(:total_result_set_size)
-    puts "Total number of teams: %d" % page[:total_result_set_size]
   end
 end
 
 if __FILE__ == $0
-  begin
-    get_all_teams()
-
-  # HTTP errors.
-  rescue AdsCommon::Errors::HttpError => e
-    puts "HTTP Error: %s" % e
-
-  # API errors.
-  rescue DfpApi::Errors::ApiException => e
-    puts "Message: %s" % e.message
-    puts 'Errors:'
-    e.errors.each_with_index do |error, index|
-      puts "\tError [%d]:" % (index + 1)
-      error.each do |field, value|
-        puts "\t\t%s: %s" % [field, value]
-      end
-    end
-  end
+  GetAllTeams.main()
 end

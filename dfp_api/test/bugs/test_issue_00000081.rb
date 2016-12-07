@@ -26,7 +26,7 @@ require 'ads_common/savon_service'
 require 'dfp_api/v201602/line_item_service'
 
 # SavonService is abstract, defining a child class for the test.
-class StubService < AdsCommon::SavonService
+class StubService81 < AdsCommon::SavonService
 
   public :get_module
 
@@ -50,7 +50,8 @@ class TestDfpIssue81 < Test::Unit::TestCase
   TEST_VERSION = :v201602
 
   def setup()
-    @stub_service = StubService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
+    @stub_service =
+        StubService81.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
     nori_options = {
       :strip_namespaces      => true,
       :convert_tags_to       => lambda { |tag| tag.snakecase.to_sym },
@@ -61,7 +62,8 @@ class TestDfpIssue81 < Test::Unit::TestCase
 
   def test_issue_81()
     data = @nori.parse(get_xml_text())[:envelope][:body]
-    savon_service = StubService.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
+    savon_service =
+        StubService81.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
     assert_instance_of(DfpApi::V201602::LineItemService::ApiException,
         savon_service.send(:exception_for_soap_fault, data))
   end

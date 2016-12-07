@@ -1,3 +1,14 @@
+0.19.0:
+  - Added support for v201611.
+  - Removed support for v201508 and v201511.
+  - Removed examples for v201602.
+  - Require google-ads-common 0.12.6 or later from now on.
+  - Removed examples and tests from bundled gem. For code examples, see:
+    https://github.com/googleads/google-api-ads-ruby/tree/master/dfp_api/examples
+
+0.18.1:
+  - Added retrieval examples for sales management services.
+
 0.18.0:
   - Start enforcing actual application name.
   - Added support for v201608.

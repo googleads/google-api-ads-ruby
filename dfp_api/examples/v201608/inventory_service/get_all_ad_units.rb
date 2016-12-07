@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # Encoding: utf-8
 #
-# Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2016, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -16,65 +16,72 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets all ad units. To create ad units, run create_ad_units.rb.
-
+# This example gets all ad units.
 require 'dfp_api'
 
+class GetAllAdUnits
 
-API_VERSION = :v201608
+  def self.run_example(dfp)
+    inventory_service =
+        dfp.service(:InventoryService, :v201608)
 
-def get_all_ad_units()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
+    # Create a statement to select ad units.
+    statement = DfpApi::FilterStatement.new()
 
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
+    # Retrieve a small amount of ad units at a time, paging
+    # through until all ad units have been retrieved.
+    total_result_set_size = 0;
+    begin
+      page = inventory_service.get_ad_units_by_statement(
+          statement.toStatement())
 
-  # Get the InventoryService.
-  inventory_service = dfp.service(:InventoryService, API_VERSION)
+      # Print out some information for each ad unit.
+      if page[:results]
+        total_result_set_size = page[:total_result_set_size]
+        page[:results].each_with_index do |ad_unit, index|
+          puts "%d) Ad unit with ID '%s' and name '%s' was found." % [
+              index + statement.offset,
+              ad_unit[:id],
+              ad_unit[:name]
+          ]
+        end
+      end
+      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+    end while statement.offset < page[:total_result_set_size]
 
-  # Create a statement to get all ad units
-  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
+    puts 'Total number of ad units: %d' %
+        total_result_set_size
+  end
 
-  begin
-    # Get ad units by statement.
-    page = inventory_service.get_ad_units_by_statement(statement.toStatement())
+  def self.main()
+    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+    dfp = DfpApi::Api.new
 
-    if page[:results]
-      # Print details about each ad unit in results.
-      page[:results].each_with_index do |ad_unit, index|
-        puts "%d) Ad unit ID: %d, name: %s, status: %s." %
-            [index + statement.offset, ad_unit[:id],
-             ad_unit[:name], ad_unit[:status]]
+    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+    # the configuration file or provide your own logger:
+    # dfp.logger = Logger.new('dfp_xml.log')
+
+    begin
+      run_example(dfp)
+
+    # HTTP errors.
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+
+    # API errors.
+    rescue DfpApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
+        end
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-  end while statement.offset < page[:total_result_set_size]
-
-  # Print a footer.
-  if page.include?(:total_result_set_size)
-    puts "Total number of ad units: %d" % page[:total_result_set_size]
   end
 end
 
 if __FILE__ == $0
-  begin
-    get_all_ad_units()
-
-  # HTTP errors.
-  rescue AdsCommon::Errors::HttpError => e
-    puts "HTTP Error: %s" % e
-
-  # API errors.
-  rescue DfpApi::Errors::ApiException => e
-    puts "Message: %s" % e.message
-    puts 'Errors:'
-    e.errors.each_with_index do |error, index|
-      puts "\tError [%d]:" % (index + 1)
-      error.each do |field, value|
-        puts "\t\t%s: %s" % [field, value]
-      end
-    end
-  end
+  GetAllAdUnits.main()
 end
