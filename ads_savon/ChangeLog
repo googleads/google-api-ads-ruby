@@ -1,5 +1,6 @@
 1.0.2:
   - Fixing https://github.com/googleads/google-api-ads-ruby/issues/7
+  - Updating nokogiri and builder dependencies to newer versions.
 
 1.0.1:
   - Releasing a new version to fix RubyGems file permissions bug.
