@@ -211,7 +211,7 @@ module AdsCommon
           if verification_code.nil? || verification_code.empty?
             uri_options = {
               :access_type => credentials[:oauth2_access_type],
-              :approval_prompt => credentials[:oauth2_approval_prompt]
+              :prompt => credentials[:oauth2_prompt]
             }.reject {|k, v| v.nil?}
             oauth_url = client.authorization_uri(uri_options)
             raise AdsCommon::Errors::OAuth2VerificationRequired.new(oauth_url)

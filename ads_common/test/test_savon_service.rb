@@ -20,10 +20,6 @@
 
 require 'test/unit'
 
-# Work around jruby <= 1.7.8 issue with OpenSSL definition.
-require 'openssl'
-OpenSSL::SSL::SSLContext::METHODS = []
-
 require 'ads_common/config'
 require 'ads_common/savon_service'
 

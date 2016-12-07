@@ -69,7 +69,7 @@ class TestOAuth < Test::Unit::TestCase
 
     # Make sure that we are still able to refresh the token.
     assert_nothing_raised do
-      token = handler.refresh_token!();
+      handler.refresh_token!();
     end
   end
 

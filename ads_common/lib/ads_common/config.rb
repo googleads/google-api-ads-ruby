@@ -52,8 +52,8 @@ module AdsCommon
     def set(property_path, value)
       if property_path
         last_node = @config
-        last_name = property_path.split('.').inject(nil) do |last_name, section|
-          last_node = last_node[last_name] ||= {} unless last_name.nil?
+        last_name = property_path.split('.').inject(nil) do |name, section|
+          last_node = last_node[name] ||= {} unless name.nil?
           section.to_sym
         end
         last_node[last_name] = value
@@ -83,11 +83,11 @@ module AdsCommon
           @config = new_config
         else
           raise AdsCommon::Errors::Error,
-              "Incorrect configuration file: %s" % filename
+              "Incorrect configuration file: '%s'" % filename
         end
       rescue TypeError => e
         raise AdsCommon::Errors::Error,
-            "Error parsing configuration file: %s" % filename
+            "Error parsing configuration file: '%s' (%s)" % [filename, e]
       end
       return nil
     end

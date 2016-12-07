@@ -109,7 +109,7 @@ module AdsCommon
       original_action_name = action if original_action_name.nil?
       response = @client.request(original_action_name) do |soap, wsdl, http|
         soap.body = args
-        header_handler.prepare_request(http, soap)
+        @header_handler.prepare_request(http, soap)
         soap.namespaces.merge!(extra_namespaces) unless extra_namespaces.nil?
         return soap.to_xml if xml_only
       end

@@ -63,7 +63,7 @@ class TestConfig < Test::Unit::TestCase
   # Test initializer with an incorrect existing file.
   def test_initialize_filename_incorrect
     assert_raises (AdsCommon::Errors::Error) do
-      config = AdsCommon::Config.new('/dev/null')
+      AdsCommon::Config.new('/dev/null')
     end
   end
 

@@ -62,7 +62,7 @@ module AdsCommon
     # Normalizes output starting with root output node.
     def normalize_output(output_data, method_definition)
       fields = method_definition[:output][:fields]
-      result = normalize_fields(output_data, fields)
+      return normalize_fields(output_data, fields)
     end
 
     # Normalizes all fields for the given data based on the fields list
@@ -102,9 +102,9 @@ module AdsCommon
       result = data
       # Convert a specific structure to a handy hash if detected.
       if check_key_value_struct(result)
-        result = convert_key_value_to_hash(result).inject({}) do |result, (k,v)|
-          result[k] = normalize_output_field(v, field_def)
-          result
+        result = convert_key_value_to_hash(result).inject({}) do |s, (k,v)|
+          s[k] = normalize_output_field(v, field_def)
+          s
         end
       else
         result = data.map {|item| normalize_output_field(item, field_def)}

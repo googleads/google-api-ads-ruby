@@ -82,8 +82,7 @@ class TestResultsExtractor < Test::Unit::TestCase
   end
 
   def test_normalize_item_long()
-    result1 = @extractor.normalize_item(2147483648,
-        {:type => 'long'})
+    result1 = @extractor.normalize_item(2147483648, {:type => 'long'})
     assert_kind_of(Integer, result1)
     assert_equal(2147483648, result1, 'bad conversion')
 
@@ -102,26 +101,21 @@ class TestResultsExtractor < Test::Unit::TestCase
     result3 = @extractor.normalize_item('true', {:type => 'boolean'})
     assert_kind_of(TrueClass, result3)
 
-    result4 = @extractor.normalize_item('false',
-        {:type => 'boolean'})
+    result4 = @extractor.normalize_item('false', {:type => 'boolean'})
     assert_kind_of(FalseClass, result4)
 
-    result5 = @extractor.normalize_item('True',
-        {:type => 'boolean'})
-    assert_kind_of(TrueClass, result3)
+    result5 = @extractor.normalize_item('True', {:type => 'boolean'})
+    assert_kind_of(TrueClass, result5)
 
-    result6 = @extractor.normalize_item('False',
-        {:type => 'boolean'})
-    assert_kind_of(FalseClass, result4)
+    result6 = @extractor.normalize_item('False', {:type => 'boolean'})
+    assert_kind_of(FalseClass, result6)
   end
 
   def test_normalize_item_object()
-    result1 = @extractor.normalize_item({:a => 'b'},
-        {:type => 'StubClass'})
+    result1 = @extractor.normalize_item({:a => 'b'}, {:type => 'StubClass'})
     assert_equal('b', result1[:a], 'object corrupted')
 
-    result2 = @extractor.normalize_item(@extractor,
-        {:type => 'SavonService'})
+    result2 = @extractor.normalize_item(@extractor, {:type => 'SavonService'})
     assert_equal(@extractor.hash, result2.hash, 'object corrupted')
   end
 

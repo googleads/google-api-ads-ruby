@@ -49,7 +49,7 @@ module AdsCommon
       end
 
       # Find removed properties.
-      diff = @credentials.inject(diff) do |result, (key, value)|
+      diff = @credentials.inject(diff) do |result, (key, _)|
         result << [key, nil] unless new_credentials.include?(key)
         result
       end

@@ -35,4 +35,9 @@ class TestEnv < Test::Unit::TestCase
     puts "\nUsing OpenSSL %s with %d methods.\n" %
         [OpenSSL::OPENSSL_VERSION, OpenSSL::SSL::SSLContext::METHODS.count]
   end
+
+  # Output rake version to the tests log.
+  def test_rake_version
+    puts "\nRunning with rake %s.\n" % Rake::VERSION if defined?(Rake)
+  end
 end
