@@ -8,7 +8,7 @@ gem 'activerecord-session_store'
 gem 'sqlite3'
 
 # AdWords API gem.
-gem 'google-adwords-api', '~> 0.18.0'
+gem 'google-adwords-api', '~> 0.22'
 
 # Gem for OAuth authorization.
 gem 'oauth2'
