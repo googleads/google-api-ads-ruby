@@ -301,4 +301,4 @@ Author:
     Danial Klimkin
 
 Maintainer:
-    Nicholas Chen
+    Danial Klimkin

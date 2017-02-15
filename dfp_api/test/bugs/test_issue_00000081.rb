@@ -23,7 +23,7 @@ require 'ads_savon'
 require 'test/unit'
 
 require 'ads_common/savon_service'
-require 'dfp_api/v201602/line_item_service'
+require 'dfp_api/v201702/line_item_service'
 
 # SavonService is abstract, defining a child class for the test.
 class StubService81 < AdsCommon::SavonService
@@ -37,7 +37,7 @@ class StubService81 < AdsCommon::SavonService
   end
 
   def get_module()
-    return DfpApi::V201602::LineItemService
+    return DfpApi::V201702::LineItemService
   end
 end
 
@@ -46,8 +46,8 @@ class TestDfpIssue81 < Test::Unit::TestCase
 
   TEST_NAMESPACE = 'https://ads.google.com/apis/ads/publisher/'
   TEST_ENDPOINT = (
-      'https://ads.google.com/apis/ads/publisher/v201602/LineItemService?wsdl')
-  TEST_VERSION = :v201602
+      'https://ads.google.com/apis/ads/publisher/v201702/LineItemService?wsdl')
+  TEST_VERSION = :v201702
 
   def setup()
     @stub_service =
@@ -64,7 +64,7 @@ class TestDfpIssue81 < Test::Unit::TestCase
     data = @nori.parse(get_xml_text())[:envelope][:body]
     savon_service =
         StubService81.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
-    assert_instance_of(DfpApi::V201602::LineItemService::ApiException,
+    assert_instance_of(DfpApi::V201702::LineItemService::ApiException,
         savon_service.send(:exception_for_soap_fault, data))
   end
 
@@ -73,7 +73,7 @@ class TestDfpIssue81 < Test::Unit::TestCase
 <?xml version="1.0"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Header>
-    <ResponseHeader xmlns="https://www.google.com/apis/ads/publisher/v201602">
+    <ResponseHeader xmlns="https://www.google.com/apis/ads/publisher/v201702">
       <requestId>abc123</requestId>
       <responseTime>658</responseTime>
     </ResponseHeader>

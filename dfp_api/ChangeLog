@@ -1,3 +1,8 @@
+0.20.0:
+  - Added support for v201702.
+  - Removed support for v201602.
+  - Removed examples for v201605.
+
 0.19.0:
   - Added support for v201611.
   - Removed support for v201508 and v201511.
