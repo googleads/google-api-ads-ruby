@@ -65,7 +65,7 @@ def add_expanded_text_ads(ad_group_id)
   response = ad_group_ad_srv.mutate(operations)
   if response and response[:value]
     response[:value].each do |ad_group_ad|
-      puts ('New expanded text ad with id "%d" and headine "%s - %s" was ' +
+      puts ('New expanded text ad with id "%d" and headline "%s - %s" was ' +
           'added.') % [ad_group_ad[:ad][:id], ad_group_ad[:ad][:headline_part1],
           ad_group_ad[:ad][:headline_part2]]
     end

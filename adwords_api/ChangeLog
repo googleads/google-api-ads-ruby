@@ -1,3 +1,10 @@
+0.23.1:
+  - Support and examples for v201702.
+
+0.23.0:
+  - Removed examples and tests from bundled gem. For code examples, see:
+    https://github.com/googleads/google-api-ads-ruby/tree/master/adwords_api/examples
+
 0.22.0:
   - Removed deprecated API version v201603.
 

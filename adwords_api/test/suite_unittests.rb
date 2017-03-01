@@ -23,10 +23,6 @@ require 'test/unit'
 $:.unshift File.expand_path('../../lib/', __FILE__)
 $:.unshift File.expand_path('../../', __FILE__)
 
-# Work around jruby <= 1.7.8 issue with OpenSSL definition.
-require 'openssl'
-OpenSSL::SSL::SSLContext::METHODS = []
-
 # AdWords API units tests.
 adwords_mask = File.join(File.dirname(__FILE__), 'adwords_api', 'test_*.rb')
 Dir.glob(adwords_mask).each { |file| require file }
