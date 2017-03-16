@@ -15,11 +15,12 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Code template for registry generation for Savon backend
+# Code template for registry generation for Savon backend.
+
+require 'pp'
 
 require 'ads_savon'
 require 'ads_common/build/savon_abstract_generator'
-require 'pp'
 
 module AdsCommon
   module Build
@@ -29,7 +30,7 @@ module AdsCommon
       #
       # This is auto-generated code, changes will be overwritten.
       #
-      # Copyright:: Copyright 2016, Google Inc. All Rights Reserved.
+      # Copyright:: Copyright <%= @year %>, Google Inc. All Rights Reserved.
       # License:: Licensed under the Apache License, Version 2.0.
       #
       # <%= @generator_stamp %>

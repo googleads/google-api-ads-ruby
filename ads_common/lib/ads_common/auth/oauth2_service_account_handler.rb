@@ -124,30 +124,20 @@ module AdsCommon
               'key file provided, only one can be used.'
         end
 
-        p12 = true
         if credentials[:oauth2_keyfile]
           file_name = credentials[:oauth2_keyfile]
           if File.file?(file_name)
-            unless file_name.end_with?('.p12') || file_name.end_with?('.json')
+            unless file_name.end_with?('.json')
               raise AdsCommon::Errors::AuthError,
-                  "Key file '%s' must be either a .p12 or .json file." %
-                  file_name
+                  "Key file '%s' must be a .json file." % file_name
             end
-            p12 = false if file_name.end_with?('.json')
           else
             raise AdsCommon::Errors::AuthError,
                 "Key file '%s' does not exist or not a file." % file_name
           end
-        end
-
-        if credentials[:oauth2_issuer].nil? && p12
+        elsif credentials[:oauth2_issuer].nil?
           raise AdsCommon::Errors::AuthError,
-              'Issuer is not included in the credentials.'
-        end
-
-        if credentials[:oauth2_secret].nil? && p12
-          raise AdsCommon::Errors::AuthError,
-              'Key secret is not included in the credentials.'
+              'Issuer must be specified in the config if not using a key file.'
         end
 
         if credentials[:oauth2_key] &&
@@ -195,16 +185,9 @@ module AdsCommon
       def load_oauth2_service_account_credentials(credentials)
         return credentials unless credentials.include?(:oauth2_keyfile)
         key_file = File.read(credentials[:oauth2_keyfile])
-        key = nil
-        issuer = nil
-        if credentials[:oauth2_keyfile].end_with?('.p12')
-          key_secret = credentials[:oauth2_secret]
-          key = OpenSSL::PKCS12.new(key_file, key_secret).key
-        else
-          key_file_hash = JSON.parse(key_file, :symbolize_names => true)
-          key = OpenSSL::PKey::RSA.new(key_file_hash[:private_key])
-          issuer = key_file_hash[:client_email]
-        end
+        key_file_hash = JSON.parse(key_file, :symbolize_names => true)
+        key = OpenSSL::PKey::RSA.new(key_file_hash[:private_key])
+        issuer = key_file_hash[:client_email]
         result = credentials.merge({:oauth2_key => key})
         result[:oauth2_issuer] = issuer unless issuer.nil?
         result.delete(:oauth2_keyfile)

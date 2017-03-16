@@ -15,7 +15,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Code template generator base class
+# Code template generator base class.
 
 require 'ads_savon'
 require 'erb'
@@ -53,6 +53,7 @@ module AdsCommon
         @modules_open_string = 'module ' +
             [@api_name, @version.to_s.upcase, @service_name].join('; module ')
         @modules_close_string = 'end; end; end'
+        @year = Time.now.year
       end
 
       def remove_lines_with_blanks_only(text)

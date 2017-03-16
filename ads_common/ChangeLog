@@ -1,3 +1,8 @@
+0.13.0:
+  - Removed support for p12 keyfiles for service accounts.
+  - Fixed issue #27. You can now force a refresh when fetching the access token
+    using the get_token function.
+
 0.12.6:
   - Added support for config param :oauth2_prompt and removed support for
     :oauth2_approval_prompt, and updated URI parameter name. The expected value

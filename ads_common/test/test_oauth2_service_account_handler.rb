@@ -36,7 +36,7 @@ class TestOAuthServiceAccount < Test::Unit::TestCase
     assert_nothing_raised do
       validate_credentials(['test', '.json'])
     end
-    assert_nothing_raised do
+    assert_raise(AdsCommon::Errors::AuthError) do
       validate_credentials(['test', '.p12'])
     end
     assert_raises(AdsCommon::Errors::AuthError) do
