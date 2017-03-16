@@ -30,6 +30,7 @@ module AdwordsApi
     public :add_report_definition_hash_order
     public :check_report_definition_hash
     public :get_report_request_headers
+    public :report_definition_to_xml
   end
 
   # Removing OAuth step so we can test header generation.
@@ -195,6 +196,31 @@ class TestReportUtils < Test::Unit::TestCase
     assert_equal(expected2, node[:selector][:order!])
     assert_equal(expected3, node[:selector][:date_range][:order!])
     assert_equal(expected4, node[:selector][:predicates][:order!])
+  end
+
+  # Testing error message for invalid fields.
+  def test_invalid_fields_in_hash()
+    report_definition = {
+      :report_name => 'report_name',
+      :report_type => 'CRITERIA_PERFORMANCE_REPORT',
+      :selector => {
+        :date_range => {:max => '20120405', :min => '20120405'},
+        :predicates => {:operator => 'IN', :field => 'S', :values => ['A']},
+        :fields => ['CampaignId'],
+        :invalid_field => 'some_value'
+      },
+      :download_format => 'CSV',
+      :date_range_type => 'LAST_7_DAYS'
+    }
+    expected_message = "Unknown report definition field(s): [:invalid_field]"
+
+    assert_nothing_raised do
+      begin
+        @report_utils.report_definition_to_xml(report_definition)
+      rescue AdwordsApi::Errors::InvalidReportDefinitionError => e
+        assert_equal(expected_message, e.message)
+      end
+    end
   end
 
   # Testing check_for_xml_error.

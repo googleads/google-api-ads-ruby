@@ -1,3 +1,11 @@
+0.24.0:
+  - Removed deprecated API version v201605.
+  - Require google-ads-common 0.13.0 or later from now on. This removes
+    support for p12 key files for service accounts.
+  - Fixing issue with report_stream handling of streams ending in newline.
+  - Fixed issue #107. Improved error messaging when trying to specify
+    unrecognized fields in report definition.
+
 0.23.1:
   - Support and examples for v201702.
 

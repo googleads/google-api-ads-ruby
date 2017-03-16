@@ -23,11 +23,12 @@
 
   # Auth parameters for OAUTH2_SERVICE_ACCOUNT method. See:
   #   https://developers.google.com/accounts/docs/OAuth2ServiceAccount
-  #:oauth2_issuer: INSERT_OAUTH2_ISSUER_HERE
-  #:oauth2_secret: INSERT_OAUTH2_SECRET_HERE
   # You can provide path to a file with 'oauth2_keyfile' or the key itself with
   # 'oauth2_key' option.
   #:oauth2_keyfile: INSERT_OAUTH2_KEYFILE_HERE
+  # Specify the issuer only if you are using a key directly with no key file.
+  #:oauth2_key: INSERT_OAUTH2_KEY_HERE
+  #:oauth2_issuer: INSERT_OAUTH2_ISSUER_HERE
   # To impersonate a user set prn to an email address.
   #:oauth2_prn: INSERT_OAUTH2_PRN_HERE
 

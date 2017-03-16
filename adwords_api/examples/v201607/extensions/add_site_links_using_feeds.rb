@@ -42,8 +42,8 @@ def add_site_links(campaign_id)
     :attributes => [
       {:type => 'STRING', :name => 'Link Text'},
       {:type => 'URL_LIST', :name => 'Final URLs'},
-      {:type => 'STRING', :name => 'Line 1 Description'},
-      {:type => 'STRING', :name => 'Line 2 Description'}
+      {:type => 'STRING', :name => 'Line 2 Description'},
+      {:type => 'STRING', :name => 'Line 3 Description'}
     ]
   }
 
@@ -57,24 +57,24 @@ def add_site_links(campaign_id)
     # Attribute of type URL_LIST.
     final_url_feed_attribute_id = feed[:attributes][1][:id]
     # Attribute of type STRING.
-    line_1_feed_attribute_id = feed[:attributes][2][:id]
+    line_2_feed_attribute_id = feed[:attributes][2][:id]
     #Attribute of type STRING.
-    line_2_feed_attribute_id = feed[:attributes][3][:id]
+    line_3_feed_attribute_id = feed[:attributes][3][:id]
     puts "Feed with name '%s' and ID %d was added with" %
         [feed[:name], feed[:id]]
     puts "\tText attribute ID %d and Final URLs attribute ID %d " +
-        "and Line 1 attribute ID %d and Line 2 attribute ID %d." % [
+        "and Line 2 attribute ID %d and Line 3 attribute ID %d." % [
           link_text_feed_attribute_id,
           final_url_feed_attribute_id,
-          line_1_feed_attribute_id,
-          line_2_feed_attribute_id
+          line_2_feed_attribute_id,
+          line_3_feed_attribute_id
         ]
 
     sitelinks_data[:feed_id] = feed[:id]
     sitelinks_data[:link_text_feed_id] = link_text_feed_attribute_id
     sitelinks_data[:final_url_feed_id] = final_url_feed_attribute_id
-    sitelinks_data[:line_1_feed_id] = line_1_feed_attribute_id
     sitelinks_data[:line_2_feed_id] = line_2_feed_attribute_id
+    sitelinks_data[:line_3_feed_id] = line_3_feed_attribute_id
   else
     raise new StandardError, 'No feeds were added.'
   end
@@ -84,38 +84,38 @@ def add_site_links(campaign_id)
     {
       :text => 'Home',
       :final_urls => ['http://www.example.com'],
-      :line_1 => 'Home line 1',
-      :line_2 => 'Home line 2'
+      :line_2 => 'Home line 2',
+      :line_3 => 'Home line 3'
     },
     {
       :text => 'Stores',
       :final_urls => ['http://www.example.com/stores'],
-      :line_1 => 'Stores line 1',
-      :line_2 => 'Stores line 2'
+      :line_2 => 'Stores line 2',
+      :line_3 => 'Stores line 3'
      },
     {
       :text => 'On Sale',
       :final_urls => ['http://www.example.com/sale'],
-      :line_1 => 'On Sale line 1',
-      :line_2 => 'On Sale line 2'
+      :line_2 => 'On Sale line 2',
+      :line_3 => 'On Sale line 3'
     },
     {
       :text => 'Support',
       :final_urls => ['http://www.example.com/support'],
-      :line_1 => 'Support line 1',
-      :line_2 => 'Support line 2'
+      :line_2 => 'Support line 2',
+      :line_3 => 'Support line 3'
     },
     {
       :text => 'Products',
       :final_urls => ['http://www.example.com/products'],
-      :line_1 => 'Products line 1',
-      :line_2 => 'Products line 2'
+      :line_2 => 'Products line 2',
+      :line_3 => 'Products line 3'
     },
     {
       :text => 'About Us',
       :final_urls => ['http://www.example.com/about'],
-      :line_1 => 'About line 1',
       :line_2 => 'About line 2',
+      :line_3 => 'About line 3',
       :location_id => '21137'
     }
   ]
@@ -133,12 +133,12 @@ def add_site_links(campaign_id)
           :string_values => item[:final_urls]
         },
         {
-          :feed_attribute_id => sitelinks_data[:line_1_feed_id],
-          :string_value => item[:line_1]
-        },
-        {
           :feed_attribute_id => sitelinks_data[:line_2_feed_id],
           :string_value => item[:line_2]
+        },
+        {
+          :feed_attribute_id => sitelinks_data[:line_3_feed_id],
+          :string_value => item[:line_3]
         }
       ]
     }
@@ -187,12 +187,12 @@ def add_site_links(campaign_id)
         :field_id => PLACEHOLDER_FIELD_SITELINK_FINAL_URLS
       },
       {
-        :feed_attribute_id => sitelinks_data[:line_1_feed_id],
-        :field_id => PLACEHOLDER_FIELD_SITELINK_LINE_1_TEXT
-      },
-      {
         :feed_attribute_id => sitelinks_data[:line_2_feed_id],
         :field_id => PLACEHOLDER_FIELD_SITELINK_LINE_2_TEXT
+      },
+      {
+        :feed_attribute_id => sitelinks_data[:line_3_feed_id],
+        :field_id => PLACEHOLDER_FIELD_SITELINK_LINE_3_TEXT
       }
     ]
   }
@@ -252,8 +252,8 @@ if __FILE__ == $0
   PLACEHOLDER_SITELINKS = 1
   PLACEHOLDER_FIELD_SITELINK_LINK_TEXT = 1
   PLACEHOLDER_FIELD_SITELINK_FINAL_URLS = 5
-  PLACEHOLDER_FIELD_SITELINK_LINE_1_TEXT = 3
-  PLACEHOLDER_FIELD_SITELINK_LINE_2_TEXT = 4
+  PLACEHOLDER_FIELD_SITELINK_LINE_2_TEXT = 3
+  PLACEHOLDER_FIELD_SITELINK_LINE_3_TEXT = 4
 
   begin
     # Campaign ID to add site link to.

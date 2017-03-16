@@ -308,7 +308,17 @@ module AdwordsApi
     def report_definition_to_xml(report_definition)
       check_report_definition_hash(report_definition)
       add_report_definition_hash_order(report_definition)
-      return Gyoku.xml({:report_definition => report_definition})
+      begin
+        return Gyoku.xml({:report_definition => report_definition})
+      rescue ArgumentError => e
+        if e.message.include?("order!")
+          unknown_fields =
+              e.message.slice(e.message.index('['), e.message.length)
+          raise AdwordsApi::Errors::InvalidReportDefinitionError,
+              "Unknown report definition field(s): %s" % unknown_fields
+        end
+        raise e
+      end
     end
 
     # Checks if the report definition looks correct.
