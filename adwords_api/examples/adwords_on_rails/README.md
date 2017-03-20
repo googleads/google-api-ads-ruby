@@ -54,7 +54,7 @@ How do I get started?
 
 8. Start the server:
 
-    $ script/rails server
+    $ rails s
 
 You should be able to access the application now by pointing your browser to:
 
