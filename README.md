@@ -23,7 +23,7 @@ programmatically access your accounts.
  - Support for logging incoming and outgoing SOAP messages
  - Support for logging request information
  - Based on Savon library
- - Ruby 2.1 and 2.2 compatible
+ - Ruby 2.1, 2.2, 2.3, and 2.4 compatible
  - OAuth2 and OAuth2 JWT built-in authentication
  - Local validation for parameter number and type on API calls
  - Thread-safe
