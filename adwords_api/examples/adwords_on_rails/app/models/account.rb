@@ -7,7 +7,7 @@ class Account
 
   def initialize(api_account)
     @customer_id = api_account[:customer_id]
-    @company_name = api_account[:company_name]
+    @company_name = api_account[:name]
     @child_accounts = []
   end
 

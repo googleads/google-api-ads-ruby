@@ -19,14 +19,14 @@ class AccountController < ApplicationController
 
     # First get the AdWords manager account ID.
     customer_srv = adwords.service(:CustomerService, get_api_version())
-    customer = customer_srv.get()
+    customers = customer_srv.get_customers()
     adwords.credential_handler.set_credential(
-        :client_customer_id, customer[:customer_id])
+        :client_customer_id, customers.first[:customer_id])
 
     # Then find all child accounts using that ID.
     managed_customer_srv = adwords.service(
         :ManagedCustomerService, get_api_version())
-    selector = {:fields => ['CustomerId', 'CompanyName']}
+    selector = {:fields => ['CustomerId', 'Name']}
     result = nil
     begin
       result = managed_customer_srv.get(selector)

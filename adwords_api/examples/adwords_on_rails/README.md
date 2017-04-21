@@ -26,7 +26,7 @@ developers and to demonstrate some of the core functionality in the API.
 How do I get started?
 ---------------------
 
-1. Make sure you have Ruby 2.1 or later installed:
+1. Make sure you have Ruby 2.2 or later installed:
 
     $ ruby -v
     ruby 2.2.2p95 (2015-04-13 revision 50295) [x86_64-linux]
@@ -46,7 +46,7 @@ How do I get started?
 
 6. Initialize default local SQLite schema:
 
-    $ rake db:migrate
+    $ rails db:migrate
 
 7. Configure AdWords API settings:
 
@@ -54,7 +54,7 @@ How do I get started?
 
 8. Start the server:
 
-    $ script/rails server
+    $ rails server
 
 You should be able to access the application now by pointing your browser to:
 
