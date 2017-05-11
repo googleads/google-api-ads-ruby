@@ -63,9 +63,11 @@ def create_creative_from_template()
   asset_variable_value = {
       :xsi_type => 'AssetCreativeTemplateVariableValue',
       :unique_name => 'Imagefile',
-      :asset_byte_array => image_data_base64,
-      # Filenames must be unique.
-      :file_name => "image%d.jpg" % Time.new.to_i
+      :asset => {
+        :asset_byte_array => image_data_base64,
+        # Filenames must be unique.
+        :file_name => "image%d.jpg" % Time.new.to_i
+      }
   }
 
   # Create the image width variable value.
