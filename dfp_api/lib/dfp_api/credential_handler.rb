@@ -45,6 +45,11 @@ module DfpApi
       super(extra_ids, agent_app)
     end
 
+    # Returns the network code specified in the current credentials.
+    def identifier()
+      return credentials[:extra_headers]['networkCode']
+    end
+
     private
 
     # Validates that the right credentials are being used for the chosen

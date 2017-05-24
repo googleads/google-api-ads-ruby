@@ -6,14 +6,25 @@
 :authentication:
   # Authentication method, methods currently supported:
   # OAUTH2, OAUTH2_SERVICE_ACCOUNT
-  :method: OAuth2
+  :method: OAUTH2_SERVICE_ACCOUNT
+
+  # Auth parameters for OAUTH2_SERVICE_ACCOUNT method. See:
+  #   https://developers.google.com/accounts/docs/OAuth2ServiceAccount
+  # You can provide path to a file with 'oauth2_keyfile' or the key itself with
+  # 'oauth2_key' option.
+  :oauth2_keyfile: INSERT_OAUTH2_KEYFILE_HERE
+  # Specify the issuer only if you are using a key directly with no key file.
+  #:oauth2_key: INSERT_OAUTH2_KEY_HERE
+  #:oauth2_issuer: INSERT_OAUTH2_ISSUER_HERE
+  # To impersonate a user set prn to an email address.
+  #:oauth2_prn: INSERT_OAUTH2_PRN_HERE
 
   # Auth parameters for OAUTH2 method.
   # Set the OAuth2 client id and secret. Register your application here to
   # obtain these values:
   #   https://console.developers.google.com/
-  :oauth2_client_id: INSERT_OAUTH2_CLIENT_ID_HERE
-  :oauth2_client_secret: INSERT_OAUTH2_CLIENT_SECRET_HERE
+  #:oauth2_client_id: INSERT_OAUTH2_CLIENT_ID_HERE
+  #:oauth2_client_secret: INSERT_OAUTH2_CLIENT_SECRET_HERE
   # Optional, see: https://developers.google.com/accounts/docs/OAuth2WebServer
   #:oauth2_callback: INSERT_OAUTH2_CALLBACK_URL_HERE
   #:oauth2_state: INSERT_OAUTH2_STATE_HERE
@@ -22,16 +33,6 @@
   # You can define extra scopes so that you can reuse your refresh token for
   # other APIs.
   #:oauth2_extra_scopes: [INSERT_EXTRA_SCOPES_HERE]
-
-  # Auth parameters for OAUTH2_SERVICE_ACCOUNT method. See:
-  #   https://developers.google.com/accounts/docs/OAuth2ServiceAccount
-  #:oauth2_issuer: INSERT_OAUTH2_ISSUER_HERE
-  #:oauth2_secret: INSERT_OAUTH2_SECRET_HERE
-  # You can provide path to a file with 'oauth2_keyfile' or the key itself with
-  # 'oauth2_key' option.
-  #:oauth2_keyfile: INSERT_OAUTH2_KEYFILE_HERE
-  # To impersonate a user set prn to an email address.
-  #:oauth2_prn: INSERT_OAUTH2_PRN_HERE
 
   # Other parameters.
   :application_name: INSERT_APPLICATION_NAME_HERE

@@ -1,3 +1,10 @@
+0.21.0:
+  - Added support for v201705.
+  - Removed support for v201605.
+  - Removed examples for v201608.
+  - Require google-ads-common 0.14.0 or later from now on. This improves logging
+    and removes support for p12 key files for service accounts.
+
 0.20.0:
   - Added support for v201702.
   - Removed support for v201602.
