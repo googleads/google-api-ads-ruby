@@ -98,6 +98,12 @@ module AdsCommon
       @auth_handler = auth_handler
     end
 
+    # Get the unique identifier for the current account/network context. This
+    # is meant to be overriden by each client library.
+    def identifier()
+      return nil
+    end
+
     private
 
     # Loads the credentials from the config data.

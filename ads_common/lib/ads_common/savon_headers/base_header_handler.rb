@@ -73,6 +73,11 @@ module AdsCommon
         generate_headers(request, soap)
       end
 
+      # Returns the account/network identifier based on the current context.
+      def identifier()
+        return @credential_handler.identifier()
+      end
+
       private
 
       # Returns element name for SOAP header.

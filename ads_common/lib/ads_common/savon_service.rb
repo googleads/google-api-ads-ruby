@@ -32,6 +32,7 @@ module AdsCommon
     attr_reader :namespace
 
     FALLBACK_API_ERROR_EXCEPTION = "ApiException"
+    MAX_FAULT_LOG_LENGTH = 16000
 
     # Creates a new service.
     def initialize(config, endpoint, namespace, version)
@@ -68,7 +69,7 @@ module AdsCommon
         AdsCommon::Http.configure_httpi(@config, httpi)
       end
       client.config.raise_errors = false
-      client.config.logger.subject = get_logger()
+      client.config.logger.subject = NoopLogger.new
       return client
     end
 
@@ -86,9 +87,9 @@ module AdsCommon
       registry = get_service_registry()
       validator = ParametersValidator.new(registry)
       args = validator.validate_args(action_name, args)
-      response = handle_soap_request(
+      request_info, response = handle_soap_request(
           action_name.to_sym, false, args, validator.extra_namespaces)
-      log_headers(response.http.headers)
+      do_logging(action_name, request_info, response)
       handle_errors(response)
       extractor = ResultsExtractor.new(registry)
       result = extractor.extract_result(response, action_name, &block)
@@ -96,24 +97,20 @@ module AdsCommon
       return result
     end
 
-    # Logs response headers.
-    # TODO: this needs to go on http or httpi level.
-    def log_headers(headers)
-      get_logger().debug(headers.map {|k, v| [k, v].join(': ')}.join(', '))
-    end
-
     # Executes the SOAP request with original SOAP name.
     def handle_soap_request(action, xml_only, args, extra_namespaces)
       original_action_name =
           get_service_registry.get_method_signature(action)[:original_name]
       original_action_name = action if original_action_name.nil?
+      request_info = nil
       response = @client.request(original_action_name) do |soap, wsdl, http|
         soap.body = args
         @header_handler.prepare_request(http, soap)
         soap.namespaces.merge!(extra_namespaces) unless extra_namespaces.nil?
         return soap.to_xml if xml_only
+        request_info = RequestInfo.new(soap.to_xml, http.headers, http.url)
       end
-      return response
+      return request_info, response
     end
 
     # Checks for errors in response and raises appropriate exception.
@@ -165,6 +162,104 @@ module AdsCommon
               "Wrong number of block parameters: %d" % block.arity
       end
       return nil
+    end
+
+    # Log the request, response, and summary lines.
+    def do_logging(action, request, response)
+      logger = get_logger()
+      return unless should_log_summary(logger.level, response.soap_fault?)
+
+      response_hash = response.hash
+
+      soap_headers = {}
+      begin
+        soap_headers = response_hash[:envelope][:header][:response_header]
+      rescue NoMethodError
+        # If there are no headers, just ignore. We'll log what we know.
+      end
+
+      summary_message = ('ID: %s, URL: %s, Service: %s, Action: %s, Response ' +
+          'time: %sms, Request ID: %s') % [@header_handler.identifier,
+          request.url, self.class.to_s.split("::").last, action,
+          soap_headers[:response_time], soap_headers[:request_id]]
+      if soap_headers[:operations]
+        summary_message += ', Operations: %s' % soap_headers[:operations]
+      end
+      summary_message += ', Is fault: %s' % response.soap_fault?
+
+      request_message = nil
+      response_message = nil
+
+      if should_log_payloads(logger.level, response.soap_fault?)
+        request_message = 'Outgoing request: %s %s' %
+            [format_headers(request.headers), sanitize_request(request.body)]
+        response_message = 'Incoming response: %s %s' %
+            [format_headers(response.http.headers), response.http.body]
+      end
+
+      if response.soap_fault?
+        summary_message += ', Fault message: %s' % format_fault(
+            response_hash[:envelope][:body][:fault][:faultstring])
+        logger.warn(summary_message)
+        logger.info(request_message) if request_message
+        logger.info(response_message) if response_message
+      else
+        logger.info(summary_message)
+        logger.debug(request_message) if request_message
+        logger.debug(response_message) if response_message
+      end
+    end
+
+    # Format headers, redacting sensitive information.
+    def format_headers(headers)
+      return headers.map do |k, v|
+        v = 'REDACTED' if k == 'Authorization'
+        [k, v].join(': ')
+      end.join(', ')
+    end
+
+    # Sanitize the request body, redacting sensitive information.
+    def sanitize_request(body)
+      body.gsub(/developerToken>[a-zA-Z0-9_\-]+<\//,
+          'developerToken>REDACTED</')
+    end
+
+    # Format the fault message by capping length and removing newlines.
+    def format_fault(message)
+      message = message[0...MAX_FAULT_LOG_LENGTH] if
+          message.length > MAX_FAULT_LOG_LENGTH
+      message = message.gsub("\n", " ")
+      return message
+    end
+
+    # Check whether or not to log request summaries based on log level.
+    def should_log_summary(level, is_fault)
+      # Fault summaries log at WARN.
+      return level <= Logger::WARN if is_fault
+      # Success summaries log at INFO.
+      return level <= Logger::INFO
+    end
+
+    # Check whether or not to log payloads based on log level.
+    def should_log_payloads(level, is_fault)
+      # Fault payloads log at INFO.
+      return level <= Logger::INFO if is_fault
+      # Success payloads log at DEBUG.
+      return level <= Logger::DEBUG
+    end
+
+    class RequestInfo
+      attr_accessor :body, :headers, :url
+
+      def initialize(body, headers, url)
+        @body, @headers, @url = body, headers, url
+      end
+    end
+
+    class NoopLogger
+      def method_missing(m, *args, &block)
+        nil
+      end
     end
   end
 end

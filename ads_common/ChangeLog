@@ -1,3 +1,6 @@
+0.14.0:
+  - Standardizing logging format for requests, response, and summary.
+
 0.13.0:
   - Removed support for p12 keyfiles for service accounts.
   - Fixed issue #27. You can now force a refresh when fetching the access token
