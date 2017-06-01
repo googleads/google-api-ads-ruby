@@ -1,3 +1,7 @@
+0.24.1:
+  - Support and examples for v201705.
+  - Require google-ads-common 0.14.0 or later from now on for logging updates.
+
 0.24.0:
   - Removed deprecated API version v201605.
   - Require google-ads-common 0.13.0 or later from now on. This removes

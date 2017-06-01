@@ -62,6 +62,11 @@ module AdwordsApi
       super(extra_ids, agent_app)
     end
 
+    # Returns the client customer ID specified in the current credentials.
+    def identifier()
+      return credentials[:extra_headers]['clientCustomerId']
+    end
+
     private
 
     # Validates that the right credentials are being used for the chosen
