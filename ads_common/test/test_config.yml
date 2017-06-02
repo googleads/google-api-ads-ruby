@@ -9,3 +9,5 @@
 :service:
   :environment: sandbox
   :use_ruby_names: false
+:template:
+  :example: <%= 'something replaced' %>

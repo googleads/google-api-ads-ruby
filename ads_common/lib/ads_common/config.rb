@@ -19,6 +19,7 @@
 # rewrite it in memory.
 
 require 'yaml'
+require 'erb'
 
 require 'ads_common/errors'
 
@@ -78,7 +79,7 @@ module AdsCommon
     #
     def load(filename)
       begin
-        new_config = YAML::load_file(filename)
+        new_config = YAML::load(ERB.new(File.read(filename)).result)
         if new_config.kind_of?(Hash)
           @config = new_config
         else
