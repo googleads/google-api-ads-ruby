@@ -33,7 +33,8 @@ def get_all_disapproved_ads_with_awql(ad_group_id)
   ad_group_ad_srv = adwords.service(:AdGroupAdService, API_VERSION)
 
   # Get all the ads in this ad group.
-  query = 'SELECT Id, PolicySummary WHERE AdGroupId = %d ORDER BY Id' %
+  query = ('SELECT Id, PolicySummary WHERE AdGroupId = %d AND' +
+      ' CombinedApprovalStatus = DISAPPROVED ORDER BY Id') %
       ad_group_id
 
   # Set the initial values.
@@ -47,7 +48,6 @@ def get_all_disapproved_ads_with_awql(ad_group_id)
     if page[:entries]
       page[:entries].each do |ad_group_ad|
         policy_summary = ad_group_ad[:policy_summary]
-        next unless policy_summary[:combined_approval_status] == 'DISAPPROVED'
         disapproved_ads_count += 1
         puts ("Ad with ID %d and type '%s' was disapproved with the " +
             "following policy topic entries:") % [ad_group_ad[:ad][:id],

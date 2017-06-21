@@ -17,7 +17,7 @@
 #           limitations under the License.
 #
 # This example removes an ad using the 'REMOVE' operator. To get ads, run
-# get_text_ads.rb.
+# get_expanded_text_ads.rb.
 
 require 'adwords_api'
 

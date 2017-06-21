@@ -37,7 +37,12 @@ def get_all_disapproved_ads(ad_group_id)
     :fields => ['Id', 'PolicySummary'],
     :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
     :predicates => [
-      {:field => 'AdGroupId', :operator => 'IN', :values => [ad_group_id]}
+      {:field => 'AdGroupId', :operator => 'IN', :values => [ad_group_id]},
+      {
+        :field => 'CombinedApprovalStatus',
+        :operator => 'IN',
+        :values => ['DISAPPROVED']
+      }
     ],
     :paging => {
       :start_index => 0,
@@ -55,7 +60,6 @@ def get_all_disapproved_ads(ad_group_id)
     if page[:entries]
       page[:entries].each do |ad_group_ad|
         policy_summary = ad_group_ad[:policy_summary]
-        next unless policy_summary[:combined_approval_status] == 'DISAPPROVED'
         disapproved_ads_count += 1
         puts ("Ad with ID %d and type '%s' was disapproved with the " +
             "following policy topic entries:") % [ad_group_ad[:ad][:id],
