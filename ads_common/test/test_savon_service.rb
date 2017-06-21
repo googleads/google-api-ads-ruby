@@ -90,9 +90,14 @@ class TestSavonService < Test::Unit::TestCase
     test2 = "<xml><element1></element1><element2></element2></xml>"
     test3 = "<xml><ns1:developerToken>w-x_Y-Z_</ns1:developerToken></xml>"
     expected3 = "<xml><ns1:developerToken>REDACTED</ns1:developerToken></xml>"
+    test4 = "<xml><httpAuthorizationHeader>Authorization: Bearer " +
+        "1/abcdEFGH1234</httpAuthorizationHeader></xml>"
+    expected4 = "<xml><httpAuthorizationHeader>REDACTED" +
+        "</httpAuthorizationHeader></xml>"
     assert_equal(expected1, @stub_service.sanitize_request(test1))
     assert_equal(test2, @stub_service.sanitize_request(test2))
     assert_equal(expected3, @stub_service.sanitize_request(test3))
+    assert_equal(expected4, @stub_service.sanitize_request(test4))
   end
 
   def test_format_fault()

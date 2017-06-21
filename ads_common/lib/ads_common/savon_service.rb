@@ -220,8 +220,11 @@ module AdsCommon
 
     # Sanitize the request body, redacting sensitive information.
     def sanitize_request(body)
-      body.gsub(/developerToken>[a-zA-Z0-9_\-]+<\//,
+      body = body.gsub(/developerToken>[^<]+<\//,
           'developerToken>REDACTED</')
+      body = body.gsub(/httpAuthorizationHeader>[^<]+<\//,
+          'httpAuthorizationHeader>REDACTED</')
+      return body
     end
 
     # Format the fault message by capping length and removing newlines.
