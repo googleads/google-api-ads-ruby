@@ -22,7 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency "akami",    "~> 1.2"
   s.add_dependency "gyoku",    "~> 1.2"
 
-  s.add_dependency "builder",  "~> 3.2"
+  s.add_dependency "builder",  "~> 3.0"
   s.add_dependency "nokogiri", "~> 1.6"
 
   s.add_development_dependency "rake",    "~> 10.1"
@@ -30,6 +30,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "mocha",   "~> 0.14"
   s.add_development_dependency "timecop", "~> 0.3"
 
-  s.files = Dir["**/*"]
+  s.files = Dir.glob('lib/**/*') + %w(LICENSE README.md ChangeLog)
   s.require_path = "lib"
 end

@@ -1,3 +1,6 @@
+0.14.2:
+
+
 0.14.1:
   - Scrubbing an additional sensitive field present in some AdWords requests.
 

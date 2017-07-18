@@ -39,6 +39,6 @@ Gem::Specification.new do |s|
   s.test_files = ['test/suite_unittests.rb']
   s.add_runtime_dependency('google-ads-common', '~> 0.14.1')
   s.add_runtime_dependency('nori', '~> 2.6')
-  s.add_development_dependency('rr', '~> 1.1.2')
-  s.add_development_dependency('webmock', '~> 1.21.0')
+  s.add_development_dependency('rr', '~> 1.1', '>= 1.1.2')
+  s.add_development_dependency('webmock', '~> 1.21')
 end

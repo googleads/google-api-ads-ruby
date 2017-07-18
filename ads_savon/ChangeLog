@@ -1,3 +1,6 @@
+1.0.3:
+  - Relaxed builder dependencies to improve compatibility with Rails.
+
 1.0.2:
   - Fixing https://github.com/googleads/google-api-ads-ruby/issues/7
   - Updating nokogiri and builder dependencies to newer versions.
