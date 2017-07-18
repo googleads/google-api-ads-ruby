@@ -1,4 +1,3 @@
-#!/usr/bin/env ruby
 # Encoding: utf-8
 #
 # Copyright:: Copyright 2011, Google Inc. All Rights Reserved.
@@ -16,8 +15,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Helper methods for loading and managing the available services in the DFP
-# API.
+# Helper methods for loading and managing the available services in the DFP API.
 
 require 'ads_common/api_config'
 
