@@ -120,6 +120,10 @@ module AdsCommon
       strict_ssl =
           config.read('connection.strict_ssl_verification', true)
       httpi.auth.ssl.verify_mode = strict_ssl ? :peer : :none
+      if logger && !strict_ssl
+        logger.warn('HTTPS peer validation is disabled. This is NOT ' +
+            'secure and NOT recommended.')
+      end
     end
   end
 end
