@@ -94,10 +94,16 @@ class TestSavonService < Test::Unit::TestCase
         "1/abcdEFGH1234</httpAuthorizationHeader></xml>"
     expected4 = "<xml><httpAuthorizationHeader>REDACTED" +
         "</httpAuthorizationHeader></xml>"
+    test5 = "<some_xml><developerToken>ab1cdEF2GH-IJ3KL_mn4OP" +
+        "</developerToken>"
+    test5 += "<operation>something</operation>" * 1024 + "</some_xml>"
+    expected5 = "<some_xml><developerToken>REDACTED</developerToken>"
+    expected5 += "<operation>something</operation>" * 1024 + "</some_xml>"
     assert_equal(expected1, @stub_service.sanitize_request(test1))
     assert_equal(test2, @stub_service.sanitize_request(test2))
     assert_equal(expected3, @stub_service.sanitize_request(test3))
     assert_equal(expected4, @stub_service.sanitize_request(test4))
+    assert_equal(expected5, @stub_service.sanitize_request(test5))
   end
 
   def test_format_fault()

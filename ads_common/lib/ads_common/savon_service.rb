@@ -33,6 +33,7 @@ module AdsCommon
 
     FALLBACK_API_ERROR_EXCEPTION = "ApiException"
     MAX_FAULT_LOG_LENGTH = 16000
+    HEADER_PEEK_LENGTH = 1024
 
     # Creates a new service.
     def initialize(config, endpoint, namespace, version)
@@ -220,19 +221,23 @@ module AdsCommon
 
     # Sanitize the request body, redacting sensitive information.
     def sanitize_request(body)
-      body = body.gsub(/developerToken>[^<]+<\//,
-          'developerToken>REDACTED</')
+      body_tail = ""
+      if body.length > HEADER_PEEK_LENGTH
+        body_tail = body[HEADER_PEEK_LENGTH, body.length]
+        body = body[0, HEADER_PEEK_LENGTH]
+      end
+      body = body.gsub(/developerToken>[^<]+<\//, 'developerToken>REDACTED</')
       body = body.gsub(/httpAuthorizationHeader>[^<]+<\//,
           'httpAuthorizationHeader>REDACTED</')
-      return body
+      return body + body_tail
     end
 
     # Format the fault message by capping length and removing newlines.
     def format_fault(message)
-      message = message[0...MAX_FAULT_LOG_LENGTH] if
-          message.length > MAX_FAULT_LOG_LENGTH
-      message = message.gsub("\n", " ")
-      return message
+      if message.length > MAX_FAULT_LOG_LENGTH
+        message = message[0, MAX_FAULT_LOG_LENGTH]
+      end
+      return message.gsub("\n", ' ')
     end
 
     # Check whether or not to log request summaries based on log level.

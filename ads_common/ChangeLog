@@ -1,5 +1,6 @@
 0.14.2:
   - Throw explicit warning for disabled SSL peer verification.
+  - Small performance improvements for large requests.
 
 0.14.1:
   - Scrubbing an additional sensitive field present in some AdWords requests.

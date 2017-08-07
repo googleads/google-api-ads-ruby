@@ -23,8 +23,7 @@ module AdsCommon
 
       # Returns the String in lowerCamelCase.
       def lower_camelcase()
-        result = dup()
-        result.gsub!(/^([A-Z])/) {$1.downcase()}
+        result = gsub(/^([A-Z])/) {$1.downcase()}
         result.gsub!(/(?:_)([a-zA-Z\d])/) {$1.upcase()}
         return result
       end
