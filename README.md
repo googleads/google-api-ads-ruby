@@ -6,12 +6,10 @@ client libraries for the various SOAP-based Ads APIs at Google.
 The Ruby client libraries make it easier to write Ruby clients to
 programmatically access your accounts.
 
-**New to the library?** Take a look at the [wiki for this project]
-(https://github.com/googleads/google-api-ads-ruby/wiki).
+**New to the library?** Take a look at the [wiki for this project](https://github.com/googleads/google-api-ads-ruby/wiki).
 
 **Want to stay up-to-date with our latest releases?** Subscribe to the
-[master RSS feed on GitHub]
-(https://github.com/googleads/google-api-ads-ruby/commits/master.atom).
+[master RSS feed on GitHub](https://github.com/googleads/google-api-ads-ruby/commits/master.atom).
 
 ## Products currently supported
 
@@ -57,8 +55,7 @@ product to your home directory and fill out the required properties.
 
 1. Setup your OAuth2 credentials.
 
-  The AdWords and DoubleClick for Publishers APIs use
-[OAuth2](http://oauth.net/2/) as the authentication mechanism. Follow the
+  The AdWords and DoubleClick for Publishers APIs use [OAuth2](http://oauth.net/2/) as the authentication mechanism. Follow the
 appropriate guide below based on your use case.
 
   **If you're accessing an API using your own credentials...**
@@ -77,18 +74,14 @@ appropriate guide below based on your use case.
 
 ## Submitting bug reports and/or feature requests
 
-If you have issues directly related to the client library, use the [issue
-tracker](https://github.com/googleads/google-api-ads-ruby/issues).
+If you have issues directly related to the client library, use the [issue tracker](https://github.com/googleads/google-api-ads-ruby/issues).
 
-If you have issues pertaining to a specific product, use the product support
-forums:
+If you have issues pertaining to a specific product, use the product support forums:
 
 * [AdWords](https://groups.google.com/forum/#!forum/adwords-api)
 * [DoubleClick for Publishers](https://groups.google.com/forum/#!forum/google-doubleclick-for-publishers-api)
 
-Make sure to subscribe to our [Google Plus page]
-(https://plus.google.com/+GoogleAdsDevelopers) for API change announcements and
-other news.
+Make sure to subscribe to [our blog](https://googleadsdeveloper.blogspot.com) for API change announcements and other news.
 
 ## Logging
 
@@ -103,8 +96,7 @@ other news.
 
 ## Contributing
 
-See [CONTRIBUTING.md]
-(https://github.com/googleads/google-api-ads-ruby/blob/master/CONTRIBUTING.md)
+See [CONTRIBUTING.md](https://github.com/googleads/google-api-ads-ruby/blob/master/CONTRIBUTING.md)
 for details on how to contribute.
 
 Note: if you have an ad blocker active, you might experience issues while
