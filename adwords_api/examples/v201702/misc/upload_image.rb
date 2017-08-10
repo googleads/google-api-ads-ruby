@@ -32,13 +32,13 @@ def upload_image()
 
   media_srv = adwords.service(:MediaService, API_VERSION)
 
-  # Create image.
-  image_url =
-      'http://www.google.com/intl/en/adwords/select/images/samples/inline.jpg'
   # This utility method retrieves the contents of a URL using all of the config
   # options provided to the Api object.
+  image_url = 'https://goo.gl/3b9Wfh'
   image_data = AdsCommon::Http.get(image_url, adwords.config)
   base64_image_data = Base64.encode64(image_data)
+
+  # Create image.
   image = {
     # The 'xsi_type' field allows you to specify the xsi:type of the object
     # being created. It's only necessary when you must provide an explicit
