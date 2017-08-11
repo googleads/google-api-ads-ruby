@@ -13,8 +13,8 @@ programmatically access your accounts.
 
 ## Products currently supported
 
- - Google AdWords API
- - Google's DoubleClick For Publishers API
+ - Google AdWords API [![AdWords Gem Version](https://badge.fury.io/rb/google-adwords-api.svg)](https://badge.fury.io/rb/google-adwords-api)
+ - Google's DoubleClick For Publishers API [![DFP Gem Version](https://badge.fury.io/rb/google-dfp-api.svg)](https://badge.fury.io/rb/google-dfp-api)
 
 ## Client library features
 
