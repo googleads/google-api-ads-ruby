@@ -43,8 +43,7 @@ def create_custom_creative()
   advertiser_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'.to_i
 
   # Prepare image data for creative.
-  image_url =
-      'http://www.google.com/intl/en/adwords/select/images/samples/inline.jpg'
+  image_url = 'https://goo.gl/3b9Wfh'
   image_data = AdsCommon::Http.get(image_url, dfp.config)
   image_data_base64 = Base64.encode64(image_data)
 
@@ -66,7 +65,7 @@ def create_custom_creative()
       :html_snippet => "<a href='%%CLICK_URL_UNESC%%%%DEST_URL%%'>" +
         "<img src='%%FILE:IMAGE_ASSET%%'/></a><br>Click above for great deals!",
       # Set the creative size.
-      :size => {:width => 300, :height => 250, :is_aspect_ratio => false}
+      :size => {:width => 600, :height => 315, :is_aspect_ratio => false}
   }
 
   # Create the creatives on the server.

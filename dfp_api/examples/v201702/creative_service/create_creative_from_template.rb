@@ -50,12 +50,11 @@ def create_creative_from_template()
       :name => 'Template creative',
       :advertiser_id => advertiser_id,
       :creative_template_id => creative_template_id,
-      :size => {:width => 300, :height => 250, :is_aspect_ratio => false}
+      :size => {:width => 600, :height => 315, :is_aspect_ratio => false}
   }
 
   # Prepare image data for asset value.
-  image_url =
-      'http://www.google.com/intl/en/adwords/select/images/samples/inline.jpg'
+  image_url = 'https://goo.gl/3b9Wfh'
   image_data = AdsCommon::Http.get(image_url, dfp.config)
   image_data_base64 = Base64.encode64(image_data)
 

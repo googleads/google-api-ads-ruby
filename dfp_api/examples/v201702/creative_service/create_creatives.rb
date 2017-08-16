@@ -43,11 +43,10 @@ def create_creatives()
   advertiser_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'.to_i
 
   # Prepare image data for creative.
-  image_url =
-      'http://www.google.com/intl/en/adwords/select/images/samples/inline.jpg'
+  image_url = 'https://goo.gl/3b9Wfh'
   image_data = AdsCommon::Http.get(image_url, dfp.config)
   image_data_base64 = Base64.encode64(image_data)
-  size = {:width => 300, :height => 250}
+  size = {:width => 600, :height => 315}
 
   # Create an array to store local creative objects.
   creatives = (1..ITEM_COUNT).map do |index|
@@ -60,7 +59,7 @@ def create_creatives()
         :primary_image_asset => {
             :file_name => 'image.jpg',
             :asset_byte_array => image_data_base64,
-            :size => size
+            :size => size.dup
         }
     }
   end
