@@ -28,7 +28,9 @@ module AdwordsApi
       yield "a\n"
       yield "b\nc"
       yield "\n\n\nd"
-      yield "e\n"
+      yield "e"
+      yield "f\ng\xe4\xb9"
+      yield "\x91h\n"
     end
   end
 end
@@ -55,7 +57,7 @@ class TestReportStream < Test::Unit::TestCase
   end
 
   def test_read_by_line()
-    expected_lines = ["a", "b", "c", "", "", "de"]
+    expected_lines = ["a", "b", "c", "", "", "def", "g\u4e51h"]
     actual_lines = []
     @report_utils.get_stream_helper(nil).each_line do |line|
       actual_lines << line

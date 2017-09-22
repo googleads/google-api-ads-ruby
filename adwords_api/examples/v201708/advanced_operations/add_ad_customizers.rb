@@ -138,6 +138,10 @@ def create_customizer_feed(adwords, feed_name)
   added_feed = ad_customizer_srv.mutate([operation])[:value].first()
   puts "Created ad customizer feed with ID = %d and name = '%s'." %
       [added_feed[:feed_id], added_feed[:feed_name]]
+  added_feed[:feed_attributes].each do |feed_attribute|
+    puts "  ID: %d, name: '%s', type: %s" %
+        [feed_attribute[:id], feed_attribute[:name], feed_attribute[:type]]
+  end
   return {
     :feed_id => added_feed[:feed_id],
     :name_id => added_feed[:feed_attributes][0][:id],

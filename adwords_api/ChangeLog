@@ -1,3 +1,13 @@
+1.0.0:
+  - Major version bump. The library has been stable and feature complete for
+    some time, and this is more accurately reflected by this version number.
+  - Remove deprecated API version v201609.
+  - No longer include test files in the built gem.
+  - Fixed potential issue where ReportStream could not split sometimes when a
+    unicode character was returned across separate batches.
+  - Removing support for multiple environments.
+  - Require google-ads-common 1.0.0 or later from now on.
+
 0.25.1:
   - Support and examples for v201708.
 

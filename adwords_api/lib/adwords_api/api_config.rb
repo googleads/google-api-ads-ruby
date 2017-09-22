@@ -34,7 +34,6 @@ module AdwordsApi
 
     # Set defaults
     DEFAULT_VERSION = :v201708
-    DEFAULT_ENVIRONMENT = :PRODUCTION
     LATEST_VERSION = :v201708
 
     # Set other constants
@@ -43,52 +42,6 @@ module AdwordsApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v201609 => [
-          :AccountLabelService,
-          :AdCustomizerFeedService,
-          :AdGroupAdService,
-          :AdGroupBidModifierService,
-          :AdGroupCriterionService,
-          :AdGroupExtensionSettingService,
-          :AdGroupFeedService,
-          :AdGroupService,
-          :AdParamService,
-          :AdwordsUserListService,
-          :BatchJobService,
-          :BiddingStrategyService,
-          :BudgetOrderService,
-          :BudgetService,
-          :CampaignCriterionService,
-          :CampaignExtensionSettingService,
-          :CampaignFeedService,
-          :CampaignService,
-          :CampaignSharedSetService,
-          :ConstantDataService,
-          :ConversionTrackerService,
-          :CustomerExtensionSettingService,
-          :CustomerFeedService,
-          :CustomerService,
-          :CustomerSyncService,
-          :DataService,
-          :DraftService,
-          :DraftAsyncErrorService,
-          :FeedItemService,
-          :FeedMappingService,
-          :FeedService,
-          :LabelService,
-          :LocationCriterionService,
-          :ManagedCustomerService,
-          :MediaService,
-          :OfflineCallConversionFeedService,
-          :OfflineConversionFeedService,
-          :ReportDefinitionService,
-          :SharedCriterionService,
-          :SharedSetService,
-          :TargetingIdeaService,
-          :TrafficEstimatorService,
-          :TrialService,
-          :TrialAsyncErrorService
-      ],
       :v201702 => [
           :AccountLabelService,
           :AdCustomizerFeedService,
@@ -236,66 +189,18 @@ module AdwordsApi
       ]
     }
 
-    # Configure the different environments, with the base URL for each one
-    @@environment_config = {
-      :PRODUCTION => {
-        :oauth_scope => 'https://www.googleapis.com/auth/adwords',
-        :header_ns => 'https://adwords.google.com/api/adwords/cm/',
-        :v201609 => 'https://adwords.google.com/api/adwords/',
-        :v201702 => 'https://adwords.google.com/api/adwords/',
-        :v201705 => 'https://adwords.google.com/api/adwords/',
-        :v201708 => 'https://adwords.google.com/api/adwords/'
-      }
+    # Configure the base URL for each version and scope.
+    @@config = {
+      :oauth_scope => 'https://www.googleapis.com/auth/adwords',
+      :header_ns => 'https://adwords.google.com/api/adwords/cm/',
+      :v201702 => 'https://adwords.google.com/api/adwords/',
+      :v201705 => 'https://adwords.google.com/api/adwords/',
+      :v201708 => 'https://adwords.google.com/api/adwords/'
     }
 
     # Configure the subdirectories for each version / service pair.
     # A missing pair means that only the base URL is used.
     @@subdir_config = {
-      # v201609
-      [:v201609, :AccountLabelService] => 'mcm/',
-      [:v201609, :AdCustomizerFeedService] => 'cm/',
-      [:v201609, :AdGroupAdService] => 'cm/',
-      [:v201609, :AdGroupBidModifierService] => 'cm/',
-      [:v201609, :AdGroupCriterionService] => 'cm/',
-      [:v201609, :AdGroupExtensionSettingService] => 'cm/',
-      [:v201609, :AdGroupFeedService] => 'cm/',
-      [:v201609, :AdGroupService] => 'cm/',
-      [:v201609, :AdParamService] => 'cm/',
-      [:v201609, :BatchJobService] => 'cm/',
-      [:v201609, :BudgetOrderService] => 'billing/',
-      [:v201609, :CampaignCriterionService] => 'cm/',
-      [:v201609, :CampaignExtensionSettingService] => 'cm/',
-      [:v201609, :CampaignFeedService] => 'cm/',
-      [:v201609, :CampaignService] => 'cm/',
-      [:v201609, :CampaignSharedSetService] => 'cm/',
-      [:v201609, :ConstantDataService] => 'cm/',
-      [:v201609, :ConversionTrackerService] => 'cm/',
-      [:v201609, :CustomerExtensionSettingService] => 'cm/',
-      [:v201609, :CustomerSyncService] => 'ch/',
-      [:v201609, :DataService] => 'cm/',
-      [:v201609, :FeedItemService] => 'cm/',
-      [:v201609, :FeedMappingService] => 'cm/',
-      [:v201609, :FeedService] => 'cm/',
-      [:v201609, :LocationCriterionService] => 'cm/',
-      [:v201609, :MediaService] => 'cm/',
-      [:v201609, :OfflineCallConversionFeedService] => 'cm/',
-      [:v201609, :OfflineConversionFeedService] => 'cm/',
-      [:v201609, :ReportDefinitionService] => 'cm/',
-      [:v201609, :SharedCriterionService] => 'cm/',
-      [:v201609, :SharedSetService] => 'cm/',
-      [:v201609, :TargetingIdeaService] => 'o/',
-      [:v201609, :TrafficEstimatorService] => 'o/',
-      [:v201609, :ManagedCustomerService] => 'mcm/',
-      [:v201609, :CustomerService] => 'mcm/',
-      [:v201609, :CustomerFeedService] => 'cm/',
-      [:v201609, :BudgetService] => 'cm/',
-      [:v201609, :BiddingStrategyService] => 'cm/',
-      [:v201609, :AdwordsUserListService] => 'rm/',
-      [:v201609, :LabelService] => 'cm/',
-      [:v201609, :DraftService] => 'cm/',
-      [:v201609, :DraftAsyncErrorService] => 'cm/',
-      [:v201609, :TrialService] => 'cm/',
-      [:v201609, :TrialAsyncErrorService] => 'cm/',
       # v201702
       [:v201702, :AccountLabelService] => 'mcm/',
       [:v201702, :AdCustomizerFeedService] => 'cm/',
@@ -447,10 +352,6 @@ module AdwordsApi
       DEFAULT_VERSION
     end
 
-    def self.default_environment
-      DEFAULT_ENVIRONMENT
-    end
-
     def self.latest_version
       LATEST_VERSION
     end
@@ -463,9 +364,8 @@ module AdwordsApi
       @@service_config
     end
 
-    def self.environment_config(environment, key)
-      return @@environment_config.include?(environment) ?
-          @@environment_config[environment][key] : nil
+    def self.config(key)
+      @@config[key]
     end
 
     def self.subdir_config
@@ -483,14 +383,13 @@ module AdwordsApi
     # Get the download URL for Ad Hoc reports.
     #
     # Args:
-    # - environment: the service environment to be used
     # - version: the API version (as a symbol)
     #
     # Returns:
     # - The endpoint URL (as a string)
     #
-    def self.adhoc_report_download_url(environment, version)
-      base = get_wsdl_base(environment, version)
+    def self.adhoc_report_download_url(version)
+      base = get_wsdl_base(version)
       if base
         base += 'reportdownload/%s' % version.to_s
       end

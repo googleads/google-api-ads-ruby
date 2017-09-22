@@ -89,7 +89,7 @@ def add_universal_app_campaigns()
     :description2 => 'Remove connected blocks',
     :description3 => '3 difficulty levels',
     :description4 => '4 colorful fun skins'
-    # Optional: You can set up to 10 image assets for your campaign. See
+    # Optional: You can set up to 20 image assets for your campaign. See
     # upload_image.rb for an example on how to upload images.
     #
     # :image_media_ids => [INSERT_IMGAGE_MEDIA_ID(s)_HERE]

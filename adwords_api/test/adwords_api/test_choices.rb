@@ -26,7 +26,7 @@ require 'adwords_api/v201708/adwords_user_list_service_registry'
 class TestChoices < Test::Unit::TestCase
 
   def setup()
-    registry_module = AdwordsApi::v201708::AdwordsUserListService
+    registry_module = AdwordsApi::V201708::AdwordsUserListService
     registry = registry_module::AdwordsUserListServiceRegistry
     @validator = AdsCommon::ParametersValidator.new(registry)
   end

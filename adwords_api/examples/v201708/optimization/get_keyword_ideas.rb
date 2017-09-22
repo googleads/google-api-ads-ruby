@@ -20,7 +20,7 @@
 
 require 'adwords_api'
 
-def get_keyword_ideas(keyword_text)
+def get_keyword_ideas(keyword_text, ad_group_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -34,48 +34,67 @@ def get_keyword_ideas(keyword_text)
   # Construct selector object.
   selector = {
     :idea_type => 'KEYWORD',
-    :request_type => 'IDEAS',
-    :requested_attribute_types =>
-        ['KEYWORD_TEXT', 'SEARCH_VOLUME', 'CATEGORY_PRODUCTS_AND_SERVICES'],
-    :search_parameters => [
-      {
-        # The 'xsi_type' field allows you to specify the xsi:type of the object
-        # being created. It's only necessary when you must provide an explicit
-        # type that the client library can't infer.
-        :xsi_type => 'RelatedToQuerySearchParameter',
-        :queries => [keyword_text]
-      },
-      {
-        # Language setting (optional).
-        # The ID can be found in the documentation:
-        #  https://developers.google.com/adwords/api/docs/appendix/languagecodes
-        # Only one LanguageSearchParameter is allowed per request.
-        :xsi_type => 'LanguageSearchParameter',
-        :languages => [{:id => 1000}]
-      },
-      {
-        # Network search parameter (optional).
-        :xsi_type => 'NetworkSearchParameter',
-        :network_setting => {
-          :target_google_search => true,
-          :target_search_network => false,
-          :target_content_network => false,
-          :target_partner_search_network => false
-        }
-      }
-    ],
-    :paging => {
-      :start_index => 0,
-      :number_results => PAGE_SIZE
+    :request_type => 'IDEAS'
+  }
+  selector[:requested_attribute_types] = [
+    'KEYWORD_TEXT',
+    'SEARCH_VOLUME',
+    'AVERAGE_CPC',
+    'COMPETITION',
+    'CATEGORY_PRODUCTS_AND_SERVICES',
+  ]
+
+  selector[:paging] = {
+    :start_index => 0,
+    :number_results => PAGE_SIZE
+  }
+
+  search_parameters = []
+  search_parameters << {
+      # The 'xsi_type' field allows you to specify the xsi:type of the object
+      # being created. It's only necessary when you must provide an explicit
+      # type that the client library can't infer.
+      :xsi_type => 'RelatedToQuerySearchParameter',
+      :queries => [keyword_text]
+  }
+
+  search_parameters << {
+    # Language setting (optional).
+    # The ID can be found in the documentation:
+    #  https://developers.google.com/adwords/api/docs/appendix/languagecodes
+    # Only one LanguageSearchParameter is allowed per request.
+    :xsi_type => 'LanguageSearchParameter',
+    :languages => [{:id => 1000}]
+  }
+
+  search_parameters << {
+    # Network search parameter (optional).
+    :xsi_type => 'NetworkSearchParameter',
+    :network_setting => {
+      :target_google_search => true,
+      :target_search_network => false,
+      :target_content_network => false,
+      :target_partner_search_network => false
     }
   }
+
+  unless ad_group_id.nil?
+    search_parameters << {
+      :xsi_type => 'SeedAdGroupIdSearchParameter',
+      :ad_group_id => ad_group_id
+    }
+  end
+
+  selector[:search_parameters] = search_parameters
 
   # Define initial values.
   offset = 0
   results = []
 
   begin
-    # Perform request.
+    # Perform request. If this loop executes too many times in quick suggestion,
+    # you may get a RateExceededError. See here for more info on handling these:
+    # https://developers.google.com/adwords/api/docs/guides/rate-limits
     page = targeting_idea_srv.get(selector)
     results += page[:entries] if page and page[:entries]
 
@@ -88,16 +107,19 @@ def get_keyword_ideas(keyword_text)
   results.each do |result|
     data = result[:data]
     keyword = data['KEYWORD_TEXT'][:value]
-    puts "Found keyword with text '%s'" % keyword
+    average_cpc = data['AVERAGE_CPC'][:value]
+    competition = data['COMPETITION'][:value]
     products_and_services = data['CATEGORY_PRODUCTS_AND_SERVICES'][:value]
-    if products_and_services
-      puts "\tWith Products and Services categories: [%s]" %
-          products_and_services.join(', ')
-    end
     average_monthly_searches = data['SEARCH_VOLUME'][:value]
-    if average_monthly_searches
-      puts "\tand average monthly search volume: %d" % average_monthly_searches
-    end
+    puts ("Keyword with text '%s', average monthly search volume %d, " +
+        "average CPC %d, and competition %.2f was found with categories: %s") %
+        [
+          keyword,
+          average_monthly_searches,
+          average_cpc[:micro_amount],
+          competition,
+          products_and_services
+        ]
   end
   puts "Total keywords related to '%s': %d." % [keyword_text, results.length]
 end
@@ -108,7 +130,11 @@ if __FILE__ == $0
 
   begin
     keyword_text = 'INSERT_KEYWORD_TEXT_HERE'
-    get_keyword_ideas(keyword_text)
+    # Optional:
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'
+
+    ad_group_id = nil if ad_group_id == 'INSERT_AD_GROUP_ID_HERE'
+    get_keyword_ideas(keyword_text, ad_group_id)
 
   # Authorization error.
   rescue AdsCommon::Errors::OAuth2VerificationRequired => e

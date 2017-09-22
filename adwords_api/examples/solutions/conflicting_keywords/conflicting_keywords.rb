@@ -139,7 +139,7 @@ end
 def retrieve_negative_keywords(report_utils)
   report_definition = {
     :selector => {
-      :fields => ['CampaignId', 'Id', 'KeywordMatchType', 'KeywordText']
+      :fields => ['CampaignId', 'Id', 'KeywordMatchType', 'Criteria']
     },
     :report_name => 'Negative campaign keywords',
     :report_type => 'CAMPAIGN_NEGATIVE_KEYWORDS_PERFORMANCE_REPORT',
@@ -174,7 +174,7 @@ def retrieve_positive_keyword_report(report_utils, allowed_values)
   report_definition = {
     :selector => {
       :fields => ['CampaignId', 'CampaignName', 'AdGroupId', 'Id',
-                  'KeywordMatchType', 'KeywordText'],
+                  'KeywordMatchType', 'Criteria'],
       :predicates => [
         {
           :field => 'CampaignStatus',
@@ -222,6 +222,14 @@ def compare_keywords(negatives, positive)
     positive_text = positive.text.downcase
 
     match = false
+
+    # If the negative keyword is more strict than the positive one, it cannot
+    # match.
+    # E.g. a negative exact "cool shoe" will not prevent positive phrase
+    # "cool shoe shine".
+    positive_match_type = positive.match_type.downcase
+    next if positive_match_type == 'broad' && match_type != 'broad'
+    next if positive_match_type == 'phrase' && match_type == 'exact'
 
     # Exact matching with negative keywords triggers only when the full text of
     # the keywords is exactly the same.
@@ -285,7 +293,7 @@ end
 
 
 if __FILE__ == $0
-  API_VERSION = :v201702
+  API_VERSION = :v201708
 
   begin
     options = {}

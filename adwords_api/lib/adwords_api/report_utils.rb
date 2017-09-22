@@ -219,8 +219,7 @@ module AdwordsApi
     # Makes request and AdHoc service and returns response.
     def make_adhoc_request(data, cid, &block)
       @api.utils_reporter.report_utils_used()
-      url = @api.api_config.adhoc_report_download_url(
-          @api.config.read('service.environment'), @version)
+      url = @api.api_config.adhoc_report_download_url(@version)
       headers = get_report_request_headers(url, cid)
       log_request(url, headers, data)
       # A given block indicates that we should make a stream request and yield

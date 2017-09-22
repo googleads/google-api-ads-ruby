@@ -51,8 +51,14 @@ module AdwordsApi
       leftover_data = ''
       @report_utils.send(method, *args) do |batch|
         data_to_process = leftover_data + batch
+        leftover_data = ''
+        while !data_to_process.valid_encoding?
+          leftover_data = data_to_process[-1] + leftover_data
+          data_to_process = data_to_process[0, data_to_process.length - 1]
+        end
         lines = data_to_process.each_line.map {|line| line}
-        leftover_data = lines.pop
+        remainder = lines.pop
+        leftover_data = remainder + leftover_data unless remainder.nil?
         lines.each do |line|
           yield line.chomp
         end

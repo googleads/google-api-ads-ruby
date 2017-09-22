@@ -37,18 +37,18 @@ class TestApiConfig < Test::Unit::TestCase
   # Tests correct module name.
   def test_module_name()
     name1 = @config.module_name(:v201708, :CampaignService)
-    assert_equal('AdwordsApi::v201708::CampaignService', name1)
+    assert_equal('AdwordsApi::V201708::CampaignService', name1)
   end
 
   # Tests correct interface name.
   def test_interface_name()
     name1 = @config.interface_name(:v201708, :CampaignService)
-    assert_equal('AdwordsApi::v201708::CampaignService::CampaignService', name1)
+    assert_equal('AdwordsApi::V201708::CampaignService::CampaignService', name1)
   end
 
   # Tests AdHoc report URL generator (prod).
   def test_adhoc_report_download_url_prod()
-    url = AdwordsApi::ApiConfig.adhoc_report_download_url(:PRODUCTION, :v201708)
+    url = AdwordsApi::ApiConfig.adhoc_report_download_url(:v201708)
     expected_url =
         'https://adwords.google.com/api/adwords/reportdownload/v201708'
     assert_equal(expected_url, url)
