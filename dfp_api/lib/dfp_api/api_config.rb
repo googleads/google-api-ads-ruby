@@ -32,7 +32,6 @@ module DfpApi
 
     # Set defaults
     DEFAULT_VERSION = :v201708
-    DEFAULT_ENVIRONMENT = :PRODUCTION
     LATEST_VERSION = :v201708
 
     # Set other constants
@@ -139,16 +138,14 @@ module DfpApi
                    :UserTeamAssociationService, :WorkflowRequestService],
     }
 
-    # Configure the different environments, with the base URL for each one
-    @@environment_config = {
-      :PRODUCTION => {
-        :oauth_scope => 'https://www.googleapis.com/auth/dfp',
-        :header_ns => 'https://www.google.com/apis/ads/publisher/',
-        :v201611 => 'https://ads.google.com/apis/ads/publisher/',
-        :v201702 => 'https://ads.google.com/apis/ads/publisher/',
-        :v201705 => 'https://ads.google.com/apis/ads/publisher/',
-        :v201708 => 'https://ads.google.com/apis/ads/publisher/',
-      }
+    # Configure the base URL for each version and scope.
+    @@config = {
+      :oauth_scope => 'https://www.googleapis.com/auth/dfp',
+      :header_ns => 'https://www.google.com/apis/ads/publisher/',
+      :v201611 => 'https://ads.google.com/apis/ads/publisher/',
+      :v201702 => 'https://ads.google.com/apis/ads/publisher/',
+      :v201705 => 'https://ads.google.com/apis/ads/publisher/',
+      :v201708 => 'https://ads.google.com/apis/ads/publisher/'
     }
 
     public
@@ -156,10 +153,6 @@ module DfpApi
     # Getters for constants and module variables.
     def self.default_version
       DEFAULT_VERSION
-    end
-
-    def self.default_environment
-      DEFAULT_ENVIRONMENT
     end
 
     def self.latest_version
@@ -174,9 +167,8 @@ module DfpApi
       @@service_config
     end
 
-    def self.environment_config(environment, key)
-      return @@environment_config.include?(environment) ?
-          @@environment_config[environment][key] : nil
+    def self.config(key)
+      @@config[key]
     end
 
     def self.subdir_config

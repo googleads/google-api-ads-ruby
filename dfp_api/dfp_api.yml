@@ -39,9 +39,6 @@
 
   # Required for all calls other than GetAllNetworks and MakeTestNetwork.
   :network_code: INSERT_NETWORK_CODE_HERE
-:service:
-  # Only production environment is now available.
-  :environment: PRODUCTION
 :connection:
   # Enable to request all responses to be compressed.
   :enable_gzip: false

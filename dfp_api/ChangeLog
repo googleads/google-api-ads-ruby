@@ -1,3 +1,10 @@
+1.0.0:
+  - Major version bump. The library has been stable and feature complete for
+    some time, and this is more accurately reflected by this version number.
+  - No longer include test files in the built gem.
+  - Removing support for multiple environments.
+  - Require google-ads-common 1.0.0 or later from now on.
+
 0.22.0:
   - Added support for v201708.
   - Removed support for v201608.
