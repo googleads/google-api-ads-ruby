@@ -33,7 +33,7 @@ module AdsCommon
 
     FALLBACK_API_ERROR_EXCEPTION = "ApiException"
     MAX_FAULT_LOG_LENGTH = 16000
-    HEADER_PEEK_LENGTH = 1024
+    REDACTED_STR = 'REDACTED'
 
     # Creates a new service.
     def initialize(config, endpoint, namespace, version)
@@ -202,34 +202,27 @@ module AdsCommon
         summary_message += ', Fault message: %s' % format_fault(
             response_hash[:envelope][:body][:fault][:faultstring])
         logger.warn(summary_message)
-        logger.info(request_message) if request_message
-        logger.info(response_message) if response_message
+        logger.info(request_message) unless request_message.nil?
+        logger.info(response_message) unless response_message.nil?
       else
         logger.info(summary_message)
-        logger.debug(request_message) if request_message
-        logger.debug(response_message) if response_message
+        logger.debug(request_message) unless request_message.nil?
+        logger.debug(response_message) unless response_message.nil?
       end
     end
 
     # Format headers, redacting sensitive information.
     def format_headers(headers)
       return headers.map do |k, v|
-        v = 'REDACTED' if k == 'Authorization'
+        v = REDACTED_STR if k == 'Authorization'
         [k, v].join(': ')
       end.join(', ')
     end
 
     # Sanitize the request body, redacting sensitive information.
     def sanitize_request(body)
-      body_tail = ""
-      if body.length > HEADER_PEEK_LENGTH
-        body_tail = body[HEADER_PEEK_LENGTH, body.length]
-        body = body[0, HEADER_PEEK_LENGTH]
-      end
-      body = body.gsub(/developerToken>[^<]+<\//, 'developerToken>REDACTED</')
-      body = body.gsub(/httpAuthorizationHeader>[^<]+<\//,
-          'httpAuthorizationHeader>REDACTED</')
-      return body + body_tail
+      return body.gsub(/(developerToken>|httpAuthorizationHeader>)[^<]+(<\/)/,
+          '\1' + REDACTED_STR + '\2')
     end
 
     # Format the fault message by capping length and removing newlines.

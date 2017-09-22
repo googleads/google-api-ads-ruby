@@ -87,23 +87,37 @@ class TestSavonService < Test::Unit::TestCase
     test1 = "<some_xml><developerToken>ab1cdEF2GH-IJ3KL_mn4OP" +
         "</developerToken></some_xml>"
     expected1 = "<some_xml><developerToken>REDACTED</developerToken></some_xml>"
+    assert_equal(expected1, @stub_service.sanitize_request(test1))
+
     test2 = "<xml><element1></element1><element2></element2></xml>"
+    assert_equal(test2, @stub_service.sanitize_request(test2))
+
     test3 = "<xml><ns1:developerToken>w-x_Y-Z_</ns1:developerToken></xml>"
     expected3 = "<xml><ns1:developerToken>REDACTED</ns1:developerToken></xml>"
+    assert_equal(expected3, @stub_service.sanitize_request(test3))
+
     test4 = "<xml><httpAuthorizationHeader>Authorization: Bearer " +
         "1/abcdEFGH1234</httpAuthorizationHeader></xml>"
     expected4 = "<xml><httpAuthorizationHeader>REDACTED" +
         "</httpAuthorizationHeader></xml>"
+    assert_equal(expected4, @stub_service.sanitize_request(test4))
+
     test5 = "<some_xml><developerToken>ab1cdEF2GH-IJ3KL_mn4OP" +
         "</developerToken>"
     test5 += "<operation>something</operation>" * 1024 + "</some_xml>"
     expected5 = "<some_xml><developerToken>REDACTED</developerToken>"
     expected5 += "<operation>something</operation>" * 1024 + "</some_xml>"
-    assert_equal(expected1, @stub_service.sanitize_request(test1))
-    assert_equal(test2, @stub_service.sanitize_request(test2))
-    assert_equal(expected3, @stub_service.sanitize_request(test3))
-    assert_equal(expected4, @stub_service.sanitize_request(test4))
     assert_equal(expected5, @stub_service.sanitize_request(test5))
+
+    src6 = "<OAuthInfo><httpAuthorizationHeader>abc21.deffoobar" +
+      "</httpAuthorizationHeader></OAuthInfo>\n"
+    dst6 = "<OAuthInfo><httpAuthorizationHeader>REDACTED" +
+      "</httpAuthorizationHeader></OAuthInfo>\n"
+    test6 = "<some_xml><developerToken>ab1cdEF2GH-IJ3KL_mn4OP" +
+        "</developerToken>" + src6 * 128 + "</some_xml>"
+    expected6 = "<some_xml><developerToken>REDACTED</developerToken>" +
+        dst6 * 128 + "</some_xml>"
+    assert_equal(expected6, @stub_service.sanitize_request(test6))
   end
 
   def test_format_fault()

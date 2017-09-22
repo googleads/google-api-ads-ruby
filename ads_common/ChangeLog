@@ -1,6 +1,10 @@
-0.14.2:
+1.0.0:
+  - Major version bump. The library has been stable and feature complete for
+    some time, and this is more accurately reflected by this version number.
   - Throw explicit warning for disabled SSL peer verification.
   - Small performance improvements for large requests.
+  - No longer include test files in the built gem.
+  - Removing support for multiple environments.
 
 0.14.1:
   - Scrubbing an additional sensitive field present in some AdWords requests.

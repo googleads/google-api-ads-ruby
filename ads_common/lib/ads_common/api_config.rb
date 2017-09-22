@@ -42,14 +42,13 @@ module AdsCommon
       service_config.keys.select { |service| service.is_a? Integer }.max
     end
 
-    # Does the given environment exist and contain the given version?
+    # Does the current config contain the given version?
     #
     # Returns:
-    # Boolean indicating whether the given environment exists and contains the
-    # given version
+    # Boolean indicating whether the current config contains the given version
     #
-    def environment_has_version(environment, version)
-      return !environment_config(environment, version).nil?
+    def has_version(version)
+      return !config(version).nil?
     end
 
     # Does the given version exist and contain the given service?
@@ -94,32 +93,22 @@ module AdsCommon
       return api_name.to_s.snakecase
     end
 
-    # Get the default environment.
-    #
-    # Returns:
-    # Default environment
-    #
-    def default_environment
-      raise NotImplementedError, 'default_environment not overriden.'
-    end
-
     # Get the default filename for the config file.
     def default_config_filename
       raise NotImplementedError, 'default_config_filename not overriden.'
     end
 
-    # Get the endpoint for a service on a given environment and API version.
+    # Get the endpoint for a service on a given API version.
     #
     # Args:
-    # - environment: the service environment to be used
     # - version: the API version
     # - service: the name of the API service
     #
     # Returns:
     # The endpoint URL
     #
-    def endpoint(environment, version, service)
-      base = get_wsdl_base(environment, version)
+    def endpoint(version, service)
+      base = get_wsdl_base(version)
       # TODO(dklimkin): Unflatten subdir constants. Cross-API refactor 0.9.0.
       if !subdir_config().nil?
         base = base.to_s + subdir_config()[[version, service]].to_s
@@ -140,19 +129,6 @@ module AdsCommon
       return nil if subdir_config().nil?
       # TODO(dklimkin): Unflatten subdir constants. Cross-API refactor 0.9.0.
       subdir_config()[[version, service]]
-    end
-
-    # Get the authentication server details for an environment. Allows to
-    # override the auth URL via environmental variable.
-    #
-    # Args:
-    # - environment: the service environment to be used
-    #
-    # Returns:
-    # The full URL for the auth server
-    #
-    def auth_server(environment)
-      return ENV['ADSAPI_AUTH_URL'] || auth_server_config[environment]
     end
 
     # Perform the loading of the necessary source files for a version.
@@ -208,7 +184,7 @@ module AdsCommon
     #
     def get_wsdls(version)
       res = {}
-      wsdl_base = get_wsdl_base(default_environment(), version)
+      wsdl_base = get_wsdl_base(version)
       postfix = wsdl_base.start_with?('http') ? '?wsdl' : '.wsdl'
       services(version).each do |service|
         path = wsdl_base
@@ -226,15 +202,13 @@ module AdsCommon
     # the base URL via environmental variable.
     #
     # Args:
-    #   - environment: environment to use like :SANDBOX or :PRODUCTION
     #   - version: the API version
     #
     # Returns:
     #   String containing base URL
     #
-    def get_wsdl_base(environment, version)
-      return ENV['ADSAPI_BASE_URL'] ||
-          environment_config(environment, version)
+    def get_wsdl_base(version)
+      return ENV['ADSAPI_BASE_URL'] || config(version)
     end
   end
 end

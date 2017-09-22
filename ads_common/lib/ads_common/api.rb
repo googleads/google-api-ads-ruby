@@ -70,10 +70,9 @@ module AdsCommon
     def service(name, version = nil)
       name = name.to_sym
       version = (version.nil?) ? api_config.default_version : version.to_sym
-      environment = @config.read('service.environment')
 
       # Check if the combination is available.
-      validate_service_request(environment, version, name)
+      validate_service_request(version, name)
 
       # Try to re-use the service for this version if it was requested before.
       wrapper = if @wrappers.include?(version) && @wrappers[version][name]
@@ -150,12 +149,11 @@ module AdsCommon
     private
 
     # Auxiliary method to test parameters correctness for the service request.
-    def validate_service_request(environment, version, service)
-      # Check if the current environment supports the requested version.
-      unless api_config.environment_has_version(environment, version)
+    def validate_service_request(version, service)
+      # Check if the current config supports the requested version.
+      unless api_config.has_version(version)
         raise AdsCommon::Errors::Error,
-            "Environment '%s' does not support version '%s'" %
-            [environment.to_s, version.to_s]
+            "Version '%s' not recognized" % version.to_s
       end
 
       # Check if the specified version has the requested service.
@@ -196,18 +194,14 @@ module AdsCommon
           raise AdsCommon::Errors::Error,
               'OAuth authorization method is deprecated, use OAuth2 instead.'
         when :OAUTH2
-          environment = @config.read('service.environment',
-              api_config.default_environment())
           AdsCommon::Auth::OAuth2Handler.new(
               @config,
-              api_config.environment_config(environment, :oauth_scope)
+              api_config.config(:oauth_scope)
           )
         when :OAUTH2_SERVICE_ACCOUNT
-          environment = @config.read('service.environment',
-              api_config.default_environment())
           AdsCommon::Auth::OAuth2ServiceAccountHandler.new(
               @config,
-              api_config.environment_config(environment, :oauth_scope)
+              api_config.config(:oauth_scope)
           )
         else
           raise AdsCommon::Errors::Error,
@@ -226,15 +220,13 @@ module AdsCommon
     # - a simplified wrapper generated for the service
     #
     def prepare_wrapper(version, service)
-      environment = config.read('service.environment')
       api_config.do_require(version, service)
-      endpoint = api_config.endpoint(environment, version, service)
+      endpoint = api_config.endpoint(version, service)
       interface_class_name = api_config.interface_name(version, service)
 
       wrapper = class_for_path(interface_class_name).new(@config, endpoint)
       auth_handler = get_auth_handler()
-      header_ns =
-          api_config.environment_config(environment, :header_ns) + version.to_s
+      header_ns = api_config.config(:header_ns) + version.to_s
       soap_handler = soap_header_handler(auth_handler, version, header_ns,
                                          wrapper.namespace)
       wrapper.header_handler = soap_handler
@@ -270,10 +262,8 @@ module AdsCommon
       provided_adapter = @config.read('connection.adapter')
       @config.set('connection.adapter', :httpclient) if provided_adapter.nil?
 
-      # Validating most important parameters.
-      ['service.environment', 'authentication.method'].each do |parameter|
-        symbolize_config_value(parameter)
-      end
+      # Make sure Auth param is a symbol.
+      symbolize_config_value('authentication.method')
     end
 
     # Converts value of a config key to uppercase symbol.
