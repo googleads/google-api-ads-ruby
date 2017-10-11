@@ -195,10 +195,13 @@ module AdwordsApi
       'BudgetOperation' => :BudgetService,
       'CampaignCriterionOperation' => :CampaignCriterionService,
       'CampaignExtensionSettingOperation' => :CampaignExtensionSettingService,
-      'CampaignOperation' => :CampaignService,
       'CampaignLabelOperation' => :CampaignService,
+      'CampaignOperation' => :CampaignService,
+      'CampaignSharedSetOperation' => :CampaignSharedSetService,
       'CustomerExtensionSettingOperation' => :CustomerExtensionSettingService,
-      'FeedItemOperation' => :FeedItemService
+      'FeedItemOperation' => :FeedItemService,
+      'SharedCriterionOperation' => :SharedCriterionService,
+      'SharedSetOperation' => :SharedSetService
     }
 
     METHODS_BY_OPERATION_TYPE = {
@@ -213,10 +216,13 @@ module AdwordsApi
       'BudgetOperation' => 'mutate_to_xml',
       'CampaignCriterionOperation' => 'mutate_to_xml',
       'CampaignExtensionSettingOperation' => 'mutate_to_xml',
-      'CampaignOperation' => 'mutate_to_xml',
       'CampaignLabelOperation' => 'mutate_label_to_xml',
+      'CampaignOperation' => 'mutate_to_xml',
+      'CampaignSharedSetOperation' => 'mutate_to_xml',
       'CustomerExtensionSettingOperation' => 'mutate_to_xml',
-      'FeedItemOperation' => 'mutate_to_xml'
+      'FeedItemOperation' => 'mutate_to_xml',
+      'SharedCriterionOperation' => 'mutate_to_xml',
+      'SharedSetOperation' => 'mutate_to_xml'
     }
 
     def generate_soap_operations(hash_operations)
