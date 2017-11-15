@@ -1,3 +1,8 @@
+1.1.0:
+  - Added support for v201711
+  - Removed support for v201611
+  - Removed examples for v201702
+
 1.0.0:
   - Major version bump. The library has been stable and feature complete for
     some time, and this is more accurately reflected by this version number.
@@ -8,7 +13,7 @@
 0.22.0:
   - Added support for v201708.
   - Removed support for v201608.
-  - Removed examples for v201711.
+  - Removed examples for v201611.
 
 0.21.0:
   - Added support for v201705.
