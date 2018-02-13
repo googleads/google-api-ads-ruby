@@ -17,77 +17,66 @@
 #           limitations under the License.
 #
 # This example gets all proposals pending approval.
+
 require 'dfp_api'
 
-class GetProposalsPendingApproval
+def get_proposals_pending_approval(dfp)
+  # Get the ProposalService.
+  proposal_service = dfp.service(:ProposalService, API_VERSION)
 
-  def self.run_example(dfp)
-    proposal_service =
-        dfp.service(:ProposalService, :v201711)
-
-    # Create a statement to select proposals.
-    query = 'WHERE status = :status'
-    values = [
-      {
-        :key => 'status',
-        :value => {
-          :xsi_type => 'TextValue',
-          :value => 'PENDING_APPROVAL'
-        }
-      },
-    ]
-    statement = DfpApi::FilterStatement.new(query, values)
-
-    # Retrieve a small amount of proposals at a time, paging through until all
-    # proposals have been retrieved.
-    total_result_set_size = 0
-    begin
-      page =
-          proposal_service.get_proposals_by_statement(statement.toStatement())
-
-      # Print out some information for each proposal.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |proposal, index|
-          puts "%d) Proposal with ID %d and name '%s' was found." %
-              [index + statement.offset, proposal[:id], proposal[:name]]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < total_result_set_size
-
-    puts 'Total number of proposals: %d' % total_result_set_size
+  # Create a statement to select proposals.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'status = :status'
+    sb.with_bind_variable('status', 'PENDING_APPROVAL')
   end
 
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
+  # Retrieve a small amount of proposals at a time, paging through until all
+  # proposals have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = proposal_service.get_proposals_by_statement(statement.to_statement())
 
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each proposal.
+    unless page[:results].nil?
+      page[:results].each_with_index do |proposal, index|
+        puts '%d) Proposal with ID %d and name "%s" was found.' %
+            [index + statement.offset, proposal[:id], proposal[:name]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < total_result_set_size
+
+  puts 'Total number of proposals: %d' % page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetProposalsPendingApproval.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    get_proposals_pending_approval(dfp)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

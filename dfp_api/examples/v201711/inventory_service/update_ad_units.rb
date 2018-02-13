@@ -22,10 +22,47 @@
 
 require 'dfp_api'
 
+def update_ad_units(dfp, ad_unit_id)
+  # Get the InventoryService.
+  inventory_service = dfp.service(:InventoryService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to get first 500 ad units.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :ad_unit_id'
+    sb.with_bind_variable('ad_unit_id', ad_unit_id)
+    sb.limit = 1
+  end
 
-def update_ad_units()
+  # Get ad units by statement.
+  response = inventory_service.get_ad_units_by_statement(
+      statement.to_statement()
+  )
+  raise 'No ad unit found to update.' if response[:results].to_a.empty?
+  ad_unit = response[:results].first
+
+  new_ad_unit_size = {
+    :size => {:width => 1, :height => 1, :is_aspect_ration => false},
+    :environment_type => 'BROWSER'
+  }
+
+  ad_unit[:ad_unit_sizes] << new_ad_unit_size
+
+  # Update the ad units on the server.
+  updated_ad_units = inventory_service.update_ad_units([ad_unit])
+
+  if updated_ad_units.to_a.size > 0
+    updated_ad_units.each do |ad_unit|
+      puts 'Ad unit with ID %d, name "%s", and status "%s" was updated' %
+          [ad_unit[:id], ad_unit[:name], ad_unit[:status]]
+    end
+  else
+    puts 'No ad units were updated.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -33,67 +70,9 @@ def update_ad_units()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the InventoryService.
-  inventory_service = dfp.service(:InventoryService, API_VERSION)
-
-  # Specify which ad unit to update.
-  ad_unit_id = 'INSERT_AD_UNIT_ID_HERE'.to_i
-
-  # Create a statement to get first 500 ad units.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :id',
-      [
-        {:key => 'id',
-         :value => {
-           :value => ad_unit_id,
-           :xsi_type => 'NumberValue'
-         }
-        }
-      ],
-      1
-  }
-
-  # Get ad units by statement.
-  page = inventory_service.get_ad_units_by_statement(statement.toStatement())
-
-  if page[:results]
-    ad_units = page[:results]
-
-    new_ad_unit_size = {
-        :size => {
-          :width => 1,
-          :height => 1,
-          :is_aspect_ration => false
-        },
-        :environment_type => 'BROWSER'
-    }
-
-    # Update local ad unit by adding a new size of 1x1.
-    ad_units.each do |ad_unit|
-      ad_unit[:ad_unit_sizes] <<= new_ad_unit_size
-      # Workaround for issue #94.
-      ad_unit[:description] = "" if ad_unit[:description].nil?
-    end
-
-    # Update the ad units on the server.
-    return_ad_units = inventory_service.update_ad_units(ad_units)
-
-    if return_ad_units
-      return_ad_units.each do |ad_unit|
-        puts "Ad unit with ID: %d, name: %s and status: %s was updated" %
-            [ad_unit[:id], ad_unit[:name], ad_unit[:status]]
-      end
-    else
-      raise 'No ad units were updated.'
-    end
-  else
-    puts 'No ad units found to update.'
-  end
-end
-
-if __FILE__ == $0
   begin
-    update_ad_units()
+    ad_unit_id = 'INSERT_AD_UNIT_ID_HERE'.to_i
+    update_ad_units(dfp, ad_unit_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

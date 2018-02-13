@@ -21,10 +21,53 @@
 
 require 'dfp_api'
 
+def populate_first_party_audience_segments(dfp, audience_segment_id)
+  # Get the AudienceSegmentService.
+  audience_segment_service = dfp.service(:AudienceSegmentService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to select first party audience segment for an ID.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'type = :type AND id = :audience_segment_id'
+    sb.with_bind_variable('type', 'FIRST_PARTY')
+    sb.with_bind_variable('audience_segment_id', audience_segment_id)
+  end
 
-def populate_first_party_audience_segments(audience_segment_id)
+  # Retrieve a small amount of audience segments at a time, paging
+  # through until all audience segments have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    # Get audience segments by statement.
+    page = audience_segment_service.get_audience_segments_by_statement(
+        statement.to_statement()
+    )
+
+    unless page[:results].nil?
+      page[:results].each do |segment|
+        puts ('First party audience segment with ID %d and name "%s" will be ' +
+        'populated.') % [segment[:id], segment[:name]]
+    end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  # Perform action.
+  result = audience_segment_service.perform_audience_segment_action(
+      {:xsi_type => 'PopulateAudienceSegments'},
+      {:query => statement.to_statement()}
+  )
+
+  # Display results.
+  if !result.nil? && result[:num_changes] > 0
+    puts 'Number of audience segments populated: %d.' % result[:num_changes]
+  else
+    puts 'No audience segments were populated.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -32,54 +75,11 @@ def populate_first_party_audience_segments(audience_segment_id)
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the AudienceSegmentService.
-  audience_segment_service = dfp.service(:AudienceSegmentService, API_VERSION)
-
-  # Statement parts to help build a statement to select first party audience
-  # segment for an ID.
-  statement = DfpApi::FilterStatement.new(
-     'WHERE type = :type AND id = :audience_segment_id ORDER BY id ASC',
-     [
-       {:key => 'type',
-        :value => {:value => 'FIRST_PARTY', :xsi_type => 'TextValue'}},
-       {:key => 'audience_segment_id',
-        :value => {:value => audience_segment_id, :xsi_type => 'TextValue'}},
-     ],
-     1
-  )
-
-  # Get audience segments by statement.
-  page = audience_segment_service.get_audience_segments_by_statement(
-      statement.toStatement())
-
-  if page[:results]
-    page[:results].each do |segment|
-      puts "First party audience segment ID: %d, name: '%s' will be populated" %
-          [segment[:id], segment[:name]]
-
-      # Perform action.
-      result = audience_segment_service.perform_audience_segment_action(
-          {:xsi_type => 'PopulateAudienceSegments'},
-          {:query => statement.toStatement()})
-
-      # Display results.
-      if result and result[:num_changes] > 0
-        puts 'Number of audience segments populated: %d.' % result[:num_changes]
-      else
-        puts 'No audience segments were populated.'
-      end
-    end
-  else
-    puts 'No first party audience segments found to populate.'
-  end
-end
-
-if __FILE__ == $0
   begin
     # Audience segment ID to populate.
     audience_segment_id = 'INSERT_AUDIENCE_SEGMENT_ID_HERE'
 
-    populate_first_party_audience_segments(audience_segment_id)
+    populate_first_party_audience_segments(dfp, audience_segment_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

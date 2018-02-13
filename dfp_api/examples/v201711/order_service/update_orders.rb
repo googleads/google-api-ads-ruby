@@ -21,10 +21,42 @@
 
 require 'dfp_api'
 
+def update_orders(dfp, order_id)
+  # Get the OrderService.
+  order_service = dfp.service(:OrderService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to get first 500 orders.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :order_id'
+    sb.with_bind_variable('order_id', order_id)
+    sb.limit = 1
+  end
 
-def update_orders()
+  # Get orders by statement.
+  response = order_service.get_orders_by_statement(statement.to_statement())
+  raise 'No orders found to update.' if response[:results].to_a.empty?
+  order = response[:results].first
+
+  # Archived orders can not be updated.
+  order[:notes] = 'Spoke to advertiser. All is well.' unless order[:is_archived]
+
+  # Update the orders on the server.
+  updated_orders = order_service.update_orders(orders)
+
+  if updated_orders.to_a.size > 0
+    updated_orders.each do |order|
+      puts ('Order ID %d, advertiser ID %d, name "%s" was updated with notes ' +
+          '"%s".') % [order[:id], order[:advertiser_id], order[:name],
+          order[:notes]]
+    end
+  else
+    puts 'No orders were updated.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -32,56 +64,9 @@ def update_orders()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the OrderService.
-  order_service = dfp.service(:OrderService, API_VERSION)
-
-  order_id = 'INSERT_ORDER_ID_HERE'.to_i
-
-  # Create a statement to get first 500 orders.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :id ORDER BY id ASC',
-      [
-          {:key => 'id',
-          :value => {:value => order_id, :xsi_type => 'NumberValue'}}
-      ],
-      1
-  )
-
-  # Get orders by statement.
-  page = order_service.get_orders_by_statement(statement.toStatement())
-
-  if page[:results]
-    orders = page[:results]
-
-    orders.each do |order|
-      # Archived orders can not be updated.
-      if !order[:is_archived]
-        order[:notes] = 'Spoke to advertiser. All is well.'
-        # Workaround for issue #94.
-        order[:po_number] = "" if order[:po_number].nil?
-      end
-    end
-
-    # Update the orders on the server.
-    return_orders = order_service.update_orders(orders)
-
-    if return_orders
-      return_orders.each do |order|
-        puts ("Order ID: %d, advertiser ID: %d, name: %s was updated " +
-              "with notes %s") % [order[:id], order[:advertiser_id],
-                                  order[:name], order[:notes]]
-      end
-    else
-      raise 'No orders were updated.'
-    end
-  else
-    puts 'No orders found to update.'
-  end
-end
-
-if __FILE__ == $0
   begin
-    update_orders()
+    order_id = 'INSERT_ORDER_ID_HERE'.to_i
+    update_orders(dfp, order_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -23,53 +23,41 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def update_user_team_associations()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def update_user_team_associations(dfp, user_id)
   # Get the UserTeamAssociationService.
   uta_service = dfp.service(:UserTeamAssociationService, API_VERSION)
 
-  # Set the user to set to read only access within its teams.
-  user_id = 'INSERT_USER_ID_HERE'.to_i
-
   # Create filter text to select user team associations by the user ID.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE userId = :user_id ORDER BY id ASC',
-      [
-          {:key => 'user_id',
-           :value => {:value => user_id, :xsi_type => 'NumberValue'}},
-      ]
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'userId = :user_id'
+    sb.with_bind_variable('user_id', user_id)
+    sb.order_by = 'id'
+  end
 
   # Get user team associations by statement.
   page = uta_service.get_user_team_associations_by_statement(
-      statement.toStatement())
+      statement.to_statement()
+  )
+  if page[:results].to_a.empty?
+    raise 'No user team assiciations found to update.'
+  end
 
-  if page[:results] and !page[:results].empty?
-    associations = page[:results]
-    associations.each do |association|
-      # Update local user team association to read-only access.
-      association[:overridden_team_access_type] = 'READ_ONLY'
-    end
+  associations = page[:results]
+  associations.each do |association|
+    # Update local user team association to read-only access.
+    association[:overridden_team_access_type] = 'READ_ONLY'
+  end
 
-    # Update the user team association on the server.
-    return_associations =
-        uta_service.update_user_team_associations(associations)
+  # Update the user team association on the server.
+  updated_associations =
+      uta_service.update_user_team_associations(associations)
 
-    # Display results.
-    return_associations.each do |association|
-      puts ("User team association between user ID %d and team ID %d was " +
-          "updated with access type '%s'") %
-          [association[:user_id], association[:team_id],
-           association[:overridden_team_access_type]]
+  # Display results.
+  if updated_associations.to_a.size > 0
+    updated_associations.each do |association|
+      puts ('User team association between user ID %d and team ID %d was ' +
+          'updated with access type "%s".') % [association[:user_id],
+          association[:team_id], association[:overridden_team_access_type]]
     end
   else
     puts 'No user team associations were updated.'
@@ -77,8 +65,18 @@ def update_user_team_associations()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    update_user_team_associations()
+    user_id = 'INSERT_USER_ID_HERE'.to_i
+    update_user_team_associations(dfp, user_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

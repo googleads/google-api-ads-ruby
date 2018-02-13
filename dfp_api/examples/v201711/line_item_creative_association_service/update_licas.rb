@@ -16,58 +16,44 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example updates the destination URL of all LICAs belonging to a line item.
-# To determine which LICAs exist, run get_all_licas.rb.
+# This example updates the destination URL of all LICAs belonging to a line
+# item. To determine which LICAs exist, run get_all_licas.rb.
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def update_licas()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def update_licas(dfp, line_item_id)
   # Get the LineItemCreativeAssociationService.
   lica_service = dfp.service(:LineItemCreativeAssociationService, API_VERSION)
 
-  # Set the line item to get LICAs by.
-  line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
-
   # Create a statement to only select LICAs for the given line item ID.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE lineItemId = :line_item_id ORDER BY lineItemId, creativeId ASC',
-      [
-          {:key => 'line_item_id',
-           :value => {:value => line_item_id, :xsi_type => 'NumberValue'}}
-      ]
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'lineItemId = :line_item_id'
+    sb.with_bind_variable('line_item_id', line_item_id)
+    sb.order_by = 'creativeId'
+  end
 
   # Get LICAs by statement.
   page = lica_service.get_line_item_creative_associations_by_statement(
-      statement.toStatement())
+      statement.to_statement()
+  )
 
-  if page[:results]
+  if page[:results].to_a.size > 0
     licas = page[:results]
 
     # Update each local LICA object by changing its destination URL.
     licas.each {|lica| lica[:destination_url] = 'http://news.google.com'}
 
     # Update the LICAs on the server.
-    return_licas = lica_service.update_line_item_creative_associations(licas)
+    updated_licas = lica_service.update_line_item_creative_associations(licas)
 
-    if return_licas
-      return_licas.each do |lica|
-        puts ("LICA with line item ID: %d and creative ID: %d was updated " +
-              "with destination url [%s]") %
-              [lica[:line_item_id], lica[:creative_id], lica[:destination_url]]
+    if updated_licas.to_a.size > 0
+      updated_licas.each do |lica|
+        puts ('LICA with line item ID %d and creative ID %d was updated ' +
+            'with destination url "%s".') % [lica[:line_item_id],
+            lica[:creative_id], lica[:destination_url]]
       end
     else
-      raise 'No LICAs were updated.'
+      puts 'No LICAs were updated.'
     end
   else
     puts 'No LICAs found to update.'
@@ -75,8 +61,18 @@ def update_licas()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    update_licas()
+    line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
+    update_licas(dfp, line_item_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

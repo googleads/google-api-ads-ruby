@@ -21,16 +21,7 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_custom_fields()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_custom_fields(dfp)
   # Get the CustomFieldService.
   custom_field_service = dfp.service(:CustomFieldService, API_VERSION)
 
@@ -51,18 +42,31 @@ def create_custom_fields()
   ]
 
   # Create the custom fields on the server.
-  return_custom_fields =
+  created_custom_fields =
       custom_field_service.create_custom_fields(custom_fields)
 
-  return_custom_fields.each do |custom_field|
-    puts "Custom field with ID: %d and name: %s was created." %
-        [custom_field[:id], custom_field[:name]]
+  if created_custom_fields.to_a.size > 0
+    created_custom_fields.each do |custom_field|
+      puts 'Custom field with ID %d and name "%s" was created.' %
+          [custom_field[:id], custom_field[:name]]
+    end
+  else
+    puts 'No custom fields were created.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_custom_fields()
+    create_custom_fields(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

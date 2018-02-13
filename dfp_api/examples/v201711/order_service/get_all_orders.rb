@@ -17,71 +17,64 @@
 #           limitations under the License.
 #
 # This example gets all orders.
+
 require 'dfp_api'
 
-class GetAllOrders
+def get_all_orders(dfp)
+  order_service = dfp.service(:OrderService, API_VERSION)
 
-  def self.run_example(dfp)
-    order_service =
-        dfp.service(:OrderService, :v201711)
+  # Create a statement to select orders.
+  statement = dfp.new_statement_builder()
 
-    # Create a statement to select orders.
-    statement = DfpApi::FilterStatement.new()
+  # Retrieve a small amount of orders at a time, paging
+  # through until all orders have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = order_service.get_orders_by_statement(
+        statement.to_statement()
+    )
 
-    # Retrieve a small amount of orders at a time, paging
-    # through until all orders have been retrieved.
-    total_result_set_size = 0;
-    begin
-      page = order_service.get_orders_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each order.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |order, index|
-          puts "%d) Order with ID %d and name '%s' was found." % [
-              index + statement.offset,
-              order[:id],
-              order[:name]
-          ]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < page[:total_result_set_size]
-
-    puts 'Total number of orders: %d' %
-        total_result_set_size
-  end
-
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
-
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each order.
+    unless page[:results].nil?
+      page[:results].each_with_index do |order, index|
+        puts '%d) Order with ID %d and name "%s" was found.' %
+            [index + statement.offset, order[:id], order[:name]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of orders: %d' % page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetAllOrders.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    get_all_orders(dfp)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

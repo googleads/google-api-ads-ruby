@@ -19,67 +19,64 @@
 # This example approves and overbooks all eligible draft or pending orders. To
 # determine which orders exist, run get_all_orders.rb.
 
-require 'date'
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-PAGE_SIZE = 500
-
-def approve_orders()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def approve_orders(dfp)
   # Get the OrderService.
   order_service = dfp.service(:OrderService, API_VERSION)
 
-  # Create a statement text to select all eligible draft or pending orders.
-  statement = DfpApi::FilterStatement.new(
-      "WHERE status IN ('DRAFT', 'PENDING_APPROVAL') " +
-      "AND endDateTime >= :today AND isArchived = FALSE",
-      [
-         {:key => 'today',
-          :value => {:value => Date.today.strftime('%Y-%m-%dT%H:%M:%S'),
-                     :xsi_type => 'TextValue'}}
-      ]
+  # Create a DfpDateTime representing the start of the present day.
+  today = dfp.today()
+  start_of_today = dfp.datetime(
+      today.year, today.month, today.day, 0, 0, 0, 'America/New_York'
   )
+
+  # Create a statement text to select all eligible draft or pending orders.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'status IN (%s) AND endDateTime >= :start_of_today AND ' +
+        'isArchived = :is_archived' %
+        ["'DRAFT'", "'PENDING_APPROVAL'"].join(', ')
+    sb.with_bind_variable('start_of_today', start_of_today)
+    sb.with_bind_variable('is_archived', false)
+  end
 
   order_ids = []
 
+  page = {:total_result_set_size => 0}
   begin
     # Get orders by statement.
-    page = order_service.get_orders_by_statement(statement.toStatement())
+    page = order_service.get_orders_by_statement(statement.to_statement())
 
-    if page[:results]
+    unless page[:results].nil?
       page[:results].each_with_index do |order, index|
-        puts ("%d) Order ID: %d, status: %s and name: %s will be " +
-            "approved.") % [index + statement.offset,
-                            order[:id], order[:status],
-                            order[:name]]
+        puts ('%d) Order ID %d, status "%s", and name "%s" will be ' +
+            'approved.') % [index + statement.offset, order[:id],
+            order[:status], order[:name]]
         order_ids << order[:id]
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
   end while statement.offset < page[:total_result_set_size]
 
-  puts "Number of orders to be approved: %d" % order_ids.size
+  puts 'Number of orders to be approved: %d' % order_ids.size
 
   if !order_ids.empty?
     # Create statement for action.
-    statement = DfpApi::FilterStatement.new(
-        "WHERE id IN (%s)" % order_ids.join(', '))
+    statement = dfp.new_statement_builder do |sb|
+      sb.where = 'id IN (%s)' % order_ids.join(', ')
+    end
 
     # Perform action.
     result = order_service.perform_order_action(
-        {:xsi_type => 'ApproveAndOverbookOrders'}, statement.toStatement())
+        {:xsi_type => 'ApproveAndOverbookOrders'},
+        statement.to_statement()
+    )
 
     # Display results.
-    if result and result[:num_changes] > 0
-      puts "Number of orders approved: %d" % result[:num_changes]
+    if !result.nil? && result[:num_changes] > 0
+      puts 'Number of orders approved: %d' % result[:num_changes]
     else
       puts 'No orders were approved.'
     end
@@ -89,8 +86,17 @@ def approve_orders()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    approve_orders()
+    approve_orders(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

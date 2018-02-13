@@ -21,36 +21,20 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def update_activities()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def update_activities(dfp, activity_id)
   # Get the ActivityService.
   activity_service = dfp.service(:ActivityService, API_VERSION)
 
-  # Set the ID of the activity to update.
-  activity_id = 'INSERT_ACTIVITY_ID_HERE'
-
   # Create statement to select a single activity.
-  statement = DfpApi::FilterStatement.new(
-     'WHERE id = :id ORDER BY id ASC',
-     [
-         {:key => 'id',
-          :value => {:value => activity_id, :xsi_type => 'NumberValue'}}
-     ],
-     1
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :id'
+    sb.with_bind_variable('id', activity_id)
+  end
 
-  page = activity_service.get_activities_by_statement(statement.toStatement())
+  # Get the activities by statement.
+  page = activity_service.get_activities_by_statement(statement.to_statement())
 
-  if page[:results]
+  unless page[:results].nil?
     # Get the activities.
     activities = page[:results]
 
@@ -63,20 +47,30 @@ def update_activities()
     return_activities = activity_service.update_activities(activities)
 
     # Display results.
-    if return_activities
+    if return_activities.to_a.size > 0
       return_activities.each do |updated_activity|
-        puts "Activity with ID: %d and name: %s was updated." %
+        puts 'Activity with ID %d and name "%s" was updated.' %
             [updated_activity[:id], updated_activity[:name]]
       end
     else
-      raise 'No activities were updated.'
+      puts 'No activities were updated.'
     end
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    update_activities()
+    activity_id = 'INSERT_ACTIVITY_ID_HERE'
+    update_activities(dfp, activity_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

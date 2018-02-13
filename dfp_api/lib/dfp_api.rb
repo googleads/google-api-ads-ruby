@@ -23,6 +23,9 @@ require 'dfp_api/api_config'
 require 'dfp_api/credential_handler'
 require 'dfp_api/errors'
 require 'dfp_api/dfp_api_statement'
+require 'dfp_api/dfp_api_datetime'
+require 'dfp_api/pql_statement_utils'
+require 'dfp_api/utils_reporter'
 
 # Main namespace for all the client library's modules and classes.
 module DfpApi
@@ -32,15 +35,57 @@ module DfpApi
   # Holds all the services, as well as login credentials.
   #
   class Api < AdsCommon::Api
+    attr_reader :utils_reporter
+
     # Constructor for API.
     def initialize(provided_config = nil)
       super(provided_config)
       @credential_handler = DfpApi::CredentialHandler.new(@config)
+      @utils_reporter = DfpApi::UtilsReporter.new(@credential_handler)
     end
 
     # Getter for the API service configurations.
     def api_config
       DfpApi::ApiConfig
+    end
+
+    # Returns an instance of StatementBuilder object.
+    def new_statement_builder(&block)
+      return DfpApi::StatementBuilder.new(self, &block)
+    end
+
+    def new_report_statement_builder(&block)
+      statement = DfpApi::StatementBuilder.new(self) do |sb|
+        sb.limit = nil
+        sb.offset = nil
+      end
+      statement.configure(&block)
+      return statement
+    end
+
+    # Returns an instance of DfpDate.
+    def date(*args)
+      return DfpApi::DfpDate.new(self, *args)
+    end
+
+    # Returns an instance of DfpDate representing the current day.
+    def today(*args)
+      return DfpApi::DfpDate.today(self, *args)
+    end
+
+    # Returns an instance of DfpDateTime.
+    def datetime(*args)
+      return DfpApi::DfpDateTime.new(self, *args)
+    end
+
+    # Returns an instance of DfpDateTime representing the current time.
+    def now(*args)
+      return DfpApi::DfpDateTime.now(self, *args)
+    end
+
+    # Returns an instance of DfpDateTime in the UTC timezone.
+    def utc(*args)
+      return DfpApi::DfpDateTime.utc(self, *args)
     end
 
     private

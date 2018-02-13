@@ -25,68 +25,61 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def activate_line_items()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def activate_line_items(dfp, order_id)
   # Get the LineItemService.
   line_item_service = dfp.service(:LineItemService, API_VERSION)
 
-  # Set the ID of the order to get line items from.
-  order_id = 'INSERT_ORDER_ID_HERE'.to_i
-
   # Create a statement to only select line items from the specified order that
   # are in the approved (needs creatives) state.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE orderID = :order_id AND status = :status',
-      [
-          {:key => 'order_id',
-           :value => {:value => order_id, :xsi_type => 'NumberValue'}},
-          {:key => 'status',
-           :value => {:value => 'NEEDS_CREATIVES', :xsi_type => 'TextValue'}}
-      ]
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'orderId = :order_id AND status = :status'
+    sb.with_bind_variable('order_id', order_id)
+    sb.with_bind_variable('status', 'NEEDS_CREATIVES')
+  end
 
   line_item_ids = []
 
+  # Retrieve a small number of line items at a time, paging
+  # through until all line items have been retrieved.
+  page = {:total_result_set_size => 0}
   begin
     # Get line items by statement.
     page = line_item_service.get_line_items_by_statement(
-        statement.toStatement())
+        statement.to_statement()
+    )
 
-    if page[:results]
+    unless page[:results].nil?
       page[:results].each do |line_item|
-        if !line_item[:is_archived]
-          puts ("%d) Line item with ID: %d, order ID: %d and name: %s will " +
-              "be activated.") % [line_item_ids.size, line_item[:id],
+        unless line_item[:is_archived]
+          puts ('%d) Line item with ID %d, order ID %d and name "%s" will ' +
+              'be activated.') % [line_item_ids.size, line_item[:id],
               line_item[:order_id], line_item[:name]]
           line_item_ids << line_item[:id]
         end
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
   end while statement.offset < page[:total_result_set_size]
 
   puts "Number of line items to be activated: %d" % line_item_ids.size
 
   if !line_item_ids.empty?
-    # Modify statement for action. Note, the values are still present.
-    statement = DfpApi::FilterStatement.new(
-        "WHERE id IN (%s)" % line_item_ids.join(', '))
+    # Create statement for action.
+    statement = dfp.new_statement_builder do |sb|
+      sb.where = 'id IN (%s)' % line_item_ids.join(', ')
+      sb.offset = nil
+      sb.limit = nil
+    end
 
     # Perform action.
     result = line_item_service.perform_line_item_action(
-        {:xsi_type => 'ActivateLineItems'}, statement.toStatement())
+        {:xsi_type => 'ActivateLineItems'}, statement.to_statement()
+    )
 
     # Display results.
-    if result and result[:num_changes] > 0
+    if !result.nil? && result[:num_changes] > 0
       puts "Number of line items activated: %d" % result[:num_changes]
     else
       puts 'No line items were activated.'
@@ -97,8 +90,18 @@ def activate_line_items()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    activate_line_items()
+    order_id = 'INSERT_ORDER_ID_HERE'.to_i
+    activate_line_items(dfp, order_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

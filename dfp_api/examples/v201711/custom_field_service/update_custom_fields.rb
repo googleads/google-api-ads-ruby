@@ -21,10 +21,45 @@
 
 require 'dfp_api'
 
+def update_custom_fields(dfp, custom_field_id)
+  # Get the CustomFieldService.
+  custom_field_service = dfp.service(:CustomFieldService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to only select a single custom field.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :custom_field_id'
+    sb.with_bind_variable('custom_field_id', custom_field_id)
+    sb.limit = 1
+  end
 
-def update_custom_fields()
+  # Get custom fields by statement.
+  response = custom_field_service.get_custom_fields_by_statement(
+      statement.to_statement()
+  )
+  raise 'No custom fields found to update.' if response[:results].to_a.empty?
+  custom_field = response[:results].first
+
+  # Update custom field object.
+  custom_field[:description] ||= ''
+  custom_field[:description] += ' Updated.'
+
+  # Update the custom field on the server.
+  updated_custom_fields =
+      custom_field_service.update_custom_fields([custom_field])
+
+  if updated_custom_fields.to_a.size > 0
+    updated_custom_fields.each do |custom_field|
+      puts 'Custom field ID %d, name "%s", and description "%s" was updated.' %
+          [custom_field[:id], custom_field[:name], custom_field[:description]]
+    end
+  else
+    puts 'No custom fields were updated.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -32,53 +67,9 @@ def update_custom_fields()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the CustomFieldService.
-  custom_field_service = dfp.service(:CustomFieldService, API_VERSION)
-
-  # Set the ID of the custom field to update.
-  custom_field_id = 'INSERT_CUSTOM_FIELD_ID_HERE'.to_i
-
-  # Create a statement to only select a single custom field.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :id',
-      [
-          {:key => 'id',
-           :value => {:value => custom_field_id, :xsi_type => 'NumberValue'}}
-      ],
-      1
-  )
-
-  # Get custom fields by statement.
-  page = custom_field_service.get_custom_fields_by_statement(
-      statement.toStatement())
-
-  if page[:results]
-    custom_fields = page[:results]
-
-    custom_fields.each do |custom_field|
-      # Update local custom field object.
-      custom_field[:description] = '' if custom_field[:description].nil?
-      custom_field[:description] +=' Updated.'
-
-      # Update the custom field on the server.
-      return_custom_fields =
-          custom_field_service.update_custom_fields([custom_field])
-
-      return_custom_fields.each do |custom_field|
-        puts "Custom field ID: " +
-            "%d, name: '%s' and description '%s' was updated." % [
-                custom_field[:id], custom_field[:name],
-                custom_field[:description]]
-      end
-    else
-      puts 'No custom fields were found to update.'
-    end
-  end
-end
-
-if __FILE__ == $0
   begin
-    update_custom_fields()
+    custom_field_id = 'INSERT_CUSTOM_FIELD_ID_HERE'.to_i
+    update_custom_fields(dfp, custom_field_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

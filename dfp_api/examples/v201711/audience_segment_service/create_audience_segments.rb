@@ -21,20 +21,10 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_audience_segments(custom_targeting_key_id, custom_targeting_value_id)
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
-  # Get the AudienceSegmentService.
+def create_audience_segments(dfp, custom_targeting_key_id,
+    custom_targeting_value_id)
+  # Get the AudienceSegmentService and the NetworkService.
   audience_segment_service = dfp.service(:AudienceSegmentService, API_VERSION)
-
-  # Get the NetworkService.
   network_service = dfp.service(:NetworkService, API_VERSION)
 
   # Get the root ad unit ID used to target the whole site.
@@ -78,23 +68,33 @@ def create_audience_segments(custom_targeting_key_id, custom_targeting_value_id)
   # Create the audience segment on the server.
   return_segments = audience_segment_service.create_audience_segments([segment])
 
-  if return_segments
+  if return_segments.to_a.size > 0
     return_segments.each do |segment|
-      puts ("An audience segment with ID: %d, name: '%s' and type: '%s' was " +
-          "created.") % [segment[:id], segment[:name], segment[:type]]
+      puts ('An audience segment with ID %d, name "%s", and type "%s" was ' +
+          'created.') % [segment[:id], segment[:name], segment[:type]]
     end
   else
-    raise 'No audience segments were created.'
+    puts 'No audience segments were created.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
     # Set the IDs of the custom criteria to target.
-    custom_targeting_key_id = 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'
-    custom_targeting_value_id = 'INSERT_CUSTOM_TARGETING_VALUE_ID_HERE'
-
-    create_audience_segments(custom_targeting_key_id, custom_targeting_value_id)
+    custom_targeting_key_id = 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'.to_i
+    custom_targeting_value_id = 'INSERT_CUSTOM_TARGETING_VALUE_ID_HERE'.to_i
+    create_audience_segments(
+      dfp, custom_targeting_key_id, custom_targeting_value_id
+    )
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

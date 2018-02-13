@@ -25,28 +25,9 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_licas()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_licas(dfp, line_item_id, creative_ids)
   # Get the LineItemCreativeAssociationService.
   lica_service = dfp.service(:LineItemCreativeAssociationService, API_VERSION)
-
-  # Get the CreativeService.
-  creative_service = dfp.service(:CreativeService, API_VERSION)
-
-  # Set the line item ID and creative IDs to associate.
-  line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
-  creative_ids = [
-      'INSERT_CREATIVE_ID_HERE'.to_i,
-      'INSERT_CREATIVE_ID_HERE'.to_i
-  ]
 
   # Create an array to store local LICA objects.
   licas = creative_ids.map do |creative_id|
@@ -55,22 +36,35 @@ def create_licas()
   end
 
   # Create the LICAs on the server.
-  return_licas = lica_service.create_line_item_creative_associations(licas)
+  created_licas = lica_service.create_line_item_creative_associations(licas)
 
-  if return_licas
-    return_licas.each do |lica|
-      puts ("LICA with line item ID: %d, creative ID: %d and status: %s was " +
-          "created.") % [lica[:line_item_id], lica[:creative_id], lica[:status]]
+  if created_licas.to_a.size > 0
+    created_licas.each do |lica|
+      puts ('LICA with line item ID %d, creative ID %d, and status "%s" was ' +
+          'created.') % [lica[:line_item_id], lica[:creative_id], lica[:status]]
     end
   else
-    raise 'No LICAs were created.'
+    puts 'No LICAs were created.'
   end
-
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_licas()
+    line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
+    creative_ids = [
+      'INSERT_CREATIVE_ID_HERE'.to_i,
+      'INSERT_CREATIVE_ID_HERE'.to_i
+    ]
+    create_licas(dfp, line_item_id, creative_ids)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -23,24 +23,12 @@
 # This feature is only available to DFP premium solution networks.
 
 require 'base64'
+require 'securerandom'
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_custom_creative()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_custom_creative(dfp, advertiser_id)
   # Get the CreativeService.
   creative_service = dfp.service(:CreativeService, API_VERSION)
-
-  # Set the ID of the advertiser (company) that all creatives will be assigned
-  # to.
-  advertiser_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'.to_i
 
   # Prepare image data for creative.
   image_url =
@@ -50,40 +38,51 @@ def create_custom_creative()
 
   # Create an array to store local creative objects.
   custom_creative = {
-      :xsi_type => 'CustomCreative',
-      :name => 'Custom creative',
-      :advertiser_id => advertiser_id,
-      :destination_url => 'http://www.google.com',
-      :custom_creative_assets => [{
-           :macro_name => 'IMAGE_ASSET',
-           :asset => {
-               :file_name => "image%d.jpg" % Time.new.to_i,
-               :asset_byte_array => image_data_base64
-           }
-      }],
-
-      # Set the HTML snippet using the custom creative asset macro.
-      :html_snippet => "<a href='%%CLICK_URL_UNESC%%%%DEST_URL%%'>" +
-        "<img src='%%FILE:IMAGE_ASSET%%'/></a><br>Click above for great deals!",
-      # Set the creative size.
-      :size => {:width => 300, :height => 250, :is_aspect_ratio => false}
+    :xsi_type => 'CustomCreative',
+    :name => 'Custom creative',
+    :advertiser_id => advertiser_id,
+    :destination_url => 'http://www.google.com',
+    :custom_creative_assets => [{
+       :macro_name => 'IMAGE_ASSET',
+       :asset => {
+         :file_name => 'image_%d.jpg' % SecureRandom.uuid(),
+         :asset_byte_array => image_data_base64
+       }
+    }],
+    # Set the HTML snippet using the custom creative asset macro.
+    :html_snippet => '<a href=\'%%CLICK_URL_UNESC%%%%DEST_URL%%\'>' +
+        '<img src=\'%%FILE:IMAGE_ASSET%%\'/></a><br>Click above for great ' +
+        'deals!',
+    # Set the creative size.
+    :size => {:width => 300, :height => 250, :is_aspect_ratio => false}
   }
 
   # Create the creatives on the server.
-  return_creative = creative_service.create_creative(custom_creative)
+  created_creatives = creative_service.create_creative(custom_creative)
 
-  if return_creative
-    puts "Custom creative with ID: %d, name: '%s' and type: '%s' was created." %
-        [return_creative[:id], return_creative[:name],
-         return_creative[:creative_type]]
+  if created_creatives.to_a.size > 0
+    created_creatives.each do |creative|
+      puts ('Custom creative with ID %d, name "%s", and type "%s" was ' +
+          'created.') % [creative[:id], creative[:name],
+          creative[:creative_type]]
   else
-    raise 'No creatives were created.'
+    puts 'No creatives were created.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_custom_creative()
+    advertiser_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'.to_i
+    create_custom_creative(dfp, advertiser_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

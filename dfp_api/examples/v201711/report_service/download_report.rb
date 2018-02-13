@@ -16,16 +16,35 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example downloads a completed report. To run a report, run
-# run_delivery_report.rb, run_sales_report.rb or run_inventory_report.rb.
+# This example downloads a completed report. By default, downloaded reports
+# are compressed to a gzip file. To run a report, run run_delivery_report.rb,
+# run_sales_report.rb or run_inventory_report.rb.
 
 require 'dfp_api'
-
 require 'open-uri'
 
-API_VERSION = :v201711
+def download_report(dfp, report_job_id, file_name)
+  # Get the ReportService.
+  report_service = dfp.service(:ReportService, API_VERSION)
 
-def download_report()
+  # Set the export format used to generate the report. Other options include,
+  # TSV, TSV_EXCEL, and XML.
+  export_format = 'CSV_DUMP'
+
+  # Get the report URL.
+  download_url = report_service.get_report_download_url(
+      report_job_id, export_format
+  )
+
+  puts 'Downloading "%s" to "%s"...' % [download_url, file_name]
+  open(file_name, 'wb') do |local_file|
+    local_file << open(download_url).read()
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -33,31 +52,10 @@ def download_report()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the ReportService.
-  report_service = dfp.service(:ReportService, API_VERSION)
-
-  # Set the ID of the completed report.
-  report_job_id = 'INSERT_REPORT_JOB_ID_HERE'.to_i
-
-  # Set the file path and name to save to.
-  file_name = 'INSERT_FILE_PATH_AND_NAME_HERE'
-
-  # Change to your preffered export format.
-  export_format = 'CSV_DUMP'
-
-  # Get the report URL.
-  download_url = report_service.get_report_download_url(
-      report_job_id, export_format);
-
-  puts "Downloading [%s] to [%s]..." % [download_url, file_name]
-  open(file_name, 'wb') do |local_file|
-    local_file << open(download_url).read()
-  end
-end
-
-if __FILE__ == $0
   begin
-    download_report()
+    report_job_id = 'INSERT_REPORT_JOB_ID_HERE'.to_i
+    file_name = 'INSERT_FILE_PATH_AND_NAME_HERE'
+    download_report(dfp, report_job_id, file_name)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

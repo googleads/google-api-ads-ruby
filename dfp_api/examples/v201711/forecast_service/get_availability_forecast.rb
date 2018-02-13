@@ -21,37 +21,21 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def get_availability_forecast()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
-  # Get the ForecastService.
+def get_availability_forecast(dfp, advertiser_id)
+  # Get the ForecastService and the NetworkService.
   forecast_service = dfp.service(:ForecastService, API_VERSION)
-
-  # Get the NetworkService.
   network_service = dfp.service(:NetworkService, API_VERSION)
 
-  # Set the advertiser to assign the prospective line item to.
-  # This allows for forecasting while taking into account
-  # same advertiser exclusion.
-  advertiser_id = 'INSERT_ADVERTISER_ID_HERE'.to_i
-
   # Set the root ad unit to target the entire network.
-  root_ad_unit_id = (
-      network_service.get_current_network()[:effective_root_ad_unit_id].to_i)
+  root_ad_unit_id =
+      network_service.get_current_network()[:effective_root_ad_unit_id].to_i
 
   # Create targeting.
   targeting = {
     :inventory_targeting => {
       :targeted_ad_units => [
         {
-          :include_descendants => True,
+          :include_descendants => true,
           :ad_unit_id => root_ad_unit_id
         }
       ]
@@ -71,12 +55,12 @@ def get_availability_forecast()
     :creative_placeholders => [creative_placeholder],
     # Set the line item's time to be now until the projected end date time.
     :start_date_time_type => 'IMMEDIATELY',
-    :end_date_time => Time.utc(2014, 01, 01),
+    :end_date_time => dfp.utc(Date.today.year + 1, 1, 1).to_h,
     # Set the line item to use 50% of the impressions.
-    :primary_goal => {:goal => {
+    :primary_goal => {
       :units => '50',
       :unit_type => 'IMPRESSIONS',
-      :goal_type => 'DAILY'}
+      :goal_type => 'DAILY'
     },
     # Set the cost type to match the unit type.
     :cost_type => 'CPM'
@@ -89,32 +73,47 @@ def get_availability_forecast()
 
   # Set forecasting options.
   forecast_options = {
-    :include_contending_line_items => True,
-    :include_targeting_criteria_breakdown => True,
+    :include_contending_line_items => true,
+    :include_targeting_criteria_breakdown => true,
   }
 
   # Get forecast for the line item.
   forecast = forecast_service.get_availability_forecast(
       prospective_line_item, forecast_options)
 
-  if forecast
+  unless forecast.nil?
     # Display results.
     matched = forecast[:matched_units]
     available_percent = forecast[:available_units] * 100.0 / matched
     unit_type = forecast[:unit_type].to_s.downcase
-    puts "%.2f %s matched." % [matched, unit_type]
-    puts "%.2f%% %s available." % [available_percent, unit_type]
-    puts "%d contending line items." % forecast[:contending_line_items].size
-    if forecast[:possible_units]
+    puts '%.2f %s matched.' % [matched, unit_type]
+    puts '%.2f%% of %s available.' % [available_percent, unit_type]
+    unless forecast[:contending_line_items].nil?
+      puts '%d contending line items.' % forecast[:contending_line_items].size
+    end
+    unless forecast[:possible_units].nil?
       possible_percent = forecast[:possible_units] * 100.0 / matched
-      puts "%.2f%% %s possible." % [possible_percent, unit_type]
+      puts '%.2f%% of %s possible.' % [possible_percent, unit_type]
     end
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    get_availability_forecast()
+    # Set the advertiser to assign the prospective line item to.
+    # This allows for forecasting while taking into account
+    # same advertiser exclusion.
+    advertiser_id = 'INSERT_ADVERTISER_ID_HERE'.to_i
+    get_availability_forecast(dfp, advertiser_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -23,6 +23,7 @@ module DfpApi
   SUGGESTED_PAGE_LIMIT = 500
 
   # A statement object for PQL and get*ByStatement queries.
+  # Deprecated. Use StatementBuilder instead.
   class FilterStatement
     # Constructor for a Filter Statement.
     def initialize(query_statement='', values=[], limit=SUGGESTED_PAGE_LIMIT,
@@ -37,17 +38,25 @@ module DfpApi
     attr_accessor :offset
 
     def toStatement()
+      register_filter_statement_util()
       statement = @query_statement + ' LIMIT %d OFFSET %d' % [@limit, @offset]
       return {:query => statement, :values => @values}
     end
 
     def toStatementForAction()
+      register_filter_statement_util()
       return {:query => @query_statement.dup(), :values => @values}
     end
 
     def toStatementWithoutOffset()
+      register_filter_statement_util()
       statement = @query_statement + ' LIMIT %d' % [@limit]
       return {:query => statement, :values => @values}
+    end
+
+    private
+    def register_filter_statement_util()
+      DfpApi::Utils::UtilityRegistry.instance.add('FilterStatement')
     end
   end
 end

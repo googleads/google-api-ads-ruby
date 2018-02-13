@@ -19,6 +19,7 @@
 
 require 'ads_common/credential_handler'
 require 'dfp_api/api_config'
+require 'dfp_api/utils'
 
 module DfpApi
 
@@ -31,17 +32,21 @@ module DfpApi
     def credentials(credentials_override = nil)
       result = super(credentials_override)
       validate_headers_for_server(result)
+      include_utils = @config.read('library.include_utilities_in_user_agent',
+          true)
       result[:extra_headers] = {
-          'applicationName' => generate_user_agent(),
+          'applicationName' => generate_user_agent([], include_utils),
           'networkCode' => result[:network_code]
       }
       return result
     end
 
     # Generates string to use as user agent in headers.
-    def generate_user_agent(extra_ids = [])
+    def generate_user_agent(extra_ids = [], include_utilities = true)
       agent_app = @config.read('authentication.application_name')
       extra_ids << ["DfpApi-Ruby/%s" % DfpApi::ApiConfig::CLIENT_LIB_VERSION]
+      utility_registry = DfpApi::Utils::UtilityRegistry.instance
+      extra_ids += utility_registry.extract!.to_a if include_utilities
       super(extra_ids, agent_app)
     end
 

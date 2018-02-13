@@ -21,37 +21,19 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-MAX_RETRIES = 10
-RETRY_INTERVAL = 30
-
-def run_saved_query(saved_query_id)
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def run_saved_query(dfp, saved_query_id)
   # Get the ReportService and NetworkService.
   report_service = dfp.service(:ReportService, API_VERSION)
 
   # Create statement to select a single saved report query.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :id',
-      [
-        {:key => 'id',
-         :value => {
-             :value => saved_query_id,
-             :xsi_type => 'NumberValue'}
-        }
-      ],
-      # Limit results to single entity.
-      1
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :saved_query_id'
+    sb.with_bind_variable('saved_query_id', saved_query_id)
+  end
 
   saved_query_page = report_service.get_saved_queries_by_statement(
-      statement.toStatement())
+      statement.to_statement()
+  )
 
   unless saved_query_page[:results].nil?
     saved_query = response[:results].first
@@ -62,20 +44,21 @@ def run_saved_query(saved_query_id)
 
       # Run report job.
       report_job = report_service.run_report_job(report_job);
+      report_job_status = 'IN_PROGRESS'
 
       MAX_RETRIES.times do |retry_count|
         # Get the report job status.
         report_job_status = report_service.get_report_job_status(
-            report_job[:id])
+            report_job[:id]
+        )
 
         break unless report_job_status == 'IN_PROGRESS'
-        puts "Report with ID: %d is still running." % report_job[:id]
+        puts 'Report with ID %d is still running.' % report_job[:id]
         sleep(RETRY_INTERVAL)
       end
 
-      puts "Report job with ID: %d finished with status %s." %
-          [report_job[:id],
-           report_service.get_report_job_status(report_job[:id])]
+      puts 'Report job with ID %d finished with status "%s."' %
+          [report_job[:id], report_job_status]
     else
       raise StandardError, 'Report query is not compatible with the API'
     end
@@ -83,9 +66,20 @@ def run_saved_query(saved_query_id)
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+  MAX_RETRIES = 10
+  RETRY_INTERVAL = 30
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    SAVED_QUERY_ID = 'INSERT_SAVED_QUERY_ID_HERE'.to_i
-    run_saved_query(SAVED_QUERY_ID)
+    saved_query_id = 'INSERT_SAVED_QUERY_ID_HERE'.to_i
+    run_saved_query(dfp, saved_query_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

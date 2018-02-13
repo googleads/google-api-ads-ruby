@@ -19,12 +19,38 @@
 # This example creates new teams with the logged in user added to each team. To
 # determine which teams exist, run get_all_teams.rb.
 
+require 'securerandom'
 require 'dfp_api'
 
-API_VERSION = :v201711
-ITEM_COUNT = 5
+def create_teams(dfp, number_of_teams_to_create)
+  # Get the TeamService.
+  team_service = dfp.service(:TeamService, API_VERSION)
 
-def create_teams()
+  # Create an array to store local team objects.
+  teams = (1..number_of_teams_to_create).map do |index|
+    {
+      :name => "Team #%d - %d" % [index, SecureRandom.uuid()],
+      :has_all_companies => false,
+      :has_all_inventory => false
+    }
+  end
+
+  # Create the teams on the server.
+  created_teams = team_service.create_teams(teams)
+
+  if created_teams.to_a.size > 0
+    created_teams.each do |team|
+      puts 'Team with ID %d and name "%s" was created.' %
+          [team[:id], team[:name]]
+    end
+  else
+    puts 'No teams were created.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -32,34 +58,9 @@ def create_teams()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the TeamService.
-  team_service = dfp.service(:TeamService, API_VERSION)
-
-  # Create an array to store local team objects.
-  teams = (1..ITEM_COUNT).map do |index|
-    {
-      :name => "Team #%d" % index,
-      :has_all_companies => false,
-      :has_all_inventory => false
-    }
-  end
-
-  # Create the teams on the server.
-  return_teams = team_service.create_teams(teams)
-
-  if return_teams
-    return_teams.each do |team|
-      puts "Team with ID: %d and name: '%s' was created." %
-          [team[:id], team[:name]]
-    end
-  else
-    raise 'No teams were created.'
-  end
-end
-
-if __FILE__ == $0
   begin
-    create_teams()
+    number_of_teams_to_create = 5
+    create_teams(dfp, number_of_teams_to_create)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

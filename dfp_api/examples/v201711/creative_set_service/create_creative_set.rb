@@ -18,11 +18,37 @@
 #
 # This code example creates a new creative set.
 
+require 'securerandom'
 require 'dfp_api'
 
-API_VERSION = :v201711
+def create_creative_set(dfp, master_creative_id, companion_creative_id)
+  # Get the CreativeSetService.
+  creative_set_service = dfp.service(:CreativeSetService, API_VERSION)
 
-def create_creative_set()
+  # Create an array to store local creative set object.
+  creative_set = {
+    :name => 'Creative set #%d' % SecureRandom.uuid(),
+    :master_creative_id => master_creative_id,
+    :companion_creative_ids => [companion_creative_id]
+  }
+
+  # Create the creative set on the server.
+  created_creative_set = creative_set_service.create_creative_set(creative_set)
+
+  if created_creative_set.nil?
+    raise 'No creative set was created.'
+  else
+    puts ('Creative set with ID %d, master creative ID %d and companion ' +
+        'creative IDs [%s] was created') % [created_creative_set[:id],
+        created_creative_set[:master_creative_id],
+        created_creative_set[:companion_creative_ids].join(', ')]
+  end
+
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -30,36 +56,10 @@ def create_creative_set()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  master_creative_id = 'INSERT_MASTER_CREATIVE_ID_HERE'.to_i
-  companion_creative_id = 'INSERT_COMPANION_CREATIVE_ID_HERE'.to_i
-
-  # Get the CreativeSetService.
-  creative_set_service = dfp.service(:CreativeSetService, API_VERSION)
-
-  # Create an array to store local creative set object.
-  creative_set = {
-      :name => 'Creative set #%d' % (Time.new.to_f * 1000),
-      :master_creative_id => master_creative_id,
-      :companion_creative_ids => [companion_creative_id]
-  }
-
-  # Create the creative set on the server.
-  return_set = creative_set_service.create_creative_set(creative_set)
-
-  if return_set
-    puts ('Creative set with ID: %d, master creative ID: %d and companion ' +
-        'creative IDs: [%s] was created') %
-        [return_set[:id], return_set[:master_creative_id],
-         return_set[:companion_creative_ids].join(', ')]
-  else
-    raise 'No creative set was created.'
-  end
-
-end
-
-if __FILE__ == $0
   begin
-    create_creative_set()
+    master_creative_id = 'INSERT_MASTER_CREATIVE_ID_HERE'.to_i
+    companion_creative_id = 'INSERT_COMPANION_CREATIVE_ID_HERE'.to_i
+    create_creative_set(dfp, master_creative_id, companion_creative_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -22,10 +22,54 @@
 
 require 'dfp_api'
 
+def update_content_metadata_key_hierarchies(dfp,
+    content_metadata_key_hierarchy_id, custom_targeting_key_id)
+  # Get the ContentMetadataKeyHierarchyService.
+  cmkh_service = dfp.service(:ContentMetadataKeyHierarchyService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to only select a single content metadata key hierarchy.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :id'
+    sb.with_bind_variable('id', content_metadata_key_hierarchy_id)
+    sb.limit = 1
+  end
 
-def update_content_metadata_key_hierarchies()
+  # Get content metadata key hierarchy to update by statement.
+  response = cmkh_service.get_content_metadata_key_hierarchies_by_statement(
+      statement.to_statement()
+  )
+  if response[:results].to_a.empty?
+    raise 'No content metadata key hierarchy found to update.'
+  end
+  content_metadata_key_hierarchy = response[:results].first
+
+  # Update the content metadata key hierarchy by adding a hierarchy level.
+  hierarchy_levels = content_metadata_key_hierarchy[:hierarchy_levels]
+
+  hierarchy_level = {
+    :custom_targeting_key_id => custom_targeting_key_id,
+    :hierarchy_level => hierarchy_levels.length + 1
+  }
+
+  content_metadata_key_hierarchy[:hierarchy_levels] =
+      hierarchy_levels.concat([hierarchy_level])
+
+  # Update the content metadata key hierarchy on the server.
+  content_metadata_key_hierarchies =
+      cmkh_service.update_content_metadata_key_hierarchies(
+          [content_metadata_key_hierarchy]
+      )
+
+  content_metadata_key_hierarchies.each do |content_metadata_key_hierarchy|
+    puts 'Content metadata key hierarchy with ID %d, name "%s" was updated.' %
+        [content_metadata_key_hierarchy[:id],
+        content_metadata_key_hierarchy[:name]]
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -33,64 +77,13 @@ def update_content_metadata_key_hierarchies()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the ContentMetadataKeyHierarchyService.
-  cmkh_service = dfp.service(:ContentMetadataKeyHierarchyService, API_VERSION)
-
-  # Set the ID of the content metadata key hierarchy.
-  content_metadata_key_hierarchy_id =
-      'INSERT_CONTENT_METADATA_KEY_HIERARCHY_ID_HERE'
-
-  # Set the ID of the custom targeting key to be added as a hierarchy level.
-  custom_targeting_key_id = "INSERT_CUSTOM_TARGETING_KEY_ID_HERE"
-
-  # Create a statement to only select a single content metadata key hierarchy.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :id ORDER BY id ASC',
-      [
-          {:key => 'id',
-           :value => {:value => content_metadata_key_hierarchy_id,
-                      :xsi_type => 'NumberValue'}},
-      ],
-      1
-  }
-
-  # Get content metadata key hierarchies by statement.
-  page = cmkh_service.get_content_metadata_key_hierarchies_by_statement(
-      statement.toStatement())
-
-  if page[:results]
-    content_metadata_key_hierarchy = page[:results].first
-
-    # Update the content metadata key hierarchy by adding a hierarchy level.
-    hierarchy_levels = content_metadata_key_hierarchy[:hierarchy_levels]
-
-    hierarchy_level = {
-      :custom_targeting_key_id => custom_targeting_key_id,
-      :hierarchy_level => hierarchy_levels.length + 1
-    }
-
-    content_metadata_key_hierarchy[:hierarchy_levels] =
-        hierarchy_levels.concat([hierarchy_level])
-
-    # Update content metadata key hierarchy.
-    content_metadata_key_hierarchies =
-        cmkh_service.update_content_metadata_key_hierarchies(
-            [content_metadata_key_hierarchy])
-
-    content_metadata_key_hierarchies.each do |content_metadata_key_hierarchy|
-      puts 'Content metadata key hierarchy with ID ' +
-           '%d, name "%s" was updated.' % [
-               content_metadata_key_hierarchy[:id],
-               content_metadata_key_hierarchy[:name]]
-    end
-  else
-    puts 'No content metadata key hierarchy found to update.'
-  end
-end
-
-if __FILE__ == $0
   begin
-    update_content_metadata_key_hierarchies()
+    content_metadata_key_hierarchy_id =
+        'INSERT_CONTENT_METADATA_KEY_HIERARCHY_ID_HERE'.to_i
+    custom_targeting_key_id = "INSERT_CUSTOM_TARGETING_KEY_ID_HERE".to_i
+    update_content_metadata_key_hierarchies(
+        dfp, content_metadata_key_hierarchy_id, custom_targeting_key_id
+    )
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

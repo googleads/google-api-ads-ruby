@@ -23,16 +23,7 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_custom_targeting_keys_and_values()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_custom_targeting_keys_and_values(dfp)
   # Get the CustomTargetingService.
   custom_targeting_service = dfp.service(:CustomTargetingService, API_VERSION)
 
@@ -40,71 +31,88 @@ def create_custom_targeting_keys_and_values()
   gender_key = {:display_name => 'gender', :name => 'g', :type => 'PREDEFINED'}
 
   # Create free-form key.
-  car_model_key = {:display_name => 'car model', :name => 'c',
-      :type => 'FREEFORM'}
+  car_model_key = {
+    :display_name => 'car model',
+    :name => 'c',
+    :type => 'FREEFORM'
+  }
 
   # Create predefined key that may be used for content targeting.
-  genre_key = {:display_name => 'genre', :name => 'genre',
-      :type => 'PREDEFINED'}
+  genre_key = {
+    :display_name => 'genre',
+    :name => 'genre',
+    :type => 'PREDEFINED'
+  }
 
   # Create the custom targeting keys on the server.
-  return_keys = custom_targeting_service.create_custom_targeting_keys(
-      [gender_key, car_model_key, genre_key])
+  created_keys = custom_targeting_service.create_custom_targeting_keys(
+      [gender_key, car_model_key, genre_key]
+  )
 
-  if return_keys
-    return_keys.each do |key|
-      puts ("Custom targeting key ID: %d, name: %s and display name: %s" +
-            " was created.") % [key[:id], key[:name], key[:display_name]]
+  if created_keys.to_a.size > 0
+    created_keys.each do |key|
+      puts ('Custom targeting key ID %d, name "%s" and display name "%s"' +
+          ' was created.') % [key[:id], key[:name], key[:display_name]]
     end
   else
     raise 'No keys were created.'
   end
 
   # Create custom targeting value for the predefined gender key.
-  gender_male_value = {:custom_targeting_key_id => return_keys[0][:id],
-      :display_name => 'male', :match_type => 'EXACT'}
+  gender_male_value = {
+    :custom_targeting_key_id => created_keys[0][:id],
+    :display_name => 'male',
+    :match_type => 'EXACT'
+  }
+
   # Name is set to 1 so that the actual name can be hidden from website users.
   gender_male_value[:name] = '1'
 
   # Create another custom targeting value for the same key.
-  gender_female_value = {:custom_targeting_key_id => return_keys[0][:id],
-      :display_name => 'female', :name => '2', :match_type => 'EXACT'}
+  gender_female_value = {
+    :custom_targeting_key_id => created_keys[0][:id],
+    :display_name => 'female',
+    :name => '2',
+    :match_type => 'EXACT'
+  }
 
   # Create custom targeting value for the free-form age key. These are values
   # that would be suggested in the UI or can be used when targeting
   # with a free-form custom criterion.
   car_model_honda_civic_value = {
-      :custom_targeting_key_id => return_keys[1][:id],
-      :display_name => 'honda civic',
-      :name => 'honda civic',
-      # Setting match type to exact will match exactly "honda civic".
-      :match_type => 'EXACT'
+    :custom_targeting_key_id => created_keys[1][:id],
+    :display_name => 'honda civic',
+    :name => 'honda civic',
+    # Setting match type to exact will match exactly "honda civic".
+    :match_type => 'EXACT'
   }
 
   # Create custom targeting values for the predefined genre key.
   genre_comedy_value = {
-      :custom_targeting_key_id => return_keys[2][:id],
-      :display_name => 'comedy',
-      :name => 'comedy',
-      :match_type => 'EXACT'
+    :custom_targeting_key_id => created_keys[2][:id],
+    :display_name => 'comedy',
+    :name => 'comedy',
+    :match_type => 'EXACT'
   }
 
   genre_drama_value = {
-      :custom_targeting_key_id => return_keys[2][:id],
-      :display_name => 'drama',
-      :name => 'drama',
-      :match_type => 'EXACT'
+    :custom_targeting_key_id => created_keys[2][:id],
+    :display_name => 'drama',
+    :name => 'drama',
+    :match_type => 'EXACT'
   }
 
   # Create the custom targeting values on the server.
-  return_values = custom_targeting_service.create_custom_targeting_values(
-      [gender_male_value, gender_female_value, car_model_honda_civic_value,
-       genre_comedy_value, genre_drama_value])
+  custom_targeting_values = [gender_male_value, gender_female_value,
+      car_model_honda_civic_value, genre_comedy_value, genre_drama_value]
+  created_values = custom_targeting_service.create_custom_targeting_values(
+      custom_targeting_values
+  )
 
-  if return_values
-    return_values.each do |value|
-      puts ("A custom targeting value ID: %d, name: %s and display name: %s" +
-          " was created for key ID: %d.") % [value[:id], value[:name],
+  if created_values.to_a.size > 0
+    created_values.each do |value|
+      puts ('A custom targeting value ID %d, name "%s" and display name "%s"' +
+          ' was created for key ID %d.') % [value[:id], value[:name],
           value[:display_name], value[:custom_targeting_key_id]]
     end
   else
@@ -114,8 +122,17 @@ def create_custom_targeting_keys_and_values()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_custom_targeting_keys_and_values()
+    create_custom_targeting_keys_and_values(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -21,10 +21,45 @@
 
 require 'dfp_api'
 
+def update_creative_wrappers(dfp, creative_wrapper_id)
+  # Get the CreativeWrapperService.
+  creative_wrapper_service = dfp.service(:CreativeWrapperService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to only select a single creative wrapper.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :creative_wrapper_id'
+    sb.with_bind_variable('creative_wrapper_id', creative_wrapper_id)
+    sb.limit = 1
+  end
 
-def update_creative_wrappers()
+  # Get creative wrappers by statement.
+  response = creative_wrapper_service.get_creative_wrappers_by_statement(
+      statement.to_statement()
+  )
+  raise 'No creative wrapper found to update.' if response[:results].to_a.empty?
+  creative_wrapper = response[:results].first
+
+  # Update creative wrapper object by changing its ordering.
+  creative_wrapper[:ordering] = 'OUTER'
+
+  # Update the creative wrapper on the server.
+  updated_creative_wrappers =
+      creative_wrapper_service.update_creative_wrappers([creative_wrapper])
+
+  if updated_creative_wrappers.to_a.size > 0
+    updated_creative_wrappers.each do |creative_wrapper|
+      puts ('Creative wrapper ID %d and label ID %d was updated with ordering' +
+          ' "%s"') % [creative_wrapper[:id], creative_wrapper[:label_id],
+          creative_wrapper[:ordering]]
+    end
+  else
+    puts 'No creative wrappers found to update.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -32,54 +67,9 @@ def update_creative_wrappers()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the CreativeWrapperService.
-  creative_wrapper_service = dfp.service(:CreativeWrapperService, API_VERSION)
-
-  # Set the ID of the creative wrapper to get.
-  creative_wrapper_id = 'INSERT_CREATIVE_WRAPPER_ID_HERE'.to_i
-
-  # Create a statement to only select a single creative wrapper.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :id',
-      [
-          {:key => 'id',
-           :value => {:value => creative_wrapper_id, :xsi_type => 'NumberValue'}
-          }
-      ],
-      1
-  )
-
-  # Get creative wrappers by statement.
-  page = creative_wrapper_service.get_creative_wrappers_by_statement(
-      statement.toStatement())
-
-  if page[:results]
-    creative_wrappers = page[:results]
-
-    creative_wrappers.each do |creative_wrapper|
-      # Update local creative wrapper object by changing its ordering.
-      creative_wrapper[:ordering] = 'OUTER'
-    end
-
-    # Update the creative wrapper on the server.
-    return_creative_wrappers =
-        creative_wrapper_service.update_creative_wrappers([creative_wrapper])
-
-    if return_creative_wrappers
-      return_creative_wrappers.each do |creative_wrapper|
-        puts ("Creative wrapper ID: %d, label ID: %d was updated with order" +
-              " '%s'") % [creative_wrapper[:id], creative_wrapper[:label_id],
-                          creative_wrapper[:ordering]]
-      end
-    else
-      puts 'No creative wrappers found to update.'
-    end
-  end
-end
-
-if __FILE__ == $0
   begin
-    update_creative_wrappers()
+    creative_wrapper_id = 'INSERT_CREATIVE_WRAPPER_ID_HERE'.to_i
+    update_creative_wrappers(dfp, creative_wrapper_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

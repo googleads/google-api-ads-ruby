@@ -23,60 +23,56 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def deactivate_labels()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def deactivate_labels(dfp)
   # Get the LabelService.
   label_service = dfp.service(:LabelService, API_VERSION)
 
   # Create statement to select active labels.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE isActive = :is_active',
-      [
-          {:key => 'is_active',
-           :value => {:value => true, :xsi_type => 'BooleanValue'}}
-      ]
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'isActive = :is_active'
+    sb.with_bind_variable('is_active', true)
+  end
 
   # Define initial values.
   label_ids = []
 
+  # Retrieve a small number of labels at a time, paging
+  # through until all labels have been retrieved.
+  page = {:total_result_set_size => 0}
   begin
     # Get labels by statement.
-    page = label_service.get_labels_by_statement(statement.toStatement())
+    page = label_service.get_labels_by_statement(statement.to_statement())
 
-    if page[:results]
+    unless page[:results].nil?
       page[:results].each_with_index do |label, index|
-        puts ("%d) Label ID: %d, name: %s will be deactivated.") %
+        puts ('%d) Label ID %d and name "%s" will be deactivated.') %
             [index + statement.offset, label[:id], label[:name]]
         label_ids << label[:id]
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
   end while statement.offset < page[:total_result_set_size]
 
-  puts "Number of labels to be deactivated: %d" % label_ids.size
+  puts 'Number of labels to be deactivated: %d' % label_ids.size
 
   if !label_ids.empty?
     # Create a statement for action.
-    statement = DfpApi::FilterStatement.new(
-        "WHERE id IN (%s)" % label_ids.join(', '))
+    statement = dfp.new_statement_builder do |sb|
+      sb.where = 'id IN (%s)' % label_ids.join(', ')
+      sb.offset = nil
+      sb.limit = nil
+    end
 
     # Perform action.
     result = label_service.perform_label_action(
-        {:xsi_type => 'DeactivateLabels'}, statement.toStatement())
+        {:xsi_type => 'DeactivateLabels'}, statement.to_statement()
+    )
 
     # Display results.
-    if result and result[:num_changes] > 0
-      puts "Number of labels deactivated: %d" % result[:num_changes]
+    if !result.nil? && result[:num_changes] > 0
+      puts 'Number of labels deactivated: %d' % result[:num_changes]
     else
       puts 'No labels were deactivated.'
     end
@@ -86,8 +82,17 @@ def deactivate_labels()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    deactivate_labels()
+    deactivate_labels(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

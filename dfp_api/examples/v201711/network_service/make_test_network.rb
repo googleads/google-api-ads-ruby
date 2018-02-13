@@ -31,9 +31,22 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
+def make_test_network(dfp)
+  # Get the NetworkService.
+  network_service = dfp.service(:NetworkService, API_VERSION)
 
-def make_test_network()
+  # Make a test network.
+  network = network_service.make_test_network()
+
+  puts 'Test network with network code %s and display name "%s" created.' %
+      [network[:network_code], network[:display_name]]
+  puts 'You may now sign in at http://www.google.com/dfp/main?networkCode=%s' %
+      network[:network_code]
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -41,21 +54,8 @@ def make_test_network()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the NetworkService.
-  network_service = dfp.service(:NetworkService, API_VERSION)
-
-  # Make a test network.
-  network = network_service.make_test_network()
-
-  puts "Test network with network code %s and display name '%s' created." %
-      [network[:network_code], network[:display_name]]
-  puts "You may now sign in at http://www.google.com/dfp/main?networkCode=%s" %
-      network[:network_code]
-end
-
-if __FILE__ == $0
   begin
-    make_test_network()
+    make_test_network(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

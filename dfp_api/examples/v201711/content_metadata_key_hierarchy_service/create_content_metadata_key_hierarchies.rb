@@ -20,24 +20,13 @@
 #
 # This feature is only available to DFP video publishers.
 
+require 'securerandom'
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_content_metadata_key_hierarchies()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_content_metadata_key_hierarchies(dfp, hierarchy_level_one_key_id,
+    hierarchy_level_two_key_id)
   # Get the ContentMetadataKeyHierarchyService.
   cmkh_service = dfp.service(:ContentMetadataKeyHierarchyService, API_VERSION)
-
-  # Set the IDs of the custom targeting keys for the hierarchy.
-  hierarchy_level_one_key_id = 'INSERT_LEVEL_ONE_CUSTOM_TARGETING_KEY_ID_HERE'
-  hierarchy_level_two_key_id = 'INSERT_LEVEL_TWO_CUSTOM_TARGETING_KEY_ID_HERE'
 
   hierarchy_level_1 = {
     :custom_targeting_key_id => hierarchy_level_own_key_id,
@@ -52,27 +41,40 @@ def create_content_metadata_key_hierarchies()
   hierarchy_levels = [hierarchy_level_1, hierarchy_level_2]
 
   content_metadata_key_hierarchy = {
-    :name => 'Content Metadata Key Hierarchy #%d' % (Time.new.to_f * 1000),
+    :name => 'Content Metadata Key Hierarchy %d' % SecureRandom.uuid(),
     :hierarchy_levels => hierarchy_levels
   }
 
   # Create the content metadata key hierarchy on the server.
   content_metadata_key_hierarchies =
       cmkh_service.create_content_metadata_key_hierarchies(
-          [content_metadata_key_hierarchy])
+          [content_metadata_key_hierarchy]
+      )
 
   content_metadata_key_hierarchies.each do |content_metadata_key_hierarchy|
-    puts 'A content metadata key hierarchy with ID %d, name "%s", and %d ' +
-        'levels was created.' % [
-            content_metadata_key_hierarchy[:id],
-            content_metadata_key_hierarchy[:name],
-            content_metadata_key_hierarchy[:hierarchy_levels].length]
+    puts ('A content metadata key hierarchy with ID %d, name "%s", and %d ' +
+        'levels was created.') % [content_metadata_key_hierarchy[:id],
+        content_metadata_key_hierarchy[:name],
+        content_metadata_key_hierarchy[:hierarchy_levels].length]
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_content_metadata_key_hierarchies()
+    hierarchy_level_one_key_id = 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'.to_i
+    hierarchy_level_two_key_id = 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'.to_i
+    create_content_metadata_key_hierarchies(
+        dfp, hierarchy_level_one_key_id, hierarchy_level_two_key_id
+    )
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

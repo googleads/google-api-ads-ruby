@@ -20,69 +20,59 @@
 
 require 'dfp_api'
 
+def get_marketplace_comments(dfp, proposal_id)
+  # Get the ProposalService.
+  proposal_service = dfp.service(:ProposalService, API_VERSION)
 
-class GetMarketplaceComments
-
-  def self.run_example(dfp, proposal_id)
-    proposal_service = dfp.service(:ProposalService, :v201711)
-
-    # Create a statement to select marketplace comments.
-    query = 'WHERE proposalId = :proposalId'
-    values = [
-      {
-        :key => 'proposalId',
-        :value => {:xsi_type => 'NumberValue', :value => proposal_id}
-      }
-    ]
-    statement = DfpApi::FilterStatement.new(query, values)
-
-    # Retrieve comments.
-    page = proposal_service.get_marketplace_comments_by_statement(
-        statement.toStatement())
-
-    # Print out some information for each comment.
-    if page[:results]
-      page[:results].each_with_index do |comment, index|
-        puts ("%d) Comment Marketplace comment with creation time '%s' and " +
-            "comment '%s' was found.") % [index + statement.offset,
-            comment[:proposal_id], comment[:creation_time], comment[:comment]]
-      end
-    end
-    puts 'Total number of comments: %d' % (page[:total_result_set_size] || 0)
+  # Create a statement to select marketplace comments.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'proposalId = :proposal_id'
+    sb.with_bind_variable('proposal_id', proposal_id)
   end
 
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
+  # Retrieve comments.
+  page = proposal_service.get_marketplace_comments_by_statement(
+      statement.to_statement()
+  )
 
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    # Specify ID of the proposal to get comments for here.
-    proposal_id = 'INSERT_PROPOSAL_ID_HERE'.to_i
-
-    begin
-      run_example(dfp, proposal_id)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
-      end
+  # Print out some information for each comment.
+  unless page[:results].nil?
+    page[:results].each_with_index do |comment, index|
+      puts ('%d) Comment Marketplace comment with creation time "%s" and ' +
+          'comment "%s" was found.') % [index + statement.offset,
+          comment[:proposal_id], comment[:creation_time], comment[:comment]]
     end
   end
+  puts 'Total number of comments: %d' % (page[:total_result_set_size] || 0)
 end
 
 if __FILE__ == $0
-  GetMarketplaceComments.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    proposal_id = 'INSERT_PROPOSAL_ID_HERE'.to_i
+    get_marketplace_comments(dfp, proposal_id)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

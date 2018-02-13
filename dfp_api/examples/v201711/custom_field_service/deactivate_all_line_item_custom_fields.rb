@@ -21,54 +21,46 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def deactivate_all_line_item_custom_fields()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def deactivate_all_line_item_custom_fields(dfp)
   # Get the CustomFieldService.
   custom_field_service = dfp.service(:CustomFieldService, API_VERSION)
 
   # Create statement text to select active ad units.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE entityType = :entity_type AND isActive = :is_active',
-      [
-          {:key => 'entity_type',
-           :value => {:value => 'LINE_ITEM', :xsi_type => 'TextValue'}},
-          {:key => 'is_active',
-           :value => {:value => true, :xsi_type => 'BooleanValue'}}
-      ]
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'entityType = :entity_type AND isActive = :is_active'
+    sb.with_bind_variable('entity_type', 'LINE_ITEM')
+    sb.with_bind_variable('is_active', true)
+  end
 
   begin
     # Get custom fields by statement.
     page = custom_field_service.get_custom_fields_by_statement(
-        statement.toStatement())
+        statement.to_statement()
+    )
 
-    if page[:results]
+    unless page[:results].nil?
       page[:results].each_with_index do |custom_field, index|
-        puts "%d) Custom field with ID: %d and name: '%s' will be deactivated" %
+        puts '%d) Custom field with ID %d and name "%s" will be deactivated.' %
             [index + statement.offset, custom_field[:id], custom_field[:name]]
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
   end while statement.offset < page[:total_result_set_size]
 
   # Update statement for action.
-  statement.toStatementForAction()
+  statement.configure do |sb|
+    sb.offset = nil
+    sb.limit = nil
+  end
 
   # Perform action.
   result = custom_field_service.perform_custom_field_action(
-        {:xsi_type => 'DeactivateCustomFields'}, statement.toStatement())
+        {:xsi_type => 'DeactivateCustomFields'}, statement.to_statement())
 
   # Display results.
-  if result and result[:num_changes] > 0
+  if !result.nil? && result[:num_changes] > 0
     puts "Number of custom fields deactivated: %d" % result[:num_changes]
   else
     puts 'No custom fields were deactivated.'
@@ -76,8 +68,17 @@ def deactivate_all_line_item_custom_fields()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    deactivate_all_line_item_custom_fields()
+    deactivate_all_line_item_custom_fields(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -20,53 +20,33 @@
 # with additional attributes and can filter to include just one order.
 # To download the report see download_report.rb.
 
-require 'date'
 require 'dfp_api'
 
-API_VERSION = :v201711
-MAX_RETRIES = 10
-RETRY_INTERVAL = 30
-
-def run_delivery_report()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def run_delivery_report(dfp, order_id)
   # Get the ReportService.
   report_service = dfp.service(:ReportService, API_VERSION)
 
-  # Specify the order ID to filter by.
-  order_id = 'INSERT_ORDER_ID_HERE'.to_i
-
   # Specify a report to run for the last 7 days.
-  report_end_date = DateTime.now
+  report_end_date = dfp.today()
   report_start_date = report_end_date - 7
+
+  # Create statement object to filter for an order.
+  statement = dfp.new_report_statement_builder do |sb|
+    sb.where = 'ORDER_ID = :order_id'
+    sb.with_bind_variable('order_id', order_id)
+  end
 
   # Create report query.
   report_query = {
     :date_range_type => 'CUSTOM_DATE',
-    :start_date => {:year => report_start_date.year,
-                    :month => report_start_date.month,
-                    :day => report_start_date.day},
-    :end_date => {:year => report_end_date.year,
-                  :month => report_end_date.month,
-                  :day => report_end_date.day},
+    :start_date => report_start_date.to_h,
+    :end_date => report_end_date.to_h,
     :dimensions => ['ORDER_ID', 'ORDER_NAME'],
     :dimension_attributes => ['ORDER_TRAFFICKER', 'ORDER_START_DATE_TIME',
         'ORDER_END_DATE_TIME'],
     :columns => ['AD_SERVER_IMPRESSIONS', 'AD_SERVER_CLICKS', 'AD_SERVER_CTR',
         'AD_SERVER_CPM_AND_CPC_REVENUE', 'AD_SERVER_WITHOUT_CPD_AVERAGE_ECPM'],
-    # Create statement object to filter for an order.
-    :statement => {
-        :query => 'WHERE ORDER_ID = :order_id',
-        :values => [
-            {:key => 'order_id',
-             :value => {:value => order_id, :xsi_type => 'NumberValue'}}
-        ]
-    }
+    :statement => statement.to_statement()
   }
 
   # Create report job.
@@ -80,18 +60,29 @@ def run_delivery_report()
     report_job_status = report_service.get_report_job_status(report_job[:id])
 
     break unless report_job_status == 'IN_PROGRESS'
-    puts "Report with ID: %d is still running." % report_job[:id]
+    puts 'Report with ID %d is still running.' % report_job[:id]
     sleep(RETRY_INTERVAL)
   end
 
-  puts "Report job with ID: %d finished with status %s." %
-      [report_job[:id],
-       report_service.get_report_job_status(report_job[:id])]
+  puts 'Report job with ID %d finished with status "%s".' % [report_job[:id],
+      report_service.get_report_job_status(report_job[:id])]
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+  MAX_RETRIES = 10
+  RETRY_INTERVAL = 30
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    run_delivery_report()
+    order_id = 'INSERT_ORDER_ID_HERE'.to_i
+    run_delivery_report(dfp, order_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

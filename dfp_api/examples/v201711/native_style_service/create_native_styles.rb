@@ -18,23 +18,15 @@
 #
 # Creates a native app install ad.
 
+require 'securerandom'
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_native_styles()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_native_styles(dfp)
   # Get the NativeStyleService.
   native_style_service = dfp.service(:NativeStyleService, API_VERSION)
 
   native_style = {
-    :name => 'Native style #%d' % (Time.new.to_f * 1000),
+    :name => 'Native style - %d' % SecureRandom.uuid(),
     :html_snippet => get_html(),
     :css_snippet => get_css(),
     # This is the creative template ID for the system-defined native app install
@@ -49,14 +41,14 @@ def create_native_styles()
   # Create the native styles on the server.
   results = native_style_service.create_native_styles([native_style])
 
-  if results
+  if results.to_a.size > 0
     results.each_with_index do |style, index|
-      puts ("%d) Native style with ID %d, name '%s' and creative " +
-          "template ID %d was created.") % [index, style[:id], style[:name],
+      puts ('%d) Native style with ID %d, name "%s" and creative ' +
+          'template ID %d was created.') % [index, style[:id], style[:name],
           style[:creative_template_id]]
     end
   else
-    raise 'No native styles were created.'
+    puts 'No native styles were created.'
   end
 end
 
@@ -179,8 +171,17 @@ EOF
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_native_styles()
+    create_native_styles(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

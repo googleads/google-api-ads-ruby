@@ -17,83 +17,65 @@
 #           limitations under the License.
 #
 # This example gets users by email.
+
 require 'dfp_api'
 
-class GetUserByEmailAddress
+def get_user_by_email_address(dfp, email_address)
+  # Get the UserService.
+  user_service = dfp.service(:UserService, :v201711)
 
-  EMAIL_ADDRESS = 'INSERT_EMAIL_ADDRESS_HERE';
-
-  def self.run_example(dfp, email_address)
-    user_service =
-        dfp.service(:UserService, :v201711)
-
-    # Create a statement to select users.
-    query = 'WHERE email = :email'
-    values = [
-      {
-        :key => 'email',
-        :value => {
-          :xsi_type => 'TextValue',
-          :value => email_address
-        }
-      },
-    ]
-    statement = DfpApi::FilterStatement.new(query, values)
-
-    # Retrieve a small amount of users at a time, paging
-    # through until all users have been retrieved.
-    total_result_set_size = 0;
-    begin
-      page = user_service.get_users_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each user.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |user, index|
-          puts "%d) User with ID %d and name '%s' was found." % [
-              index + statement.offset,
-              user[:id],
-              user[:name]
-          ]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < page[:total_result_set_size]
-
-    puts 'Total number of users: %d' %
-        total_result_set_size
+  # Create a statement to select users.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'email = :email_address'
+    sb.with_bind_variable('email_address', email_address)
   end
 
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
+  # Retrieve a small amount of users at a time, paging
+  # through until all users have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = user_service.get_users_by_statement(statement.to_statement())
 
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp, EMAIL_ADDRESS)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each user.
+    unless page[:results].nil?
+      page[:results].each_with_index do |user, index|
+        puts '%d) User with ID %d and name "%s" was found.' %
+            [index + statement.offset, user[:id], user[:name]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of users: %d' % page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetUserByEmailAddress.main()
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    email_address = 'INSERT_EMAIL_ADDRESS_HERE';
+    get_user_by_email_address(dfp, email_address)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

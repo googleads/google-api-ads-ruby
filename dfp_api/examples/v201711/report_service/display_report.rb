@@ -21,24 +21,11 @@
 # a report, run run_delivery_report.rb.
 
 require 'dfp_api'
-
 require 'open-uri'
 
-API_VERSION = :v201711
-
-def display_report()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def display_report(dfp, report_job_id)
   # Get the ReportService.
   report_service = dfp.service(:ReportService, API_VERSION)
-
-  # Set the ID of the completed report.
-  report_job_id = 'INSERT_REPORT_JOB_ID_HERE'.to_i
 
   # Set the format of the report (e.g. CSV_DUMP) and download without
   # compression so we can print it.
@@ -49,15 +36,26 @@ def display_report()
 
   # Get the report URL.
   download_url = report_service.get_report_download_url_with_options(
-      report_job_id, report_download_options);
+      report_job_id, report_download_options
+  )
 
-  puts "Downloading report from URL %s.\n" % download_url
+  puts 'Downloading report from URL %s.\n' % download_url
   puts open(download_url).read()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    display_report()
+    report_job_id = 'INSERT_REPORT_JOB_ID_HERE'.to_i
+    display_report(dfp, report_job_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -21,13 +21,38 @@
 #
 # This feature is only available to DFP premium solution networks.
 
+require 'securerandom'
 require 'dfp_api'
 
-API_VERSION = :v201711
-# Number of labels to create.
-ITEM_COUNT = 5
+def create_labels(dfp, number_of_labels_to_create)
+  # Get the LabelService.
+  label_service = dfp.service(:LabelService, API_VERSION)
 
-def create_labels()
+  # Create an array to store local label objects.
+  labels = (1..number_of_labels_to_create).map do |index|
+    {
+      :name => "Label #%d - %d" % [index, SecureRandom.uuid()],
+      :types => ['COMPETITIVE_EXCLUSION']
+    }
+  end
+
+  # Create the labels on the server.
+  created_labels = label_service.create_labels(labels)
+
+  if created_labels.to_a.size > 0
+    created_labels.each do |label|
+      puts 'Label with ID %d, name "%s" and types "%s" was created.' %
+          [label[:id], label[:name], label[:types].join(', ')]
+    end
+  else
+    puts 'No labels were created.'
+  end
+
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -35,31 +60,9 @@ def create_labels()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the LabelService.
-  label_service = dfp.service(:LabelService, API_VERSION)
-
-  # Create an array to store local label objects.
-  labels = (1..ITEM_COUNT).map do |index|
-    {:name => "Label #%d" % index, :types => ['COMPETITIVE_EXCLUSION']}
-  end
-
-  # Create the labels on the server.
-  return_labels = label_service.create_labels(labels)
-
-  if return_labels
-    return_labels.each do |label|
-      puts "Label with ID: %d, name: '%s' and types: '%s' was created." %
-          [label[:id], label[:name], label[:types].join(', ')]
-    end
-  else
-    raise 'No labels were created.'
-  end
-
-end
-
-if __FILE__ == $0
   begin
-    create_labels()
+    number_of_labels_to_create = 5
+    create_labels(dfp, number_of_labels_to_create)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

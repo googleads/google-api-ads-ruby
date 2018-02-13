@@ -21,16 +21,7 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_cdn_configurations()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_cdn_configurations(dfp)
   # Get the CdnConfigurationService.
   cdn_configuration_service = dfp.service(:CdnConfigurationService, API_VERSION)
 
@@ -82,21 +73,31 @@ def create_cdn_configurations()
 
   # Create the CDN configurations on the server.
   cdn_configurations = cdn_configuration_service.create_cdn_configurations([
-      cdn_config_without_security_policy, cdn_config_with_security_policy])
+      cdn_config_without_security_policy, cdn_config_with_security_policy
+  ])
 
-  if cdn_configurations
+  if cdn_configurations.to_a.size > 0
     cdn_configurations.each do |cdn_configuration|
-      puts "A CDN configuration with ID: %d and name: %s was created." %
+      puts 'A CDN configuration with ID %d and name "%s" was created.' %
           [cdn_configuration[:id], cdn_configuration[:name]]
     end
   else
-    raise 'No CDN configurations were created.'
+    puts 'No CDN configurations were created.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_cdn_configurations()
+    create_cdn_configurations(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

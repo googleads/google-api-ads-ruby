@@ -24,22 +24,9 @@
 #   https://developers.google.com/doubleclick-publishers/docs/reference/v201711/PublisherQueryLanguageService
 
 require 'tempfile'
-
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-# A string to separate columns in output. Use "," to get CSV.
-COLUMN_SEPARATOR = ','
-
-def fetch_match_tables()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def fetch_match_tables(dfp)
   # Get the PublisherQueryLanguageService.
   pql_service = dfp.service(:PublisherQueryLanguageService, API_VERSION)
 
@@ -47,16 +34,19 @@ def fetch_match_tables()
   fetch_tables = ['Line_Item', 'Ad_Unit']
 
   fetch_tables.each do |table|
-    results_file_path = fetch_match_table(table, pql_service)
-    puts "%s table saved to:\n\t%s" % [table, results_file_path]
+    results_file_path = fetch_match_table(dfp, table, pql_service)
+    puts '%s table saved to:\n\t%s' % [table, results_file_path]
   end
 end
 
 # Fetches a match table from a PQL statement and writes it to a file.
-def fetch_match_table(table_name, pql_service)
+def fetch_match_table(dfp, table_name, pql_service)
   # Create a statement to select all items for the table.
-  statement = DfpApi::FilterStatement.new(
-      'SELECT Id, Name, Status FROM %s ' % table_name + 'ORDER BY Id ASC')
+  statement = dfp.new_statement_builder do |sb|
+    sb.select = 'Id, Name, Status'
+    sb.from = table_name
+    sb.order_by = 'Id'
+  end
 
   # Set initial values.
   file_path = '%s.csv' % table_name
@@ -64,30 +54,43 @@ def fetch_match_table(table_name, pql_service)
   open(file_path, 'wb') do |file|
     file_path = file.path()
     begin
-      result_set = pql_service.select(statement.toStatement())
+      result_set = pql_service.select(statement.to_statement())
 
-      if result_set
+      unless result_set.nil?
         # Only write column names if the first page.
-        if (offset == 0)
+        if statement.offset == 0
           columns = result_set[:column_types].collect {|col| col[:label_name]}
-          file.write(columns.join(COLUMN_SEPARATOR) + "\n")
+          file.write(columns.join(COLUMN_SEPARATOR) + '\n')
         end
         # Print out every row.
         result_set[:rows].each do |row_set|
           row = row_set[:values].collect {|item| item[:value]}
-          file.write(row.join(COLUMN_SEPARATOR) + "\n")
+          file.write(row.join(COLUMN_SEPARATOR) + '\n')
         end
       end
       # Update the counters.
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while result_set[:rows].size == DfpApi::SUGGESTED_PAGE_LIMIT
+  
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+    end while result_set[:rows].size == statement.limit
   end
   return file_path
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+  # A string to separate columns in output. Use "," to get CSV.
+  COLUMN_SEPARATOR = ','
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    fetch_match_tables()
+    fetch_match_tables(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

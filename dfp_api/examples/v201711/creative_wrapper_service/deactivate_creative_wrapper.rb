@@ -20,54 +20,37 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def deactivate_creative_wrappers()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def deactivate_creative_wrappers(dfp, label_id)
   # Get the CreativeWrapperService.
   creative_wrapper_service = dfp.service(:CreativeWrapperService, API_VERSION)
 
-  # Set the ID of the label for the creative wrapper to deactivate.
-  label_id = 'INSERT_CREATIVE_WRAPPER_LABEL_ID_HERE'.to_i
-
   # Create statement to select creative wrappers by label id and status.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE labelId = :label_id AND status = :status',
-      [
-        {
-          :key => 'label_id',
-          :value => {:value => label_id, :xsi_type => 'NumberValue'}
-        },
-        {
-          :key => 'status',
-          :value => {:value => 'ACTIVE', :xsi_type => 'TextValue'}
-        }
-      ]
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'labelId = :label_id AND status = :status'
+    sb.with_bind_variable('label_id', label_id)
+    sb.with_bind_variable('status', 'ACTIVE')
+  end
 
   # Get creative wrappers by statement.
   page = creative_wrapper_service.get_creative_wrappers_by_statement(
-      statement.toStatement())
+      statement.to_statement()
+  )
 
-  if page[:results]
+  if page[:results].to_a.size > 0
     page[:results].each do |creative_wrapper|
-      puts 'Creative wrapper ID: %d, label: %d will be deactivated.' %
-          [creative_wrapper[:id], creative_wrapper[:label_id]]
+      puts 'Creative wrapper with ID %d applying to the label with ID %d ' +
+          'will be deactivated.' % [creative_wrapper[:id],
+          creative_wrapper[:label_id]]
     end
 
     # Perform action.
     result = creative_wrapper_service.perform_creative_wrapper_action(
-        {:xsi_type => 'DeactivateCreativeWrappers'}, statement.toStatement())
+        {:xsi_type => 'DeactivateCreativeWrappers'},
+        statement.to_statement()
+    )
 
     # Display results.
-    if result and result[:num_changes] > 0
+    if !result.nil? && result[:num_changes] > 0
       puts 'Number of creative wrappers deactivated: %d' % result[:num_changes]
     else
       puts 'No creative wrappers were deactivated.'
@@ -78,8 +61,18 @@ def deactivate_creative_wrappers()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    deactivate_creative_wrappers()
+    label_id = 'INSERT_CREATIVE_WRAPPER_LABEL_ID_HERE'.to_i
+    deactivate_creative_wrappers(dfp, label_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

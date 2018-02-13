@@ -24,21 +24,9 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_creative_wrappers()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_creative_wrappers(dfp, label_id)
   # Get the CreativeWrapperService.
   creative_wrapper_service = dfp.service(:CreativeWrapperService, API_VERSION)
-
-  # Set the creative wrapper label ID.
-  label_id = 'INSERT_CREATIVE_WRAPPER_LABEL_ID_HERE'.to_i
 
   # Create creative wrapper objects.
   creative_wrapper = {
@@ -53,19 +41,29 @@ def create_creative_wrappers()
   return_creative_wrappers =
       creative_wrapper_service.create_creative_wrappers([creative_wrapper])
 
-  if return_creative_wrappers
+  if return_creative_wrappers.to_a.size > 0
     return_creative_wrappers.each do |creative_wrapper|
-      puts "Creative wrapper with ID: %d applying to label: %d was created." %
-          [creative_wrapper[:id], creative_wrapper[:label_id]]
+      puts ('Creative wrapper with ID %d applying to the label with ID %d ' +
+          'was created.') % [creative_wrapper[:id], creative_wrapper[:label_id]]
     end
   else
-    raise 'No creative wrappers were created.'
+    puts 'No creative wrappers were created.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_creative_wrappers()
+    label_id = 'INSERT_CREATIVE_WRAPPER_LABEL_ID_HERE'.to_i
+    create_creative_wrappers(dfp, label_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

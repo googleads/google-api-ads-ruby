@@ -16,73 +16,66 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example deactivates all LICAs for the line item. To determine which LICAs
-# exist, run get_all_licas.rb. To determine which line items exist, run
-# get_all_line_items.rb.
+# This example deactivates all line item creative associations (LICAs) for the
+# line item. To determine which LICAs exist, run get_all_licas.rb. To determine
+# which line items exist, run get_all_line_items.rb.
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def deactivate_licas()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def deactivate_licas(dfp, line_item_id)
   # Get the LineItemCreativeAssociationService.
   lica_service = dfp.service(:LineItemCreativeAssociationService, API_VERSION)
 
-  # Set the line item to get LICAs by.
-  line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
-
   # Create statement to select active LICAs for a given line item.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE lineItemId = :line_item_id AND status = :status',
-      [
-          {:key => 'line_item_id',
-           :value => {:value => line_item_id, :xsi_type => 'NumberValue'}},
-          {:key => 'status',
-           :value => {:value => 'ACTIVE', :xsi_type => 'TextValue'}}
-      ]
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'lineItemId = :line_item_id AND status = :status'
+    sb.with_bind_variable('line_item_id', line_item_id)
+    sb.with_bind_variable('status', 'ACTIVE')
+  end
 
   creative_ids = []
 
+  # Retrieve a small number of LICAs at a time, paging
+  # through until all LICAs have been retrieved.
+  page = {:total_result_set_size => 0}
   begin
     # Get LICAs by statement.
     page = lica_service.get_line_item_creative_associations_by_statement(
-        statement.toStatement())
+        statement.to_statement()
+    )
 
-    if page[:results]
+    unless page[:results].nil?
       page[:results].each do |lica|
-        puts ("%d) LICA with line item ID: %d, creative ID: %d and status: %s" +
-            " will be deactivated.") % [creative_ids.size, lica[:line_item_id],
+        puts ('%d) LICA with line item ID %d, creative ID %d and status "%s"' +
+            ' will be deactivated.') % [creative_ids.size, lica[:line_item_id],
             lica[:creative_id], lica[:status]]
         creative_ids << lica[:creative_id]
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
   end while statement.offset < page[:total_result_set_size]
 
-  puts "Number of LICAs to be deactivated: %d" % creative_ids.size
+  puts 'Number of LICAs to be deactivated: %d' % creative_ids.size
 
   if !creative_ids.empty?
-    # Modify statement for action. Note, the values are still present.
-    statement = DfpApi::FilterStatement.new(
-        "WHERE creativeId IN (%s)" % creative_ids.join(', '))
+    # Create statement for action.
+    statement = dfp.new_statement_builder do |sb|
+      sb.where = 'creativeId IN (%s)' % creative_ids.join(', ')
+      sb.offset = nil
+      sb.limit = nil
+    end
 
     # Perform action.
     result = lica_service.perform_line_item_creative_association_action(
         {:xsi_type => 'DeactivateLineItemCreativeAssociations'},
-        statement.toStatement())
+        statement.to_statement()
+    )
 
     # Display results.
-    if result and result[:num_changes] > 0
-      puts "Number of LICAs deactivated: %d" % result[:num_changes]
+    if !result.nil? && result[:num_changes] > 0
+      puts 'Number of LICAs deactivated: %d' % result[:num_changes]
     else
       puts 'No LICAs were deactivated.'
     end
@@ -92,8 +85,18 @@ def deactivate_licas()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    deactivate_licas()
+    line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
+    deactivate_licas(dfp, line_item_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -25,17 +25,7 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def oauth2_jwt_handling()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def oauth2_jwt_handling(dfp)
   # Option 1: provide key filename as authentication -> oauth2_keyfile in the
   #           configuration file. No additional code is necessary.
   # To provide a file name at runtime, use authorize:
@@ -54,32 +44,43 @@ def oauth2_jwt_handling()
   user_service = dfp.service(:UserService, API_VERSION)
 
   # Create a statement to select all users.
-  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
+  statement = dfp.new_statement_builder do |sb|
+    sb.order_by = 'id'
+  end
   # Define initial values.
 
+  page = {:total_result_set_size => 0}
   begin
     # Get users by statement.
-    page = user_service.get_users_by_statement(
-        statement.toStatement())
+    page = user_service.get_users_by_statement(statement.to_statement())
 
-    if page[:results]
+    unless page[:results].nil?
       page[:results].each_with_index do |user, index|
-        puts "%d) User ID: %d, name: %s, email: %s" %
+        puts '%d) User ID: %d, name: %s, email: %s' %
             [index + statement.offset, user[:id], user[:name], user[:email]]
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer
-  if page.include?(:total_result_set_size)
-    puts "Total number of users: %d" % page[:total_result_set_size]
-  end
+  puts 'Total number of users: %d' % page[:total_result_set_size]
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    oauth2_jwt_handling()
+    oauth2_jwt_handling(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

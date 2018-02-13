@@ -21,51 +21,30 @@
 # creatives exist, run get_all_creatives.rb.
 
 require 'dfp_api'
-
 require 'base64'
 
-API_VERSION = :v201711
-
-def copy_image_creatives()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def copy_image_creatives(dfp, image_creative_ids)
   # Get the CreativeService.
   creative_service = dfp.service(:CreativeService, API_VERSION)
 
-  # Create a list of creative ids to copy.
-  image_creative_ids = [
-      'INSERT_IMAGE_CREATIVE_ID_HERE'.to_i,
-      'INSERT_IMAGE_CREATIVE_ID_HERE'.to_i,
-      'INSERT_IMAGE_CREATIVE_ID_HERE'.to_i,
-      'INSERT_IMAGE_CREATIVE_ID_HERE'.to_i
-  ]
-
   # Create the statement to filter image creatives by ID.
-  statement = DfpApi::FilterStatement.new(
-      "WHERE id IN (%s) AND creativeType = :creative_type" %
-          image_creative_ids.join(', '),
-      [
-          {:key => 'creative_type',
-           :value => {:value => 'ImageCreative', :xsi_type => 'TextValue'}}
-      ]
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id IN (%s) AND creativeType = :creative_type' %
+        image_creative_ids.join(', ')
+    sb.with_bind_variable('creative_type', 'ImageCreative')
+  end
 
   # Get creatives by statement.
-  page = creative_service.get_creatives_by_statement(statement.toStatement())
+  page = creative_service.get_creatives_by_statement(statement.to_statement())
 
-  if page[:results]
+  if page[:results].to_a.size > 0
     creatives = page[:results]
 
     # Copy each local creative object and change its name.
     new_creatives = creatives.map do |creative|
       new_creative = creative.dup()
       old_id = new_creative.delete(:id)
-      new_creative[:name] += " (Copy of %d)" % old_id
+      new_creative[:name] += ' (Copy of %d)' % old_id
       image_url = new_creative.delete(:image_url)
       new_creative[:image_byte_array] =
           Base64.encode64(AdsCommon::Http.get(image_url, dfp.config))
@@ -73,16 +52,16 @@ def copy_image_creatives()
     end
 
     # Create the creatives on the server.
-    return_creatives = creative_service.create_creatives(new_creatives)
+    created_creatives = creative_service.create_creatives(new_creatives)
 
     # Display copied creatives.
-    if return_creatives
-      return_creatives.each_with_index do |creative, index|
-        puts "A creative with ID [%d] was copied to ID [%d], name: %s" %
+    if created_creatives.to_a.size > 0
+      created_creatives.each_with_index do |creative, index|
+        puts 'A creative with ID %d was copied to ID %d, named "%s".' %
             [creatives[index][:id], creative[:id], creative[:name]]
       end
     else
-      raise 'No creatives were copied.'
+      puts 'No creatives were copied.'
     end
   else
     puts 'No creatives found to copy.'
@@ -90,8 +69,23 @@ def copy_image_creatives()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    copy_image_creatives()
+    image_creative_ids = [
+        'INSERT_IMAGE_CREATIVE_ID_HERE'.to_i,
+        'INSERT_IMAGE_CREATIVE_ID_HERE'.to_i,
+        'INSERT_IMAGE_CREATIVE_ID_HERE'.to_i,
+        'INSERT_IMAGE_CREATIVE_ID_HERE'.to_i
+    ]
+    copy_image_creatives(dfp, image_creative_ids)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

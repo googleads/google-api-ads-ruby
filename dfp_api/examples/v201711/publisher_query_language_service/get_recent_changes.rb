@@ -22,41 +22,55 @@
 # A full list of available tables can be found at
 # https://developers.google.com/doubleclick-publishers/docs/reference/latest/PublisherQueryLanguageService
 
-require 'date'
-
 require 'dfp_api'
 
-API_VERSION = :v201711
-# A string to separate columns in output. Use "," to get CSV.
-COLUMN_SEPARATOR = "\t"
-
-def get_recent_changes()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def get_recent_changes(dfp)
   # Get the PublisherQueryLanguageService.
   pql_service = dfp.service(:PublisherQueryLanguageService, API_VERSION)
 
-  start_date_time = DateTime.parse(Date.today.to_s).
-      strftime('%Y-%m-%dT%H:%M:%S')
-  end_date_time = DateTime.parse((Date.today - 1).to_s).
-      strftime('%Y-%m-%dT%H:%M:%S')
+  # Set end_time to the beginning of today.
+  today = dfp.today()
+  end_time = dfp.datetime(
+      today.year,
+      today.month,
+      today.day,
+      0,
+      0,
+      0,
+      'America/New_York'
+  )
+
+  # Set start_time to the beginning of yesterday.
+  yesterday = today - 1
+  start_time = dfp.datetime(
+      yesterday.year,
+      yesterday.month,
+      yesterday.day,
+      0,
+      0,
+      0,
+      'America/New_York'
+  )
 
   # Create a statement to select recent changes. Change_History only supports
   # ordering by descending ChangeDateTime. To prevent complications from
   # changes that occur while paging, offset is not supported. Filter for a
   # specific time range instead.
-  statement = get_filter_statement(start_date_time, end_date_time)
+  statement = dfp.new_statement_builder do |sb|
+    sb.select = 'ChangeDateTime, EntityId, EntityType, Operation'
+    sb.from = 'Change_History'
+    sb.where = 'ChangeDateTime > :start_time AND ChangeDateTime < :end_time'
+    sb.order_by = 'ChangeDateTime'
+    sb.ascending = false
+    sb.with_bind_variable('start_time', start_time)
+    sb.with_bind_variable('end_time', end_time)
+  end
 
   # Set initial values for paging.
-  result_set, all_rows = nil, 0
+  result_set, row_count = {:rows => []}, 0
 
   begin
-    result_set = pql_service.select(statement.toStatement())
+    result_set = pql_service.select(statement.to_statement())
 
     if result_set
       # Print out columns header.
@@ -65,55 +79,40 @@ def get_recent_changes()
 
       # Print out every row.
       result_set[:rows].each do |row_set|
-          row = row_set[:values].collect {|item| item[:value]}
-          row[0] = format_date(row[0])
-          puts row.join(COLUMN_SEPARATOR)
+        row = row_set[:values].collect {|item| item[:value]}
+        change_date_time = dfp.datetime(row[0])
+        row[0] = change_date_time.strftime('%Y-%m-%d %H:%M:%S ') +
+            row[0][:time_zone_id]
+        puts row.join(COLUMN_SEPARATOR)
       end
 
       # Get the earliest change time in the result set.
-      last_date_time =
-          format_date(result_set[:rows][-1][:values][0][:value], false)
-      statement = get_filter_statement(last_date_time, end_date_time)
-      all_rows += result_set[:rows].size
+      last_date_time = result_set[:rows][-1][:values][0][:value]
+      statement.configure do |sb|
+        sb.with_bind_variable('start_time', last_date_time)
+      end
+      row_count += result_set[:rows].size
     end
   end while result_set && result_set[:rows] &&
-      result_set[:rows].size == DfpApi::SUGGESTED_PAGE_LIMIT
+      result_set[:rows].size == statement.limit
 
-  puts 'Total number of rows found: %d' % all_rows
-end
-
-def get_filter_statement(start_date_time, end_date_time)
-  DfpApi::FilterStatement.new(
-    'SELECT ChangeDateTime, EntityId, EntityType, Operation ' +
-    'FROM Change_History ' +
-    'WHERE ChangeDateTime < :start_date_time ' +
-    'AND ChangeDateTime > :end_date_time ' +
-    'ORDER BY ChangeDateTime DESC',
-    [
-      {
-        :key => 'start_date_time',
-        :value => {:value => start_date_time, :xsi_type => 'TextValue'}
-      },
-      {
-        :key => 'end_date_time',
-        :value => {:value => end_date_time, :xsi_type => 'TextValue'}
-      }
-    ]
-  )
-end
-
-def format_date(date_hash, with_time_zone = true)
-  date_time = '%s-%02d-%02dT%02d:%02d:%02d' % [
-    date_hash[:date][:year], date_hash[:date][:month], date_hash[:date][:day],
-    date_hash[:hour], date_hash[:minute], date_hash[:second]
-  ]
-  date_time += ' %s' % date_hash[:time_zone_id] if with_time_zone
-  return date_time
+  puts 'Total number of rows found: %d' % row_count
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+  # A string to separate columns in output. Use "," to get CSV.
+  COLUMN_SEPARATOR = "\t"
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    get_recent_changes()
+    get_recent_changes(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

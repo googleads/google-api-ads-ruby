@@ -37,4 +37,5 @@ Gem::Specification.new do |s|
   s.files = Dir.glob('lib/**/*') +
       %w(COPYING README.md ChangeLog dfp_api.yml)
   s.add_dependency('google-ads-common', '~> 1.0.0')
+  s.add_dependency('tzinfo', '~> 1.0')
 end

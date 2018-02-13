@@ -22,29 +22,22 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def update_custom_targeting_keys()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def update_custom_targeting_keys(dfp)
   # Get the CustomTargetingService.
   custom_targeting_service = dfp.service(:CustomTargetingService, API_VERSION)
 
   # Create a statement to get all custom targeting keys.
-  statement = DfpApi::FilterStatement.new('ORDER BY id ASC')
+  statement = dfp.new_statement_builder do |sb|
+    sb.order_by = 'id'
+  end
 
   # Get custom targeting keys by statement.
   page = custom_targeting_service.get_custom_targeting_keys_by_statement(
-      statement)
+      statement.to_statement()
+  )
   keys = page[:results]
 
-  raise 'No targeting keys found to update' if !keys || keys.empty?
+  raise 'No targeting keys found to update' if keys.to_a.empty?
 
   # Update each local custom targeting key object by changing its display name.
   keys.each do |key|
@@ -53,13 +46,13 @@ def update_custom_targeting_keys()
   end
 
   # Update the custom targeting keys on the server.
-  result_keys = custom_targeting_service.update_custom_targeting_keys(keys)
+  updated_keys = custom_targeting_service.update_custom_targeting_keys(keys)
 
-  if result_keys
+  if updated_keys.to_a.size > 0
     # Print details about each key in results.
-    result_keys.each_with_index do |custom_targeting_key, index|
-      puts ("%d) Custom targeting key with ID [%d], name: %s," +
-          " displayName: %s type: %s was updated") % [index,
+    updated_keys.each_with_index do |custom_targeting_key, index|
+      puts ('%d) Custom targeting key with ID %d, name "%s", ' +
+          'displayName "%s", and type "%s" was updated') % [index,
           custom_targeting_key[:id], custom_targeting_key[:name],
           custom_targeting_key[:display_name], custom_targeting_key[:type]]
     end
@@ -69,8 +62,17 @@ def update_custom_targeting_keys()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    update_custom_targeting_keys()
+    update_custom_targeting_keys(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

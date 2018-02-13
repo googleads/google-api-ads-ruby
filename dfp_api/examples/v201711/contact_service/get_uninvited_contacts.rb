@@ -17,81 +17,68 @@
 #           limitations under the License.
 #
 # This example gets all contacts that aren't invited yet.
+
 require 'dfp_api'
 
-class GetUninvitedContacts
+def get_uninvited_contacts(dfp)
+  contact_service = dfp.service(:ContactService, API_VERSION)
 
-  def self.run_example(dfp)
-    contact_service =
-        dfp.service(:ContactService, :v201711)
-
-    # Create a statement to select contacts.
-    query = 'WHERE status = :status'
-    values = [
-      {
-        :key => 'status',
-        :value => {
-          :xsi_type => 'TextValue',
-          :value => 'UNINVITED'
-        }
-      },
-    ]
-    statement = DfpApi::FilterStatement.new(query, values)
-
-    # Retrieve a small amount of contacts at a time, paging
-    # through until all contacts have been retrieved.
-    total_result_set_size = 0;
-    begin
-      page = contact_service.get_contacts_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each contact.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |contact, index|
-          puts "%d) Contact with ID %d and name '%s' was found." % [
-              index + statement.offset,
-              contact[:id],
-              contact[:name]
-          ]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < page[:total_result_set_size]
-
-    puts 'Total number of contacts: %d' %
-        total_result_set_size
+  # Create a statement to select contacts.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'status = :status'
+    sb.with_bind_variable('status', 'UNINVITED')
   end
 
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
+  # Retrieve a small amount of contacts at a time, paging
+  # through until all contacts have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    # Get the contacts by statement.
+    page = contact_service.get_contacts_by_statement(
+        statement.to_statement()
+    )
 
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each contact.
+    unless page[:results].nil?
+      page[:results].each_with_index do |contact, index|
+        puts '%d) Contact with ID %d and name "%s" was found.' %
+            [index + statement.offset, contact[:id], contact[:name]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of contacts: %d' % page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetUninvitedContacts.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    get_uninvited_contacts(dfp)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

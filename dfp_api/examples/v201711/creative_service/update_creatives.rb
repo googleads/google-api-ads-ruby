@@ -21,10 +21,44 @@
 
 require 'dfp_api'
 
+def update_creatives(dfp, creative_id)
+  # Get the CreativeService.
+  creative_service = dfp.service(:CreativeService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to get first 500 image creatives.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :id'
+    sb.with_bind_variable('id', creative_id)
+    sb.limit = 1
+  end
 
-def update_creatives()
+  # Get creatives by statement.
+  response = creative_service.get_creatives_by_statement(
+      statement.to_statement()
+  )
+  raise 'No creatives found to update.' if response[:results].to_a.empty?
+  creative = response[:results].first
+
+  # Update creative object by changing its destination URL.
+  creative[:destination_url] = 'http://news.google.com'
+
+  # Update the creative on the server.
+  updated_creatives = creative_service.update_creatives([creative])
+
+  # Display the results.
+  if updated_creatives.to_a.size > 0
+    updated_creatives.each do |creative|
+      puts 'Creative with ID %d, name "%s", and url "%s" was updated.' %
+          [creative[:id], creative[:name], creative[:destination_url]]
+    end
+  else
+    puts 'No creatives were updated.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -32,52 +66,9 @@ def update_creatives()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the CreativeService.
-  creative_service = dfp.service(:CreativeService, API_VERSION)
-
-  # Specify creative ID to update.
-  creative_id = 'INSERT_CREATIVE_ID_HERE'.to_i
-
-  # Create a statement to get first 500 image creatives.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :id ORDER BY id ASC',
-      [
-          {:key => 'id',
-           :value => {:value =>  creative_id, :xsi_type => 'NumberValue'}}
-      ],
-      1
-  )
-
-  # Get creatives by statement.
-  page = creative_service.get_creatives_by_statement(statement.toStatement())
-
-  if page[:results]
-    creatives = page[:results]
-
-    # Update each local creative object by changing its destination URL.
-    creatives.each do |creative|
-      creative[:destination_url] = 'http://news.google.com'
-    end
-
-    # Update the creatives on the server.
-    return_creatives = creative_service.update_creatives(creatives)
-
-    if return_creatives
-      return_creatives.each do |creative|
-        puts "Creative with ID: %d, name: %s and url: [%s] was updated." %
-            [creative[:id], creative[:name], creative[:destination_url]]
-      end
-    else
-      raise 'No creatives were updated.'
-    end
-  else
-    puts 'No creatives found to update.'
-  end
-end
-
-if __FILE__ == $0
   begin
-    update_creatives()
+    creative_id = 'INSERT_CREATIVE_ID_HERE'.to_i
+    update_creatives(dfp, creative_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

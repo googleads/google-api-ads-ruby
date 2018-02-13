@@ -21,65 +21,54 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def deactivate_ad_units()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def deactivate_ad_units(dfp)
   # Get the InventoryService.
   inventory_service = dfp.service(:InventoryService, API_VERSION)
 
   # Create statement text to select active ad units.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE status = :status',
-      [
-          {:key => 'status',
-           :value => {:value => 'ACTIVE', :xsi_type => 'TextValue'}}
-      ]
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'status = :status'
+    sb.with_bind_variable('status', 'ACTIVE')
+  end
 
   ad_unit_ids = []
 
+  page = {:total_result_set_size => 0}
   begin
     # Get ad units by statement.
-    page = inventory_service.get_ad_units_by_statement(statement.toStatement())
+    page = inventory_service.get_ad_units_by_statement(statement.to_statement())
 
-    if page[:results]
+    unless page[:results].nil?
       page[:results].each_with_index do |ad_unit, index|
-        puts ("%d) Ad unit with ID: %d, status: %s and name: %s will be " +
-              "deactivated.") % [index + statement.offset, ad_unit[:id],
-              ad_unit[:status], ad_unit[:name]]
+        puts ('%d) Ad unit with ID %d, status "%s", and name "%s" will be ' +
+            'deactivated.') % [index + statement.offset, ad_unit[:id],
+            ad_unit[:status], ad_unit[:name]]
         ad_unit_ids << ad_unit[:id]
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
   end while statement.offset < page[:total_result_set_size]
 
-  puts "Number of ad units to be deactivated: %d" % ad_unit_ids.size
+  puts 'Number of ad units to be deactivated: %d' % ad_unit_ids.size
 
   if !ad_unit_ids.empty?
     # Modify statement for action. Note, the values are still present.
-    statement = DfpApi::FilterStatement.new(
-        "WHERE status = :status AND id in (%s)" % ad_unit_ids.join(', '),
-        [
-            {:key => 'status',
-             :value => {:value => 'ACTIVE', :xsi_type => 'TextValue'}}
-        ]
-    )
+    statement.configure do |sb|
+      sb.where = 'status = :status AND id IN (%s)' % ad_unit_ids.join(', ')
+      sb.offset = nil
+      sb.limit = nil
+    end
 
     # Perform action.
     result = inventory_service.perform_ad_unit_action(
-        {:xsi_type => 'DeactivateAdUnits'}, statement.toStatement())
+        {:xsi_type => 'DeactivateAdUnits'}, statement.to_statement()
+    )
 
     # Display results.
-    if result and result[:num_changes] > 0
-      puts "Number of ad units deactivated: %d" % result[:num_changes]
+    if !result.nil? && result[:num_changes] > 0
+      puts 'Number of ad units deactivated: %d' % result[:num_changes]
     else
       puts 'No ad units were deactivated.'
     end
@@ -89,8 +78,17 @@ def deactivate_ad_units()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    deactivate_ad_units()
+    deactivate_ad_units(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

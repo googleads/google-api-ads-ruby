@@ -21,41 +21,30 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def deactivate_placements()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def deactivate_placements(dfp)
   # Get the PlacementService.
   placement_service = dfp.service(:PlacementService, API_VERSION)
 
   # Create statement to select active placements.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE status = :status',
-      [
-          {:key => 'status',
-           :value => {:value => 'ACTIVE', :xsi_type => 'TextValue'}}
-      ]
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'status = :status'
+    sb.with_bind_variable('status', 'ACTIVE')
+  end
 
   # Define initial values.
   placement_ids = []
 
+  page = {:total_result_set_size => 0}
   begin
     # Get placements by statement.
     page = placement_service.get_placements_by_statement(
-        statement.toStatement())
+        statement.to_statement()
+    )
 
-    if page[:results]
+    unless page[:results].nil?
       page[:results].each_with_index do |placement, index|
-        puts ("%d) Placement ID: %d, name: %s and status: %s will be " +
-            "deactivated.") % [index + statement.offset, placement[:id],
+        puts ('%d) Placement ID %d, name "%s", and status "%s" will be ' +
+            'deactivated.') % [index + statement.offset, placement[:id],
             placement[:name], placement[:status]]
         placement_ids << placement[:id]
       end
@@ -66,15 +55,18 @@ def deactivate_placements()
 
   if !placement_ids.empty?
     # Create a statement for action.
-    statement = DfpApi::FilterStatement.new(
-        "WHERE id IN (%s)" % placement_ids.join(', '))
+    statement = dfp.new_statement_builder do |sb|
+      sb.where = 'id IN (%s)' % placement_ids.join(', ')
+    end
 
     # Perform action.
     result = placement_service.perform_placement_action(
-        {:xsi_type => 'DeactivatePlacements'}, statement.toStatement())
+        {:xsi_type => 'DeactivatePlacements'},
+        statement.to_statement()
+    )
 
     # Display results.
-    if result and result[:num_changes] > 0
+    if !result.nil? && result[:num_changes] > 0
       puts "Number of placements deactivated: %d" % result[:num_changes]
     else
       puts 'No placements were deactivated.'
@@ -85,8 +77,17 @@ def deactivate_placements()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    deactivate_placements()
+    deactivate_placements(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

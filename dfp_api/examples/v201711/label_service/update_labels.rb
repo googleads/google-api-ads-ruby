@@ -23,10 +23,50 @@
 
 require 'dfp_api'
 
+def update_labels(dfp)
+  # Get the LabelService.
+  label_service = dfp.service(:LabelService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to only select active labels.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'isActive = :is_active'
+    sb.with_bind_variable('is_active', true)
+  end
 
-def update_labels()
+  page = {:total_result_set_size => 0}
+  begin
+    # Get labels by statement.
+    page = label_service.get_labels_by_statement(statement.to_statement())
+
+    if page[:results].to_a.size > 0
+      # Update each local label object by changing its description.
+      page[:results].each do |label|
+        label[:description] = 'This label was updated'
+      end
+
+      # Update the labels on the server.
+      updated_labels = label_service.update_labels(labels)
+
+      if updated_labels.to_a.size > 0
+        updated_labels.each do |label|
+          puts('Label ID %d and name "%s" was updated with description "%s".') %
+              [label[:id], label[:name], label[:description]]
+        end
+      else
+        puts 'No labels were updated.'
+      end
+    else
+      puts 'No labels were found to update.'
+    end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -34,49 +74,8 @@ def update_labels()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the LabelService.
-  label_service = dfp.service(:LabelService, API_VERSION)
-
-  # Create a statement to only select active labels.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE isActive = :is_active',
-      [
-          {:key => 'is_active',
-           :value => {
-               :value => 'true',
-               :xsi_type => 'BooleanValue'}
-          }
-      ]
-  )
-
   begin
-    # Get labels by statement.
-    page = label_service.get_labels_by_statement(statement.toStatement())
-
-    if page[:results]
-      # Update each local label object by changing its description.
-      page[:results].each do |label|
-        label[:description] = 'This label was updated'
-      end
-
-      # Update the labels on the server.
-      return_labels = label_service.update_labels(labels)
-
-      if return_labels
-        return_labels.each do |label|
-          puts("Label ID: %d, name: %s was updated with description: %s.") %
-              [label[:id], label[:name], label[:description]]
-        end
-      else
-        raise 'No labels were updated.'
-      end
-    end
-  end
-end
-
-if __FILE__ == $0
-  begin
-    update_labels()
+    update_labels(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

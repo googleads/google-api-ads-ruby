@@ -22,10 +22,48 @@
 
 require 'dfp_api'
 
+def deactivate_users(dfp, user_id)
+  # Get the UserService.
+  user_service = dfp.service(:UserService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create filter text to select user by id.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :user_id'
+    sb.with_bind_variable('user_id', user_id)
+    sb.limit = 1
+  end
 
-def deactivate_users()
+  # Get users by statement.
+  response = user_service.get_users_by_statement(statement.to_statement())
+  raise 'No users found to deactivate.' if response[:results].to_a.empty?
+  user = response[:results].first
+
+  puts "User ID: %d, name: %s and status: %s will be deactivated." %
+      [user[:id], user[:name], user[:status]]
+
+  # Prepare statement for action.
+  statement.configure do |sb|
+    sb.offset = nil
+    sb.limit = nil
+  end
+
+  # Perform action.
+  result = user_service.perform_user_action(
+      {:xsi_type => 'DeactivateUsers'},
+      statement.to_statement()
+  )
+
+  # Display results.
+  if !result.nil? && result[:num_changes] > 0
+    puts 'Number of users deactivated: %d' % result[:num_changes]
+  else
+    puts 'No users were deactivated.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -33,48 +71,9 @@ def deactivate_users()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the UserService.
-  user_service = dfp.service(:UserService, API_VERSION)
-
-  # Set the ID of the user to deactivate
-  user_id = 'INSERT_USER_ID_HERE'
-
-  # Create filter text to select user by id.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :user_id',
-      [
-          {:key => 'user_id',
-           :value => {:value => user_id, :xsi_type => 'NumberValue'}}
-      ]
-  )
-
-  # Get users by statement.
-  page = user_service.get_users_by_statement(statement.toStatement())
-
-  if page[:results]
-    page[:results].each do |user|
-      puts "User ID: %d, name: %s and status: %s will be deactivated." %
-          [user[:id], user[:name], user[:status]]
-    end
-
-    # Perform action.
-    result = user_service.perform_user_action(
-        {:xsi_type => 'DeactivateUsers'}, statement.toStatement())
-
-    # Display results.
-    if result and result[:num_changes] > 0
-      puts "Number of users deactivated: %d" % result[:num_changes]
-    else
-      puts 'No users were deactivated.'
-    end
-  else
-    puts 'No user found to deactivate.'
-  end
-end
-
-if __FILE__ == $0
   begin
-    deactivate_users()
+    user_id = 'INSERT_USER_ID_HERE'.to_i
+    deactivate_users(dfp, user_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

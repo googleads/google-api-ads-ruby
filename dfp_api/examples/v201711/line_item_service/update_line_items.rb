@@ -22,45 +22,27 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def update_line_items()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def update_line_items(dfp, order_id)
   # Get the LineItemService.
   line_item_service = dfp.service(:LineItemService, API_VERSION)
 
-  # Set the ID of the order to get line items from.
-  order_id = 'INSERT_ORDER_ID_HERE'.to_i
-
   # Create a statement to get line items with even delivery rates.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE deliveryRateType = :delivery_rate_type AND ' +
-      'orderId = :order_id ',
-      [
-          {:key => 'delivery_rate_type',
-           :value => {:value => 'EVENLY', :xsi_type => 'TextValue'}},
-          {:key => 'order_id',
-           :value => {:value => order_id, :xsi_type => 'NumberValue'}}
-      ]
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'deliveryRateType = :delivery_rate_type AND orderId = :order_id'
+    sb.with_bind_variable('delivery_rate_type', 'EVENLY')
+    sb.with_bind_variable('order_id', order_id)
+  end
 
   # Get line items by statement.
-  page = line_item_service.get_line_items_by_statement(statement.toStatement())
+  page = line_item_service.get_line_items_by_statement(statement.to_statement())
 
-  if page[:results]
+  if page[:results].to_a.size > 0
     line_items = page[:results]
 
     # Update each local line item object by changing its delivery rate.
     new_line_items = line_items.inject([]) do |new_line_items, line_item|
       # Archived line items can not be updated.
-      if !line_item[:is_archived]
+      unless line_item[:is_archived]
         line_item[:delivery_rate_type] = 'AS_FAST_AS_POSSIBLE'
         new_line_items << line_item
       end
@@ -68,16 +50,16 @@ def update_line_items()
     end
 
     # Update the line items on the server.
-    return_line_items = line_item_service.update_line_items(new_line_items)
+    updated_line_items = line_item_service.update_line_items(new_line_items)
 
-    if return_line_items
-      return_line_items.each do |line_item|
-        puts ("Line item ID: %d, order ID: %d, name: %s was updated with " +
-              "delivery rate: %s") % [line_item[:id], line_item[:order_id],
-              line_item[:name], line_item[:delivery_rate_type]]
+    if updated_line_items.to_a.size > 0
+      updated_line_items.each do |line_item|
+        puts ('Line item ID %d, order ID %d, name "%s" was updated with ' +
+            'delivery rate "%s".') % [line_item[:id], line_item[:order_id],
+            line_item[:name], line_item[:delivery_rate_type]]
       end
     else
-      raise 'No line items were updated.'
+      puts 'No line items were updated.'
     end
   else
     puts 'No line items found to update.'
@@ -85,8 +67,18 @@ def update_line_items()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    update_line_items()
+    order_id = 'INSERT_ORDER_ID_HERE'.to_i
+    update_line_items(dfp, order_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

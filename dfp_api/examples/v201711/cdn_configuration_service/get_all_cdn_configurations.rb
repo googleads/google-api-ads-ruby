@@ -20,9 +20,41 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
+def get_all_cdn_configurations(dfp)
+  # Get the CdnConfigurationService.
+  cdn_configuration_service = dfp.service(:CdnConfigurationService, API_VERSION)
 
-def get_all_cdn_configurations()
+  # Create a statement to select CDN configurations.
+  statement = dfp.new_statement_builder()
+
+  # Retrieve a small number of CDN configurations at a time, paging
+  # through until all CDN configuration objects have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    # Get the CDN configurations by statement.
+    page = cdn_configuration_service.get_cdn_configurations_by_statement(
+        statement.to_statement()
+    )
+
+    # Print out some information for each CDN configuration.
+    unless page[:results].nil?
+      page[:results].each_with_index do |cdn_configuration, index|
+        puts '%d) CDN configuration with ID %d and name "%s" was found.' %
+            [index + statement.offset, cdn_configuration[:id],
+            cdn_configuration[:name]]
+      end
+    end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of CDN configurations: %d' % page[:total_result_set_size]
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -30,39 +62,8 @@ def get_all_cdn_configurations()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the CdnConfigurationService.
-  cdn_configuration_service = dfp.service(:CdnConfigurationService, API_VERSION)
-
-  # Create a statement to select CDN configurations.
-  statement = DfpApi::FilterStatement.new()
-
-  # Retrieve a small number of CDN configurations at a time, paging
-  # through until all CDN configuration objects have been retrieved.
-  total_result_set_size = 0;
   begin
-    page = cdn_configuration_service.get_cdn_configurations_by_statement(
-        statement.toStatement())
-
-    # Print out some information for each CDN configuration.
-    if page[:results]
-      total_result_set_size = page[:total_result_set_size]
-      page[:results].each_with_index do |cdn_configuration, index|
-        puts "%d) CDN configuration with ID %d and name '%s' was found." % [
-            index + statement.offset,
-            cdn_configuration[:id],
-            cdn_configuration[:name]
-        ]
-      end
-    end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-  end while statement.offset < page[:total_result_set_size]
-
-  puts 'Total number of CDN configurations: %d' % total_result_set_size
-end
-
-if __FILE__ == $0
-  begin
-    get_all_cdn_configurations()
+    get_all_cdn_configurations(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

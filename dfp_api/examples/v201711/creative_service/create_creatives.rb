@@ -21,26 +21,12 @@
 # determine which creatives already exist, run get_all_creatives.rb.
 
 require 'base64'
+require 'securerandom'
 require 'dfp_api'
 
-API_VERSION = :v201711
-# Number of creatives to create.
-ITEM_COUNT = 5
-
-def create_creatives()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_creatives(dfp, advertiser_id, number_of_creatives_to_create)
   # Get the CreativeService.
   creative_service = dfp.service(:CreativeService, API_VERSION)
-
-  # Set the ID of the advertiser (company) that all creatives will be assigned
-  # to.
-  advertiser_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'.to_i
 
   # Prepare image data for creative.
   image_url =
@@ -50,45 +36,55 @@ def create_creatives()
   size = {:width => 300, :height => 250}
 
   # Create an array to store local creative objects.
-  creatives = (1..ITEM_COUNT).map do |index|
+  creatives = (1..number_of_creatives_to_create).map do |index|
     {
-        :xsi_type => 'ImageCreative',
-        :name => "Image creative #%d-%d" % [index, (Time.new.to_f * 1000).to_i],
-        :advertiser_id => advertiser_id,
-        :destination_url => 'http://www.google.com',
-        :size => size,
-        :primary_image_asset => {
-            :file_name => 'image.jpg',
-            :asset_byte_array => image_data_base64,
-            :size => size
-        }
+      :xsi_type => 'ImageCreative',
+      :name => 'Image creative #%d - %d' % [index, SecureRandom.uuid()],
+      :advertiser_id => advertiser_id,
+      :destination_url => 'http://www.google.com',
+      :size => size,
+      :primary_image_asset => {
+        :file_name => 'image.jpg',
+        :asset_byte_array => image_data_base64,
+        :size => size
+      }
     }
   end
 
   # Create the creatives on the server.
-  return_creatives = creative_service.create_creatives(creatives)
+  created_creatives = creative_service.create_creatives(creatives)
 
-  if return_creatives
-    return_creatives.each do |creative|
+  if created_creatives.to_a.size > 0
+    created_creatives.each do |creative|
       if creative[:creative_type] == 'ImageCreative'
-        puts ("Image creative with ID: %d, name: %s, size: %dx%d was " +
-            "created and can be previewed at: [%s]") %
-            [creative[:id], creative[:name],
-             creative[:size][:width], creative[:size][:height],
-             creative[:preview_url]]
+        puts ('Image creative with ID %d, name "%s", and size %dx%d was ' +
+            'created and can be previewed at "%s".') % [creative[:id],
+            creative[:name], creative[:size][:width], creative[:size][:height],
+            creative[:preview_url]]
       else
-        puts "Creative with ID: %d, name: %s and type: %s was created." %
+        puts 'Creative with ID: %d, name: %s and type: %s was created.' %
             [creative[:id], creative[:name], creative[:creative_type]]
       end
     end
   else
-    raise 'No creatives were created.'
+    puts 'No creatives were created.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_creatives()
+    advertiser_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'.to_i
+    number_of_creatives_to_create = 5
+    create_creatives(dfp, advertiser_id, number_of_creatives_to_create)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

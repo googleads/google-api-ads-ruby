@@ -22,10 +22,48 @@
 
 require 'dfp_api'
 
+def delete_content_metadata_key_hierarchies(dfp,
+    content_metadata_key_hierarchy_id)
+  # Get the ContentMetadataKeyHierarchyService.
+  cmkh_service = dfp.service(:ContentMetadataKeyHierarchyService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to only select a single content metadata key hierarchy.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :id'
+    sb.with_bind_variable('id', content_metadata_key_hierarchy_id)
+    sb.limit = 1
+  end
 
-def delete_content_metadata_key_hierarchies()
+  # Get content metadata key hierarchy to delete.
+  response = cmkh_service.get_content_metadata_key_hierarchies_by_statement(
+      statement.to_statement()
+  )
+  if response[:results].to_a.empty?
+    raise 'No content metadata key hierarchy found to delete.'
+  end
+  content_metadata_key_hierarchy = response[:results].first
+
+  puts 'Content metadata key hierarchy with ID %d will be deleted.' %
+      content_metadata_key_hierarchy[:id]
+
+  # Perform action.
+  result = cmkh_service.perform_content_metadata_key_hierarchy_action(
+      {:xsi_type => 'DeleteContentMetadataKeyHierarchy'},
+      statement.to_statement()
+  )
+
+  # Display results.
+  if !result.nil? && result[:num_changes] > 0
+    puts 'Number of content metadata key hierarchies deleted: %d' %
+        result[:num_changes]
+  else
+    puts 'No content metadata key hierarchies were deleted.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -33,55 +71,11 @@ def delete_content_metadata_key_hierarchies()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the ContentMetadataKeyHierarchyService.
-  cmkh_service = dfp.service(:ContentMetadataKeyHierarchyService, API_VERSION)
-
-  # Set the ID of the content metadata key hierarchy.
-  content_metadata_key_hierarchy_id = 'CONTENT_METADATA_KEY_HIERARCHY_ID'
-
-  # Create a statement to only select a single content metadata key hierarchy.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :id ORDER BY id ASC',
-      [
-          {:key => 'id',
-           :value => {:value => content_metadata_key_hierarchy_id,
-                      :xsi_type => 'NumberValue'}},
-      ],
-      1
-  )
-
-  # Get content metadata key hierarchies by statement.
-  page = cmkh_service.get_content_metadata_key_hierarchies_by_statement(
-      statement.toStatement())
-
-  if page[:results]
-    content_metadata_key_hierarchy = page[:results].first
-  end
-
-  if content_metadata_key_hierarchy
-    puts 'Content metadata key hierarchy with ID ' +
-        '"%d" will be deleted.' % content_metadata_key_hierarchy[:id]
-
-    # Perform action.
-    result = cmkh_service.perform_content_metadata_key_hierarchy_action(
-        {:xsi_type => 'DeleteContentMetadataKeyHierarchy'},
-        statement.toStatement())
-
-    # Display results.
-    if result and result[:num_changes] > 0
-      puts 'Number of content metadata key hierarchies deleted: %d' %
-          result[:num_changes]
-    else
-      puts 'No content metadata key hierarchies were deleted.'
-    end
-  else
-    puts 'No content metadata key hierarchy found to delete.'
-  end
-end
-
-if __FILE__ == $0
   begin
-    delete_content_metadata_key_hierarchies()
+    content_metadata_key_hierarchy_id = 'CONTENT_METADATA_KEY_HIERARCHY_ID'.to_i
+    delete_content_metadata_key_hierarchies(
+        dfp, content_metadata_key_hierarchy_id
+    )
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

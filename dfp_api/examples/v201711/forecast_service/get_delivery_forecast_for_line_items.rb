@@ -17,13 +17,34 @@
 #           limitations under the License.
 #
 # This example gets a delivery forecast for multiple line items. To determine
-# which placements exist, run get_all_placements.rb.
+# which line items exist, run get_all_line_items.rb.
 
 require 'dfp_api'
 
-API_VERSION = :v201711
+def get_delivery_forecast_for_line_items(dfp, line_item_id1, line_item_id2)
+  # Get the ForecastService.
+  forecast_service = dfp.service(:ForecastService, API_VERSION)
 
-def get_delivery_forecast_for_line_items()
+  # Get forecast for the line item.
+  forecast = forecast_service.get_delivery_forecast_by_ids(
+      [line_item_id1, line_item_id2], nil)
+
+  unless forecast.nil? || forecast[:line_item_delivery_forecasts].nil?
+    forecast[:line_item_delivery_forecasts].each do |single_forecast|
+      # Display results.
+      unit_type = single_forecast[:unit_type]
+      puts ('Forecast for line item %d:\n\t%d %s matched\n\t%d %s ' +
+          'delivered\n\t%d %s predicted\n') % [single_forecast[:line_item_id],
+          single_forecast[:matched_units], unit_type,
+          single_forecast[:delivered_units], unit_type,
+          single_forecast[:predicted_delivery_units], unit_type]
+    end
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -31,33 +52,10 @@ def get_delivery_forecast_for_line_items()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the ForecastService.
-  forecast_service = dfp.service(:ForecastService, API_VERSION)
-
-  # Set the line items to get a forecast for.
-  line_item_id1 = 'INSERT_LINE_ITEM_ID_1_HERE'.to_i
-  line_item_id2 = 'INSERT_LINE_ITEM_ID_2_HERE'.to_i
-
-  # Get forecast for the line item.
-  forecast = forecast_service.get_delivery_forecast_by_ids(
-      [line_item_id1, line_item_id2], nil)
-
-  if forecast
-    forecast[:line_item_delivery_forecasts].each do |single_forecast|
-      # Display results.
-      unit_type = single_forecast[:unit_type]
-      puts ('Forecast for line item %d:\n\t%d %s matched\n\t%d %s ' +
-            'delivered\n\t%d %s predicted\n') % [
-                single_forecast[:line_item_id], single_forecast[:matched_units],
-                unit_type, single_forecast[:delivered_units], unit_type,
-                single_forecast[:predicted_delivery_units], unit_type]
-    end
-  end
-end
-
-if __FILE__ == $0
   begin
-    get_delivery_forecast_for_line_items()
+    line_item_id1 = 'INSERT_LINE_ITEM_ID_1_HERE'.to_i
+    line_item_id2 = 'INSERT_LINE_ITEM_ID_2_HERE'.to_i
+    get_delivery_forecast_for_line_items(dfp, line_item_id1, line_item_id2)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

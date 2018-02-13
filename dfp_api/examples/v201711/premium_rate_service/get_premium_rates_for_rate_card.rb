@@ -17,84 +17,71 @@
 #           limitations under the License.
 #
 # This example gets all premium rates on a specific rate card.
+
 require 'dfp_api'
 
-class GetPremiumRatesForRateCard
+def get_premium_rates_for_rate_card(dfp, rate_card_id)
+  # Get the PremiumRateService.
+  premium_rate_service = dfp.service(:PremiumRateService, API_VERSION)
 
-  RATE_CARD_ID = 'INSERT_RATE_CARD_ID_HERE';
-
-  def self.run_example(dfp, rate_card_id)
-    premium_rate_service =
-        dfp.service(:PremiumRateService, :v201711)
-
-    # Create a statement to select premium rates.
-    query = 'WHERE rateCardId = :rateCardId'
-    values = [
-      {
-        :key => 'rateCardId',
-        :value => {
-          :xsi_type => 'NumberValue',
-          :value => rate_card_id
-        }
-      },
-    ]
-    statement = DfpApi::FilterStatement.new(query, values)
-
-    # Retrieve a small amount of premium rates at a time, paging
-    # through until all premium rates have been retrieved.
-    total_result_set_size = 0;
-    begin
-      page = premium_rate_service.get_premium_rates_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each premium rate.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |premium_rate, index|
-          puts "%d) Premium rate with ID %d, premium feature '%s', and rate card ID %d was found." % [
-              index + statement.offset,
-              premium_rate[:id],
-              premium_rate[:xsi_type],
-              premium_rate[:rate_card_id]
-          ]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < page[:total_result_set_size]
-
-    puts 'Total number of premium rates: %d' %
-        total_result_set_size
+  # Create a statement to select premium rates.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'rateCardId = :rate_card_id'
+    sb.with_bind_variable('rate_card_id', rate_card_id)
   end
 
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
+  # Retrieve a small amount of premium rates at a time, paging
+  # through until all premium rates have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = premium_rate_service.get_premium_rates_by_statement(
+        statement.to_statement()
+    )
 
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp, RATE_CARD_ID.to_i)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each premium rate.
+    unless page[:results].nil?
+      page[:results].each_with_index do |premium_rate, index|
+        puts ('%d) Premium rate with ID %d, premium feature "%s", and rate ' +
+            'card ID %d was found.') % [index + statement.offset,
+            premium_rate[:id], premium_rate[:xsi_type],
+            premium_rate[:rate_card_id]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of premium rates: %d' % page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetPremiumRatesForRateCard.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    rate_card_id = 'INSERT_RATE_CARD_ID_HERE'.to_i
+    get_premium_rates_for_rate_card(dfp, rate_card_id)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

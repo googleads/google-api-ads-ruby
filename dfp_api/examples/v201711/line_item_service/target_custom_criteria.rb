@@ -16,20 +16,91 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example updates a line item to add custom criteria targeting. To
-# determine which line items exist, run get_all_line_items.rb. To determine
+# This example updates a line item to add custom criteria targeting. The custom
+# criteria set will be structured as follows:
+#
+# (custom_criteria[0].key == custom_criteria[0].values OR
+#     (custom_criteria[1].key != custom_criteria[1].values AND
+#         custom_criteria[2].key == custom_criteria[2].values))
+#
+# To determine which line items exist, run get_all_line_items.rb. To determine
 # which custom targeting keys and values exist, run
 # get_all_custom_targeting_keys_and_values.rb.
 
 require 'dfp_api'
-
-
 require 'pp'
 
-API_VERSION = :v201711
-PAGE_SIZE = 500
+def target_custom_criteria(dfp, line_item_id, custom_criteria_ids)
+  # Get the LineItemService.
+  line_item_service = dfp.service(:LineItemService, API_VERSION)
 
-def target_custom_criteria()
+  # Create custom criteria.
+  custom_criteria = [
+    {
+      :xsi_type => 'CustomCriteria',
+      :key_id => custom_criteria_ids[0][:key],
+      :value_ids => custom_criteria_ids[0][:values],
+      :operator => 'IS'
+    },
+    {
+      :xsi_type => 'CustomCriteria',
+      :key_id => custom_criteria_ids[1][:key],
+      :value_ids => custom_criteria_ids[1][:values],
+      :operator => 'IS_NOT'
+    },
+    {
+      :xsi_type => 'CustomCriteria',
+      :key_id => custom_criteria_ids[2][:key],
+      :value_ids => custom_criteria_ids[2][:values],
+      :operator => 'IS'
+    }
+  ]
+
+  sub_custom_criteria_set = {
+    :xsi_type => 'CustomCriteriaSet',
+    :logical_operator => 'AND',
+    :children => [custom_criteria[1], custom_criteria[2]]
+  }
+  top_custom_criteria_set = {
+    :xsi_type => 'CustomCriteriaSet',
+    :logical_operator => 'OR',
+    :children => [custom_criteria[0], sub_custom_criteria_set]
+  }
+
+  # Create a statement to only select a single line item.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :line_item_id'
+    sb.with_bind_variable('line_item_id', line_item_id)
+    sb.limit = 1
+  end
+
+  # Get line items by statement.
+  response = line_item_service.get_line_items_by_statement(
+      statement.to_statement()
+  )
+  raise 'No line item found to update.' if response[:results].to_a.empty?
+  line_item = response[:results].first
+
+  line_item[:targeting][:custom_targeting] = top_custom_criteria_set
+
+  # Update the line items on the server.
+  updated_line_items = line_item_service.update_line_items([line_item])
+
+  # Display the updated line item.
+  if updated_line_items.to_a.size > 0
+    updated_line_items.each do |line_item|
+      puts 'Line item with ID %d was updated with custom criteria targeting:' %
+          line_item[:id]
+      pp line_item[:targeting]
+    end
+  else
+    puts 'No line items were updated.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -37,90 +108,17 @@ def target_custom_criteria()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the LineItemService.
-  line_item_service = dfp.service(:LineItemService, API_VERSION)
-
-  # Set the ID of the line item to update targeting.
-  line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
-
-  # Set the IDs of the custom targeting keys.
-  custom_criteria_ids = [
+  begin
+    line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
+    custom_criteria_ids = [
       {:key => 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'.to_i,
        :values => ['INSERT_CUSTOM_TARGETING_VALUE_IDS_HERE'.to_i]},
       {:key => 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'.to_i,
        :values => ['INSERT_CUSTOM_TARGETING_VALUE_IDS_HERE'.to_i]},
       {:key => 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'.to_i,
        :values => ['INSERT_CUSTOM_TARGETING_VALUE_IDS_HERE'.to_i]}
-  ]
-
-  # Create custom criteria.
-  custom_criteria = [
-      {:xsi_type => 'CustomCriteria',
-       :key_id => custom_criteria_ids[0][:key],
-       :value_ids => custom_criteria_ids[0][:values],
-       :operator => 'IS'},
-      {:xsi_type => 'CustomCriteria',
-       :key_id => custom_criteria_ids[1][:key],
-       :value_ids => custom_criteria_ids[1][:values],
-       :operator => 'IS_NOT'},
-      {:xsi_type => 'CustomCriteria',
-       :key_id => custom_criteria_ids[2][:key],
-       :value_ids => custom_criteria_ids[2][:values],
-       :operator => 'IS'}
-  ]
-
-  # Create the custom criteria set that will resemble:
-  #
-  # (custom_criteria[0].key == custom_criteria[0].values OR
-  #     (custom_criteria[1].key != custom_criteria[1].values AND
-  #         custom_criteria[2].key == custom_criteria[2].values))
-  sub_custom_criteria_set = {
-      :xsi_type => 'CustomCriteriaSet',
-      :logical_operator => 'AND',
-      :children => [custom_criteria[1], custom_criteria[2]]
-  }
-  top_custom_criteria_set = {
-      :xsi_type => 'CustomCriteriaSet',
-      :logical_operator => 'OR',
-      :children => [custom_criteria[0], sub_custom_criteria_set]
-  }
-
-
-  # Create a statement to only select a single line item.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :id ORDER BY id ASC',
-      [
-          {:key => 'id',
-           :value => {:value => line_item_id, :xsi_type => 'NumberValue'}}
-      ],
-      1
-  )
-
-  # Get line items by statement.
-  page = line_item_service.get_line_items_by_statement(statement.toStatement())
-
-  if page[:results]
-    line_item = page[:results].first
-
-    line_item[:targeting][:custom_targeting] = top_custom_criteria_set
-
-    # Update the line items on the server.
-    return_line_item = line_item_service.update_line_items([line_item])
-
-    # Display the updated line item.
-    if return_line_item
-      puts "Line item ID: %d was updated with custom criteria targeting:" %
-          return_line_item[:id]
-      pp return_line_item[:targeting]
-    else
-      puts 'Line item update failed.'
-    end
-  end
-end
-
-if __FILE__ == $0
-  begin
-    target_custom_criteria()
+    ]
+    target_custom_criteria(dfp, line_item_id, custom_criteria_ids)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -19,13 +19,35 @@
 # This example creates new companies. To determine which companies exist, run
 # get_all_companies.rb.
 
+require 'securerandom'
 require 'dfp_api'
 
-API_VERSION = :v201711
-# Number of companies to create.
-ITEM_COUNT = 5
+def create_companies(dfp, number_of_companies_to_create)
+  # Get the CompanyService.
+  company_service = dfp.service(:CompanyService, API_VERSION)
 
-def create_companies()
+  # Create an array to store local company objects.
+  companies = (1..number_of_companies_to_create).map do
+    {:name => 'Advertiser %d' % SecureRandom.uuid(), :type => 'ADVERTISER'}
+  end
+
+  # Create the companies on the server.
+  created_companies = company_service.create_companies(companies)
+
+  if created_companies.to_a.size > 0
+    created_companies.each do |company|
+      puts 'Company with ID %d, name "%s", and type "%s" was created.' %
+          [company[:id], company[:name], company[:type]]
+    end
+  else
+    puts 'No companies were created.'
+  end
+
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -33,32 +55,9 @@ def create_companies()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the CompanyService.
-  company_service = dfp.service(:CompanyService, API_VERSION)
-
-  # Create an array to store local company objects.
-  companies = (1..ITEM_COUNT).map do |index|
-    {:name => "Advertiser #%d-%d" % [Time.new.to_f * 1000, index],
-     :type => 'ADVERTISER'}
-  end
-
-  # Create the companies on the server.
-  return_companies = company_service.create_companies(companies)
-
-  if return_companies
-    return_companies.each do |company|
-      puts "Company with ID: %d, name: %s and type: %s was created." %
-          [company[:id], company[:name], company[:type]]
-    end
-  else
-    raise 'No companies were created.'
-  end
-
-end
-
-if __FILE__ == $0
   begin
-    create_companies()
+    number_of_companies_to_create = 5
+    create_companies(dfp, number_of_companies_to_create)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

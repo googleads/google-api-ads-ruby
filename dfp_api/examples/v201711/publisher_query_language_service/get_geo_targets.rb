@@ -23,12 +23,56 @@
 
 require 'dfp_api'
 
+def get_geo_targets(dfp)
+  # Get the PublisherQueryLanguageService.
+  pql_service = dfp.service(:PublisherQueryLanguageService, API_VERSION)
 
-API_VERSION = :v201711
-# A string to separate columns in output. Use "," to get CSV.
-COLUMN_SEPARATOR = "\t"
+  # Create a statement to select all targetable cities.
+  statement = dfp.new_statement_builder do |sb|
+    sb.select = 'Id, Name, CanonicalParentId, ParentIds, CountryCode, Type, ' +
+        'Targetable'
+    sb.from = 'Geo_Target'
+    sb.where = 'Type = :type AND Targetable = :targetable'
+    sb.with_bind_variable('type', 'City')
+    sb.with_bind_variable('targetable', true)
+    sb.order_by = 'Id'
+  end
 
-def get_geo_targets()
+  # Set initial values for paging.
+  result_set, row_count = {:rows => []}, 0
+
+  # Get all cities with paging.
+  begin
+    result_set = pql_service.select(statement.to_statement())
+
+    unless result_set.nil?
+      # Print out columns header.
+      columns = result_set[:column_types].collect {|col| col[:label_name]}
+      puts columns.join(COLUMN_SEPARATOR)
+
+      # Print out every row.
+      result_set[:rows].each do |row_set|
+        row = row_set[:values].collect {|item| item[:value]}
+        puts row.join(COLUMN_SEPARATOR)
+      end
+    end
+
+    # Update the counters.
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+    row_count += result_set[:rows].size
+  end while result_set[:rows].size == statement.limit
+
+  # Print a footer.
+  puts "Total number of rows found: %d" % row_count
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+  # A string to separate columns in output. Use "," to get CSV.
+  COLUMN_SEPARATOR = "\t"
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -36,49 +80,8 @@ def get_geo_targets()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the PublisherQueryLanguageService.
-  pql_service = dfp.service(:PublisherQueryLanguageService, API_VERSION)
-
-  # Create a statement to select all targetable cities.
-  statement_text = "SELECT Id, Name, CanonicalParentId, ParentIds, " +
-      "CountryCode, Type, Targetable FROM Geo_Target WHERE Type = 'City' " +
-      "AND Targetable = true ORDER BY Id ASC"
-
-  statement = DfpApi::FilterStatement.new(statement_text)
-
-  # Set initial values for paging.
-  result_set, all_rows = nil, 0
-
-  # Get all cities with paging.
   begin
-    result_set = pql_service.select(statement.toStatement())
-
-    if result_set
-      # Print out columns header.
-      columns = result_set[:column_types].collect {|col| col[:label_name]}
-      puts columns.join(COLUMN_SEPARATOR)
-
-      # Print out every row.
-      result_set[:rows].each do |row_set|
-          row = row_set[:values].collect {|item| item[:value]}
-          puts row.join(COLUMN_SEPARATOR)
-      end
-    end
-
-    # Update the counters.
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    all_rows += result_set[:rows].size
-  end while result_set[:rows].size == DfpApi::SUGGESTED_PAGE_LIMIT
-
-  # Print a footer.
-  if result_set[:rows]
-    puts "Total number of rows found: %d" % all_rows
-  end
-end
-
-if __FILE__ == $0
-  begin
-    get_geo_targets()
+    get_geo_targets(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

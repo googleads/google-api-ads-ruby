@@ -20,67 +20,63 @@
 
 require 'dfp_api'
 
+def get_all_native_styles(dfp)
+  # Get the NativeStyleService.
+  native_style_service = dfp.service(:NativeStyleService, API_VERSION)
 
-class GetAllNativeStyles
+  # Create a statement to select native styles.
+  statement = dfp.new_statement_builder()
 
-  def self.run_example(dfp)
-    # Get the NativeStyleService.
-    native_style_service = dfp.service(:NativeStyleService, :v201711)
+  # Retrieve a small amount of native styles at a time, paging through until
+  # all of them have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = native_style_service.get_native_styles_by_statement(
+        statement.to_statement()
+    )
 
-    # Create a statement to select native styles.
-    statement = DfpApi::FilterStatement.new()
-
-    # Retrieve a small amount of native styles at a time, paging through until
-    # all of them have been retrieved.
-    total_result_set_size = 0
-    begin
-      page = native_style_service.get_native_styles_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each native style.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |style, index|
-          puts ("%d) Native style with ID %d, name '%s' and creative " +
-              "template ID %d was found.") % [index + statement.offset,
-              style[:id], style[:name], style[:creative_template_id]]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < total_result_set_size
-
-    puts 'Total number of native styles: %d' % total_result_set_size
-  end
-
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
-
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each native style.
+    unless page[:results].nil?
+      page[:results].each_with_index do |style, index|
+        puts ('%d) Native style with ID %d, name "%s", and creative ' +
+            'template ID %d was found.') % [index + statement.offset,
+            style[:id], style[:name], style[:creative_template_id]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < total_result_set_size
+
+  puts 'Total number of native styles: %d' % page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetAllNativeStyles.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    get_all_native_styles(dfp)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

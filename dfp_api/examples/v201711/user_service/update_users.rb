@@ -16,15 +16,47 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example updates all users by adding "Sr." to the end of a single user.
-# To determine which users exist, run get_all_users.rb.
+# This example updates a single user's name. To determine which users exist,
+# run get_all_users.rb.
 
 require 'dfp_api'
 
+def update_users(dfp, user_id)
+  # Get the UserService.
+  user_service = dfp.service(:UserService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to get all users.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :user_id'
+    sb.with_bind_variable('user_id', user_id)
+    sb.limit = 1
+  end
 
-def update_users()
+  # Get users by statement.
+  response = user_service.get_users_by_statement(statement.to_statement())
+  raise 'No users found to update.' if response[:results].to_a.empty?
+  user = response[:results].first
+
+  # Update the user object's name field.
+  user[:name] ||= ''
+  user[:name] += ' Ph.D.'
+
+  # Update the users on the server.
+  updated_users = user_service.update_users(users)
+
+  if updated_users.to_a.size > 0
+    updated_users.each do |user|
+      puts 'User with ID %d and email "%s" was updated with name "%s".' %
+          [user[:id], user[:email], user[:name]]
+    end
+  else
+    puts 'No users were updated.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -32,49 +64,9 @@ def update_users()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the UserService.
-  user_service = dfp.service(:UserService, API_VERSION)
-
-  user_id = 'INSERT_USER_ID_HERE'.to_i
-
-  # Create a statement to get all users.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :id ORDER BY id ASC',
-      [
-         {:key => 'id',
-          :value => {:value => user_id, :xsi_type => 'NumberValue'}}
-      ],
-      1
-  )
-
-  # Get users by statement.
-  page = user_service.get_users_by_statement(statement.toStatement())
-
-  if page[:results]
-    users = page[:results]
-
-    # Update each local users object by changing its name.
-    users.each {|user| user[:name] += ' Sr.'}
-
-    # Update the users on the server.
-    return_users = user_service.update_users(users)
-
-    if return_users
-      return_users.each do |user|
-        puts ("User ID: %d, email: %s was updated with name %s") %
-            [user[:id], user[:email], user[:name]]
-      end
-    else
-      raise 'No users were updated.'
-    end
-  else
-    puts 'No users found to update.'
-  end
-end
-
-if __FILE__ == $0
   begin
-    update_users()
+    user_id = 'INSERT_USER_ID_HERE'.to_i
+    update_users(dfp, user_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -16,68 +16,65 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This code example approves all suggested ad units with 50 or more requests.
+# This code example approves all suggested ad units with more requests than the
+# given threshold.
 #
 # This feature is only available to DFP premium solution networks.
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-NUMBER_OF_REQUESTS = 50
-
-def approve_suggested_ad_units()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def approve_suggested_ad_units(dfp, num_requests)
   # Get the SuggestedAdUnitService.
   suggested_ad_unit_service = dfp.service(:SuggestedAdUnitService, API_VERSION)
 
-  # Create a statement to only select suggested ad units with 50 or more
-  # requests.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE numRequests >= :num_requests',
-      [
-          {:key => 'num_requests',
-           :value => {:value => NUMBER_OF_REQUESTS,
-                      :xsi_type => 'NumberValue'}}
-      ]
-  )
+  # Create a statement to only select suggested ad units with more requests
+  # than the value of the num_requests parameter.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'numRequests >= :num_requests'
+    sb.with_bind_variable('num_requests', num_requests)
+  end
 
   begin
     # Get suggested ad units by statement.
     page = suggested_ad_unit_service.get_suggested_ad_units_by_statement(
-        statement.toStatement())
+        statement.to_statement()
+    )
 
     unit_count_to_approve = 0
 
-    if page[:results]
+    unless page[:results].nil?
       page[:results].each_with_index do |ad_unit, index|
-        if ad_unit[:num_requests] >= NUMBER_OF_REQUESTS
-          puts(("%d) Suggested ad unit with ID '%s' and %d requests will be " +
-              "approved.") % [index + statement.offset, ad_unit[:id],
-              ad_unit[:num_requests]])
+        if ad_unit[:num_requests] >= num_requests
+          puts ('%d) Suggested ad unit with ID "%s" and %d requests will be ' +
+              'approved.') % [index + statement.offset, ad_unit[:id],
+              ad_unit[:num_requests]]
           unit_count_to_approve += 1
         end
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
   end
 
   puts "Number of suggested ad units to be approved: %d" % unit_count_to_approve
 
   if unit_count_to_approve > 0
+    # Prepare statement for action.
+    statement.configure do |sb|
+      sb.offset = nil
+      sb.limit = nil
+    end
+
     # Perform action with the same statement.
     result = suggested_ad_unit_service.perform_suggested_ad_unit_action(
-        {:xsi_type => 'ApproveSuggestedAdUnits'}, statement)
+        {:xsi_type => 'ApproveSuggestedAdUnits'},
+        statement.to_statement()
+    )
 
     # Display results.
-    if result and result[:num_changes] > 0
-      puts "Number of ad units approved: %d" % result[:num_changes]
+    if !result.nil? && result[:num_changes] > 0
+      puts 'Number of ad units approved: %d' % result[:num_changes]
     else
       puts 'No ad units were approved.'
     end
@@ -87,8 +84,18 @@ def approve_suggested_ad_units()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    approve_suggested_ad_units()
+    num_requests = 50
+    approve_suggested_ad_units(dfp, num_requests)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

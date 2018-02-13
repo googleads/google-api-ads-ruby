@@ -21,10 +21,44 @@
 
 require 'dfp_api'
 
+def update_creative_sets(dfp, creative_set_id, companion_creative_id)
+  # Get the CreativeSetService.
+  creative_set_service = dfp.service(:CreativeSetService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to only select a single creative set.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :creative_set_id'
+    sb.with_bind_variable('creative_set_id', creative_set_id)
+  end
 
-def update_creative_sets()
+  # Get creative sets by statement.
+  response = creative_set_service.get_creative_sets_by_statement(
+      statement.to_statement()
+  )
+  raise 'No creative sets found to update.' if response[:results].to_a.empty?
+  creative_set = response[:results].first
+
+  # Update the creative set locally.
+  creative_set[:companion_creative_ids] << companion_creative_id
+
+  # Update the creative set on the server.
+  updated_creative_sets = creative_set_service.update_creative_set(creative_set)
+
+  if updated_creative_sets.to_a.size > 0
+    updated_creative_sets.each do |creative_set|
+      puts ('Creative set with ID %d and master creative ID: %d was updated ' +
+          'with companion creative IDs [%s].') % [creative_set[:id],
+          creative_set[:master_creative_id],
+          creative_set[:companion_creative_ids].join(', ')]
+    end
+  else
+    puts 'No creative sets were updated.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -32,53 +66,10 @@ def update_creative_sets()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Set the IDs of the creative set to get and companion creative ID to add.
-  creative_set_id = 'INSERT_CREATIVE_SET_ID_HERE'.to_i
-  companion_creative_id = 'INSERT_COMPANION_CREATIVE_ID_HERE'.to_i
-
-  # Get the CreativeSetService.
-  creative_set_service = dfp.service(:CreativeSetService, API_VERSION)
-
-  # Create a statement to only select a single creative set.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :id'
-      [
-          {:key => 'id',
-           :value => {:value => creative_set_id, :xsi_type => 'NumberValue'}}
-      ],
-      1
-  )
-
-  # Get creative sets by statement.
-  page = creative_set_service.get_creative_sets_by_statement(
-      statement.toStatement())
-
-  if page[:results]
-    creative_sets = page[:results]
-
-    creative_sets.each do |creative_set|
-      # Update the creative set locally.
-      creative_set[:companion_creative_ids] << companion_creative_id
-    end
-
-    # Update the creative set on the server.
-    return_creative_set = creative_set_service.update_creative_set(creative_set)
-
-    if return_creative_set
-       puts ('Creative set ID: %d, master creative ID: %d was updated with ' +
-           'companion creative IDs: [%s]') %
-           [creative_set[:id],
-            creative_set[:master_creative_id],
-            creative_set[:companion_creative_ids].join(', ')]
-    else
-      raise 'No creative sets were updated.'
-    end
-  end
-end
-
-if __FILE__ == $0
   begin
-    update_creative_sets()
+    creative_set_id = 'INSERT_CREATIVE_SET_ID_HERE'.to_i
+    companion_creative_id = 'INSERT_COMPANION_CREATIVE_ID_HERE'.to_i
+    update_creative_sets(dfp, creative_set_id, companion_creative_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -17,72 +17,65 @@
 #           limitations under the License.
 #
 # This example gets all packages.
+
 require 'dfp_api'
 
-class GetAllPackages
+def get_all_packages(dfp)
+  package_service = dfp.service(:PackageService, API_VERSION)
 
-  def self.run_example(dfp)
-    package_service =
-        dfp.service(:PackageService, :v201711)
+  # Create a statement to select packages.
+  statement = dfp.new_statement_builder()
 
-    # Create a statement to select packages.
-    statement = DfpApi::FilterStatement.new()
+  # Retrieve a small amount of packages at a time, paging
+  # through until all packages have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = package_service.get_packages_by_statement(
+        statement.to_statement()
+    )
 
-    # Retrieve a small amount of packages at a time, paging
-    # through until all packages have been retrieved.
-    total_result_set_size = 0;
-    begin
-      page = package_service.get_packages_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each package.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |pkg, index|
-          puts "%d) Package with ID %d, name '%s', and proposal id %d was found." % [
-              index + statement.offset,
-              pkg[:id],
-              pkg[:name],
-              pkg[:proposal_id]
-          ]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < page[:total_result_set_size]
-
-    puts 'Total number of packages: %d' %
-        total_result_set_size
-  end
-
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
-
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each package.
+    unless page[:results].nil?
+      page[:results].each_with_index do |package, index|
+        puts ('%d) Package with ID %d, name "%s", and proposal id %d was ' +
+            'found.') % [index + statement.offset, package[:id],
+            package[:name], package[:proposal_id]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of packages: %d' % page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetAllPackages.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    get_all_packages(dfp)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

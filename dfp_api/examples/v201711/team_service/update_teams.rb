@@ -21,10 +21,42 @@
 
 require 'dfp_api'
 
+def update_teams(dfp, team_id)
+  # Get the TeamService.
+  team_service = dfp.service(:TeamService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to select the matching team.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :team_id'
+    sb.with_bind_variable('team_id', team_id)
+    sb.limit = 1
+  end
 
-def update_teams()
+  # Get team by statement.
+  response = team_service.get_teams_by_statement(statement.to_statement())
+  raise 'No teams found to update.' if response[:results].to_a.empty?
+  team = response[:results].first
+
+  # Change the description of the team.
+  team[:description] ||= ''
+  team[:description] += ' - UPDATED'
+
+  # Update the teams on the server.
+  updated_teams = team_service.update_teams(updated_teams)
+
+  # Display the results.
+  if updated_teams.to_a.size > 0
+    updated_teams.each do |team|
+      puts 'Team ID %d and name "%s" was updated' % [team[:id], team[:name]]
+    end
+  else
+    puts 'No teams were updated.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -32,46 +64,9 @@ def update_teams()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Set the ID of the team to update.
-  team_id = 'INSERT_TEAM_ID_HERE'.to_i
-
-  # Get the TeamService.
-  team_service = dfp.service(:TeamService, API_VERSION)
-
-  # Create a statement to select the matching team.
-  query = 'WHERE id = :id'
-  values = [
-    {:key => 'id', :value => {:xsi_type => 'NumberValue', :value => team_id}}
-  ]
-  statement = DfpApi::FilterStatement.new(query, values)
-
-  # Get teams by statement.
-  page = team_service.get_teams_by_statement(statement.toStatement())
-
-  if page[:results]
-    teams = page[:results]
-
-    # Create a local set of teams than need to be updated. We are updating by
-    # changing the description.
-    updated_teams = teams.map do |team|
-      team[:description] ||= ''
-      team[:description] += ' - UPDATED'
-      team
-    end
-
-    # Update the teams on the server.
-    return_teams = team_service.update_teams(updated_teams)
-    return_teams.each do |team|
-      puts "Team ID: %d, name: '%s' was updated" % [team[:id], team[:name]]
-    end
-  else
-    puts 'No teams found to update.'
-  end
-end
-
-if __FILE__ == $0
   begin
-    update_teams()
+    team_id = 'INSERT_TEAM_ID_HERE'.to_i
+    update_teams(dfp, team_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

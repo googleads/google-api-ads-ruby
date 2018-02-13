@@ -22,77 +22,61 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def delete_custom_targeting_values()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def delete_custom_targeting_values(dfp, custom_targeting_key_id)
   # Get the CustomTargetingService.
   custom_targeting_service = dfp.service(:CustomTargetingService, API_VERSION)
-
-  # Set ID of the custom targeting key to delete values from.
-  custom_targeting_key_id = 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'.to_i
 
   # Define initial values.
   custom_target_value_ids = []
 
   # Create statement to only select custom values by the given custom targeting
   # key ID.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE customTargetingKeyId = :key_id',
-      [
-          {:key => 'key_id',
-           :value => {:value => custom_targeting_key_id,
-                      :xsi_type => 'NumberValue'}
-          }
-      ]
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'customTargetingKeyId = :key_id'
+    sb.with_bind_variable('key_id', custom_targeting_key_id)
+  end
 
+  page = {:total_result_set_size => 0}
   begin
     # Get custom targeting values by statement.
     page = custom_targeting_service.get_custom_targeting_values_by_statement(
-        statement.toStatement())
+        statement.to_statement()
+    )
 
-    if page[:results]
+    unless page[:results].nil?
       # Increase query offset by page size.
       page[:results].each do |value|
         # Add value ID to the list for deletion.
         custom_target_value_ids << value[:id]
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.
-  puts "Number of custom targeting value to be deleted: %d" %
+  puts 'Number of custom targeting value to be deleted: %d' %
       custom_target_value_ids.size
 
   if !(custom_target_value_ids.empty?)
     # Modify statement for action, note, values are still present.
-    statement = DfpApi::FilterStatement.new(
-        "WHERE customTargetingKeyId = :key_id AND id IN (%s)" %
-        [custom_target_value_ids.join(', ')],
-        [
-          {:key => 'key_id',
-           :value => {:value => custom_targeting_key_id,
-                      :xsi_type => 'NumberValue'}
-          }
-        ]
-    )
+    statement.configure do |sb|
+      sb.where = 'customTargetingKeyId = :key_id AND id IN (%s)' %
+          custom_target_value_ids.join(', ')
+      sb.offset = nil
+      sb.limit = nil
+    end
 
     # Perform action.
     result = custom_targeting_service.perform_custom_targeting_value_action(
-        {:xsi_type => 'DeleteCustomTargetingValues'}, statement.toStatement())
+        {:xsi_type => 'DeleteCustomTargetingValues'},
+        statement.to_statement()
+    )
 
-    # Display results.
-    if result and result[:num_changes] > 0
-      puts "Number of custom targeting values deleted: %d" %
+    # Display the results.
+    if !result.nil? && result[:num_changes] > 0
+      puts 'Number of custom targeting values deleted: %d' %
           result[:num_changes]
     else
       puts 'No custom targeting values were deleted.'
@@ -101,8 +85,18 @@ def delete_custom_targeting_values()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    delete_custom_targeting_values()
+    custom_targeting_key_id = 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'.to_i
+    delete_custom_targeting_values(dfp, custom_targeting_key_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

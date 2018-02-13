@@ -21,21 +21,9 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def get_availability_forecast_for_line_item()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def get_availability_forecast_for_line_item(dfp, line_item_id)
   # Get the ForecastService.
   forecast_service = dfp.service(:ForecastService, API_VERSION)
-
-  # Set the line item to get a forecast for.
-  line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
 
   # Set forecasting options.
   forecast_options = {
@@ -45,26 +33,37 @@ def get_availability_forecast_for_line_item()
 
   # Get forecast for the line item.
   forecast = forecast_service.get_availability_forecast_by_id(
-      line_item_id, forecast_options)
+      line_item_id, forecast_options
+  )
 
-  if forecast
+  unless forecast.nil?
     # Display results.
     matched = forecast[:matched_units]
     available_percent = forecast[:available_units] * 100.0 / matched
     unit_type = forecast[:unit_type].to_s.downcase
-    puts "%.2f %s matched." % [matched, unit_type]
-    puts "%.2f%% %s available." % [available_percent, unit_type]
-    puts "%d contending line items." % forecast[:contending_line_items].size
-    if forecast[:possible_units]
+    puts '%.2f %s matched.' % [matched, unit_type]
+    puts '%.2f%% of %s available.' % [available_percent, unit_type]
+    puts '%d contending line items.' % forecast[:contending_line_items].size
+    unless forecast[:possible_units].nil?
       possible_percent = forecast[:possible_units] * 100.0 / matched
-      puts "%.2f%% %s possible." % [possible_percent, unit_type]
+      puts '%.2f%% of %s possible.' % [possible_percent, unit_type]
     end
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    get_availability_forecast_for_line_item()
+    line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
+    get_availability_forecast_for_line_item(dfp, line_item_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

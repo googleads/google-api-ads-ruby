@@ -19,30 +19,15 @@
 # This example creates a new template creative for a given advertiser. To
 # determine which companies are advertisers, run get_companies_by_statement.rb.
 # To determine which creatives already exist, run get_all_creatives.rb. To
-# determine which creative templates run get_all_creative_templates.rb.
+# determine which creative templates exist, run get_all_creative_templates.rb.
 
 require 'base64'
+require 'securerandom'
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_creative_from_template()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_creative_from_template(dfp, advertiser_id, creative_template_id)
   # Get the CreativeService.
   creative_service = dfp.service(:CreativeService, API_VERSION)
-
-  # Set the ID of the advertiser (company) that all creatives will be assigned
-  # to.
-  advertiser_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'.to_i
-
-  # Use the image banner with optional third party tracking template.
-  creative_template_id = 10000680
 
   # Create the local custom creative object.
   creative = {
@@ -66,7 +51,7 @@ def create_creative_from_template()
       :asset => {
         :asset_byte_array => image_data_base64,
         # Filenames must be unique.
-        :file_name => "image%d.jpg" % Time.new.to_i
+        :file_name => 'image_%d.jpg' % SecureRandom.uuid()
       }
   }
 
@@ -95,7 +80,7 @@ def create_creative_from_template()
   target_window_variable_value = {
       :xsi_type => 'StringCreativeTemplateVariableValue',
       :unique_name => 'Targetwindow',
-      :value => '__blank'
+      :value => '_blank'
   }
 
   creative[:creative_template_variable_values] = [asset_variable_value,
@@ -103,21 +88,34 @@ def create_creative_from_template()
       url_variable_value, target_window_variable_value]
 
   # Create the creatives on the server.
-  return_creative = creative_service.create_creatives([creative])[0]
+  created_creatives = creative_service.create_creatives([creative])
 
-  if return_creative
-    puts(("Template creative with ID: %d, name: %s and type '%s' was " +
-            "created and can be previewed at: '%s'") %
-            [return_creative[:id], return_creative[:name],
-             return_creative[:creative_type], return_creative[:preview_url]])
+  if created_creatives.to_a_size > 0
+    created_creatives.each do |creative|
+      puts ('Template creative with ID %d, name "%s" and type "%s" was ' +
+          'created and can be previewed at "%s"') % [creative[:id],
+          creative[:name], creative[:creative_type], creative[:preview_url]]
+    end
   else
-    raise 'No creatives were created.'
+    puts 'No creatives were created.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_creative_from_template()
+    advertiser_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'.to_i
+    # Use the image banner with optional third party tracking template.
+    creative_template_id = 10000680
+    create_creative_from_template(dfp, advertiser_id, creative_template_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

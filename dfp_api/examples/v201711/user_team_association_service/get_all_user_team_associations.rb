@@ -17,71 +17,67 @@
 #           limitations under the License.
 #
 # This example gets all user team associations.
+
 require 'dfp_api'
 
-class GetAllUserTeamAssociations
+def get_all_user_team_associations(dfp)
+  # Get the UserTeamAssociationService.
+  user_team_association_service =
+      dfp.service(:UserTeamAssociationService, API_VERSION)
 
-  def self.run_example(dfp)
-    user_team_association_service =
-        dfp.service(:UserTeamAssociationService, :v201711)
+  # Create a statement to select user team associations.
+  statement = dfp.new_statement_builder()
 
-    # Create a statement to select user team associations.
-    statement = DfpApi::FilterStatement.new()
+  # Retrieve a small amount of user team associations at a time, paging
+  # through until all user team associations have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = user_team_association_service.
+        get_user_team_associations_by_statement(statement.to_statement())
 
-    # Retrieve a small amount of user team associations at a time, paging
-    # through until all user team associations have been retrieved.
-    total_result_set_size = 0;
-    begin
-      page = user_team_association_service.get_user_team_associations_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each user team association.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |user_team_association, index|
-          puts "%d) User team association with team id %d and user id %d was found." % [
-              index + statement.offset,
-              user_team_association[:team_id],
-              user_team_association[:user_id]
-          ]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < page[:total_result_set_size]
-
-    puts 'Total number of user team associations: %d' %
-        total_result_set_size
-  end
-
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
-
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each user team association.
+    unless page[:results].nil?
+      page[:results].each_with_index do |user_team_association, index|
+        puts ('%d) User team association with team ID %d and user ID %d was ' +
+            'found.') % [index + statement.offset,
+            user_team_association[:team_id], user_team_association[:user_id]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of user team associations: %d' %
+      page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetAllUserTeamAssociations.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    get_all_user_team_associations(dfp)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

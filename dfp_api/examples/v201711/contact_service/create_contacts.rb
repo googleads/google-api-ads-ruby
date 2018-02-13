@@ -21,24 +21,9 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_contacts()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_contacts(dfp, advertiser_company_id, agency_company_id)
   # Get the ContactService.
   contact_service = dfp.service(:ContactService, API_VERSION)
-
-  # Set the ID of the advertiser company this contact is associated with.
-  advertiser_company_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'
-
-  # Set the ID of the agency company this contact is associated with.
-  agency_company_id = 'INSERT_AGENCY_COMPANY_ID_HERE'
 
   # Create an advertiser contact.
   advertiser_contact = {
@@ -55,23 +40,34 @@ def create_contacts()
   }
 
   # Create the contacts on the server.
-  return_contacts = contact_service.create_contacts([advertiser_contact,
+  created_contacts = contact_service.create_contacts([advertiser_contact,
       agency_contact])
 
   # Display results.
-  if return_contacts
-    return_contacts.each do |contact|
-      puts 'A contact with ID %d and name %s was created.' % [contact[:id],
+  if created_contacts.to_a.size > 0
+    created_contacts.each do |contact|
+      puts 'A contact with ID %d and name "%s" was created.' % [contact[:id],
           contact[:name]]
     end
   else
-    raise 'No contacts were created.'
+    puts 'No contacts were created.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_contacts()
+    advertiser_company_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'
+    agency_company_id = 'INSERT_AGENCY_COMPANY_ID_HERE'
+    create_contacts(dfp, advertiser_company_id, agency_company_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

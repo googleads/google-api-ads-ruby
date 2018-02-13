@@ -20,9 +20,20 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
+def get_current_user(dfp)
+  # Get the UserService.
+  user_service = dfp.service(:UserService, API_VERSION)
 
-def get_current_user()
+  # Get the current user.
+  user = user_service.get_current_user()
+
+  puts 'Current user has ID %d, email "%s", and role "%s".' %
+      [user[:id], user[:email], user[:role_name]]
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -30,19 +41,8 @@ def get_current_user()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the UserService.
-  user_service = dfp.service(:UserService, API_VERSION)
-
-  # Get the current user.
-  user = user_service.get_current_user()
-
-  puts "Current user has ID %d, email %s and role %s." %
-      [user[:id], user[:email], user[:role_name]]
-end
-
-if __FILE__ == $0
   begin
-    get_current_user()
+    get_current_user(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

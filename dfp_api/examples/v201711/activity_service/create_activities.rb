@@ -21,21 +21,9 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_activities()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_activities(dfp, activity_group_id)
   # Get the ActivityService.
   activity_service = dfp.service(:ActivityService, API_VERSION)
-
-  # Set the ID of the activity group this activity is associated with.
-  activity_group_id = 'INSERT_ACTIVITY_GROUP_ID_HERE';
 
   # Create a daily visits activity.
   daily_visits_activity = {
@@ -53,21 +41,32 @@ def create_activities()
 
   # Create the activities on the server.
   return_activities = activity_service.create_activities([
-      daily_visits_activity, custom_activity])
+      daily_visits_activity, custom_activity
+  ])
 
-  if return_activities
+  if return_activities.to_a.size > 0
     return_activities.each do |activity|
-      puts "An activity with ID: %d, name: %s and type: %s was created." %
+      puts 'An activity with ID %d, name "%s", and type "%s" was created.' %
           [activity[:id], activity[:name], activity[:type]]
     end
   else
-    raise 'No activities were created.'
+    puts 'No activities were created.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_activities()
+    activity_group_id = 'INSERT_ACTIVITY_GROUP_ID_HERE'
+    create_activities(dfp, activity_group_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

@@ -17,82 +17,68 @@
 #           limitations under the License.
 #
 # This example gets all first party audience segments.
+
 require 'dfp_api'
 
-class GetFirstPartyAudienceSegments
+def get_first_party_audience_segments(dfp)
+  audience_segment_service = dfp.service(:AudienceSegmentService, API_VERSION)
 
-  def self.run_example(dfp)
-    audience_segment_service =
-        dfp.service(:AudienceSegmentService, :v201711)
-
-    # Create a statement to select audience segments.
-    query = 'WHERE type = :type'
-    values = [
-      {
-        :key => 'type',
-        :value => {
-          :xsi_type => 'TextValue',
-          :value => 'FIRST_PARTY'
-        }
-      },
-    ]
-    statement = DfpApi::FilterStatement.new(query, values)
-
-    # Retrieve a small amount of audience segments at a time, paging
-    # through until all audience segments have been retrieved.
-    total_result_set_size = 0;
-    begin
-      page = audience_segment_service.get_audience_segments_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each audience segment.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |audience_segment, index|
-          puts "%d) Audience segment with ID %d, name '%s', and size %d was found." % [
-              index + statement.offset,
-              audience_segment[:id],
-              audience_segment[:name],
-              audience_segment[:size]
-          ]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < page[:total_result_set_size]
-
-    puts 'Total number of audience segments: %d' %
-        total_result_set_size
+  # Create a statement to select audience segments.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'type = :type'
+    sb.with_bind_variable('type', 'FIRST_PARTY')
   end
 
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
+  # Retrieve a small amount of audience segments at a time, paging
+  # through until all audience segments have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = audience_segment_service.get_audience_segments_by_statement(
+        statement.to_statement()
+    )
 
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each audience segment.
+    if page[:results]
+      page[:results].each_with_index do |audience_segment, index|
+        puts ('%d) Audience segment with ID %d, name "%s", and size %d was ' +
+            'found.') % [index + statement.offset, audience_segment[:id],
+            audience_segment[:name], audience_segment[:size]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of audience segments: %d' % page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetFirstPartyAudienceSegments.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    get_first_party_audience_segments(dfp)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

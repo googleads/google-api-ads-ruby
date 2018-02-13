@@ -16,26 +16,14 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This code example creates a line item creative association for a creative
-# set. To create creative sets, run create_creative_set.rb. To create creatives,
-# run create_creatives.rb. To determine which LICAs exist, run get_all_licas.rb.
+# This code example creates a line item creative association (LICA) for a
+# creative set. To create creative sets, run create_creative_set.rb. To create
+# creatives, run create_creatives.rb. To determine which LICAs exist, run
+# get_all_licas.rb.
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def associate_creative_set_to_line_item()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
-  # Set the line item ID and creative set ID to associate.
-  line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
-  creative_set_id = 'INSERT_CREATIVE_SET_ID_HERE'.to_i
-
+def associate_creative_set_to_line_item(dfp, line_item_id, creative_set_id)
   # Get the LineItemCreativeAssociationService.
   lica_service = dfp.service(:LineItemCreativeAssociationService, API_VERSION)
 
@@ -45,15 +33,32 @@ def associate_creative_set_to_line_item()
   }
 
   # Create the LICAs on the server.
-  return_lica = lica_service.create_line_item_creative_associations([lica])
+  created_licas = lica_service.create_line_item_creative_associations([lica])
 
-  puts 'A LICA with line item ID %d and creative set ID %d was created.' %
-      [return_lica[:line_item_id], return_lica[:creative_set_id]]
+  # Display the results.
+  if created_licas.to_a.size > 0
+    created_licas.each do |lica|
+      puts 'A LICA with line item ID %d and creative set ID %d was created.' %
+          [lica[:line_item_id], lica[:creative_set_id]]
+    end
+  else
+    puts 'No LICAs were updated.'
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    associate_creative_set_to_line_item()
+    line_item_id = 'INSERT_LINE_ITEM_ID_HERE'.to_i
+    creative_set_id = 'INSERT_CREATIVE_SET_ID_HERE'.to_i
+    associate_creative_set_to_line_item(dfp, line_item_id, creative_set_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

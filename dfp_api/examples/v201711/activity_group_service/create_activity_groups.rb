@@ -21,22 +21,9 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_activity_groups()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_activity_groups(dfp, advertiser_company_id)
   # Get the ActivityGroupService.
   activity_group_service = dfp.service(:ActivityGroupService, API_VERSION)
-
-  # Set the ID of the advertiser company this activity group is associated
-  # with.
-  advertiser_company_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE';
 
   # Create a short-term activity group.
   short_term_activity_group = {
@@ -56,11 +43,12 @@ def create_activity_groups()
 
   # Create the activity groups on the server.
   return_activity_groups = activity_group_service.create_activity_groups([
-      short_term_activity_group, long_term_activity_group])
+      short_term_activity_group, long_term_activity_group
+  ])
 
-  if return_activity_groups
+  if return_activity_groups.to_a.size > 0
     return_activity_groups.each do |activity_group|
-      puts "An activity group with ID: %d and name: %s was created." %
+      puts 'An activity group with ID %d and name "%s" was created.' %
           [activity_group[:id], activity_group[:name]]
     end
   else
@@ -69,8 +57,18 @@ def create_activity_groups()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_activity_groups()
+    advertiser_company_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'
+    create_activity_groups(dfp, advertiser_company_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

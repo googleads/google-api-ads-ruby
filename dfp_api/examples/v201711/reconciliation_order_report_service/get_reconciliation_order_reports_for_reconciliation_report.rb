@@ -16,84 +16,78 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets all reconciliation order reports for a given reconciliation report.
+# This example gets all reconciliation order reports for a given reconciliation
+# report.
+
 require 'dfp_api'
 
-class GetReconciliationOrderReportsForReconciliationReport
+def get_reconciliation_order_reports_for_reconciliation_report(dfp,
+    reconciliation_report_id)
+  reconciliation_order_report_service =
+      dfp.service(:ReconciliationOrderReportService, API_VERSION)
 
-  RECONCILIATION_REPORT_ID = 'INSERT_RECONCILIATION_REPORT_ID_HERE';
-
-  def self.run_example(dfp, reconciliation_report_id)
-    reconciliation_order_report_service =
-        dfp.service(:ReconciliationOrderReportService, :v201711)
-
-    # Create a statement to select reconciliation order reports.
-    query = 'WHERE reconciliationReportId = :reconciliationReportId'
-    values = [
-      {
-        :key => 'reconciliationReportId',
-        :value => {
-          :xsi_type => 'NumberValue',
-          :value => reconciliation_report_id
-        }
-      },
-    ]
-    statement = DfpApi::FilterStatement.new(query, values)
-
-    # Retrieve a small amount of reconciliation order reports at a time, paging
-    # through until all reconciliation order reports have been retrieved.
-    total_result_set_size = 0;
-    begin
-      page = reconciliation_order_report_service.get_reconciliation_order_reports_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each reconciliation order report.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |reconciliation_order_report, index|
-          puts "%d) Reconciliation order report with ID %d and status '%s' was found." % [
-              index + statement.offset,
-              reconciliation_order_report[:id],
-              reconciliation_order_report[:status]
-          ]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < page[:total_result_set_size]
-
-    puts 'Total number of reconciliation order reports: %d' %
-        total_result_set_size
+  # Create a statement to select reconciliation order reports.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'reconciliationReportId = :reconciliation_report_id'
+    sb.with_bind_variable(
+        'reoconciliation_report_id', reconciliation_report_id
+    )
   end
 
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
+  # Retrieve a small amount of reconciliation order reports at a time, paging
+  # through until all reconciliation order reports have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = reconciliation_order_report_service.
+        get_reconciliation_order_reports_by_statement(statement.to_statement())
 
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp, RECONCILIATION_REPORT_ID.to_i)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each reconciliation order report.
+    unless page[:results].nil?
+      page[:results].each_with_index do |reconciliation_order_report, index|
+        puts ('%d) Reconciliation order report with ID %d and status "%s" ' +
+            'was found.') % [index + statement.offset,
+            reconciliation_order_report[:id],
+            reconciliation_order_report[:status]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of reconciliation order reports: %d' %
+      page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetReconciliationOrderReportsForReconciliationReport.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    reconciliation_report_id = 'INSERT_RECONCILIATION_REPORT_ID_HERE'.to_i
+    get_reconciliation_order_reports_for_reconciliation_report(
+      dfp, reconciliation_report_id
+    )
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

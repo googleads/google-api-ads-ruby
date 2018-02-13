@@ -20,31 +20,19 @@
 # determine which ad units exist, run get_inventory_tree.rb or
 # get_all_ad_units.rb.
 
+require 'securerandom'
 require 'dfp_api'
 
-API_VERSION = :v201711
-# Number of ad units to create.
-ITEM_COUNT = 5
-
-def create_ad_units()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
-  # Get the InventoryService.
+def create_ad_units(dfp, number_of_ad_units_to_create)
+  # Get the InventoryService and the NetworkService.
   inventory_service = dfp.service(:InventoryService, API_VERSION)
-
-  # Get the NetworkService.
   network_service = dfp.service(:NetworkService, API_VERSION)
 
   # Get the effective root ad unit ID of the network.
   effective_root_ad_unit_id =
       network_service.get_current_network[:effective_root_ad_unit_id]
 
-  puts "Using effective root ad unit: %d" % effective_root_ad_unit_id
+  puts 'Using effective root ad unit: %d' % effective_root_ad_unit_id
 
   # Create the creative placeholder.
   creative_placeholder = {
@@ -53,31 +41,43 @@ def create_ad_units()
   }
 
   # Create an array to store local ad unit objects.
-  ad_units = (1..ITEM_COUNT).map do |index|
-    {:name => "Ad_Unit_%d" % index,
-     :parent_id => effective_root_ad_unit_id,
-     :description => 'Ad unit description.',
-     :target_window => 'BLANK',
-     # Set the size of possible creatives that can match this ad unit.
-     :ad_unit_sizes => [creative_placeholder]}
+  ad_units = (1..number_of_ad_units_to_create).map do |index|
+    {
+      :name => 'Ad_Unit #%d - %d' % [index, SecureRandom.uuid()],
+      :parent_id => effective_root_ad_unit_id,
+      :description => 'Ad unit description.',
+      :target_window => 'BLANK',
+      # Set the size of possible creatives that can match this ad unit.
+      :ad_unit_sizes => [creative_placeholder]
+    }
   end
 
   # Create the ad units on the server.
-  return_ad_units = inventory_service.create_ad_units(ad_units)
+  created_ad_units = inventory_service.create_ad_units(ad_units)
 
-  if return_ad_units
-    return_ad_units.each do |ad_unit|
-      puts "Ad unit with ID: %d, name: %s and status: %s was created." %
+  if created_ad_units.to_a.size > 0
+    created_ad_units.each do |ad_unit|
+      puts 'Ad unit with ID %d, name "%s", and status "%s" was created.' %
           [ad_unit[:id], ad_unit[:name], ad_unit[:status]]
     end
   else
-    raise 'No ad units were created.'
+    puts 'No ad units were created.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_ad_units()
+    number_of_ad_units_to_create = 5
+    create_ad_units(dfp, number_of_ad_units_to_create)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

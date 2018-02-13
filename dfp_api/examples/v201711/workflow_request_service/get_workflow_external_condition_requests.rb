@@ -16,83 +16,72 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example gets workflow external condition requests. Workflow external condition requests must be triggered or skipped for a workflow to finish.
+# This example gets workflow external condition requests. Workflow external
+# condition requests must be triggered or skipped for a workflow to finish.
+
 require 'dfp_api'
 
-class GetWorkflowExternalConditionRequests
+def get_workflow_external_condition_requests(dfp)
+  # Get the WorkflowRequestService.
+  workflow_request_service = dfp.service(:WorkflowRequestService, API_VERSION)
 
-  def self.run_example(dfp)
-    workflow_request_service =
-        dfp.service(:WorkflowRequestService, :v201711)
-
-    # Create a statement to select workflow requests.
-    query = 'WHERE type = :type'
-    values = [
-      {
-        :key => 'type',
-        :value => {
-          :xsi_type => 'TextValue',
-          :value => 'WORKFLOW_EXTERNAL_CONDITION_REQUEST'
-        }
-      },
-    ]
-    statement = DfpApi::FilterStatement.new(query, values)
-
-    # Retrieve a small amount of workflow requests at a time, paging
-    # through until all workflow requests have been retrieved.
-    total_result_set_size = 0;
-    begin
-      page = workflow_request_service.get_workflow_requests_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each workflow request.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |workflow_request, index|
-          puts "%d) Workflow request with ID %d, entity type '%s', and entity ID %d was found." % [
-              index + statement.offset,
-              workflow_request[:id],
-              workflow_request[:entity_type],
-              workflow_request[:entity_id]
-          ]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < page[:total_result_set_size]
-
-    puts 'Total number of workflow requests: %d' %
-        total_result_set_size
+  # Create a statement to select workflow requests.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'type = :type'
+    sb.with_bind_variable('type', 'WORKFLOW_EXTERNAL_CONDITION_REQUEST')
   end
 
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
+  # Retrieve a small amount of workflow requests at a time, paging
+  # through until all workflow requests have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = workflow_request_service.get_workflow_requests_by_statement(
+        statement.to_statement()
+    )
 
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each workflow request.
+    unless page[:results].nil?
+      page[:results].each_with_index do |workflow_request, index|
+        puts ('%d) Workflow request with ID %d, entity type "%s", and entity ' +
+            'ID %d was found.') % [index + statement.offset,
+            workflow_request[:id], workflow_request[:entity_type],
+            workflow_request[:entity_id]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of workflow requests: %d' % page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetWorkflowExternalConditionRequests.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    get_workflow_external_condition_requests(dfp)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

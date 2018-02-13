@@ -17,71 +17,64 @@
 #           limitations under the License.
 #
 # This example gets all custom fields.
+
 require 'dfp_api'
 
-class GetAllCustomFields
+def get_all_custom_fields(dfp)
+  custom_field_service = dfp.service(:CustomFieldService, API_VERSION)
 
-  def self.run_example(dfp)
-    custom_field_service =
-        dfp.service(:CustomFieldService, :v201711)
+  # Create a statement to select custom fields.
+  statement = dfp.new_statement_builder()
 
-    # Create a statement to select custom fields.
-    statement = DfpApi::FilterStatement.new()
+  # Retrieve a small amount of custom fields at a time, paging
+  # through until all custom fields have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = custom_field_service.get_custom_fields_by_statement(
+        statement.to_statement()
+    )
 
-    # Retrieve a small amount of custom fields at a time, paging
-    # through until all custom fields have been retrieved.
-    total_result_set_size = 0;
-    begin
-      page = custom_field_service.get_custom_fields_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each custom field.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |custom_field, index|
-          puts "%d) Custom field with ID %d and name '%s' was found." % [
-              index + statement.offset,
-              custom_field[:id],
-              custom_field[:name]
-          ]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < page[:total_result_set_size]
-
-    puts 'Total number of custom fields: %d' %
-        total_result_set_size
-  end
-
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
-
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each custom field.
+    unless page[:results].nil?
+      page[:results].each_with_index do |custom_field, index|
+        puts '%d) Custom field with ID %d and name "%s" was found.' %
+            [index + statement.offset, custom_field[:id], custom_field[:name]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of custom fields: %d' % page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetAllCustomFields.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    get_all_custom_fields(dfp)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

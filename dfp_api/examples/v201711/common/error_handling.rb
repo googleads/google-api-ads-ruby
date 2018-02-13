@@ -20,16 +20,7 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def produce_api_error()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def produce_api_error(dfp)
   # Get the UserService.
   user_service = dfp.service(:UserService, API_VERSION)
 
@@ -39,15 +30,25 @@ def produce_api_error()
   # Execute request and get the response, this should raise an exception.
   user = user_service.update_user(user)
 
-  # Output retrieved data.
-  puts "User ID: %d, name: %s, email: %s" %
+  # Output retrieved data. (This code will not actually be executed, since the
+  # call to update_user raises an exception.)
+  puts 'User ID: %d, name: %s, email: %s' %
       [user[:id], user[:name], user[:email]]
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
     # This function should produce an exception for demo.
-    produce_api_error()
+    produce_api_error(dfp)
 
   # One of two kinds of exception might occur, general HTTP error like 403 or
   # 404 and DFP API error defined in WSDL and described in documentation.

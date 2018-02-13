@@ -17,72 +17,66 @@
 #           limitations under the License.
 #
 # This example gets all rate cards.
+
 require 'dfp_api'
 
-class GetAllRateCards
+def get_all_rate_cards(dfp)
+  # Get the RateCardService.
+  rate_card_service = dfp.service(:RateCardService, API_VERSION)
 
-  def self.run_example(dfp)
-    rate_card_service =
-        dfp.service(:RateCardService, :v201711)
+  # Create a statement to select rate cards.
+  statement = dfp.new_statement_builder()
 
-    # Create a statement to select rate cards.
-    statement = DfpApi::FilterStatement.new()
+  # Retrieve a small amount of rate cards at a time, paging
+  # through until all rate cards have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = rate_card_service.get_rate_cards_by_statement(
+        statement.to_statement()
+    )
 
-    # Retrieve a small amount of rate cards at a time, paging
-    # through until all rate cards have been retrieved.
-    total_result_set_size = 0;
-    begin
-      page = rate_card_service.get_rate_cards_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each rate card.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |rate_card, index|
-          puts "%d) Rate card with ID %d, name '%s', and currency code '%s' was found." % [
-              index + statement.offset,
-              rate_card[:id],
-              rate_card[:name],
-              rate_card[:currency_code]
-          ]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < page[:total_result_set_size]
-
-    puts 'Total number of rate cards: %d' %
-        total_result_set_size
-  end
-
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
-
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each rate card.
+    unless page[:results].nil?
+      page[:results].each_with_index do |rate_card, index|
+        puts ('%d) Rate card with ID %d, name "%s", and currency code "%s" ' +
+            'was found.') % [index + statement.offset, rate_card[:id],
+            rate_card[:name], rate_card[:currency_code]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of rate cards: %d' % page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetAllRateCards.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    get_all_rate_cards(dfp)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

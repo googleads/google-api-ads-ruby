@@ -23,12 +23,52 @@
 
 require 'dfp_api'
 
+def get_all_line_items(dfp)
+  # Get the PublisherQueryLanguageService.
+  pql_service = dfp.service(:PublisherQueryLanguageService, API_VERSION)
 
-API_VERSION = :v201711
-# A string to separate columns in output. Use "," to get CSV.
-COLUMN_SEPARATOR = "\t"
+  # Statement parts to help build a statement to select all line items.
+  statement = dfp.new_statement_builder do |sb|
+    sb.select = 'Id, Name, Status'
+    sb.from = 'Line_Item'
+    sb.order_by = 'Id'
+  end
 
-def get_all_line_items()
+  # Set initial values for paging.
+  result_set, row_count  = {:rows => []}, 0
+
+  # Get all line items with paging.
+  begin
+    result_set = pql_service.select(statement.to_statement())
+
+    unless result_set.nil?
+      # Print out columns header.
+      columns = result_set[:column_types].collect {|col| col[:label_name]}
+      puts columns.join(COLUMN_SEPARATOR)
+
+      # Print out every row.
+      result_set[:rows].each do |row_set|
+        row = row_set[:values].collect {|item| item[:value]}
+        puts row.join(COLUMN_SEPARATOR)
+      end
+    end
+
+    # Update the counters.
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+    row_count += result_set[:rows].size
+  end while result_set[:rows].size == statement.limit
+
+  # Print a footer.
+  puts 'Total number of rows found: %d' % row_count
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+  # A string to separate columns in output. Use "," to get CSV.
+  COLUMN_SEPARATOR = '\t'
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -36,46 +76,8 @@ def get_all_line_items()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the PublisherQueryLanguageService.
-  pql_service = dfp.service(:PublisherQueryLanguageService, API_VERSION)
-
-  # Statement parts to help build a statement to select all line items.
-  statement = DfpApi::FilterStatement.new(
-      'SELECT Id, Name, Status FROM Line_Item ORDER BY Id ASC')
-
-  # Set initial values for paging.
-  result_set, all_rows = nil, 0
-
-  # Get all line items with paging.
   begin
-    result_set = pql_service.select(statement.toStatement())
-
-    if result_set
-      # Print out columns header.
-      columns = result_set[:column_types].collect {|col| col[:label_name]}
-      puts columns.join(COLUMN_SEPARATOR)
-
-      # Print out every row.
-      result_set[:rows].each do |row_set|
-          row = row_set[:values].collect {|item| item[:value]}
-          puts row.join(COLUMN_SEPARATOR)
-      end
-    end
-
-    # Update the counters.
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    all_rows += result_set[:rows].size
-  end while result_set[:rows].size == DfpApi::SUGGESTED_PAGE_LIMIT
-
-  # Print a footer.
-  if result_set[:rows]
-    puts "Total number of rows found: %d" % all_rows
-  end
-end
-
-if __FILE__ == $0
-  begin
-    get_all_line_items()
+    get_all_line_items(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

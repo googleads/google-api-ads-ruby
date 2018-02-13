@@ -23,21 +23,9 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_custom_field_options()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_custom_field_options(dfp, custom_field_id)
   # Get the CustomFieldService.
   custom_field_service = dfp.service(:CustomFieldService, API_VERSION)
-
-  # Set the ID of the drop-down custom field to create options for.
-  custom_field_id = 'INSERT_DROP_DOWN_CUSTOM_FIELD_ID_HERE'.to_i
 
   # Create local custom field options.
   custom_field_options = [
@@ -52,18 +40,31 @@ def create_custom_field_options()
   ]
 
   # Create the custom field options on the server.
-  return_custom_field_options =
+  created_custom_field_options =
       custom_field_service.create_custom_field_options(custom_field_options)
 
-  return_custom_field_options.each do |option|
-    puts "Custom field option with ID: %d and name: '%s' was created." %
-        [option[:id], option[:display_name]]
-  end
+  if created_custom_field_options.to_a.size > 0
+    created_custom_field_options.each do |option|
+      puts 'Custom field option with ID %d and name "%s" was created.' %
+          [option[:id], option[:display_name]]
+    end
+  else
+    puts 'No custom field options were created.'
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_custom_field_options()
+    custom_field_id = 'INSERT_DROP_DOWN_CUSTOM_FIELD_ID_HERE'.to_i
+    create_custom_field_options(dfp, custom_field_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

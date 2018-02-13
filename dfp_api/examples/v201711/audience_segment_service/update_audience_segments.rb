@@ -22,10 +22,39 @@
 
 require 'dfp_api'
 
+def update_audience_segments(dfp, audience_segment_id)
+  # Get the AudienceSegmentService.
+  audience_segment_service = dfp.service(:AudienceSegmentService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create statement text to select the audience segment to update.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :audience_segment_id'
+    sb.with_bind_variable('audience_segment_id', audience_segment_id)
+    sb.limit = 1
+  end
 
-def update_audience_segments()
+  # Get the audience segment.
+  response = audience_segment_service.get_audience_segments_by_statement(
+      statement.to_statement()
+  )
+  raise 'No audience segments to update.' if response[:results].to_a.empty?
+  audience_segment = page[:results].first
+
+  # Change the membership expiration days after which a user's cookie will be
+  # removed from the audience segment due to inactivity.
+  audience_segment[:membership_expiration_days] = 180
+
+  # Update the audience segment on the server.
+  updated_audience_segments =
+      audience_segment_service.update_audience_segments([audience_segment])
+  updated_audience_segments.each do |audience_segment|
+    puts 'Audience segment with ID %d was updated' % audience_segment[:id]
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -33,48 +62,9 @@ def update_audience_segments()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Set the ID of the first party audience segment to update.
-  audience_segment_id = 'INSERT_AUDIENCE_SEGMENT_ID_HERE'
-
-  # Get the AudienceSegmentService.
-  audience_segment_service = dfp.service(:AudienceSegmentService, API_VERSION)
-
-  # Create statement text to select the audience segment to update.
-  statement = DfpApi::FilterStatement.new(
-     'WHERE id = :segment_id ORDER BY id ASC',
-     [
-         {:key => 'segment_id',
-          :value => {:value => audience_segment_id, :xsi_type => 'NumberValue'}}
-     ],
-     1
-  )
-
-  # Get audience segments by statement.
-  page = audience_segment_service.get_audience_segments_by_statement(
-      statement.toStatement())
-
-  if page[:results]
-    audience_segments = page[:results]
-
-    # Create a local set of audience segments than need to be updated.
-    audience_segments.each do |audience_segment|
-      audience_segment[:membership_expiration_days] = 180
-    end
-
-    # Update the audience segments on the server.
-    return_audience_segments =
-        audience_segment_service.update_audience_segments(audience_segments)
-    return_audience_segments.each do |audience_segment|
-      puts 'Audience segment ID: %d was updated' % audience_segment[:id]
-    end
-  else
-    puts 'No audience segments found to update.'
-  end
-end
-
-if __FILE__ == $0
   begin
-    update_audience_segments()
+    audience_segment_id = 'INSERT_AUDIENCE_SEGMENT_ID_HERE'.to_i
+    update_audience_segments(dfp, audience_segment_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

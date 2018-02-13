@@ -21,10 +21,43 @@
 
 require 'dfp_api'
 
+def update_placements(dfp, placement_id)
+  # Get the PlacementService.
+  placement_service = dfp.service(:PlacementService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to get a single placement by ID.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :placement_id'
+    sb.with_bind_variable('placement_id', placement_id)
+    sb.limit = 1
+  end
 
-def update_placements()
+  # Get placements by statement.
+  response = placement_service.get_placements_by_statement(
+      statement.to_statement()
+  )
+  raise 'No placements found to update.' if response[:results].to_a.empty?
+  placement = response[:results].first
+
+  # Change the description of the placement object.
+  placement[:description] = 'This placement contains all leaderboards.'
+
+  # Update the placements on the server.
+  updated_placements = placement_service.update_placements([placement])
+
+  if updated_placements.to_a.size > 0
+    updated_placements.each do |placement|
+      puts 'Placement with ID %d and name "%s" was updated.' %
+          [placement[:id], placement[:name]]
+    end
+  else
+    puts 'No placements were updated.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -32,52 +65,9 @@ def update_placements()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the PlacementService.
-  placement_service = dfp.service(:PlacementService, API_VERSION)
-
-  placement_id = 'INSERT_PLACEMENT_ID_HERE'.to_i
-
-  # Create a statement to get a single placement by ID.
-  statement = DfpApi::FilterStatement.new(
-    'WHERE id = :id ORDER BY id ASC',
-    [{
-      :key => 'id',
-      :value => {:value => placement_id, :xsi_type => 'NumberValue'}
-    }],
-    1
-  )
-
-  # Get placements by statement.
-  page = placement_service.get_placements_by_statement(statement.toStatement())
-
-  if page[:results]
-    placements = page[:results]
-
-    # Change the description of the local placement. The server isn't affected
-    # yet.
-    placement = placements.first
-    placement[:description] = 'This placement contains all leaderboards.'
-
-    # Update the placements on the server.
-    return_placements = placement_service.update_placements([placement])
-
-    if return_placements
-      return_placements.each do |placement|
-        puts ("Placement ID: %d, name: %s was updated with AdSense targeting " +
-              "enabled: %s.") % [placement[:id], placement[:name],
-                                 placement[:is_ad_sense_targeting_enabled]]
-      end
-    else
-      raise 'No placements were updated.'
-    end
-  else
-    puts 'No placements found to update.'
-  end
-end
-
-if __FILE__ == $0
   begin
-    update_placements()
+    placement_id = 'INSERT_PLACEMENT_ID_HERE'.to_i
+    update_placements(dfp, placement_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

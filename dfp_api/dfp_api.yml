@@ -47,3 +47,5 @@
   #:proxy: INSERT_PROXY_HERE
 :library:
   :log_level: INFO
+  # Optional: uncomment to disable user agent showing used utilities.
+  #:include_utilities_in_user_agent: false

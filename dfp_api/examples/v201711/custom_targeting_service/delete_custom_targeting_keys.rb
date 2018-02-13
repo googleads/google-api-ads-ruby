@@ -21,69 +21,57 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def delete_custom_targeting_keys()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def delete_custom_targeting_keys(dfp, custom_targeting_key_name)
   # Get the CustomTargetingService.
   custom_targeting_service = dfp.service(:CustomTargetingService, API_VERSION)
-
-  # Set the name of the custom targeting key to delete.
-  custom_targeting_key_name = 'INSERT_CUSTOM_TARGETING_KEY_NAME_HERE'
-
 
   # Define initial values.
   custom_target_key_ids = []
 
   # Create statement to only select custom targeting key by the given name.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE name = :name',
-      [
-          {:key => 'name',
-           :value => {:value => custom_targeting_key_name,
-                      :xsi_type => 'TextValue'}
-          }
-      ]
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'name = :name'
+    sb.with_bind_variable('name', custom_targeting_key_name)
+  end
 
+  page = {:total_result_set_size => 0}
   begin
     page = custom_targeting_service.get_custom_targeting_keys_by_statement(
-        statement.toStatement())
+        statement.to_statement()
+    )
 
-    if page[:results]
+    unless page[:results].nil?
       page[:results].each do |key|
         # Add key ID to the list for deletion.
         custom_target_key_ids << key[:id]
       end
     end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
   end while statement.offset < page[:total_result_set_size]
 
   # Print a footer.
-  puts "Number of custom targeting keys to be deleted: %d" %
+  puts 'Number of custom targeting keys to be deleted: %d' %
       custom_target_key_ids.size
 
   if !(custom_target_key_ids.empty?)
     # Modify statement for action.
-    statement = DfpApi::FilterStatement.new(
-        "WHERE id IN (%s)" %
-        [custom_target_key_ids.join(', ')]
-    )
+    statement = dfp.new_statement_builder do |sb|
+      sb.where = 'id IN (%s)' % custom_target_key_ids.join(', ')
+      sb.offset = nil
+      sb.limit = nil
+    end
 
     # Perform action.
     result = custom_targeting_service.perform_custom_targeting_key_action(
-        {:xsi_type => 'DeleteCustomTargetingKeys'}, statement.toStatement())
+        {:xsi_type => 'DeleteCustomTargetingKeys'},
+        statement.to_statement()
+    )
 
     # Display results.
-    if result and result[:num_changes] > 0
-      puts "Number of custom targeting keys deleted: %d" % result[:num_changes]
+    if !result.nil? && result[:num_changes] > 0
+      puts 'Number of custom targeting keys deleted: %d' % result[:num_changes]
     else
       puts 'No custom targeting keys were deleted.'
     end
@@ -91,8 +79,18 @@ def delete_custom_targeting_keys()
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    delete_custom_targeting_keys()
+    custom_targeting_key_name = 'INSERT_CUSTOM_TARGETING_KEY_NAME_HERE'
+    delete_custom_targeting_keys(dfp, custom_targeting_key_name)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

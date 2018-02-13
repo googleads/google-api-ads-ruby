@@ -16,16 +16,48 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example updates the names of all companies that are advertisers by
-# appending "LLC." up to the first 500. To determine which companies exist, run
+# This example updates a company's name. To determine which companies exist, run
 # get_all_companies.rb.
 
 require 'dfp_api'
 
+def update_companies(dfp, company_id)
+  # Get the CompanyService.
+  company_service = dfp.service(:CompanyService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to only select a single company.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :company_id'
+    sb.with_bind_variable('company_id', company_id)
+    sb.limit = 1
+  end
 
-def update_companies()
+  # Get the company by statement.
+  response = company_service.get_companies_by_statement(
+      statement.to_statement()
+  )
+  raise 'No companies found to update.' if response[:results].to_a.empty?
+  company = response[:results].first
+
+  # Update company object by appending ' LLC.' to its name.
+  company[:name] += ' LLC.'
+
+  # Update the companies on the server.
+  updated_companies = company_service.update_companies([company])
+
+  if updated_companies.to_a.size > 0
+    updated_companies.each do |company|
+      puts 'A company with ID %d, name "%s", and type "%s" was updated.' %
+          [company[:id], company[:name], company[:type]]
+    end
+  else
+    puts 'No companies were updated.'
+  end
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -33,58 +65,9 @@ def update_companies()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the CompanyService.
-  company_service = dfp.service(:CompanyService, API_VERSION)
-
-  # Specify a single company to fetch.
-  company_id = 'INSERT_COMPANY_ID_HERE'
-
-  # Create a statement to only select a single company.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :company_id ORDER BY id ASC',
-      [
-          {:key => 'company_id',
-           :value => {:value => company_id, :xsi_type => 'NumberValue'}
-          }
-      ],
-      1
-  )
-
-  # Get companies by statement.
-  page = company_service.get_companies_by_statement(statement.toStatement())
-
-  if page[:results]
-    companies = page[:results]
-
-    # Update each local company object by appending ' LLC.' to its name.
-    companies.each do |company|
-      company[:name] += ' LLC.'
-      # Workaround for issue #94.
-      [:address, :email, :fax_phone, :primary_phone,
-          :external_id, :comment].each do |item|
-        company[item] = "" if company[item].nil?
-      end
-    end
-
-    # Update the companies on the server.
-    return_companies = company_service.update_companies(companies)
-
-    if return_companies
-      return_companies.each do |company|
-        puts "A company with ID [%d], name: %s and type %s was updated." %
-            [company[:id], company[:name], company[:type]]
-      end
-    else
-      raise 'No companies were updated.'
-    end
-  else
-    puts 'No companies found to update.'
-  end
-end
-
-if __FILE__ == $0
   begin
-    update_companies()
+    company_id = 'INSERT_COMPANY_ID_HERE'.to_i
+    update_companies(dfp, company_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

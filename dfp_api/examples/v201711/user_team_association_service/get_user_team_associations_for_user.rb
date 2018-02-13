@@ -17,83 +17,71 @@
 #           limitations under the License.
 #
 # This example gets all user team associations (i.e. teams) for a given user.
+
 require 'dfp_api'
 
-class GetUserTeamAssociationsForUser
+def get_user_team_associations_for_user(dfp, user_id)
+  # Get the UserTeamAssociationService.
+  user_team_association_service =
+      dfp.service(:UserTeamAssociationService, API_VERSION)
 
-  USER_ID = 'INSERT_USER_ID_HERE';
-
-  def self.run_example(dfp, user_id)
-    user_team_association_service =
-        dfp.service(:UserTeamAssociationService, :v201711)
-
-    # Create a statement to select user team associations.
-    query = 'WHERE userId = :userId'
-    values = [
-      {
-        :key => 'userId',
-        :value => {
-          :xsi_type => 'NumberValue',
-          :value => user_id
-        }
-      },
-    ]
-    statement = DfpApi::FilterStatement.new(query, values)
-
-    # Retrieve a small amount of user team associations at a time, paging
-    # through until all user team associations have been retrieved.
-    total_result_set_size = 0;
-    begin
-      page = user_team_association_service.get_user_team_associations_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each user team association.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |user_team_association, index|
-          puts "%d) User team association with user ID %d and team ID %d was found." % [
-              index + statement.offset,
-              user_team_association[:user_id],
-              user_team_association[:team_id]
-          ]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < page[:total_result_set_size]
-
-    puts 'Total number of user team associations: %d' %
-        total_result_set_size
+  # Create a statement to select user team associations.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'userId = :user_id'
+    sb.with_bind_variable('user_id', user_id)
   end
 
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
+  # Retrieve a small amount of user team associations at a time, paging
+  # through until all user team associations have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = user_team_association_service.
+        get_user_team_associations_by_statement(statement.to_statement())
 
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp, USER_ID.to_i)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each user team association.
+    unless page[:results].nil?
+      page[:results].each_with_index do |user_team_association, index|
+        puts ('%d) User team association with user ID %d and team ID %d was ' +
+            'found.') % [index + statement.offset,
+            user_team_association[:user_id], user_team_association[:team_id]]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of user team associations: %d' %
+      page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetUserTeamAssociationsForUser.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    user_id = 'INSERT_USER_ID_HERE'.to_i
+    get_user_team_associations_for_user(dfp, user_id)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

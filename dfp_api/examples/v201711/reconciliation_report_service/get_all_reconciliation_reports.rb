@@ -17,77 +17,72 @@
 #           limitations under the License.
 #
 # This example gets all reconciliation reports.
+
 require 'dfp_api'
 require 'date'
 
-class GetAllReconciliationReports
+def get_all_reconciliation_reports(dfp)
+  reconciliation_report_service =
+      dfp.service(:ReconciliationReportService, API_VERSION)
 
-  def self.run_example(dfp)
-    reconciliation_report_service =
-        dfp.service(:ReconciliationReportService, :v201711)
+  # Create a statement to select reconciliation reports.
+  statement = dfp.new_statement_builder()
 
-    # Create a statement to select reconciliation reports.
-    statement = DfpApi::FilterStatement.new()
+  # Retrieve a small amount of reconciliation reports at a time, paging
+  # through until all reconciliation reports have been retrieved.
+  page = {:total_result_set_size => 0}
+  begin
+    page = reconciliation_report_service.
+        get_reconciliation_reports_by_statement(statement.to_statement())
 
-    # Retrieve a small amount of reconciliation reports at a time, paging
-    # through until all reconciliation reports have been retrieved.
-    total_result_set_size = 0;
-    begin
-      page = reconciliation_report_service.get_reconciliation_reports_by_statement(
-          statement.toStatement())
-
-      # Print out some information for each reconciliation report.
-      if page[:results]
-        total_result_set_size = page[:total_result_set_size]
-        page[:results].each_with_index do |reconciliation_report, index|
-          start_date = reconciliation_report[:start_date]
-          start_date_string = Date.new(
-              start_date[:year],
-              start_date[:month],
-              start_date[:day]).to_s
-          puts "%d) Reconciliation report with ID %d and start date '%s' was found." % [
-              index + statement.offset,
-              reconciliation_report[:id],
-              start_date_string
-          ]
-        end
-      end
-      statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-    end while statement.offset < page[:total_result_set_size]
-
-    puts 'Total number of reconciliation reports: %d' %
-        total_result_set_size
-  end
-
-  def self.main()
-    # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-    dfp = DfpApi::Api.new
-
-    # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-    # the configuration file or provide your own logger:
-    # dfp.logger = Logger.new('dfp_xml.log')
-
-    begin
-      run_example(dfp)
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue DfpApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
+    # Print out some information for each reconciliation report.
+    unless page[:results].nil?
+      page[:results].each_with_index do |reconciliation_report, index|
+        start_date = reconciliation_report[:start_date]
+        start_date_string = Date.new(
+            start_date[:year],
+            start_date[:month],
+            start_date[:day]).to_s
+        puts ('%d) Reconciliation report with ID %d and start date "%s" was ' +
+            'found.') % [index + statement.offset, reconciliation_report[:id],
+            start_date_string]
       end
     end
-  end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+
+  puts 'Total number of reconciliation reports: %d' %
+      page[:total_result_set_size]
 end
 
 if __FILE__ == $0
-  GetAllReconciliationReports.main()
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
+  begin
+    get_all_reconciliation_reports(dfp)
+
+  # HTTP errors.
+  rescue AdsCommon::Errors::HttpError => e
+    puts "HTTP Error: %s" % e
+
+  # API errors.
+  rescue DfpApi::Errors::ApiException => e
+    puts "Message: %s" % e.message
+    puts 'Errors:'
+    e.errors.each_with_index do |error, index|
+      puts "\tError [%d]:" % (index + 1)
+      error.each do |field, value|
+        puts "\t\t%s: %s" % [field, value]
+      end
+    end
+  end
 end

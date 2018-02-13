@@ -16,40 +16,26 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example runs a report equal to the "Whole network report" on the DFP
-# website. To download the report see download_report.rb.
+# This example runs a typical daily inventory report. To download the report
+# see download_report.rb.
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-MAX_RETRIES = 10
-RETRY_INTERVAL = 30
-
-def run_inventory_report()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def run_inventory_report(dfp)
   # Get the ReportService and NetworkService.
   report_service = dfp.service(:ReportService, API_VERSION)
   network_service = dfp.service(:NetworkService, API_VERSION)
 
   # Get the root ad unit ID to filter on.
   root_ad_unit_id =
-      network_service.get_current_network()[:effective_root_ad_unit_id]
+      network_service.get_current_network()[:effective_root_ad_unit_id].to_i
 
   # Create statement to filter on a parent ad unit with the root ad unit ID
   # to include all ad units in the network.
-  statement = {
-     :query => 'WHERE PARENT_AD_UNIT_ID = :parent_ad_unit_id',
-     :values => [
-         {:key => 'parent_ad_unit_id',
-          :value => {:value => root_ad_unit_id, :xsi_type => 'NumberValue'}}
-     ]
-  }
+  statement = dfp.new_report_statement_builder do |sb|
+    sb.where = 'PARENT_AD_UNIT_ID = :parent_ad_unit_id'
+    sb.with_bind_variable('parent_ad_unit_id', root_ad_unit_id)
+  end
 
   # Create report query.
   report_query = {
@@ -64,7 +50,7 @@ def run_inventory_report()
         'TOTAL_INVENTORY_LEVEL_IMPRESSIONS',
         'TOTAL_INVENTORY_LEVEL_CPM_AND_CPC_REVENUE'
     ],
-    :statement => statement
+    :statement => statement.to_statement()
   }
 
   # Create report job.
@@ -78,18 +64,28 @@ def run_inventory_report()
     report_job_status = report_service.get_report_job_status(report_job[:id])
 
     break unless report_job_status == 'IN_PROGRESS'
-    puts "Report with ID: %d is still running." % report_job[:id]
+    puts 'Report with ID %d is still running.' % report_job[:id]
     sleep(RETRY_INTERVAL)
   end
 
-  puts "Report job with ID: %d finished with status %s." %
-      [report_job[:id],
-       report_service.get_report_job_status(report_job[:id])]
+  puts 'Report job with ID %d finished with status "%s".' % [report_job[:id],
+      report_service.get_report_job_status(report_job[:id])]
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+  MAX_RETRIES = 10
+  RETRY_INTERVAL = 30
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    run_inventory_report()
+    run_inventory_report(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

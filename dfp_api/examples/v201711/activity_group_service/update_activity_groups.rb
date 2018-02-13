@@ -21,38 +21,21 @@
 
 require 'dfp_api'
 
-
-API_VERSION = :v201711
-
-def update_activity_groups()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def update_activity_groups(dfp, advertiser_company_id, activity_group_id)
   # Get the ActivityGroupService.
   activity_group_service = dfp.service(:ActivityGroupService, API_VERSION)
 
-  # Set the ID of the activity group and the company to update it with.
-  activity_group_id = 'INSERT_ACTIVITY_GROUP_ID_HERE'
-  advertiser_company_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'
-
   # Create statement to select a single activity group.
-  statement = DfpApi::FilterStatement.new(
-      'WHERE id = :id ORDER BY id ASC',
-      [
-          {:key => 'id',
-           :value => {:value => activity_group_id, :xsi_type => 'NumberValue'}}
-      ],
-      1
-  )
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'id = :id'
+    sb.with_bind_variable('id', activity_group_id)
+  end
 
   page = activity_group_service.get_activity_groups_by_statement(
-      statement.toStatement())
+      statement.to_statement()
+  )
 
-  if page[:results]
+  unless page[:results].nil?
     # Get the activity groups.
     activity_groups = page[:results]
 
@@ -66,15 +49,26 @@ def update_activity_groups()
         activity_groups)
 
     return_activity_groups.each do |updates_activity_group|
-      puts "Activity group with ID: %d and name: %s was updated." %
+      puts 'Activity group with ID %d and name "%s" was updated.' %
           [updates_activity_group[:id], updates_activity_group[:name]]
     end
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    update_activity_groups()
+    advertiser_company_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'
+    activity_group_id = 'INSERT_ACTIVITY_GROUP_ID_HERE'
+    update_activity_groups(dfp, advertiser_company_id, activity_group_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

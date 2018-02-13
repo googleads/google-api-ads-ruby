@@ -1,7 +1,16 @@
+1.2.0:
+  - Added support for v201802.
+  - Removed support for v201702.
+  - Removed examples for v201705.
+  - Added StatementBuilder for easier PQL statement generation.
+  - Added DfpDate and DfpDateTime to make using Date and Time objects easier
+    in the DFP API.
+  - Deprecated FilterStatement.
+
 1.1.0:
-  - Added support for v201711
-  - Removed support for v201611
-  - Removed examples for v201702
+  - Added support for v201711.
+  - Removed support for v201611.
+  - Removed examples for v201702.
 
 1.0.0:
   - Major version bump. The library has been stable and feature complete for

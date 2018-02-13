@@ -22,22 +22,9 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_user_team_associations()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_user_team_associations(dfp, team_id, user_ids)
   # Get the UserTeamAssociationService.
   uta_service = dfp.service(:UserTeamAssociationService, API_VERSION)
-
-  # Set the users and team to add them to.
-  team_id = 'INSERT_TEAM_ID_HERE'.to_i
-  user_ids = ['INSERT_USER_ID_HERE'.to_i]
 
   # Create an array to store local user team association objects.
   associations = user_ids.map do |user_id|
@@ -48,21 +35,32 @@ def create_user_team_associations()
   end
 
   # Create the user team associations on the server.
-  return_associations = uta_service.create_user_team_associations(associations)
+  created_associations = uta_service.create_user_team_associations(associations)
 
-  if return_associations
-    return_associations.each do |association|
-      puts ("A user team association between user ID %d and team ID %d was " +
-          "created.") % [association[:user_id], association[:team_id]]
+  if created_associations.to_a.size > 0
+    created_associations.each do |association|
+      puts ('A user team association between user ID %d and team ID %d was ' +
+          'created.') % [association[:user_id], association[:team_id]]
     end
   else
-    raise 'No user team associations were created.'
+    puts 'No user team associations were created.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_user_team_associations()
+    team_id = 'INSERT_TEAM_ID_HERE'.to_i
+    user_ids = ['INSERT_USER_ID_HERE'.to_i, 'INSERT_USER_ID_HERE'.to_i]
+    create_user_team_associations(dfp, team_id, user_ids)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

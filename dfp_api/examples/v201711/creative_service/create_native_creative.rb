@@ -26,34 +26,22 @@
 # https://play.google.com/store/apps/details?id=com.google.fpl.pie_noon&hl=en
 
 require 'base64'
+require 'securerandom'
 require 'dfp_api'
 
-API_VERSION = :v201711
-
-def create_creative_from_template()
-  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
-  dfp = DfpApi::Api.new
-
-  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
-  # the configuration file or provide your own logger:
-  # dfp.logger = Logger.new('dfp_xml.log')
-
+def create_native_creative(dfp, advertiser_id)
   # Get the CreativeService.
   creative_service = dfp.service(:CreativeService, API_VERSION)
-
-  # Set the ID of the advertiser (company) that all creatives will be assigned
-  # to.
-  advertiser_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'.to_i
 
   # Set the URLs of the application screenshot and the small application icon to
   # use and convert them to byte array strings.
   screenshot_url = 'https://lh4.ggpht.com/GIGNKdGHMEHFDw6TM2bgAUDKPQQRIReKZPq' +
-                   'EpMeEhZOPYnTdOQGaSpGSEZflIFs0iw=h300'
+      'EpMeEhZOPYnTdOQGaSpGSEZflIFs0iw=h300'
   screenshot_data = AdsCommon::Http.get(screenshot_url, dfp.config)
   screenshot_data_base64 = Base64.encode64(screenshot_data)
 
   app_icon = 'https://lh6.ggpht.com/Jzvjne5CLs6fJ1MHF-XeuUfpABzl0YNMlp4' +
-             'RpHnvPRCIj4--eTDwtyouwUDzVVekXw=w300')
+      'RpHnvPRCIj4--eTDwtyouwUDzVVekXw=w300')
   app_icon_data = AdsCommon::Http.get(app_icon, dfp.config)
   app_icon_data_base64 = Base64.encode64(app_icon_data)
 
@@ -63,12 +51,12 @@ def create_creative_from_template()
   # Create the local custom creative object.
   creative = {
       :xsi_type => 'TemplateCreative',
-      :name => "Native creative %d" % Time.new.to_i,
+      :name => 'Native creative - %d' % SecureRandom.uuid(),
       :advertiser_id => advertiser_id,
       :creative_template_id => creative_template_id,
       :size => {:width => 1, :height => 1, :is_aspect_ratio => false},
       :destination_url => 'https://play.google.com/store/apps/details?id=' +
-                          'com.google.fpl.pie_noon'
+          'com.google.fpl.pie_noon'
   }
 
   # Create the Image asset variable value.
@@ -78,7 +66,7 @@ def create_creative_from_template()
       :asset => {
           :asset_byte_array => screenshot_data_base64,
           # Filenames must be unique.
-          :file_name => "image%d.png" % Time.new.to_i
+          :file_name => 'image_%d.png' % SecureRandom.uuid()
       }
   }
 
@@ -89,7 +77,7 @@ def create_creative_from_template()
       :asset => {
           :asset_byte_array => app_icon_data_base64,
           # Filenames must be unique.
-          :file_name => "image%d.png" % Time.new.to_i
+          :file_name => 'image_%d.png' % SecureRandom.uuid()
       }
   }
 
@@ -155,21 +143,32 @@ def create_creative_from_template()
   ]
 
   # Create the creatives on the server.
-  return_creative = creative_service.create_creatives([creative])[0]
+  created_creatives = creative_service.create_creatives([creative])
 
-  if return_creative
-    puts(("Native creative with ID: %d and name: %s was " +
-            "created and can be previewed at: '%s'") %
-            [return_creative[:id], return_creative[:name],
-             return_creative[:preview_url]])
+  if created_creatives.to_a.size > 0
+    created_creatives.each do |creative|
+      puts ('Native creative with ID %d and name "%s" was created and can be ' +
+          'previewed at "%s".') % [creative[:id], creative[:name],
+          creative[:preview_url]]
+    end
   else
-    raise 'No creatives were created.'
+    puts 'No creatives were created.'
   end
 end
 
 if __FILE__ == $0
+  API_VERSION = :v201711
+
+  # Get DfpApi instance and load configuration from ~/dfp_api.yml.
+  dfp = DfpApi::Api.new
+
+  # To enable logging of SOAP requests, set the log_level value to 'DEBUG' in
+  # the configuration file or provide your own logger:
+  # dfp.logger = Logger.new('dfp_xml.log')
+
   begin
-    create_creative_from_template()
+    advertiser_id = 'INSERT_ADVERTISER_COMPANY_ID_HERE'.to_i
+    create_native_creative(dfp, advertiser_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

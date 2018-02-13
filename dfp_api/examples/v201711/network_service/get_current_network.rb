@@ -20,9 +20,20 @@
 
 require 'dfp_api'
 
-API_VERSION = :v201711
+def get_current_network(dfp)
+  # Get the NetworkService.
+  network_service = dfp.service(:NetworkService, API_VERSION)
 
-def get_current_network()
+  # Get the current network.
+  network = network_service.get_current_network()
+
+  puts 'Current network has network code %d and display name "%s".' %
+      [network[:network_code], network[:display_name]]
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -30,19 +41,8 @@ def get_current_network()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the NetworkService.
-  network_service = dfp.service(:NetworkService, API_VERSION)
-
-  # Get the current network.
-  network = network_service.get_current_network()
-
-  puts "Current network has network code %d and display name %s." %
-      [network[:network_code], network[:display_name]]
-end
-
-if __FILE__ == $0
   begin
-    get_current_network()
+    get_current_network(dfp)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e

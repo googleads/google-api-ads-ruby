@@ -22,10 +22,56 @@
 
 require 'dfp_api'
 
+def update_custom_targeting_values(dfp, custom_targeting_key_id)
+  # Get the CustomTargetingService.
+  custom_targeting_service = dfp.service(:CustomTargetingService, API_VERSION)
 
-API_VERSION = :v201711
+  # Create a statement to get first 500 custom targeting keys.
+  statement = dfp.new_statement_builder do |sb|
+    sb.where = 'customTargetingKeyId = :key_id'
+    sb.with_bind_variable('key_id', custom_targeting_key_id)
+  end
 
-def update_custom_targeting_values()
+  page = {:total_result_set_size => 0}
+  begin
+    # Get custom targeting keys by statement.
+    page = custom_targeting_service.get_custom_targeting_values_by_statement(
+        statement.to_statement()
+    )
+
+    unless page[:results].nil?
+      # Update each custom targeting values object by changing its display name.
+      values = page[:results]
+      values.each do |value|
+        display_name = (value[:display_name].nil?) ?
+            value[:name] : value[:display_name]
+        value[:display_name] = display_name + ' (Deprecated)'
+      end
+
+      # Update the custom targeting keys on the server.
+      updated_values = custom_targeting_service.update_custom_targeting_values(
+          values
+      )
+
+      unless updated_values.nil?
+      # Print details about each value in results.
+        updated_values.each_with_index do |custom_targeting_value, index|
+          puts ('%d) Custom targeting key with ID %d, name "%s", and display ' +
+              'name "%s" was updated.') % [index + statement.offset,
+              custom_targeting_value[:id], custom_targeting_value[:name],
+              custom_targeting_value[:display_name]]
+        end
+      end
+    end
+
+    # Increase the statement offset by the page size to get the next page.
+    statement.offset += statement.limit
+  end while statement.offset < page[:total_result_set_size]
+end
+
+if __FILE__ == $0
+  API_VERSION = :v201711
+
   # Get DfpApi instance and load configuration from ~/dfp_api.yml.
   dfp = DfpApi::Api.new
 
@@ -33,59 +79,9 @@ def update_custom_targeting_values()
   # the configuration file or provide your own logger:
   # dfp.logger = Logger.new('dfp_xml.log')
 
-  # Get the CustomTargetingService.
-  custom_targeting_service = dfp.service(:CustomTargetingService, API_VERSION)
-
-  # Set the ID of the custom targeting key to get custom targeting values for.
-  custom_targeting_key_id = 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'.to_i
-
-  # Create a statement to get first 500 custom targeting keys.
-  statement = DfpApi::FilterStatement.new(
-      :query => 'WHERE customTargetingKeyId = :key_id',
-      :values => [
-          {:key => 'key_id',
-           :value => {:value => custom_targeting_key_id,
-                      :xsi_type => 'NumberValue'}
-          }
-      ]
-  )
-
   begin
-    # Get custom targeting keys by statement.
-    page = custom_targeting_service.get_custom_targeting_values_by_statement(
-        statement.toStatement())
-
-    if page[:results]
-      # Update each local custom targeting values object by changing its display
-      # name.
-      page[:results].each do |value|
-        display_name = (value[:display_name].nil?) ?
-            value[:name] : value[:display_name]
-        value[:display_name] = display_name + ' (Deprecated)'
-      end
-
-      # Update the custom targeting keys on the server.
-      result_values = custom_targeting_service.update_custom_targeting_values(
-          values)
-
-      if result_values
-      # Print details about each value in results.
-        result_values.each_with_index do |custom_targeting_value, index|
-          puts ("%d) Custom targeting key with ID [%d], name: %s," +
-                " displayName: %s was updated") % [
-                    index + statement.offset, custom_targeting_value[:id],
-                    custom_targeting_value[:name],
-                    custom_targeting_value[:display_name]]
-        end
-      end
-    end
-    statement.offset += DfpApi::SUGGESTED_PAGE_LIMIT
-  end while statement.offset < page[:total_result_set_size]
-end
-
-if __FILE__ == $0
-  begin
-    update_custom_targeting_values()
+    custom_targeting_key_id = 'INSERT_CUSTOM_TARGETING_KEY_ID_HERE'.to_i
+    update_custom_targeting_values(dfp, custom_targeting_key_id)
 
   # HTTP errors.
   rescue AdsCommon::Errors::HttpError => e
