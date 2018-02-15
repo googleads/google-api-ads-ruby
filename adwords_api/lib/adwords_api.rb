@@ -25,6 +25,8 @@ require 'adwords_api/errors'
 require 'adwords_api/report_utils'
 require 'adwords_api/batch_job_utils'
 require 'adwords_api/utils_reporter'
+require 'adwords_api/query_utils/report_query_builder'
+require 'adwords_api/query_utils/service_query_builder'
 
 # Main namespace for all the client library's modules and classes.
 module AdwordsApi
@@ -204,6 +206,18 @@ module AdwordsApi
         raise AdsCommon::Errors::Error, "Unknown version '%s'" % version
       end
       return AdwordsApi::BatchJobUtils.new(self, version)
+    end
+
+    # Returns an instance of ReportQueryBuilder to aid in generating AWQL for
+    # reports.
+    def report_query_builder(&block)
+      return AdwordsApi::ReportQueryBuilder.new(self, &block)
+    end
+
+    # Returns an instance of ServiceQueryBuilder to aid in generating AWQL for
+    # service queries.
+    def service_query_builder(&block)
+      return AdwordsApi::ServiceQueryBuilder.new(self, &block)
     end
 
     private

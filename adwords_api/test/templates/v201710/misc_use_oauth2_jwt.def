@@ -27,7 +27,7 @@ def setup_mocks()
   stub_request(:post, "https://accounts.google.com/o/oauth2/token").
     with(:body => hash_including({"grant_type"=>"urn:ietf:params:oauth:grant-type:jwt-bearer"}),
          :headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'Content-Type'=>'application/x-www-form-urlencoded', 'User-Agent'=>/Faraday/}).
-    with(:body => /assertion=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9/).
+    with(:body => /assertion=eyJhbGciOiJSUzI1NiJ9/).
     to_return(:status => 200,
         :body => "{\n  \"access_token\" : \"ab01.CBEF2GHi3JKlMnOpqRstUvW4X-YzaBcdEFG5IjKLMNPPqRStuV\",\n  \"token_type\" : \"Bearer\",\n  \"expires_in\" : 3600\n}",
         :headers => {"Content-Type"=>"application/json"})

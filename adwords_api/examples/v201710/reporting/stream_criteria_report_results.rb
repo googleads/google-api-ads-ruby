@@ -33,10 +33,13 @@ def stream_criteria_report_results()
   report_utils = adwords.report_utils(API_VERSION)
 
   # Define report query.
-  report_query = 'SELECT Id, AdNetworkType1, Impressions ' +
-      'FROM CRITERIA_PERFORMANCE_REPORT ' +
-      'WHERE Status IN [ENABLED, PAUSED] ' +
-      'DURING LAST_7_DAYS'
+  report_query_builder = adwords.report_query_builder do |b|
+    b.select('Id', 'AdNetworkType1', 'Impressions')
+    b.from('CRITERIA_PERFORMANCE_REPORT')
+    b.where('Status').in('ENABLED', 'PAUSED')
+    b.during_date_range('LAST_7_DAYS')
+  end
+  report_query = report_query_builder.build.to_s
 
   # Optional: Set the configuration of the API instance to suppress header,
   # column name, or summary rows in the report output. You can also configure

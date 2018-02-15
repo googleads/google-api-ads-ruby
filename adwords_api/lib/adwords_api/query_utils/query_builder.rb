@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2018, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -15,10 +15,27 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Module to keep the current library version.
+# Base class with common methods used across both report and service queries.
+
+require 'adwords_api/query_utils/where_builder'
 
 module AdwordsApi
-  module ApiConfig
-    CLIENT_LIB_VERSION = '1.1.0'
+  class QueryBuilder
+    def initialize(api)
+      @api = api
+      @where = []
+    end
+
+    def where(field)
+      clause = WhereBuilder.new(field)
+      @where << clause
+      return clause
+    end
+
+    def build_where()
+      return '' if @where.empty?
+      wheres = @where.map {|w| w.awql}
+      return sprintf(' WHERE %s', wheres.join(' AND '))
+    end
   end
 end

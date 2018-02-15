@@ -42,5 +42,17 @@ module AdwordsApi
     def batch_job_utils_used()
       @credential_handler.include_in_user_agent("BatchJobHelper")
     end
+
+    # A callback method from report query builder to indicate that it has been
+    # used, and that its usage should be recorded in the next user agent string.
+    def report_query_builder_used()
+      @credential_handler.include_in_user_agent("ReportQueryBuilder")
+    end
+
+    # A callback method from service query builder to indicate that it has been
+    # used, and that its usage should be recorded in the next user agent string.
+    def service_query_builder_used()
+      @credential_handler.include_in_user_agent("ServiceQueryBuilder")
+    end
   end
 end

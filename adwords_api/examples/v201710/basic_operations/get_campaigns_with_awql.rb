@@ -33,23 +33,27 @@ def get_campaigns_with_awql()
   campaign_srv = adwords.service(:CampaignService, API_VERSION)
 
   # Get all the campaigns for this account.
-  query = 'SELECT Id, Name, Status ORDER BY Name'
+  query_builder = adwords.service_query_builder do |b|
+    b.select('Id', 'Name', 'Status')
+    b.order_by_asc('Name')
+    b.limit(0, PAGE_SIZE)
+  end
+  query = query_builder.build
 
-  # Set initial values.
-  offset, page = 0, {}
+  page = nil
 
-  begin
-    page_query = query + ' LIMIT %d,%d' % [offset, PAGE_SIZE]
+  loop do
+    page_query = query.to_s
     page = campaign_srv.query(page_query)
     if page[:entries]
       page[:entries].each do |campaign|
         puts "Campaign ID %d, name '%s' and status '%s'" %
             [campaign[:id], campaign[:name], campaign[:status]]
       end
-      # Increment values to request the next page.
-      offset += PAGE_SIZE
     end
-  end while page[:total_num_entries] > offset
+    break unless query.has_next(page)
+    query.next_page
+  end
 
   if page.include?(:total_num_entries)
     puts "\tTotal number of campaigns found: %d." % page[:total_num_entries]

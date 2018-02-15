@@ -46,7 +46,7 @@ class ExampleRunner < Test::Unit::TestCase
     setup_mocks()
     method_name = get_example_method()
     required_arguments = self.method(method_name).parameters.size
-    args = [0] * required_arguments
+    args = $args || [0] * required_arguments
     self.send(method_name, *args)
     run_asserts()
     reset_state()
@@ -58,6 +58,7 @@ class ExampleRunner < Test::Unit::TestCase
     RR.reset()
     WebMock.reset!()
     $latest_result = nil
+    $args = nil
   end
 
   def get_example_method()
@@ -85,7 +86,6 @@ class ExampleRunner < Test::Unit::TestCase
   end
 end
 
-
 module AdsCommon
   class Api
     # Patching original load_config for test credentials.
@@ -100,6 +100,16 @@ module AdsCommon
     alias :old_execute_action :execute_action
     def execute_action(action_name, args, &block)
       $latest_result = old_execute_action(action_name, args, &block)
+      return $latest_result
+    end
+  end
+end
+
+module AdwordsApi
+  class ReportUtils
+    alias :old_make_adhoc_request :make_adhoc_request
+    def make_adhoc_request(data, cid, &block)
+      $latest_result = old_make_adhoc_request(data, cid, &block)
       return $latest_result
     end
   end

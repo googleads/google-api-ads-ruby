@@ -32,6 +32,31 @@ def add_text_ad_with_upgraded_urls(ad_group_id)
 
   ad_group_ad_srv = adwords.service(:AdGroupAdService, API_VERSION)
 
+  expanded_text_ad = {
+    :xsi_type => 'ExpandedTextAd',
+    :headline_part1 => 'Luxury Cruise to Mars',
+    :headline_part2 => 'Visit the Red Planet in style.',
+    :description => 'Low-gravity fun for everyone!',
+    # Specify a list of final URLs. This field cannot be set if :url field
+    # is set. This may be specified at ad, criterion, and feed item levels.
+    :final_urls => [
+      'http://www.example.com/cruise/space/',
+      'http://www.example.com/locations/mars/'
+    ],
+    # Specify a list of final mobile URLs. This field cannot be set if :url
+    # field is set. This may be specificed at ad, criterion, and
+    # feed item levels.
+    :final_mobile_urls => [
+      'http://mobile.example.com/cruise/space/',
+      'http://mobile.example.com/locations/mars/'
+    ]
+  }
+
+  # Specify a tracking URL for 3rd party tracking provider. You may specify
+  # one at customer, campaign, ad group, ad, criterion, or feed item levels.
+  expanded_text_ad[:tracking_url_template] = 'http://tracker.example.com/' +
+      '?season={_season}&promocode={_promocode}&u={lpurl}'
+
   # Since your tracking URL will have two custom parameters, provide their
   # values too. This can be provided at campaign, ad group, ad, criterion, or
   # feed item levels.
@@ -49,30 +74,7 @@ def add_text_ad_with_upgraded_urls(ad_group_id)
     :parameters => [season_parameter, promo_code_parameter]
   }
 
-  expanded_text_ad = {
-    :xsi_type => 'ExpandedTextAd',
-    :headline_part1 => 'Luxury Cruise to Mars',
-    :headline_part2 => 'Visit the Red Planet in style.',
-    :description => 'Low-gravity fun for everyone!',
-    # Specify a tracking URL for 3rd party tracking provider. You may specify
-    # one at customer, campaign, ad group, ad, criterion, or feed item levels.
-    :tracking_url_template => 'http://tracker.example.com/' +
-        '?season={_season}&promocode={_promocode}&u={lpurl}',
-    :url_custom_parameters => tracking_url_parameters,
-    # Specify a list of final URLs. This field cannot be set if :url field
-    # is set. This may be specified at ad, criterion, and feed item levels.
-    :final_urls => [
-      'http://www.example.com/cruise/space/',
-      'http://www.example.com/locations/mars/'
-    ],
-    # Specify a list of final mobile URLs. This field cannot be set if :url
-    # field is set. This may be specificed at ad, criterion, and
-    # feed item levels.
-    :final_mobile_urls => [
-      'http://mobile.example.com/cruise/space/',
-      'http://mobile.example.com/locations/mars/'
-    ]
-  }
+  expanded_text_ad[:url_custom_parameters] = tracking_url_parameters
 
   operation = {
     :operator => 'ADD',

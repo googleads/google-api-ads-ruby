@@ -75,23 +75,11 @@ def handle_policy_violation_error(ad_group_id)
           # remove, so simply throw the exception.
           raise e
         end
+
         operation_index = first_field_path_element[:index]
         operation = operations[operation_index]
-        puts "Ad with headline '%s' violated %s policy '%s'." %
-            [operation[:operand][:ad][:headline],
-             error[:is_exemptable] ? 'exemptable' : 'non-exemptable',
-             error[:external_policy_name]]
-        if error[:is_exemptable]
-          # Add exemption request to the operation.
-          puts "Adding exemption request for policy name '%s' on text '%s'." %
-              [error[:key][:policy_name], error[:key][:violating_text]]
-          unless operation[:exemption_requests]
-            operation[:exemption_requests] = []
-          end
-          operation[:exemption_requests] << {
-            :key => error[:key]
-          }
-        else
+        process_api_error(error, operation)
+        unless error[:is_exemptable]
           # Remove non-exemptable operation
           puts "Removing the operation from the request."
           operations.delete(operation)
@@ -116,6 +104,30 @@ def handle_policy_violation_error(ad_group_id)
     else
       puts "No ads were added."
     end
+  end
+end
+
+# Checks the given error and performs the appropriate action based on whether it
+# is an exemptable policy violation error.
+def process_api_error(error, operation)
+  is_exemptable = error[:is_exemptable]
+
+  puts "Ad with headline '%s - %s' violated %s policy '%s'." %
+      [operation[:operand][:ad][:headline_part1],
+      operation[:operand][:ad][:headline_part2],
+      is_exemptable ? 'exemptable' : 'non-exemptable',
+      error[:external_policy_name]]
+
+  if is_exemptable
+    # Add exemption request to the operation.
+    puts "Adding exemption request for policy name '%s' on text '%s'." %
+        [error[:key][:policy_name], error[:key][:violating_text]]
+    unless operation[:exemption_requests]
+      operation[:exemption_requests] = []
+    end
+    operation[:exemption_requests] << {
+      :key => error[:key]
+    }
   end
 end
 

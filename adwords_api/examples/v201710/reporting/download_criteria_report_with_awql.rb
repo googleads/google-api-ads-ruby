@@ -36,17 +36,21 @@ def download_criteria_report_with_awql(file_name, report_format)
   # Get report utilities for the version.
   report_utils = adwords.report_utils(API_VERSION)
 
-  # Prepare a date range for the last week. Instead you can use 'LAST_7_DAYS'.
-  date_range = '%s,%s' % [
-      DateTime.parse((Date.today - 7).to_s).strftime('%Y%m%d'),
-      DateTime.parse((Date.today - 1).to_s).strftime('%Y%m%d')
-  ]
+  # Prepare a date range for the last week.
+  start_date =  DateTime.parse((Date.today - 7).to_s).strftime('%Y%m%d')
+  end_date = DateTime.parse((Date.today - 1).to_s).strftime('%Y%m%d')
 
   # Define report definition. You can also pass your own XML text as a string.
-  report_query = 'SELECT CampaignId, AdGroupId, Id, Criteria, CriteriaType, ' +
-      'Impressions, Clicks, Cost FROM CRITERIA_PERFORMANCE_REPORT ' +
-      'WHERE Status IN [ENABLED, PAUSED] ' +
-      'DURING %s' % date_range
+  report_query_builder = adwords.report_query_builder do |b|
+    b.select(*%w[CampaignId AdGroupId Id Criteria CriteriaType Impressions
+        Clicks Cost])
+    b.from('CRITERIA_PERFORMANCE_REPORT')
+    b.where('Status').in('ENABLED', 'PAUSED')
+    # You could use the during_date_range method to specify ranges such as
+    # 'LAST_7_DAYS', but you can't specify both.
+    b.during(start_date, end_date)
+  end
+  report_query = report_query_builder.build.to_s
 
   # Optional: Set the configuration of the API instance to suppress header,
   # column name, or summary rows in the report output. You can also configure

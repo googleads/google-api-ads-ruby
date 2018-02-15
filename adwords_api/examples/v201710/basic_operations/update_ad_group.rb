@@ -21,7 +21,7 @@
 
 require 'adwords_api'
 
-def update_ad_group(ad_group_id)
+def update_ad_group(ad_group_id, cpc_bid_micro_amount)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -32,20 +32,47 @@ def update_ad_group(ad_group_id)
 
   ad_group_srv = adwords.service(:AdGroupService, API_VERSION)
 
-  # Prepare for updating ad group.
+  # Create an ad group with the specified ID.
+  ad_group = {
+    :status => 'PAUSED',
+    :id => ad_group_id
+  }
+
+  # Update the CPC bid if specified.
+  unless cpc_bid_micro_amount.nil?
+    ad_group[:bidding_strategy_configuration] = {
+      :bids => [{
+        :xsi_type => 'CpcBid',
+        :bid => {
+          :micro_amount => cpc_bid_micro_amount
+        }
+      }]
+    }
+  end
+
   operation = {
     :operator => 'SET',
-    :operand => {
-      :status => 'PAUSED',
-      :id => ad_group_id
-    }
+    :operand => ad_group
   }
 
   # Update ad group.
   response = ad_group_srv.mutate([operation])
   if response and response[:value]
     ad_group = response[:value].first
-    puts 'Ad group id %d was successfully updated.' % ad_group[:id]
+    bidding_strategy_configuration = ad_group[:bidding_strategy_configuration]
+    cpc_bid_micros = nil
+    unless bidding_strategy_configuration.nil?
+      unless bidding_strategy_configuration[:bids].nil?
+        bidding_strategy_configuration[:bids].each do |bid|
+          if bid[:xsi_type] == 'CpcBid'
+            cpc_bid_micros = bid[:bid][:micro_amount]
+          end
+        end
+      end
+    end
+    puts ('Ad group id %d and name "%s" updated to have status "%s" and CPC ' +
+        'bid %d.') % [ad_group[:id], ad_group[:name], ad_group[:status],
+        cpc_bid_micros]
   else
     puts 'No ad groups were updated.'
   end
@@ -57,7 +84,10 @@ if __FILE__ == $0
   begin
     # ID of an ad group to update.
     ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
-    update_ad_group(ad_group_id)
+    # Set this to nil if you do not want to update the CPC bid.
+    cpc_bid_micro_amount = 'INSERT_CPC_BID_MICRO_AMOUNT_HERE'.to_i
+
+    update_ad_group(ad_group_id, cpc_bid_micro_amount)
 
   # Authorization error.
   rescue AdsCommon::Errors::OAuth2VerificationRequired => e

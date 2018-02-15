@@ -38,6 +38,6 @@ Gem::Specification.new do |s|
       %w(COPYING README.md ChangeLog adwords_api.yml)
   s.add_runtime_dependency('google-ads-common', '~> 1.0.0')
   s.add_runtime_dependency('nori', '~> 2.6')
-  s.add_development_dependency('rr', '~> 1.1', '>= 1.1.2')
+  s.add_development_dependency('rr', '~> 1.1.2')
   s.add_development_dependency('webmock', '~> 1.21')
 end

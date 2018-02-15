@@ -1,3 +1,8 @@
+1.1.0:
+  - Added ReportQueryBuilder and ServiceQueryBuilder to aid in constructing
+    AWQL for both contexts.
+  - Remove deprecated API version v201702.
+
 1.0.1:
   - Support and examples for v201710.
 

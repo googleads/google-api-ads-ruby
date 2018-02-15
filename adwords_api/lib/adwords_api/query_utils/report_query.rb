@@ -1,6 +1,6 @@
 # Encoding: utf-8
 #
-# Copyright:: Copyright 2012, Google Inc. All Rights Reserved.
+# Copyright:: Copyright 2018, Google Inc. All Rights Reserved.
 #
 # License:: Licensed under the Apache License, Version 2.0 (the "License");
 #           you may not use this file except in compliance with the License.
@@ -15,10 +15,16 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# Module to keep the current library version.
+# Class to hold a generated AWQL query for reports.
 
 module AdwordsApi
-  module ApiConfig
-    CLIENT_LIB_VERSION = '1.1.0'
+  class ReportQuery
+    def initialize(query)
+      @query = query
+    end
+
+    def to_s()
+      return @query
+    end
   end
 end

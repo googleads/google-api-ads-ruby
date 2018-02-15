@@ -33,17 +33,21 @@ def get_all_disapproved_ads_with_awql(ad_group_id)
   ad_group_ad_srv = adwords.service(:AdGroupAdService, API_VERSION)
 
   # Get all the ads in this ad group.
-  query = ('SELECT Id, PolicySummary WHERE AdGroupId = %d AND' +
-      ' CombinedApprovalStatus = DISAPPROVED ORDER BY Id') %
-      ad_group_id
+  query_builder = adwords.service_query_builder do |b|
+    b.select('Id', 'PolicySummary')
+    b.where('AdGroupId').equal_to(ad_group_id)
+    b.where('CombinedApprovalStatus').equal_to('DISAPPROVED')
+    b.order_by_asc('Id')
+    b.limit(0, PAGE_SIZE)
+  end
+  query = query_builder.build
 
   # Set the initial values.
-  offset, page = 0, {}
   disapproved_ads_count = 0
 
   # Look through all ads to find ones that are disapproved.
-  begin
-    page_query = query + (" LIMIT %d, %d" % [offset, PAGE_SIZE])
+  loop do
+    page_query = query.to_s
     page = ad_group_ad_srv.query(page_query)
     if page[:entries]
       page[:entries].each do |ad_group_ad|
@@ -72,8 +76,9 @@ def get_all_disapproved_ads_with_awql(ad_group_id)
         end
       end
     end
-    offset += PAGE_SIZE
-  end while page[:total_num_entries] > offset
+    break unless query.has_next(page)
+    query.next_page
+  end
 
   puts "%d disapproved ads were found." % disapproved_ads_count
 end

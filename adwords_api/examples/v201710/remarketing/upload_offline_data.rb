@@ -23,7 +23,9 @@ require 'adwords_api'
 require 'digest'
 require 'date'
 
-def upload_offline_data(conversion_name, external_upload_id, email_addresses)
+def upload_offline_data(conversion_name, external_upload_id,
+    store_sales_upload_common_metadata_type, email_addresses,
+    advertiser_upload_time, bridge_map_version_id, partner_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -66,12 +68,30 @@ def upload_offline_data(conversion_name, external_upload_id, email_addresses)
   offline_data_list << create_offline_data(transaction_time_2,
       transaction_amount_2, 'EUR', conversion_name, user_identifiers_2)
 
+  # Set the type and metadata of this upload.
+  upload_metadata = {
+    :xsi_type => store_sales_upload_common_metadata_type,
+    :loyalty_rate => 1.0,
+    :transaction_upload_rate => 1.0
+  }
+
+  upload_type = 'STORE_SALES_UPLOAD_FIRST_PARTY'
+  if store_sales_upload_common_metadata_type == METADATA_TYPE_3P
+    upload_type = 'STORE_SALES_UPLOAD_THIRD_PARTY'
+    upload_metadata[:advertiser_upload_time] = advertiser_upload_time
+    upload_metadata[:valid_transaction_rate] = 1.0
+    upload_metadata[:partner_match_rate] = 1.0
+    upload_metadata[:partner_upload_rate] = 1.0
+    upload_metadata[:bridge_map_version_id] = bridge_map_version_id
+    upload_metadata[:partner_id] = partner_id
+  end
+
   # Create offline data upload object.
   offline_data_upload = {
     :external_upload_id => external_upload_id,
-    :offline_data_list => offline_data_list
-    # Optional: You can set the type of this upload.
-    # :upload_type => 'STORE_SALES_UPLOAD_FIRST_PARTY'
+    :offline_data_list => offline_data_list,
+    :upload_type => upload_type,
+    :upload_metadata => upload_metadata
   }
 
   # Create an offline data upload operation.
@@ -151,12 +171,31 @@ if __FILE__ == $0
     'HASHED_PHONE'
   ]
 
+  # Store sales upload common metadata types
+  METADATA_TYPE_1P = 'FirstPartyUploadMetadata'
+  METADATA_TYPE_3P = 'ThirdPartyUploadMetadata'
+
   begin
     conversion_name = 'INSERT_CONVERSION_NAME_HERE'
     external_upload_id = 'INSERT_EXTERNAL_UPLOAD_ID_HERE'.to_i
     email_addresses = ['INSERT_EMAIL_ADDRESS_HERE', 'INSERT_EMAIL_ADDRESS_HERE']
 
-    upload_offline_data(conversion_name, external_upload_id, email_addresses)
+    # Set the below constant to METADATA_TYPE_3P if uploading third-party data.
+    store_sales_upload_common_metadata_type = METADATA_TYPE_1P
+
+    # The three constants below are needed when uploading third-party data. They
+    # are not used when uploading first-party data.
+    # Advertiser upload time to partner.
+    # For times, use the format yyyyMMdd HHmmss tz. For more details on formats,
+    # see:
+    # https://developers.google.com/adwords/api/docs/appendix/codes-formats#timezone-ids
+    advertiser_upload_time = 'INSERT_ADVERTISER_UPLOAD_TIME_HERE'
+    bridge_map_version_id = 'INSERT_BRIDGE_MAP_VERSION_ID_HERE'
+    partner_id = 'INSERT_PARTNER_ID_HERE'.to_i
+
+    upload_offline_data(conversion_name, external_upload_id,
+        store_sales_upload_common_metadata_type, email_addresses,
+        advertiser_upload_time, bridge_map_version_id, partner_id)
 
   # Authorization error.
   rescue AdsCommon::Errors::OAuth2VerificationRequired => e
