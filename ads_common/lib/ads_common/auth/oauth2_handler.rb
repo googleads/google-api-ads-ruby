@@ -77,6 +77,10 @@ module AdsCommon
       #
       def auth_string(credentials)
         token = get_token(credentials)
+        if token.nil?
+          raise AdsCommon::Errors::AuthError.new(
+            'Could not get auth token. Are you missing a refresh token?')
+        end
         return ::Signet::OAuth2.generate_bearer_authorization_header(
             token[:access_token])
       end

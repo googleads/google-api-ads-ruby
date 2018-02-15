@@ -19,7 +19,7 @@
 # Test OAuth2 service account authentication.
 
 require 'tempfile'
-
+require 'test/unit'
 require 'ads_common/auth/oauth2_service_account_handler'
 require 'ads_common/config'
 

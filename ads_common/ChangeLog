@@ -1,3 +1,7 @@
+1.0.1:
+  - Fixed issue #139. Library now gives a more appropriate warning when it
+    can't get an access token.
+
 1.0.0:
   - Major version bump. The library has been stable and feature complete for
     some time, and this is more accurately reflected by this version number.
