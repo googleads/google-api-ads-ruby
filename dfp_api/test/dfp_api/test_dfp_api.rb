@@ -23,14 +23,6 @@ require 'tempfile'
 
 require 'dfp_api'
 
-
-class LoggerStub
-  attr_reader :last_warning
-  def warn(message)
-    @last_warning = message
-  end
-end
-
 module DfpApi
   module ApiConfig
     def self.default_config_filename=(value)
@@ -57,10 +49,6 @@ class TestDfpApi < Test::Unit::TestCase
 
   DEFAULT_CONFIG_FILENAME = File.expand_path('../test_config.yml', __FILE__)
   DEFAULT_FAILURE_FILENAME = 'test_notexists.yml'
-
-  def setup()
-    @logger = LoggerStub.new
-  end
 
   # Test initializer with no arguments.
   def test_initialize_nil()

@@ -21,9 +21,6 @@ require 'dfp_api/dfp_api_datetime'
 
 
 module DfpApi
-  # Default page size to use with the StatementBuilder.
-  SUGGESTED_PAGE_LIMIT = 500
-
   # Query class used by StatementBuilder.
   class PQLQuery
     # Create a new query.
@@ -122,6 +119,8 @@ module DfpApi
   # sb.to_statement()
   #
   class StatementBuilder
+    SUGGESTED_PAGE_LIMIT = 500
+
     SELECT = 'SELECT %s'
     FROM = 'FROM %s'
     WHERE = 'WHERE %s'
