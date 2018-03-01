@@ -1,3 +1,6 @@
+1.1.1:
+  - Support and examples for v201802.
+
 1.1.0:
   - Added ReportQueryBuilder and ServiceQueryBuilder to aid in constructing
     AWQL for both contexts.

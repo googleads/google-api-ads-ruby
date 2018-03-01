@@ -33,8 +33,8 @@ module AdwordsApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201710
-    LATEST_VERSION = :v201710
+    DEFAULT_VERSION = :v201802
+    LATEST_VERSION = :v201802
 
     # Set other constants
     API_NAME = 'AdwordsApi'
@@ -191,6 +191,58 @@ module AdwordsApi
           :TrafficEstimatorService,
           :TrialAsyncErrorService,
           :TrialService
+      ],
+      :v201802 => [
+          :AccountLabelService,
+          :AdCustomizerFeedService,
+          :AdGroupAdService,
+          :AdGroupBidModifierService,
+          :AdGroupCriterionService,
+          :AdGroupExtensionSettingService,
+          :AdGroupFeedService,
+          :AdGroupService,
+          :AdParamService,
+          :AdwordsUserListService,
+          :BatchJobService,
+          :BiddingStrategyService,
+          :BudgetOrderService,
+          :BudgetService,
+          :CampaignBidModifierService,
+          :CampaignCriterionService,
+          :CampaignExtensionSettingService,
+          :CampaignFeedService,
+          :CampaignGroupService,
+          :CampaignGroupPerformanceTargetService,
+          :CampaignService,
+          :CampaignSharedSetService,
+          :ConstantDataService,
+          :ConversionTrackerService,
+          :CustomerExtensionSettingService,
+          :CustomerFeedService,
+          :CustomerNegativeCriterionService,
+          :CustomerService,
+          :CustomerSyncService,
+          :DataService,
+          :DraftAsyncErrorService,
+          :DraftService,
+          :FeedItemService,
+          :FeedItemTargetService,
+          :FeedMappingService,
+          :FeedService,
+          :LabelService,
+          :LocationCriterionService,
+          :ManagedCustomerService,
+          :MediaService,
+          :OfflineCallConversionFeedService,
+          :OfflineConversionFeedService,
+          :OfflineDataUploadService,
+          :ReportDefinitionService,
+          :SharedCriterionService,
+          :SharedSetService,
+          :TargetingIdeaService,
+          :TrafficEstimatorService,
+          :TrialAsyncErrorService,
+          :TrialService
       ]
     }
 
@@ -200,7 +252,8 @@ module AdwordsApi
       :header_ns => 'https://adwords.google.com/api/adwords/cm/',
       :v201705 => 'https://adwords.google.com/api/adwords/',
       :v201708 => 'https://adwords.google.com/api/adwords/',
-      :v201710 => 'https://adwords.google.com/api/adwords/'
+      :v201710 => 'https://adwords.google.com/api/adwords/',
+      :v201802 => 'https://adwords.google.com/api/adwords/'
     }
 
     # Configure the subdirectories for each version / service pair.
@@ -352,7 +405,58 @@ module AdwordsApi
       [:v201710, :TargetingIdeaService] => 'o/',
       [:v201710, :TrafficEstimatorService] => 'o/',
       [:v201710, :TrialAsyncErrorService] => 'cm/',
-      [:v201710, :TrialService] => 'cm/'
+      [:v201710, :TrialService] => 'cm/',
+      # v201802
+      [:v201802, :AccountLabelService] => 'mcm/',
+      [:v201802, :AdCustomizerFeedService] => 'cm/',
+      [:v201802, :AdGroupAdService] => 'cm/',
+      [:v201802, :AdGroupBidModifierService] => 'cm/',
+      [:v201802, :AdGroupCriterionService] => 'cm/',
+      [:v201802, :AdGroupExtensionSettingService] => 'cm/',
+      [:v201802, :AdGroupFeedService] => 'cm/',
+      [:v201802, :AdGroupService] => 'cm/',
+      [:v201802, :AdParamService] => 'cm/',
+      [:v201802, :AdwordsUserListService] => 'rm/',
+      [:v201802, :BatchJobService] => 'cm/',
+      [:v201802, :BiddingStrategyService] => 'cm/',
+      [:v201802, :BudgetOrderService] => 'billing/',
+      [:v201802, :BudgetService] => 'cm/',
+      [:v201802, :CampaignBidModifierService] => 'cm/',
+      [:v201802, :CampaignCriterionService] => 'cm/',
+      [:v201802, :CampaignExtensionSettingService] => 'cm/',
+      [:v201802, :CampaignFeedService] => 'cm/',
+      [:v201802, :CampaignGroupService] => 'cm/',
+      [:v201802, :CampaignGroupPerformanceTargetService] => 'cm/',
+      [:v201802, :CampaignService] => 'cm/',
+      [:v201802, :CampaignSharedSetService] => 'cm/',
+      [:v201802, :ConstantDataService] => 'cm/',
+      [:v201802, :ConversionTrackerService] => 'cm/',
+      [:v201802, :CustomerExtensionSettingService] => 'cm/',
+      [:v201802, :CustomerFeedService] => 'cm/',
+      [:v201802, :CustomerNegativeCriterionService] => 'cm/',
+      [:v201802, :CustomerService] => 'mcm/',
+      [:v201802, :CustomerSyncService] => 'ch/',
+      [:v201802, :DraftAsyncErrorService] => 'cm/',
+      [:v201802, :DataService] => 'cm/',
+      [:v201802, :DraftService] => 'cm/',
+      [:v201802, :FeedItemService] => 'cm/',
+      [:v201802, :FeedItemTargetService] => 'cm/',
+      [:v201802, :FeedMappingService] => 'cm/',
+      [:v201802, :FeedService] => 'cm/',
+      [:v201802, :LabelService] => 'cm/',
+      [:v201802, :LocationCriterionService] => 'cm/',
+      [:v201802, :ManagedCustomerService] => 'mcm/',
+      [:v201802, :MediaService] => 'cm/',
+      [:v201802, :OfflineCallConversionFeedService] => 'cm/',
+      [:v201802, :OfflineConversionFeedService] => 'cm/',
+      [:v201802, :OfflineDataUploadService] => 'rm/',
+      [:v201802, :ReportDefinitionService] => 'cm/',
+      [:v201802, :SharedCriterionService] => 'cm/',
+      [:v201802, :SharedSetService] => 'cm/',
+      [:v201802, :TargetingIdeaService] => 'o/',
+      [:v201802, :TrafficEstimatorService] => 'o/',
+      [:v201802, :TrialAsyncErrorService] => 'cm/',
+      [:v201802, :TrialService] => 'cm/'
     }
 
     public

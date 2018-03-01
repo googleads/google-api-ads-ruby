@@ -200,6 +200,7 @@ module AdwordsApi
       'CampaignSharedSetOperation' => :CampaignSharedSetService,
       'CustomerExtensionSettingOperation' => :CustomerExtensionSettingService,
       'FeedItemOperation' => :FeedItemService,
+      'FeedItemTargetOperation' => :FeedItemTargetService,
       'SharedCriterionOperation' => :SharedCriterionService,
       'SharedSetOperation' => :SharedSetService
     }
@@ -221,6 +222,7 @@ module AdwordsApi
       'CampaignSharedSetOperation' => 'mutate_to_xml',
       'CustomerExtensionSettingOperation' => 'mutate_to_xml',
       'FeedItemOperation' => 'mutate_to_xml',
+      'FeedItemTargetOperation' => 'mutate_to_xml',
       'SharedCriterionOperation' => 'mutate_to_xml',
       'SharedSetOperation' => 'mutate_to_xml'
     }
