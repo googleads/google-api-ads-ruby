@@ -43,8 +43,8 @@ def add_crm_based_user_list()
     :xsi_type => 'CrmBasedUserList',
     :name => 'Customer relationship management list #%d' % Time.new.usec,
     :description => 'A list of customers that originated from email addresses',
-    # See limit here:
-    # https://support.google.com/adwords/answer/6276125#requirements
+    # CRM-based user lists can use a membershipLifeSpan of 10000 to indicate
+    # unlimited; otherwise normal values apply.
     :membership_life_span => 30,
     :upload_key_type => 'CONTACT_INFO'
   }

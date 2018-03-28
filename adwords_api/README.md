@@ -74,7 +74,7 @@ The basics of making a request are:
 
  3. Specify which service you're looking to use, and which version:
 
-        campaign_srv = adwords.service(:CampaignService, :v201708)
+        campaign_srv = adwords.service(:CampaignService, :v201802)
 
  4. You should now be able to just use the API methods in the returned object:
 
@@ -182,6 +182,14 @@ Enabling this option will set the headers required to request the server to
 respond in gzipped format. All requests are sent uncompressed regardless.
 
 
+### 2.6 - Utilities
+
+The library offers utilities to make fetching reports and using the
+BatchJobService easier. Take a look at our wiki page on
+[AdWords Utilities](https://github.com/googleads/google-api-ads-ruby/wiki/AdWords-Utilities)
+for more information.
+
+
 # Docs for Developers
 
 ## Rake targets
@@ -196,7 +204,7 @@ To target a specific version:
 
 For example:
 
-    $ rake generate[v201708]
+    $ rake generate[v201802]
 
 To target a specific service in a specific version:
 
@@ -204,7 +212,7 @@ To target a specific service in a specific version:
 
 For example:
 
-    $ rake generate[v201708,CampaignService]
+    $ rake generate[v201802,CampaignService]
 
 To build the gems:
 

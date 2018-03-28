@@ -157,6 +157,8 @@ def create_dsa_url_add_operation(feed_details, url, label_name)
 
   url_attribute_value = {
     :feed_attribute_id => feed_details[:url_attribute_id],
+    # See https://support.google.com/adwords/answer/7166527 for page feed URL
+    # recommendations and rules.
     :string_values => [url]
   }
 

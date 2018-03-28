@@ -20,7 +20,7 @@
 
 require 'adwords_api'
 
-def add_site_links(campaign_id)
+def add_site_links(campaign_id, ad_group_id)
   # AdwordsApi::Api will read a config file from ENV['HOME']/adwords_api.yml
   # when called without parameters.
   adwords = AdwordsApi::Api.new
@@ -31,6 +31,7 @@ def add_site_links(campaign_id)
 
   feed_srv = adwords.service(:FeedService, API_VERSION)
   feed_item_srv = adwords.service(:FeedItemService, API_VERSION)
+  feed_item_target_srv = adwords.service(:FeedItemTargetService, API_VERSION)
   feed_mapping_srv = adwords.service(:FeedMappingService, API_VERSION)
   campaign_feed_srv = adwords.service(:CampaignFeedService, API_VERSION)
 
@@ -50,7 +51,7 @@ def add_site_links(campaign_id)
   response = feed_srv.mutate([
       {:operator => 'ADD', :operand => site_links_feed}
   ])
-  if response and response[:value]
+  unless response.nil? || response[:value].nil?
     feed = response[:value].first
     # Attribute of type STRING.
     link_text_feed_attribute_id = feed[:attributes][0][:id]
@@ -58,12 +59,12 @@ def add_site_links(campaign_id)
     final_url_feed_attribute_id = feed[:attributes][1][:id]
     # Attribute of type STRING.
     line_2_feed_attribute_id = feed[:attributes][2][:id]
-    #Attribute of type STRING.
+    # Attribute of type STRING.
     line_3_feed_attribute_id = feed[:attributes][3][:id]
     puts "Feed with name '%s' and ID %d was added with" %
         [feed[:name], feed[:id]]
-    puts "\tText attribute ID %d and Final URLs attribute ID %d " +
-        "and Line 2 attribute ID %d and Line 3 attribute ID %d." % [
+    puts ("\tText attribute ID %d and Final URLs attribute ID %d " +
+        "and Line 2 attribute ID %d and Line 3 attribute ID %d.") % [
           link_text_feed_attribute_id,
           final_url_feed_attribute_id,
           line_2_feed_attribute_id,
@@ -163,7 +164,7 @@ def add_site_links(campaign_id)
   end
 
   response = feed_item_srv.mutate(feed_items_operations)
-  if response and response[:value]
+  unless response.nil? || response[:value].nil?
     sitelinks_data[:feed_item_ids] = []
     response[:value].each do |feed_item|
       puts 'Feed item with ID %d was added.' % feed_item[:feed_item_id]
@@ -200,7 +201,7 @@ def add_site_links(campaign_id)
   response = feed_mapping_srv.mutate([
       {:operator => 'ADD', :operand => feed_mapping}
   ])
-  if response and response[:value]
+  unless response.nil? || response[:value].nil?
     feed_mapping = response[:value].first
     puts ('Feed mapping with ID %d and placeholder type %d was saved for feed' +
         ' with ID %d.') % [
@@ -234,12 +235,37 @@ def add_site_links(campaign_id)
   response = campaign_feed_srv.mutate([
       {:operator => 'ADD', :operand => campaign_feed}
   ])
-  if response and response[:value]
+  unless response.nil? || response[:value].nil?
     campaign_feed = response[:value].first
     puts 'Campaign with ID %d was associated with feed with ID %d.' %
       [campaign_feed[:campaign_id], campaign_feed[:feed_id]]
   else
     raise new StandardError, 'No campaign feeds were added.'
+  end
+
+  # Optional: Restrict the first feed item to only serve with ads for the
+  # specified ad group ID.
+  if !ad_group_id.nil? && ad_group_id != 0
+    feed_item_target = {
+      :xsi_type => 'FeedItemAdGroupTarget',
+      :feed_id => sitelinks_data[:feed_id],
+      :feed_item_id => sitelinks_data[:feed_item_ids].first,
+      :ad_group_id => ad_group_id
+    }
+
+    operation = {
+      :operator => 'ADD',
+      :operand => feed_item_target
+    }
+
+    response = feed_item_target_srv.mutate([operation])
+    unless response.nil? || response[:value].nil?
+      feed_item_target = response[:value].first
+      puts ('Feed item target for feed ID %d and feed item ID %d' +
+          ' was created to restrict serving to ad group ID %d') %
+          [feed_item_target[:feed_id], feed_item_target[:feed_item_id],
+          feed_item_target[:ad_group_id]]
+    end
   end
 end
 
@@ -258,7 +284,9 @@ if __FILE__ == $0
   begin
     # Campaign ID to add site link to.
     campaign_id = 'INSERT_CAMPAIGN_ID_HERE'.to_i
-    add_site_links(campaign_id)
+    # Optional: Ad group to restrict targeting to.
+    ad_group_id = 'INSERT_AD_GROUP_ID_HERE'.to_i
+    add_site_links(campaign_id, ad_group_id)
 
   # Authorization error.
   rescue AdsCommon::Errors::OAuth2VerificationRequired => e
