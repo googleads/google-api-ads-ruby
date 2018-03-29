@@ -99,6 +99,11 @@ Make sure to subscribe to [our blog](https://googleadsdeveloper.blogspot.com) fo
 See [CONTRIBUTING.md](https://github.com/googleads/google-api-ads-ruby/blob/master/CONTRIBUTING.md)
 for details on how to contribute.
 
+This library has adopted the [community-driven style guide](https://github.com/bbatsov/ruby-style-guide)
+hosted by bbatsov. Updates to the existing code base will be made incrementally
+to conform to the style defined there, and all new code will be subject to that
+style guide. Keep this in mind while crafting contributions.
+
 Note: if you have an ad blocker active, you might experience issues while
 submitting an issue or pull request. You can still contribute by disabling the
 ad blocker for this project URL.
