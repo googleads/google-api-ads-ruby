@@ -145,11 +145,29 @@ module AdsCommon
             'sequence | complexContent/extension/sequence') do |seq_node|
           type[:fields] += get_element_fields(seq_node)
         end
+
+        try_extract_enumeration(type_element, type)
+
         REXML::XPath.each(type_element, 'choice') do |seq_node|
           type[:choices] ||= []
           type[:choices] += get_element_fields(seq_node)
         end
-        return type
+
+        type
+      end
+
+      def try_extract_enumeration(type_element, type)
+        REXML::XPath.each(type_element, "restriction[@base='xsd:string']") do |seq_node|
+          type.delete(:fields)
+          type[:type] = seq_node.attribute('base').to_s.gsub(/^.+:/, '')
+          type[:min_occurs] = 0
+          type[:max_occurs] = 1
+        end
+        REXML::XPath.each(type_element, "restriction[@base='xsd:string']/enumeration") do |seq_node|
+          type[:enumerations] ||= []
+          type[:enumerations] << seq_node.attribute('value').to_s
+        end
+        type
       end
 
       # Extracts input parameters of given method as an array.
