@@ -160,8 +160,6 @@ module AdsCommon
         REXML::XPath.each(type_element, "restriction[@base='xsd:string']") do |seq_node|
           type.delete(:fields)
           type[:type] = seq_node.attribute('base').to_s.gsub(/^.+:/, '')
-          type[:min_occurs] = 0
-          type[:max_occurs] = 1
         end
         REXML::XPath.each(type_element, "restriction[@base='xsd:string']/enumeration") do |seq_node|
           type[:enumerations] ||= []
