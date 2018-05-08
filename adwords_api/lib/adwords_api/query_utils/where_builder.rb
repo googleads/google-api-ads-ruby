@@ -31,7 +31,7 @@ module AdwordsApi
     end
 
     def not_equal_to(value)
-      @awql = sprintf("%s != $s", @field, value)
+      @awql = sprintf("%s != %s", @field, value)
     end
 
     def greater_than(value)
