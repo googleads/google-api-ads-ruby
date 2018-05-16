@@ -36,7 +36,7 @@ def run_saved_query(dfp, saved_query_id)
   )
 
   unless saved_query_page[:results].nil?
-    saved_query = response[:results].first
+    saved_query = saved_query_page[:results].first
 
     if saved_query[:is_compatible_with_api_version]
       # Create report job.
