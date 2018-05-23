@@ -146,26 +146,27 @@ module AdsCommon
           type[:fields] += get_element_fields(seq_node)
         end
 
-        try_extract_enumeration(type_element, type)
+        extract_enumerations(type_element, type)
 
         REXML::XPath.each(type_element, 'choice') do |seq_node|
           type[:choices] ||= []
           type[:choices] += get_element_fields(seq_node)
         end
-
-        type
+        return type
       end
 
-      def try_extract_enumeration(type_element, type)
-        REXML::XPath.each(type_element, "restriction[@base='xsd:string']") do |seq_node|
+      # Extracts all possible enumerations for a type and adds them as a
+      # `enumerations` key on the type.
+      def extract_enumerations(type_element, type)
+        REXML::XPath.each(type_element, "restriction[@base='xsd:string']") do |enum_node|
           type.delete(:fields)
-          type[:type] = seq_node.attribute('base').to_s.gsub(/^.+:/, '')
+          type[:type] = enum_node.attribute('base').to_s.gsub(/^.+:/, '')
         end
-        REXML::XPath.each(type_element, "restriction[@base='xsd:string']/enumeration") do |seq_node|
+        REXML::XPath.each(type_element, "restriction[@base='xsd:string']/enumeration") do |enum_node|
           type[:enumerations] ||= []
-          type[:enumerations] << seq_node.attribute('value').to_s
+          type[:enumerations] << enum_node.attribute('value').to_s
         end
-        type
+        return typetype
       end
 
       # Extracts input parameters of given method as an array.
