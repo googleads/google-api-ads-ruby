@@ -155,10 +155,11 @@ module AdsCommon
         return type
       end
 
-      # Extracts all possible enumerations for a type and adds them as a
+      # Extracts all possible enumerations for a type and adds them as an
       # `enumerations` key on the type.
       def extract_enumerations(type_element, type)
-        REXML::XPath.each(type_element, "restriction[@base='xsd:string']") do |enum_node|
+        REXML::XPath.each(type_element,
+            "restriction[@base='xsd:string']") do |enum_node|
           type.delete(:fields)
           type[:type] = enum_node.attribute('base').to_s.gsub(/^.+:/, '')
         end
@@ -166,7 +167,7 @@ module AdsCommon
           type[:enumerations] ||= []
           type[:enumerations] << enum_node.attribute('value').to_s
         end
-        return typetype
+        return type
       end
 
       # Extracts input parameters of given method as an array.
