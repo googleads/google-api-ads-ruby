@@ -145,9 +145,27 @@ module AdsCommon
             'sequence | complexContent/extension/sequence') do |seq_node|
           type[:fields] += get_element_fields(seq_node)
         end
+
+        extract_enumerations(type_element, type)
+
         REXML::XPath.each(type_element, 'choice') do |seq_node|
           type[:choices] ||= []
           type[:choices] += get_element_fields(seq_node)
+        end
+        return type
+      end
+
+      # Extracts all possible enumerations for a type and adds them as an
+      # `enumerations` key on the type.
+      def extract_enumerations(type_element, type)
+        REXML::XPath.each(type_element,
+            "restriction[@base='xsd:string']") do |enum_node|
+          type.delete(:fields)
+          type[:type] = enum_node.attribute('base').to_s.gsub(/^.+:/, '')
+        end
+        REXML::XPath.each(type_element, "restriction[@base='xsd:string']/enumeration") do |enum_node|
+          type[:enumerations] ||= []
+          type[:enumerations] << enum_node.attribute('value').to_s
         end
         return type
       end
