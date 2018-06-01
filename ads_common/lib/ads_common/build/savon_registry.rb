@@ -163,7 +163,8 @@ module AdsCommon
           type.delete(:fields)
           type[:type] = enum_node.attribute('base').to_s.gsub(/^.+:/, '')
         end
-        REXML::XPath.each(type_element, "restriction[@base='xsd:string']/enumeration") do |enum_node|
+        REXML::XPath.each(type_element,
+            "restriction[@base='xsd:string']/enumeration") do |enum_node|
           type[:enumerations] ||= []
           type[:enumerations] << enum_node.attribute('value').to_s
         end
