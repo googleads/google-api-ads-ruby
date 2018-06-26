@@ -1,3 +1,7 @@
+1.0.2:
+  - Added enumeration values to SOAP service registry objects (pull
+    request #153).
+
 1.0.1:
   - Fixed issue #139. Library now gives a more appropriate warning when it
     can't get an access token.
