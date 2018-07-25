@@ -36,6 +36,7 @@ module AdwordsApi
     def has_next_landscape_page(page)
       raise ArgumentError,
           'Cannot page through query with no LIMIT clause.' if @start_index.nil?
+      return false unless page[:entries]
       total_landscape_points_in_page = 0
       page[:entries].each do |landscape|
         total_landscape_points_in_page += landscape[:landscape_points].size

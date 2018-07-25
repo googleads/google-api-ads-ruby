@@ -33,34 +33,20 @@ def get_criterion_bid_landscapes(ad_group_id, keyword_id)
   data_srv = adwords.service(:DataService, API_VERSION)
 
   # Get keyword bid landscape.
-  selector = {
-    :fields => ['AdGroupId', 'CriterionId', 'StartDate', 'EndDate', 'Bid',
-        'BiddableConversions', 'BiddableConversionsValue', 'LocalClicks',
-        'LocalCost', 'LocalImpressions'],
-    :predicates => [
-      {:field => 'AdGroupId', :operator => 'IN', :values => [ad_group_id]},
-      {:field => 'CriterionId', :operator => 'IN', :values => [keyword_id]},
-    ],
-    :paging => {
-      :start_index => 0,
-      :number_results => PAGE_SIZE
-    }
-  }
+  query_builder = adwords.service_query_builder do |b|
+    b.select(%w[
+      AdGroupId CriterionId StartDate EndDate Bid BiddableConversions
+      BiddableConversionsValue LocalClicks LocalCost LocalImpressions
+    ])
+    b.where('AdGroupId').equal_to(ad_group_id)
+    b.where('CriterionId').equal_to(keyword_id)
+    b.limit(0, PAGE_SIZE)
+  end
+  query = query_builder.build
 
-  start_index = 0
-  landscape_points_in_previous_page = 0
-  begin
-    # Offset the start index by the number of landscape points in the last
-    # retrieved page, NOT the number of entries (bid landscapes) in the page.
-    start_index += landscape_points_in_previous_page
-    selector[:paging][:start_index] = start_index
-
-    # Reset the count of landscape points in preparation for processing the
-    # next page.
-    landscape_points_in_previous_page = 0
-
+  loop do
     # Request the next page of bid landscapes.
-    page = data_srv.get_criterion_bid_landscape(selector)
+    page = data_srv.query_criterion_bid_landscape(query.to_s)
 
     if page and page[:entries]
       puts "Bid landscape(s) retrieved: %d." % [page[:entries].length]
@@ -80,7 +66,9 @@ def get_criterion_bid_landscapes(ad_group_id, keyword_id)
         end
       end
     end
-  end while landscape_points_in_previous_page >= PAGE_SIZE
+    break unless query.has_next_landscape_page(page)
+    query.next_page()
+  end
 end
 
 if __FILE__ == $0
