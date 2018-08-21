@@ -1,0 +1,9 @@
+---
+# This is a test configuration file for Ad Manager API library.
+:authentication:
+  :method : 'OAuth2'
+  :oauth2_client_id : 'myClientId'
+  :oauth2_client_secret : 'This is MY secret!'
+  :oauth2_token : 'my access token'
+  :application_name : 'ruby_test_suite'
+  :network_code : 1234567
