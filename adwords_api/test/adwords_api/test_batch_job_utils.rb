@@ -50,12 +50,12 @@ class ResponseStub
   attr_reader :body
 end
 
-VALID_SERVICE_XML = '<?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="https://adwords.google.com/api/adwords/cm/v201806" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"><env:Header><wsdl:RequestHeader xmlns="https://adwords.google.com/api/adwords/cm/v201806"><userAgent>batch job service test (AwApi-Ruby/0.17.0, Common-Ruby/0.11.1, GoogleAdsSavon/1.0.0, ruby/2.2.1, HTTPI/2.4.1, net_http)</userAgent><developerToken>developer_token</developerToken><clientCustomerId>012-345-6789</clientCustomerId></wsdl:RequestHeader></env:Header><env:Body><mutate xmlns="https://adwords.google.com/api/adwords/cm/v201806"><operations xsi:type="CampaignOperation"><operator>SET</operator><operand><id>0</id><status>PAUSED</status></operand></operations></mutate></env:Body></env:Envelope>'
+VALID_SERVICE_XML = '<?xml version="1.0" encoding="UTF-8"?><env:Envelope xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:wsdl="https://adwords.google.com/api/adwords/cm/v201809" xmlns:env="http://schemas.xmlsoap.org/soap/envelope/"><env:Header><wsdl:RequestHeader xmlns="https://adwords.google.com/api/adwords/cm/v201809"><userAgent>batch job service test (AwApi-Ruby/0.17.0, Common-Ruby/0.11.1, GoogleAdsSavon/1.0.0, ruby/2.2.1, HTTPI/2.4.1, net_http)</userAgent><developerToken>developer_token</developerToken><clientCustomerId>012-345-6789</clientCustomerId></wsdl:RequestHeader></env:Header><env:Body><mutate xmlns="https://adwords.google.com/api/adwords/cm/v201809"><operations xsi:type="CampaignOperation"><operator>SET</operator><operand><id>0</id><status>PAUSED</status></operand></operations></mutate></env:Body></env:Envelope>'
 EXPECTED_OPERATION = "<operations xsi:type=\"ns1:CampaignOperation\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n  <operator>SET</operator>\n  <operand>\n    <id>0</id>\n    <status>PAUSED</status>\n  </operand>\n</operations>"
 
 class TestBatchJobUtils < Test::Unit::TestCase
 
-  API_VERSION = :v201806
+  API_VERSION = :v201809
 
   # Initialize tests.
   def setup()

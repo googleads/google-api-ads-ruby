@@ -43,13 +43,7 @@ def create_account()
   # Prepare operation to create an account.
   operation = {
       :operator => 'ADD',
-      :operand => customer,
-      # For whitelisted users only, uncomment the invitee_email and invitee_role
-      # to invite a user to have access to an account on an ADD. An email
-      # will be sent inviting the user to have access to the newly created
-      # account.
-      # :invitee_email => 'invited_user1@example.com',
-      # :invitee_role => 'ADMINISTRATIVE'
+      :operand => customer
   }
 
   # Create the account. It is possible to create multiple accounts with one

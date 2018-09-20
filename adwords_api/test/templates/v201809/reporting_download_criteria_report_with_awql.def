@@ -1,0 +1,56 @@
+def setup_mocks()
+  require 'tempfile'
+
+  $tempfile = Tempfile.new('report_test');
+
+  $args = [$tempfile.path, 'CSV']
+
+  $api_config = {
+    :service => {:environment => 'PRODUCTION'},
+    :authentication => {
+      :method => 'OAuth2',
+      :oauth2_client_id => 'client_id123',
+      :oauth2_client_secret => 'client_secret123',
+      :developer_token => 'dev_token123',
+      :client_customer_id => '123-456-7890',
+      :user_agent => 'ruby-tests',
+      :oauth2_token => {
+        :refresh_token => 'refresh_token123'
+      }
+    }
+  }
+
+  stub_request(:post,
+      "https://adwords.google.com/api/adwords/reportdownload/v201809").
+    with(
+      body: {
+        "__fmt"=>"CSV",
+        "__rdquery"=>/SELECT CampaignId/
+      },
+      headers: {
+        'Accept'=>'*/*',
+        'Authorization'=>'Bearer ',
+        'Clientcustomerid'=>'123-456-7890',
+        'Content-Type'=>'application/x-www-form-urlencoded',
+        'Developertoken'=>'dev_token123',
+        'Includezeroimpressions'=>'true',
+        'Skipcolumnheader'=>'false',
+        'Skipreportheader'=>'false',
+        'Skipreportsummary'=>'false',
+        'User-Agent'=>/ruby-tests.*AwApi\-Ruby.*Common\-Ruby/
+      }).
+    to_return(status: 200, body: "test body", headers: {})
+
+end
+
+def run_asserts()
+  assert_equal('test body', $latest_result.body)
+  $tempfile.seek(0)
+  assert_equal('test body', $tempfile.read)
+  clean_up()
+end
+
+def clean_up()
+  $tempfile.close
+  $tempfile = nil
+end
