@@ -43,6 +43,7 @@ module AdManagerApi
   class PQLValues
     VALUE_TYPES = {
       Numeric => 'NumberValue',
+      Fixnum => 'NumberValue',
       Integer => 'NumberValue',
       Float => 'NumberValue',
       String => 'TextValue',
