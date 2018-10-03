@@ -98,7 +98,7 @@ module AdManagerApi
       if dateTypes.include?(value.class)
         value = value.to_h
       end
-      return value if type.nil?
+      raise "Value type (#{value.class}) is not supported" if type.nil?
       return {:xsi_type => type, :value => value}
     end
   end
