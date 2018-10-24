@@ -41,10 +41,11 @@ module AdManagerApi
 
   # Values class used by StatementBuilder.
   class PQLValues
+    INTEGER_KLASS = Gem::Version.new(RUBY_VERSION) < Gem::Version.new('2.4.0') ? Fixnum : Integer
+    
     VALUE_TYPES = {
       Numeric => 'NumberValue',
-      Fixnum => 'NumberValue',
-      Integer => 'NumberValue',
+      INTEGER_KLASS => 'NumberValue',
       Float => 'NumberValue',
       String => 'TextValue',
       TrueClass => 'BooleanValue',
