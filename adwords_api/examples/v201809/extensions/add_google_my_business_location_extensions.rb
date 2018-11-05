@@ -88,11 +88,11 @@ def add_gmb_location_extensions(gmb_email_address, gmb_access_token,
     :placeholder_types => [PLACEHOLDER_TYPE_LOCATION],
     :matching_function => {
       :operator => 'IDENTITY',
-      :lhs_operand => {
+      :lhs_operand => [{
         :xsi_type => 'ConstantOperand',
         :type => 'BOOLEAN',
         :boolean_value => true
-      }
+      }]
     }
   }
 
