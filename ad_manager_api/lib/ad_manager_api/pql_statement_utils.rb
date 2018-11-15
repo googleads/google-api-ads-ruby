@@ -43,8 +43,6 @@ module AdManagerApi
   class PQLValues
     VALUE_TYPES = {
       Numeric => 'NumberValue',
-      Integer => 'NumberValue',
-      Float => 'NumberValue',
       String => 'TextValue',
       TrueClass => 'BooleanValue',
       FalseClass => 'BooleanValue',
@@ -65,10 +63,11 @@ module AdManagerApi
 
     # Get values as an array, the format the Ad Manager API expects.
     def values()
-      # values_array is a Ad Manger compliant list of values of the following form:
-      # [:key => ..., :value => {:xsi_type => ..., :value => ...}]
+      # values_array is an Ad-Manager-compliant list of values of the following
+      # form: [:key => ..., :value => {:xsi_type => ..., :value => ...}]
       values_array = @values.map do |key, value|
         raise 'Missing value in StatementBuilder.' if value.nil?
+        raise 'Misconfigured value in StatementBuilder.' unless value.is_a? Hash
         raise 'Value cannot be nil on StatementBuilder.' if value[:value].nil?
         raise 'Missing value type for %s.' % key if value[:xsi_type].nil?
         unless VALUE_TYPES.values.include?(value[:xsi_type])
@@ -92,13 +91,13 @@ module AdManagerApi
     # Create an individual value object by inferring the xsi_type. If the value
     # type isn't recognized, return the original value parameter.
     def generate_value_object(value)
-      type = VALUE_TYPES[value.class]
+      typeKeyValue = VALUE_TYPES.find {|key, val| value.is_a? key}
       dateTypes = [AdManagerApi::AdManagerDate, AdManagerApi::AdManagerDateTime]
       if dateTypes.include?(value.class)
         value = value.to_h
       end
-      return value if type.nil?
-      return {:xsi_type => type, :value => value}
+      return value if typeKeyValue.nil?
+      return {:xsi_type => typeKeyValue.last, :value => value}
     end
   end
 

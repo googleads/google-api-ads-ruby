@@ -25,7 +25,7 @@ require 'test/unit'
 require 'ads_common/config'
 require 'ads_common/savon_service'
 require 'ads_savon/soap/response'
-require 'ad_manager_api/v201808/line_item_service'
+require 'ad_manager_api/v201811/line_item_service'
 
 class HeaderHandler
   def prepare_request(http, soap)
@@ -45,11 +45,11 @@ class StubService7 < AdsCommon::SavonService
   end
 
   def get_module()
-    return AdManagerApi::V201808::LineItemService
+    return AdManagerApi::V201811::LineItemService
   end
 
   def get_service_registry()
-    return AdManagerApi::V201808::LineItemService::LineItemServiceRegistry
+    return AdManagerApi::V201811::LineItemService::LineItemServiceRegistry
   end
 end
 
@@ -61,8 +61,8 @@ class TestAdManagerIssue7 < Test::Unit::TestCase
 
   TEST_NAMESPACE = 'https://ads.google.com/apis/ads/publisher/'
   TEST_ENDPOINT =
-      'https://ads.google.com/apis/ads/publisher/v201808/LineItemService?wsdl'
-  TEST_VERSION = :v201808
+      'https://ads.google.com/apis/ads/publisher/v201811/LineItemService?wsdl'
+  TEST_VERSION = :v201811
 
   def test_issue_7_request()
     args = {:line_items => [
@@ -95,7 +95,7 @@ class TestAdManagerIssue7 < Test::Unit::TestCase
   def get_xml_response_text()
     return <<EOT
   <soap:Body>
-    <getLineItemsByStatementResponse xmlns="https://www.google.com/apis/ads/publisher/v201808">
+    <getLineItemsByStatementResponse xmlns="https://www.google.com/apis/ads/publisher/v201811">
       <rval>
         <totalResultSetSize>1</totalResultSetSize>
         <startIndex>0</startIndex>

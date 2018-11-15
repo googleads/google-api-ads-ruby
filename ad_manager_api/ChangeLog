@@ -1,3 +1,9 @@
+1.5.0:
+  - Added support for v201811.
+  - Removed support for v201711.
+  - Removed examples for v201802.
+  - Updated PQL StatementBuilder to be more type lenient.
+
 1.4.0:
   - Changed all DFP references to Ad Manager (for information on migrating, see
     https://github.com/googleads/google-api-ads-ruby/wiki/DFP-to-Ad-Manager-rebrand-guide).

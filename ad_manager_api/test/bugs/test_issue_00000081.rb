@@ -23,7 +23,7 @@ require 'ads_savon'
 require 'test/unit'
 
 require 'ads_common/savon_service'
-require 'ad_manager_api/v201808/line_item_service'
+require 'ad_manager_api/v201811/line_item_service'
 
 # SavonService is abstract, defining a child class for the test.
 class StubService81 < AdsCommon::SavonService
@@ -37,7 +37,7 @@ class StubService81 < AdsCommon::SavonService
   end
 
   def get_module()
-    return AdManagerApi::V201808::LineItemService
+    return AdManagerApi::V201811::LineItemService
   end
 end
 
@@ -46,8 +46,8 @@ class TestAdManagerIssue81 < Test::Unit::TestCase
 
   TEST_NAMESPACE = 'https://ads.google.com/apis/ads/publisher/'
   TEST_ENDPOINT = (
-      'https://ads.google.com/apis/ads/publisher/v201808/LineItemService?wsdl')
-  TEST_VERSION = :v201808
+      'https://ads.google.com/apis/ads/publisher/v201811/LineItemService?wsdl')
+  TEST_VERSION = :v201811
 
   def setup()
     @stub_service =
@@ -64,7 +64,7 @@ class TestAdManagerIssue81 < Test::Unit::TestCase
     data = @nori.parse(get_xml_text())[:envelope][:body]
     savon_service =
         StubService81.new(TEST_NAMESPACE, TEST_ENDPOINT, TEST_VERSION)
-    assert_instance_of(AdManagerApi::V201808::LineItemService::ApiException,
+    assert_instance_of(AdManagerApi::V201811::LineItemService::ApiException,
         savon_service.send(:exception_for_soap_fault, data))
   end
 
@@ -73,7 +73,7 @@ class TestAdManagerIssue81 < Test::Unit::TestCase
 <?xml version="1.0"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
   <soap:Header>
-    <ResponseHeader xmlns="https://www.google.com/apis/ads/publisher/v201808">
+    <ResponseHeader xmlns="https://www.google.com/apis/ads/publisher/v201811">
       <requestId>abc123</requestId>
       <responseTime>658</responseTime>
     </ResponseHeader>
@@ -86,7 +86,7 @@ class TestAdManagerIssue81 < Test::Unit::TestCase
       </faultstring>
       <detail>
         <ApiExceptionFault
-         xmlns="https://www.google.com/apis/ads/publisher/v201808">
+         xmlns="https://www.google.com/apis/ads/publisher/v201811">
           <message>
             [PublisherQueryLanguageContextError.UNEXECUTABLE
              @ Unknown column: 'blah']
