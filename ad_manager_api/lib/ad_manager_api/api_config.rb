@@ -31,8 +31,8 @@ module AdManagerApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v201808
-    LATEST_VERSION = :v201808
+    DEFAULT_VERSION = :v201902
+    LATEST_VERSION = :v201902
 
     # Set other constants
     API_NAME = 'AdManagerApi'
@@ -40,30 +40,6 @@ module AdManagerApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v201802 => [:ActivityGroupService, :ActivityService,
-                   :AdExclusionRuleService, :AdRuleService,
-                   :AudienceSegmentService, :BaseRateService, :CompanyService,
-                   :CdnConfigurationService, :ContactService,
-                   :ContentBundleService, :ContentMetadataKeyHierarchyService,
-                   :ContentService, :CreativeService, :CreativeSetService,
-                   :CreativeTemplateService, :CreativeWrapperService,
-                   :CustomFieldService, :CustomTargetingService,
-                   :ExchangeRateService, :ForecastService, :InventoryService,
-                   :LabelService, :LineItemCreativeAssociationService,
-                   :LineItemService, :LineItemTemplateService,
-                   :LiveStreamEventService, :MobileApplicationService,
-                   :NativeStyleService, :NetworkService, :OrderService,
-                   :PackageService, :ProductPackageService,
-                   :ProductPackageItemService, :PlacementService,
-                   :PremiumRateService, :ProductService,
-                   :ProductTemplateService, :ProposalLineItemService,
-                   :ProposalService, :PublisherQueryLanguageService,
-                   :RateCardService, :ReconciliationOrderReportService,
-                   :ReconciliationLineItemReportService,
-                   :ReconciliationReportRowService,
-                   :ReconciliationReportService, :ReportService,
-                   :SuggestedAdUnitService, :TeamService, :UserService,
-                   :UserTeamAssociationService, :WorkflowRequestService],
       :v201805 => [:ActivityGroupService, :ActivityService,
                    :AdExclusionRuleService, :AdRuleService,
                    :AudienceSegmentService, :BaseRateService, :CompanyService,
@@ -135,6 +111,30 @@ module AdManagerApi
                    :ReconciliationReportRowService,
                    :ReconciliationReportService, :ReportService,
                    :SuggestedAdUnitService, :TeamService, :UserService,
+                   :UserTeamAssociationService, :WorkflowRequestService],
+      :v201902 => [:ActivityGroupService, :ActivityService,
+                   :AdExclusionRuleService, :AdjustmentService, :AdRuleService,
+                   :AudienceSegmentService, :BaseRateService, :CompanyService,
+                   :CdnConfigurationService, :CmsMetadataService,
+                   :ContactService, :ContentBundleService, :ContentService,
+                   :CreativeService, :CreativeSetService,
+                   :CreativeTemplateService, :CreativeWrapperService,
+                   :CustomFieldService, :CustomTargetingService,
+                   :DaiAuthenticationKeyService, :ExchangeRateService,
+                   :ForecastService, :InventoryService, :LabelService,
+                   :LineItemCreativeAssociationService, :LineItemService,
+                   :LineItemTemplateService, :LiveStreamEventService,
+                   :MobileApplicationService, :NativeStyleService,
+                   :NetworkService, :OrderService, :PackageService,
+                   :ProductPackageService, :ProductPackageItemService,
+                   :PlacementService, :PremiumRateService, :ProductService,
+                   :ProductTemplateService, :ProposalLineItemService,
+                   :ProposalService, :PublisherQueryLanguageService,
+                   :RateCardService, :ReconciliationOrderReportService,
+                   :ReconciliationLineItemReportService,
+                   :ReconciliationReportRowService,
+                   :ReconciliationReportService, :ReportService,
+                   :SuggestedAdUnitService, :TeamService, :UserService,
                    :UserTeamAssociationService, :WorkflowRequestService]
     }
 
@@ -142,10 +142,10 @@ module AdManagerApi
     @@config = {
       :oauth_scope => 'https://www.googleapis.com/auth/dfp',
       :header_ns => 'https://www.google.com/apis/ads/publisher/',
-      :v201802 => 'https://ads.google.com/apis/ads/publisher/',
       :v201805 => 'https://ads.google.com/apis/ads/publisher/',
       :v201808 => 'https://ads.google.com/apis/ads/publisher/',
-      :v201811 => 'https://ads.google.com/apis/ads/publisher/'
+      :v201811 => 'https://ads.google.com/apis/ads/publisher/',
+      :v201902 => 'https://ads.google.com/apis/ads/publisher/'
     }
 
     public

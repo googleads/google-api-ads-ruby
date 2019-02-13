@@ -1,3 +1,8 @@
+1.6.0:
+  - Added support for v201902.
+  - Removed support for v201802.
+  - Removed examples for v201805.
+
 1.5.0:
   - Added support for v201811.
   - Removed support for v201711.
