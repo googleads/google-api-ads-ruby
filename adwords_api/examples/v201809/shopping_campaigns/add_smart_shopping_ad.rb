@@ -59,7 +59,6 @@ def create_budget(adwords)
   return budget_srv.mutate(budget_operations)[:value].first[:budget_id]
 end
 
-# [START createCampaign] MOE:strip_line
 def create_smart_campaign(adwords, budget_id, merchant_id)
   campaign_srv = adwords.service(:CampaignService, API_VERSION)
 
@@ -102,9 +101,7 @@ def create_smart_campaign(adwords, budget_id, merchant_id)
 
   return result[:id]
 end
-# [END createCampaign] MOE:strip_line
 
-# [START createAdGroup] MOE:strip_line
 def create_smart_shopping_ad_group(adwords, campaign_id)
   ad_group_srv = adwords.service(:AdGroupService, API_VERSION)
 
@@ -127,9 +124,7 @@ def create_smart_shopping_ad_group(adwords, campaign_id)
 
   return result[:id]
 end
-# [END createAdGroup] MOE:strip_line
 
-# [START createAdGroupAd] MOE:strip_line
 def create_smart_shopping_ad(adwords, ad_group_id)
   ad_group_ad_srv = adwords.service(:AdGroupAdService, API_VERSION)
 
@@ -150,7 +145,6 @@ def create_smart_shopping_ad(adwords, ad_group_id)
 
   puts 'Smart Shopping ad with ID "%s" was added.' % result[:ad][:id]
 end
-# [END createAdGroupAd] MOE:strip_line
 
 def create_default_partition(adwords, ad_group_id)
   ad_group_criterion_srv =
