@@ -1,3 +1,9 @@
+1.5.0:
+  - Remove deprecated API version v201806.
+  - Fixed a release script issue that prevented older versions from being
+  removed. This change actually removes examples and support for v201710 and
+  v201802 of the AdWords API.
+
 1.4.0:
   - Remove deprecated API version v201802.
 

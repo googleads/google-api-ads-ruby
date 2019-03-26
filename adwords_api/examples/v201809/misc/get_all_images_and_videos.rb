@@ -16,9 +16,8 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example illustrates how to retrieve all images and videos. To upload an
-# image, run upload_image.rb. To upload video, see:
-#   http://adwords.google.com/support/aw/bin/answer.py?hl=en&answer=39454.
+# This code example gets all videos and images. Use the Google Ads website to
+# upload new videos. To upload an image, run upload_image.rb.
 
 require 'adwords_api'
 
