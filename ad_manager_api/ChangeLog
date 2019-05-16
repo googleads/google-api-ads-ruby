@@ -1,3 +1,11 @@
+1.7.0:
+  - Added support for v201905.
+  - Removed support for v201805.
+  - Removed examples for v201808.
+  - Fixed a release script issue that prevented older versions from being
+  removed. This change actually removes examples for v201802 and v201805 and
+  removes support for v201711 and v201802 of the Ad Manager API.
+
 1.6.0:
   - Added support for v201902.
   - Removed support for v201802.
