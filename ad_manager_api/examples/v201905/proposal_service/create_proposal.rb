@@ -16,8 +16,7 @@
 #           See the License for the specific language governing permissions and
 #           limitations under the License.
 #
-# This example creates a programmatic proposal. This example does not work for
-# networks with Ad Manager sales management enabled.
+# This example creates a proposal.
 
 require 'securerandom'
 require 'ad_manager_api'
@@ -32,7 +31,6 @@ def create_proposal(ad_manager, primary_salesperson_id, primary_trafficker_id,
     :marketplace_info => {
       :buyer_account_id => buyer_id
     },
-    :is_programmatic => true,
     :name => 'Proposal %s' % SecureRandom.uuid(),
     :primary_salesperson => {
       :user_id => primary_salesperson_id,
@@ -47,11 +45,11 @@ def create_proposal(ad_manager, primary_salesperson_id, primary_trafficker_id,
   # Display the results.
   if created_proposals.to_a.size > 0
     created_proposals.each do |proposal|
-      puts 'A programmatic proposal with ID %d and name "%s" was created.' %
+      puts 'A proposal with ID %d and name "%s" was created.' %
           [proposal[:id], proposal[:name]]
     end
   else
-    puts 'No programmatic proposals were created.'
+    puts 'No proposals were created.'
   end
 end
 

@@ -87,13 +87,13 @@ def set_line_item_custom_field_value(ad_manager, custom_field_id,
     # Create custom field values.
     custom_field_value = {
       :custom_field_id => custom_field[:id],
-      :type => 'CustomFieldValue',
-      :value => {:type => 'TextValue', :value => 'Custom field value'}
+      :xsi_type => 'CustomFieldValue',
+      :value => {:xsi_type => 'TextValue', :value => 'Custom field value'}
     }
 
     drop_down_custom_field_value = {
       :custom_field_id => drop_down_custom_field[:id],
-      :type => 'DropDownCustomFieldValue',
+      :xsi_type => 'DropDownCustomFieldValue',
       :custom_field_option_id => custom_field_option_id
     }
 
