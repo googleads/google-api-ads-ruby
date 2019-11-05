@@ -1,3 +1,8 @@
+1.9.0:
+  - Added support for v201911.
+  - Removed support for v201811.
+  - Removed examples for v201902.
+
 1.8.0:
   - Added support for v201908.
   - Removed support for v201808.
