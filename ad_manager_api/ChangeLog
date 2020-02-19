@@ -1,3 +1,7 @@
+1.10.1:
+  - Added missing AdRuleService types for v202002.
+  - Added missing ReportService types for v202002.
+
 1.10.0:
   - Added support for v202002.
   - Removed support for v201902.
