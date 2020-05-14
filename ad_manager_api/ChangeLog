@@ -1,3 +1,8 @@
+1.11.0:
+  - Added support for v202005.
+  - Removed support for v201905.
+  - Removed examples for v201908.
+
 1.10.1:
   - Added missing AdRuleService types for v202002.
   - Added missing ReportService types for v202002.

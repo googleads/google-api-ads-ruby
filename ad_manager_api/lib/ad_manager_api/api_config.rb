@@ -40,31 +40,6 @@ module AdManagerApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v201905 => [:ActivityGroupService, :ActivityService,
-                   :AdExclusionRuleService, :AdjustmentService, :AdRuleService,
-                   :AudienceSegmentService, :BaseRateService, :CompanyService,
-                   :CdnConfigurationService, :CmsMetadataService,
-                   :ContactService, :ContentBundleService, :ContentService,
-                   :CreativeService, :CreativeSetService,
-                   :CreativeTemplateService, :CreativeWrapperService,
-                   :CustomFieldService, :CustomTargetingService,
-                   :DaiAuthenticationKeyService, :ExchangeRateService,
-                   :ForecastService, :InventoryService, :LabelService,
-                   :LineItemCreativeAssociationService, :LineItemService,
-                   :LineItemTemplateService, :LiveStreamEventService,
-                   :MobileApplicationService, :NativeStyleService,
-                   :NetworkService, :OrderService, :PackageService,
-                   :ProductPackageService, :ProductPackageItemService,
-                   :PlacementService, :PremiumRateService, :ProductService,
-                   :ProductTemplateService, :ProposalLineItemService,
-                   :ProposalService, :PublisherQueryLanguageService,
-                   :RateCardService, :ReconciliationOrderReportService,
-                   :ReconciliationLineItemReportService,
-                   :ReconciliationReportRowService,
-                   :ReconciliationReportService, :ReportService,
-                   :SuggestedAdUnitService, :TargetingPresetService,
-                   :TeamService, :UserService, :UserTeamAssociationService,
-                   :WorkflowRequestService],
       :v201908 => [:ActivityGroupService, :ActivityService,
                    :AdExclusionRuleService, :AdjustmentService, :AdRuleService,
                    :AudienceSegmentService, :CompanyService,
@@ -119,6 +94,25 @@ module AdManagerApi
                    :PublisherQueryLanguageService, :ReportService,
                    :StreamActivityMonitorService, :SuggestedAdUnitService,
                    :TargetingPresetService, :TeamService, :UserService,
+                   :UserTeamAssociationService],
+      :v202005 => [:ActivityGroupService, :ActivityService,
+                   :AdExclusionRuleService, :AdjustmentService, :AdRuleService,
+                   :AudienceSegmentService, :CompanyService,
+                   :CdnConfigurationService, :CmsMetadataService,
+                   :ContactService, :ContentBundleService, :ContentService,
+                   :CreativeReviewService, :CreativeService,
+                   :CreativeSetService, :CreativeTemplateService,
+                   :CreativeWrapperService, :CustomFieldService,
+                   :CustomTargetingService, :DaiAuthenticationKeyService,
+                   :ForecastService, :InventoryService, :LabelService,
+                   :LineItemCreativeAssociationService, :LineItemService,
+                   :LineItemTemplateService, :LiveStreamEventService,
+                   :MobileApplicationService, :NativeStyleService,
+                   :NetworkService, :OrderService, :PlacementService,
+                   :ProposalLineItemService, :ProposalService,
+                   :PublisherQueryLanguageService, :ReportService,
+                   :StreamActivityMonitorService, :SuggestedAdUnitService,
+                   :TargetingPresetService, :TeamService, :UserService,
                    :UserTeamAssociationService]
     }
 
@@ -126,10 +120,10 @@ module AdManagerApi
     @@config = {
       :oauth_scope => 'https://www.googleapis.com/auth/dfp',
       :header_ns => 'https://www.google.com/apis/ads/publisher/',
-      :v201905 => 'https://ads.google.com/apis/ads/publisher/',
       :v201908 => 'https://ads.google.com/apis/ads/publisher/',
       :v201911 => 'https://ads.google.com/apis/ads/publisher/',
-      :v202002 => 'https://ads.google.com/apis/ads/publisher/'
+      :v202002 => 'https://ads.google.com/apis/ads/publisher/',
+      :v202005 => 'https://ads.google.com/apis/ads/publisher/'
     }
 
     public
