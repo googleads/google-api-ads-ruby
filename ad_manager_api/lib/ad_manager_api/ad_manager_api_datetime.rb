@@ -73,6 +73,11 @@ module AdManagerApi
     def to_h()
       return {:year => @date.year, :month => @date.month, :day => @date.day}
     end
+
+    # Convert AdManagerDate into a native ruby Date object.
+    def to_date()
+      return Date.new(@date.year, @date.month, @date.day)
+    end
   end
 
   class AdManagerDateTime
@@ -165,6 +170,12 @@ module AdManagerApi
         :second => @time.sec,
         :time_zone_id => @timezone.identifier
       }
+    end
+
+    # Convert AdManagerDateTime into a native ruby Time object.
+    def to_time
+      return Time.new(@time.year, @time.month, @time.day, @time.hour, @time.min,
+                      @time.sec, @timezone.current_period.utc_offset)
     end
 
     # When an unrecognized method is applied to AdManagerDateTime, pass it
