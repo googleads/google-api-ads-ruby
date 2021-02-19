@@ -1,3 +1,8 @@
+1.14.0:
+  - Added support for v202102.
+  - Removed support for v202002.
+  - Removed examples for v202005.
+
 1.13.0:
   - Added support for v202011.
   - Removed support for v201911.
