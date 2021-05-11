@@ -1,3 +1,9 @@
+1.15.0:
+  - Added support for v202105.
+  - Removed support for v202005.
+  - Removed examples for v202008.
+  - Updated tzinfo dependency.
+
 1.14.0:
   - Added support for v202102.
   - Removed support for v202002.
