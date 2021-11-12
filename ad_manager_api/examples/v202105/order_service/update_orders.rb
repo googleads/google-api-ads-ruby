@@ -41,7 +41,7 @@ def update_orders(ad_manager, order_id)
   order[:notes] = 'Spoke to advertiser. All is well.' unless order[:is_archived]
 
   # Update the orders on the server.
-  updated_orders = order_service.update_orders(orders)
+  updated_orders = order_service.update_orders([order])
 
   if updated_orders.to_a.size > 0
     updated_orders.each do |order|
