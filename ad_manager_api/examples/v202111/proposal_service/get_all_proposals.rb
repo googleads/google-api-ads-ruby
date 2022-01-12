@@ -43,7 +43,7 @@ def get_all_proposals(ad_manager)
 
     # Increase the statement offset by the page size to get the next page.
     statement.offset += statement.limit
-  end while statement.offset < total_result_set_size
+  end while statement.offset < page[:total_result_set_size]
 
   puts 'Total number of proposals: %d' % page[:total_result_set_size]
 end
