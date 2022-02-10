@@ -100,7 +100,9 @@ module AdsCommon
           if @client.issued_at.is_a?(String)
             @client.issued_at = Time.parse(@client.issued_at)
           end
-          @client.refresh!
+          proxy = @config.read('connection.proxy')
+          connection = (proxy.nil?) ? nil : Faraday.new(:proxy => proxy)
+          @client.refresh!(:connection => connection)
         rescue Signet::AuthorizationError => e
           raise AdsCommon::Errors::AuthError.new("OAuth2 token refresh failed",
               e, (e.response.nil?) ? nil : e.response.body)
