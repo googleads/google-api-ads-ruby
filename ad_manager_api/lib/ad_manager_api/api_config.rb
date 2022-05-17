@@ -31,8 +31,8 @@ module AdManagerApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v202202
-    LATEST_VERSION = :v202202
+    DEFAULT_VERSION = :v202205
+    LATEST_VERSION = :v202205
 
     # Set other constants
     API_NAME = 'AdManagerApi'
@@ -40,26 +40,6 @@ module AdManagerApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v202105 => [:ActivityGroupService, :ActivityService,
-                   :AdExclusionRuleService, :AdjustmentService, :AdRuleService,
-                   :AudienceSegmentService, :CompanyService,
-                   :CdnConfigurationService, :CmsMetadataService,
-                   :ContactService, :ContentBundleService, :ContentService,
-                   :CreativeReviewService, :CreativeService,
-                   :CreativeSetService, :CreativeTemplateService,
-                   :CreativeWrapperService, :CustomFieldService,
-                   :CustomTargetingService, :DaiAuthenticationKeyService,
-                   :DaiEncodingProfileService, :ForecastService,
-                   :InventoryService, :LabelService,
-                   :LineItemCreativeAssociationService, :LineItemService,
-                   :LineItemTemplateService, :LiveStreamEventService,
-                   :MobileApplicationService, :NativeStyleService,
-                   :NetworkService, :OrderService, :PlacementService,
-                   :ProposalLineItemService, :ProposalService,
-                   :PublisherQueryLanguageService, :ReportService,
-                   :SiteService, :StreamActivityMonitorService,
-                   :SuggestedAdUnitService, :TargetingPresetService,
-                   :TeamService, :UserService, :UserTeamAssociationService],
       :v202108 => [:ActivityGroupService, :ActivityService,
                    :AdExclusionRuleService, :AdjustmentService, :AdRuleService,
                    :AudienceSegmentService, :CompanyService,
@@ -119,6 +99,26 @@ module AdManagerApi
                    :SiteService, :StreamActivityMonitorService,
                    :SuggestedAdUnitService, :TargetingPresetService,
                    :TeamService, :UserService, :UserTeamAssociationService,
+                   :YieldGroupService],
+      :v202205 => [:ActivityGroupService, :ActivityService,
+                   :AdjustmentService, :AdRuleService, :AudienceSegmentService,
+                   :CompanyService, :CdnConfigurationService,
+                   :CmsMetadataService, :ContactService, :ContentBundleService,
+                   :ContentService, :CreativeReviewService, :CreativeService,
+                   :CreativeSetService, :CreativeTemplateService,
+                   :CreativeWrapperService, :CustomFieldService,
+                   :CustomTargetingService, :DaiAuthenticationKeyService,
+                   :DaiEncodingProfileService, :ForecastService,
+                   :InventoryService, :LabelService,
+                   :LineItemCreativeAssociationService, :LineItemService,
+                   :LineItemTemplateService, :LiveStreamEventService,
+                   :MobileApplicationService, :NativeStyleService,
+                   :NetworkService, :OrderService, :PlacementService,
+                   :ProposalLineItemService, :ProposalService,
+                   :PublisherQueryLanguageService, :ReportService,
+                   :SiteService, :StreamActivityMonitorService,
+                   :SuggestedAdUnitService, :TargetingPresetService,
+                   :TeamService, :UserService, :UserTeamAssociationService,
                    :YieldGroupService]
     }
 
@@ -126,10 +126,10 @@ module AdManagerApi
     @@config = {
       :oauth_scope => 'https://www.googleapis.com/auth/dfp',
       :header_ns => 'https://www.google.com/apis/ads/publisher/',
-      :v202105 => 'https://ads.google.com/apis/ads/publisher/',
       :v202108 => 'https://ads.google.com/apis/ads/publisher/',
       :v202111 => 'https://ads.google.com/apis/ads/publisher/',
-      :v202202 => 'https://ads.google.com/apis/ads/publisher/'
+      :v202202 => 'https://ads.google.com/apis/ads/publisher/',
+      :v202205 => 'https://ads.google.com/apis/ads/publisher/'
     }
 
     public

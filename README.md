@@ -12,7 +12,7 @@ programmatically access your accounts.
 **New to the library?** Take a look at the [wiki for this project](https://github.com/googleads/google-api-ads-ruby/wiki).
 
 **Want to stay up-to-date with our latest releases?** Subscribe to the
-[master RSS feed on GitHub](https://github.com/googleads/google-api-ads-ruby/commits/master.atom).
+[master RSS feed on GitHub](https://github.com/googleads/google-api-ads-ruby/commits/HEAD.atom).
 
 ## Products currently supported
 
@@ -53,8 +53,8 @@ programmatically access your accounts.
 1. Copy the sample config file (**adwords_api.yml** or **ad_manager_api.yml**)
 for your product to your home directory and fill out the required properties.
 
-  * [adwords_api.yml](https://github.com/googleads/google-api-ads-ruby/blob/master/adwords_api/adwords_api.yml)
-  * [ad_manager_api.yml](https://github.com/googleads/google-api-ads-ruby/blob/master/ad_manager_api/ad_manager_api.yml)
+  * [adwords_api.yml](https://github.com/googleads/google-api-ads-ruby/blob/HEAD/adwords_api/adwords_api.yml)
+  * [ad_manager_api.yml](https://github.com/googleads/google-api-ads-ruby/blob/HEAD/ad_manager_api/ad_manager_api.yml)
 
 1. Setup your OAuth2 credentials.
 
@@ -73,8 +73,8 @@ case.
 
 1. See each product's individual README for more specific instructions:
 
-  * [AdWords](https://github.com/googleads/google-api-ads-ruby/blob/master/adwords_api/README.md)
-  * [Ad Manager](https://github.com/googleads/google-api-ads-ruby/blob/master/ad_manager_api/README.md)
+  * [AdWords](https://github.com/googleads/google-api-ads-ruby/blob/HEAD/adwords_api/README.md)
+  * [Ad Manager](https://github.com/googleads/google-api-ads-ruby/blob/HEAD/ad_manager_api/README.md)
 
 ## Submitting bug reports and/or feature requests
 
@@ -89,18 +89,18 @@ Make sure to subscribe to [our blog](https://googleadsdeveloper.blogspot.com) fo
 
 ## Logging
 
- To enable logging, see the library-specific README files for [AdWords](https://github.com/googleads/google-api-ads-ruby/blob/master/adwords_api/README.md#23---logging)
- or [Ad Manager](https://github.com/googleads/google-api-ads-ruby/blob/master/ad_manager_api/README.md#how-do-i-enable-logging).
+ To enable logging, see the library-specific README files for [AdWords](https://github.com/googleads/google-api-ads-ruby/blob/HEAD/adwords_api/README.md#23---logging)
+ or [Ad Manager](https://github.com/googleads/google-api-ads-ruby/blob/HEAD/ad_manager_api/README.md#how-do-i-enable-logging).
 
 ## Updates
 
- - [AdsCommon ChangeLog](https://github.com/googleads/google-api-ads-ruby/blob/master/ads_common/ChangeLog)
- - [AdWords library ChangeLog](https://github.com/googleads/google-api-ads-ruby/blob/master/adwords_api/ChangeLog)
- - [Ad Manager library ChangeLog](https://github.com/googleads/google-api-ads-ruby/blob/master/ad_manager_api/ChangeLog)
+ - [AdsCommon ChangeLog](https://github.com/googleads/google-api-ads-ruby/blob/HEAD/ads_common/ChangeLog)
+ - [AdWords library ChangeLog](https://github.com/googleads/google-api-ads-ruby/blob/HEAD/adwords_api/ChangeLog)
+ - [Ad Manager library ChangeLog](https://github.com/googleads/google-api-ads-ruby/blob/HEAD/ad_manager_api/ChangeLog)
 
 ## Contributing
 
-See [CONTRIBUTING.md](https://github.com/googleads/google-api-ads-ruby/blob/master/CONTRIBUTING.md)
+See [CONTRIBUTING.md](https://github.com/googleads/google-api-ads-ruby/blob/HEAD/CONTRIBUTING.md)
 for details on how to contribute.
 
 This library has adopted the [community-driven style guide](https://github.com/bbatsov/ruby-style-guide)
