@@ -1,3 +1,9 @@
+2.0.0:
+  - Updated minimum Ruby version to 2.6.
+  - Added support for v202208.
+  - Removed examples for v202111.
+  - Removed support for v202108.
+
 1.19.0:
   - Added support for v202205.
   - Removed support for v202105.

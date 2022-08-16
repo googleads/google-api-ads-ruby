@@ -24,7 +24,7 @@ programmatically access your accounts.
  - Support for logging incoming and outgoing SOAP messages
  - Support for logging request information
  - Based on Savon library
- - Ruby 2.1, 2.2, 2.3, and 2.4 compatible
+ - Ruby >=2.6 compatible
  - OAuth2 and OAuth2 JWT built-in authentication
  - Local validation for parameter number and type on API calls
  - Thread-safe
@@ -43,12 +43,6 @@ programmatically access your accounts.
    or
 
         $ gem install google-dfp-api
-
-   Note: If you're using a version of Ruby lower than 2.2.2, you will need to
-   manually install a previous version of Rack, a dependency of our HTTP
-   library. You can do this with:
-
-        $ gem install rack -v 1.6.4
 
 1. Copy the sample config file (**adwords_api.yml** or **ad_manager_api.yml**)
 for your product to your home directory and fill out the required properties.
