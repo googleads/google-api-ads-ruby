@@ -53,7 +53,7 @@ case.
 
   * [Developing a web application](https://github.com/googleads/google-api-ads-ruby/wiki/API-access-on-behalf-of-your-clients-(web-flow))
 
-1. See the product individual README for more specific instructions:
+1. See the product's individual README for more specific instructions:
 
   * [Ad Manager](https://github.com/googleads/google-api-ads-ruby/blob/HEAD/ad_manager_api/README.md)
 
