@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project = 'google-dfp-api'
   s.require_path = 'lib'
   s.files = Dir.glob('lib/**/*') +
-      %w(COPYING README.md ChangeLog ad_manager_api.yml)
+      %w(README.md ChangeLog ad_manager_api.yml)
   s.add_dependency('google-ads-common', '~> 1.0.0')
   s.add_dependency('tzinfo', '>= 1.0', '< 3.0')
 end
