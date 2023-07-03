@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.email = ['dfpapi-advisor@google.com']
   s.license = 'Apache-2.0'
   s.platform = Gem::Platform::RUBY
-  s.required_ruby_version = '>= 2.6'
+  s.required_ruby_version = '>= 2.3'
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project = 'google-dfp-api'
   s.require_path = 'lib'
