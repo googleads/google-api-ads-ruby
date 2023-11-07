@@ -1,7 +1,7 @@
-# Ads API Client Libraries for Ruby
+# Ad Manager SOAP API Client Libraries for Ruby
 
-This project hosts the new Ads common framework for Ruby, as well as the Ruby
-client libraries for the various SOAP-based Ads APIs at Google.
+This project hosts the Ruby client library for Google Ad Manager, as well as the
+Ads SOAP API common framework for Ruby.
 
 The Ruby client libraries make it easier to write Ruby clients to
 programmatically access your accounts.
