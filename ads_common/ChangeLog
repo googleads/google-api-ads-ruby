@@ -1,3 +1,6 @@
+2.0.1:
+  - Relaxed nokogiri dependency requirements to match ads_savon.
+
 2.0.0:
   - Updated minimum Ruby version to 2.7.
 
