@@ -18,6 +18,7 @@
 #
 # Tests environment is correct.
 
+require 'rake'
 require 'openssl'
 require 'test/unit'
 
@@ -38,6 +39,6 @@ class TestEnv < Test::Unit::TestCase
 
   # Output rake version to the tests log.
   def test_rake_version
-    puts "\nRunning with rake %s.\n" % Rake::VERSION if defined?(Rake)
+    puts "\nRunning with rake %s.\n" % Rake::VERSION if defined?(Rake::VERSION)
   end
 end
