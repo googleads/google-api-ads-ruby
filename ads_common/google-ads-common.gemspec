@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.email = ['adwordsapiadvisor+michael@google.com']
   s.license = 'Apache-2.0'
   s.platform = Gem::Platform::RUBY
-  s.required_ruby_version = '>= 2.7'
+  s.required_ruby_version = '>= 2.3'
   s.required_rubygems_version = '>= 1.3.6'
   s.rubyforge_project = 'google-ads-common'
   s.require_path = 'lib'
