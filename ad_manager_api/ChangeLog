@@ -1,3 +1,8 @@
+3.2.0:
+  - Added support for v202408.
+  - Removed examples for v202311.
+  - Removed support for v202308.
+
 3.1.0:
   - Added support for v202405.
   - Removed examples for v202308.
