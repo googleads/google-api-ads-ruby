@@ -80,7 +80,7 @@ module AdManagerApi
                    :StreamActivityMonitorService, :SuggestedAdUnitService,
                    :TargetingPresetService, :TeamService, :UserService,
                    :UserTeamAssociationService ,:YieldGroupService],
-       :v202405 => [:AdjustmentService, :AdRuleService, :AudienceSegmentService,
+      :v202405 => [:AdjustmentService, :AdRuleService, :AudienceSegmentService,
                    :CompanyService, :CdnConfigurationService,
                    :CmsMetadataService, :ContactService, :ContentBundleService,
                    :ContentService, :CreativeService,
@@ -99,7 +99,7 @@ module AdManagerApi
                    :StreamActivityMonitorService, :SuggestedAdUnitService,
                    :TargetingPresetService, :TeamService, :UserService,
                    :UserTeamAssociationService ,:YieldGroupService],
-       :v202408 => [:AdjustmentService, :AdRuleService, :AdsTxtService,
+      :v202408 => [:AdjustmentService, :AdRuleService, :AdsTxtService,
                    :AudienceSegmentService, :CompanyService, :CdnConfigurationService,
                    :CmsMetadataService, :ContactService, :ContentBundleService,
                    :ContentService, :CreativeService,
@@ -118,7 +118,7 @@ module AdManagerApi
                    :StreamActivityMonitorService, :SuggestedAdUnitService,
                    :TargetingPresetService, :TeamService, :UserService,
                    :UserTeamAssociationService ,:YieldGroupService]
-   }
+    }
 
     # Configure the base URL for each version and scope.
     @@config = {
