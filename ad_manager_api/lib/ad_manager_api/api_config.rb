@@ -59,7 +59,7 @@ module AdManagerApi
                    :SegmentPopulationService, :SiteService,
                    :StreamActivityMonitorService, :SuggestedAdUnitService,
                    :TargetingPresetService, :TeamService, :UserService,
-                   :UserTeamAssociationService ,:YieldGroupService],
+                   :UserTeamAssociationService, :YieldGroupService],
       :v202402 => [:ActivityGroupService, :ActivityService,
                    :AdjustmentService, :AdRuleService, :AudienceSegmentService,
                    :CompanyService, :CdnConfigurationService,
@@ -79,8 +79,8 @@ module AdManagerApi
                    :SegmentPopulationService, :SiteService,
                    :StreamActivityMonitorService, :SuggestedAdUnitService,
                    :TargetingPresetService, :TeamService, :UserService,
-                   :UserTeamAssociationService ,:YieldGroupService],
-       :v202405 => [:AdjustmentService, :AdRuleService, :AudienceSegmentService,
+                   :UserTeamAssociationService, :YieldGroupService],
+      :v202405 => [:AdjustmentService, :AdRuleService, :AudienceSegmentService,
                    :CompanyService, :CdnConfigurationService,
                    :CmsMetadataService, :ContactService, :ContentBundleService,
                    :ContentService, :CreativeService,
@@ -98,8 +98,8 @@ module AdManagerApi
                    :SegmentPopulationService, :SiteService,
                    :StreamActivityMonitorService, :SuggestedAdUnitService,
                    :TargetingPresetService, :TeamService, :UserService,
-                   :UserTeamAssociationService ,:YieldGroupService],
-       :v202408 => [:AdjustmentService, :AdRuleService, :AdsTxtService,
+                   :UserTeamAssociationService, :YieldGroupService],
+      :v202408 => [:AdjustmentService, :AdRuleService, :AdsTxtService,
                    :AudienceSegmentService, :CompanyService, :CdnConfigurationService,
                    :CmsMetadataService, :ContactService, :ContentBundleService,
                    :ContentService, :CreativeService,
@@ -117,8 +117,8 @@ module AdManagerApi
                    :SegmentPopulationService, :SiteService,
                    :StreamActivityMonitorService, :SuggestedAdUnitService,
                    :TargetingPresetService, :TeamService, :UserService,
-                   :UserTeamAssociationService ,:YieldGroupService]
-   }
+                   :UserTeamAssociationService, :YieldGroupService]
+    }
 
     # Configure the base URL for each version and scope.
     @@config = {
