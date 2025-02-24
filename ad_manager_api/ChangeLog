@@ -1,3 +1,10 @@
+4.0.0:
+  - Dropped support for Ruby 3.0 and below.
+  - Fixed Issue #198.
+  - Added support for v202502.
+  - Removed examples for v202405.
+  - Removed support for v202402.
+
 3.3.0:
   - Added support for v202411.
   - Removed examples for v202402.
