@@ -120,7 +120,7 @@ module AdsCommon
       def extract_method(method_element, doc)
         name = get_element_name(method_element)
         method = {
-            :name => name.snakecase,
+            :name => Nori::StringUtils.snakecase(name),
             :input => extract_input_parameters(method_element, doc),
             :output => extract_output_parameters(method_element, doc)
             # This could be used to include documentation from wsdl.
@@ -182,7 +182,7 @@ module AdsCommon
         output_element = REXML::XPath.first(op_node, 'descendant::wsdl:output')
         output_name = get_element_name(output_element)
         output_fields = find_sequence_fields(output_name, doc)
-        return {:name => output_name.snakecase, :fields => output_fields}
+        return {:name => Nori::StringUtils.snakecase(output_name), :fields => output_fields}
       end
 
       # Finds sequence fields for the element of given name.
@@ -227,7 +227,7 @@ module AdsCommon
           name = get_element_name(item)
           original_name = get_original_name_if_needed(name)
           field = {
-              :name => name.snakecase.to_sym,
+              :name => Nori::StringUtils.snakecase(name).to_sym,
               :original_name => original_name,
               :type => item.attribute('type').to_s.gsub(/^.+:/, ''),
               :min_occurs => attribute_to_int(item.attribute('minOccurs')),
@@ -240,7 +240,7 @@ module AdsCommon
       # Returns original name if it can not be back-converted and required for
       # XML serialization.
       def get_original_name_if_needed(name)
-        return (name.nil? || (name.snakecase.lower_camelcase == name)) ?
+        return (name.nil? || (name.lower_camelcase == name)) ?
             nil : name
       end
 

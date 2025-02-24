@@ -1,3 +1,7 @@
+3.0.0:
+  - Dropped support for Ruby 3.0 and below.
+  - Fixed Issue #198.
+
 2.1.0:
   - Tightened dependency requirements to maintain 2.7 support.
 

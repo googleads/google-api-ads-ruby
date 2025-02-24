@@ -90,7 +90,7 @@ module AdsCommon
 
     # Get the API path.
     def api_path
-      return api_name.to_s.snakecase
+      return Nori::StringUtils.snakecase(api_name.to_s)
     end
 
     # Get the default filename for the config file.
@@ -139,7 +139,7 @@ module AdsCommon
     # The filename that was loaded
     #
     def do_require(version, service)
-      filename = [api_path, version.to_s, service.to_s.snakecase].join('/')
+      filename = [api_path, version.to_s, Nori::StringUtils.snakecase(service.to_s)].join('/')
       require filename
       return filename
     end

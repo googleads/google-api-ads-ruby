@@ -89,7 +89,7 @@ module AdsCommon
         wsdl = client.wsdl
         check_service(wsdl)
 
-        service_file_name = @generator_args[:service_name].to_s.snakecase
+        service_file_name = Nori::StringUtils.snakecase(@generator_args[:service_name].to_s)
         wrapper_file_name = "%s/%s.rb" % [@code_path, service_file_name]
         write_wrapper(wsdl, wrapper_file_name)
 

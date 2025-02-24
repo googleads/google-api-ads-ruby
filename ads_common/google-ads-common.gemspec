@@ -30,24 +30,16 @@ Gem::Specification.new do |s|
   s.email = ['adwordsapiadvisor+michael@google.com']
   s.license = 'Apache-2.0'
   s.platform = Gem::Platform::RUBY
-  s.required_ruby_version = '>= 2.7'
+  s.required_ruby_version = '>= 3.1'
   s.required_rubygems_version = '>= 1.3.6'
-  s.rubyforge_project = 'google-ads-common'
   s.require_path = 'lib'
   s.files = Dir.glob('lib/**/*') + %w(README.md ChangeLog)
-  s.add_runtime_dependency('faraday', '>= 0.9', '< 2.9')
-  s.add_runtime_dependency('faraday-net_http', '> 0', '< 3.1')
-  s.add_runtime_dependency('google-ads-savon', '~> 1.0', '>=1.0.2')
-  s.add_runtime_dependency('httpi', '~> 2.3')
+  s.add_runtime_dependency('faraday', '>= 0.9', '< 3.0')
+  s.add_runtime_dependency('google-ads-savon', '~> 2.0')
   s.add_runtime_dependency('httpclient', '~> 2.7')
   s.add_runtime_dependency('signet', '~> 0.7')
-  s.add_runtime_dependency('rack', '> 0', '< 3.0')
-  s.add_runtime_dependency('nori', '> 0', '< 2.7')
-  s.add_runtime_dependency('public_suffix', '> 0', '< 6.0')
-  s.add_runtime_dependency('nokogiri', '> 0', '< 1.16')
-  s.add_runtime_dependency('akami', '> 0', '< 1.3.3')
-  s.add_development_dependency('wasabi', '>0', '< 3.6')
-  s.add_development_dependency('rake', '>= 12.3.3', '< 13.0')
+  s.add_runtime_dependency('rack', '>0', '< 4.0')
+  s.add_development_dependency('rake', '~> 12.3', '>= 12.3.3')
   s.add_development_dependency('test-unit', '~> 3.2')
   s.add_development_dependency('webmock', '~> 3.0')
   s.add_development_dependency('minitest', '~> 5.10')

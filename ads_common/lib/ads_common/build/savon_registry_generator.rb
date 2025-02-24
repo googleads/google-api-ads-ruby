@@ -35,7 +35,7 @@ module AdsCommon
       #
       # <%= @generator_stamp %>
 
-      require '<%= @api_name.snakecase %>/errors'
+      require '<%= Nori::StringUtils.snakecase(@api_name) %>/errors'
 
       <%= @modules_open_string %>
 

@@ -35,7 +35,7 @@ module AdsCommon
       # <%= @generator_stamp %>
 
       require 'ads_common/savon_service'
-      require '<%= @require_path %>/<%= @service_name.to_s.snakecase %>_registry'
+      require '<%= @require_path %>/<%= Nori::StringUtils.snakecase(@service_name.to_s) %>_registry'
 
       <%= @modules_open_string %>
 
