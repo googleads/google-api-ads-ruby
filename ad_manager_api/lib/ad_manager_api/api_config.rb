@@ -31,8 +31,8 @@ module AdManagerApi
     end
 
     # Set defaults
-    DEFAULT_VERSION = :v202502
-    LATEST_VERSION = :v202502
+    DEFAULT_VERSION = :v202505
+    LATEST_VERSION = :v202505
 
     # Set other constants
     API_NAME = 'AdManagerApi'
@@ -40,25 +40,6 @@ module AdManagerApi
 
     # Configure the services available to each version
     @@service_config = {
-      :v202405 => [:AdjustmentService, :AdRuleService, :AudienceSegmentService,
-                   :CompanyService, :CdnConfigurationService,
-                   :CmsMetadataService, :ContactService, :ContentBundleService,
-                   :ContentService, :CreativeService,
-                   :CreativeSetService, :CreativeTemplateService,
-                   :CreativeWrapperService, :CustomFieldService,
-                   :CustomTargetingService, :DaiAuthenticationKeyService,
-                   :DaiEncodingProfileService, :ForecastService,
-                   :InventoryService, :LabelService,
-                   :LineItemCreativeAssociationService, :LineItemService,
-                   :LineItemTemplateService, :LiveStreamEventService,
-                   :MobileApplicationService, :NativeStyleService,
-                   :NetworkService, :OrderService, :PlacementService,
-                   :ProposalLineItemService, :ProposalService,
-                   :PublisherQueryLanguageService, :ReportService,
-                   :SegmentPopulationService, :SiteService,
-                   :StreamActivityMonitorService, :SuggestedAdUnitService,
-                   :TargetingPresetService, :TeamService, :UserService,
-                   :UserTeamAssociationService, :YieldGroupService],
       :v202408 => [:AdjustmentService, :AdRuleService, :AdsTxtService,
                    :AudienceSegmentService, :CompanyService, :CdnConfigurationService,
                    :CmsMetadataService, :ContactService, :ContentBundleService,
@@ -115,6 +96,25 @@ module AdManagerApi
                    :SegmentPopulationService, :SiteService,
                    :StreamActivityMonitorService, :SuggestedAdUnitService,
                    :TargetingPresetService, :TeamService, :UserService,
+                   :UserTeamAssociationService, :YieldGroupService],
+      :v202505 => [:AdjustmentService, :AdRuleService, :AdsTxtService,
+                   :AudienceSegmentService, :CompanyService, :CdnConfigurationService,
+                   :CmsMetadataService, :ContactService, :ContentBundleService,
+                   :ContentService, :CreativeService,
+                   :CreativeSetService, :CreativeTemplateService,
+                   :CreativeWrapperService, :CustomFieldService,
+                   :CustomTargetingService, :DaiAuthenticationKeyService,
+                   :DaiEncodingProfileService, :ForecastService,
+                   :InventoryService, :LabelService,
+                   :LineItemCreativeAssociationService, :LineItemService,
+                   :LineItemTemplateService, :LiveStreamEventService,
+                   :MobileApplicationService, :NativeStyleService,
+                   :NetworkService, :OrderService, :PlacementService,
+                   :ProposalLineItemService, :ProposalService,
+                   :PublisherQueryLanguageService, :ReportService,
+                   :SegmentPopulationService, :SiteService,
+                   :StreamActivityMonitorService, :SuggestedAdUnitService,
+                   :TargetingPresetService, :TeamService, :UserService,
                    :UserTeamAssociationService, :YieldGroupService]
     }
 
@@ -122,10 +122,10 @@ module AdManagerApi
     @@config = {
       :oauth_scope => 'https://www.googleapis.com/auth/dfp',
       :header_ns => 'https://www.google.com/apis/ads/publisher/',
-      :v202405 => 'https://ads.google.com/apis/ads/publisher/',
       :v202408 => 'https://ads.google.com/apis/ads/publisher/',
       :v202411 => 'https://ads.google.com/apis/ads/publisher/',
       :v202502 => 'https://ads.google.com/apis/ads/publisher/',
+      :v202505 => 'https://ads.google.com/apis/ads/publisher/'
     }
 
     public

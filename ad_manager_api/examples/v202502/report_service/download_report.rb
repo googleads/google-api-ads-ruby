@@ -38,7 +38,7 @@ def download_report(ad_manager, report_job_id, file_name)
 
   puts 'Downloading "%s" to "%s"...' % [download_url, file_name]
   open(file_name, 'wb') do |local_file|
-    local_file << open(download_url).read()
+    local_file << URI.open(download_url).read()
   end
 end
 
