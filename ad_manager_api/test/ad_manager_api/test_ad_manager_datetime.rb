@@ -210,18 +210,18 @@ class TestAdManagerApi < Test::Unit::TestCase
     hour_delta = 1  # Between 0 and 17
     day_delta = 3  # Between 0 and 6
     datetime = @ad_manager.datetime(
-        2017, 11, 7, 17, 30, 10, 'America/New_York'
+        2017, 10, 7, 17, 30, 10, 'America/New_York'
     )
     datetime = datetime - sec_delta - min_delta * 60 - hour_delta * 60 * 60 -
         day_delta * 60 * 60 * 24
     assert_equal(2017, datetime.year)
-    assert_equal(11, datetime.month)
+    assert_equal(10, datetime.month)
     assert_equal(7 - day_delta, datetime.day)
     assert_equal(17 - hour_delta, datetime.hour)
     assert_equal(30 - min_delta, datetime.min)
     assert_equal(10 - sec_delta, datetime.sec)
     assert_equal('America/New_York', datetime.timezone.identifier)
-    assert_equal(-18000, datetime.utc_offset)
+    assert_equal(-14400, datetime.utc_offset)
     assert_true(datetime.is_a? AdManagerApi::AdManagerDateTime)
   end
 
