@@ -19,6 +19,6 @@
 
 module AdManagerApi
   module ApiConfig
-    CLIENT_LIB_VERSION = '4.2.0'
+    CLIENT_LIB_VERSION = '4.3.0'
   end
 end

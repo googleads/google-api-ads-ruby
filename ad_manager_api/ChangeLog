@@ -1,3 +1,8 @@
+4.3.0:
+  - Added support for v202511.
+  - Removed examples for v202502.
+  - Removed support for v202411.
+
 4.2.0:
   - Added support for v202508.
   - Removed examples for v202411.
