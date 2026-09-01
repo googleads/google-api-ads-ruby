@@ -1,3 +1,8 @@
+4.6.0:
+  - Added support for v202608.
+  - Removed examples for v202511.
+  - Removed support for v202508.
+
 4.5.0:
   - Added support for v202605.
   - Removed examples for v202508.
