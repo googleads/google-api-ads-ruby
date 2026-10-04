@@ -116,17 +116,16 @@ module AdManagerApi
         end
       else
         datetime_args = args
+        datetime_args = [0, 1, 1, 0, 0, 0] + args if args.length == 1
       end
       # Check the validity of the timezone parameter, which is required.
       if not TZInfo::Timezone.all_identifiers.include?(datetime_args.last)
         raise "Last argument to AdManagerDateTime constructor must be valid" +
             "timezone"
       end
-      # Set timezone attribute and pass its utc offset into the Time
-      # constructor.
+      # Set timezone attribute and pass it into the Time constructor.
       @timezone = TZInfo::Timezone.get(datetime_args.pop)
-      @time = Time.new(*datetime_args,
-          utc_offset=@timezone.current_period.utc_offset)
+      @time = Time.new(*datetime_args, @timezone)
     end
 
     # Create an AdManagerDateTime for the current time in the specified
@@ -175,7 +174,7 @@ module AdManagerApi
     # Convert AdManagerDateTime into a native ruby Time object.
     def to_time
       return Time.new(@time.year, @time.month, @time.day, @time.hour, @time.min,
-                      @time.sec, @timezone.current_period.utc_offset)
+                      @time.sec, @timezone)
     end
 
     # When an unrecognized method is applied to AdManagerDateTime, pass it
